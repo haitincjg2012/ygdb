@@ -1,0 +1,29 @@
+{
+  "name": "apec_node",
+  "version": "1.0.0",
+  "description": "apec daiban node server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "echo 'nothing to do here for apec_node' && exit 0",
+    "dev": "cross-env  NODE_ENV=production PORT=4100 node index.js"
+  },
+  "keywords": [
+    "daiban",
+    "node"
+  ],
+  "author": "yirder",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "config": "^1.26.1",
+    "elasticsearch": "^13.2.0",
+    "errs": "^0.3.2",
+    "errto": "^0.2.1",
+    "express": "^4.15.3",
+    "ioredis": "^3.1.1"
+  },
+  "devDependencies": {
+    "cross-env": "^5.0.1"
+  }
+}

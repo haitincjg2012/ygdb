@@ -1,0 +1,137 @@
+.ProvCityBoxWarp {
+
+}
+.ProvCityBoxBg {
+  /*background: rgba(0, 0, 0, .35);*/
+  z-index: 200;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.ProvCityBox {
+  position: fixed;
+  z-index: 300;
+  background: #fff;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.ProvCityHeader {
+  background-color: #eee;
+  height: 44px;
+  line-height: 44px;
+  overflow: hidden;
+  text-align: center;
+  font-size: 16px !important;
+}
+
+.ProvCityHeaderCancle {
+  float: left;
+  padding: 0 20px;
+  color: #00c850;
+  font-size: 16px !important;
+}
+
+.ProvCityHeaderConfirm {
+  float: right;
+  padding: 0 20px;
+  color: #00c850;
+  font-size: 16px !important;
+}
+
+.ProvCityContent {
+  width: 100%;
+  margin: 0 auto;
+  background: #fff;
+  overflow: hidden;
+  height: 245px;
+  overflow: hidden;
+}
+
+.ProvCityContentList {
+  float: left;
+  width: 33.333333%;
+  text-align: center;
+}
+
+.ProvCityContentList ul {
+  -webkit-transition: all .3s ease;
+  transition: all .3s ease;
+  padding: 0;
+}
+
+.ProvCityContentList ul.province_dragging,
+.ProvCityContentList ul.city_dragging,
+.ProvCityContentList ul.area_dragging {
+  -webkit-transition: none;
+  transition: none;
+}
+
+.ProvCityContentList li {
+  line-height: 35px;
+  height: 35px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px !important;
+}
+
+.ProvCityContentList li.current {
+  font-size: 16px !important;
+  font-weight: bold;
+}
+
+.ProvCityContentList li.node1 {
+  font-size: 15px !important;
+  opacity: .7;
+}
+
+.ProvCityContentList li.node2 {
+  font-size: 14px !important;
+  opacity: .5;
+}
+
+.ProvCityContentList li.node3 {
+  font-size: 12px !important;
+  opacity: .3;
+}
+
+.ProvCitySelectedTop {
+  width: 100%;
+  border: none;
+  border-top: 1px solid #eee;
+  position: absolute;
+  bottom: 105px;
+  margin: 0;
+  height: 0;
+}
+
+.ProvCitySelectedBottom {
+  width: 100%;
+  border: none;
+  border-top: 1px solid #eee;
+  position: absolute;
+  bottom: 140px;
+  margin: 0;
+  height: 0;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: all .2s ease
+}
+
+.fade-enter, .fade-leave-active {
+  opacity: 0
+}
+
+.select-enter-active, .select-leave-active {
+  transition: all .3s ease;
+}
+
+.select-enter, .select-leave-active {
+  transform: translate(0, 289px);
+}

@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>artDialog</title>
+<!--  
+<script type="text/javascript" src="../../javascript/jquery.min.js"></script>
+<script type="text/javascript" src="jquery.artDialog.js?skin=default"></script>
+-->
+</head>
+
+<body>
+<strong onclick="js_alert('用户密码不对？')">测试artDialog</strong>
+
+<script language="javascript">
+function js_alert(string0){
+	var list = art.dialog.list;
+	for (var i in list) {
+	list[i].close();
+	};
+	art.dialog({
+	title: '错误提示：',
+	icon: 'error',
+	fixed: true,
+	content: string0,
+	id: 'Alert67'
+	});
+}
+
+
+
+
+function js_alert_mark(string0){
+	art.dialog({
+	title: '错误提示：',
+	content: string0,
+	id: 'EF893L'
+	});
+}
+
+</script>
+</body>
+</html>

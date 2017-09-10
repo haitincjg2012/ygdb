@@ -1,0 +1,362 @@
+.aui_title {
+  height: 38px;
+  line-height: 38px;
+  position: relative;
+  font-size: 14px;
+  text-align: center;
+  font-family: \5fae\8f6f\96c5\9ed1;
+  background-color: #e5e5e5;
+  color: #261f1f;
+}
+.hy-alert .m-imgbox li {
+  float: left;
+  width: 50%;
+}
+.hy-alert .m-imgbox li img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.hy-alert .contxt {
+  text-align: center;
+  margin-top: 30px;
+  padding: 0 10px;
+  color: #261f1f;
+  height: 132px;
+  overflow: hidden;
+}
+.hy-alert .contxt .radio {
+  text-align: left;
+  height: 100%;
+  overflow-y: auto;
+}
+.hy-alert .contxt .contxtc {
+  text-align: left;
+  overflow-y: auto;
+  height: 120px;
+  padding: 0 10px;
+}
+.hy-alert .contxt label {
+  display: block;
+  font-size: 12px;
+  color: #999999;
+  display: inline-block;
+  margin: 5px;
+  font-weight: 400;
+}
+.hy-alert .contxt label input {
+  margin-right: 5px;
+}
+.hy-alert .contxt1 {
+  height: 200px;
+}
+.hy-alert .foot {
+  padding: 20px 50px;
+  height: 76px;
+}
+.hy-alert .foot .cancel,
+.hy-alert .foot .comfirn {
+  display: block;
+  float: left;
+  width: 110px;
+  height: 36px;
+  line-height: 36px;
+  text-align: center;
+  color: #ffffff;
+  font-size: 14px;
+  letter-spacing: 3px;
+  cursor: pointer;
+}
+.hy-alert .foot .cancel:hover,
+.hy-alert .foot .comfirn:hover {
+  text-decoration: none;
+}
+.hy-alert .foot .cancel {
+  background-color: #dcdcdc;
+}
+.hy-alert .foot .comfirn {
+  background-color: #fd8248;
+  margin-left: 30px;
+}
+.hy-alert .foot .cancelcomfirn {
+  margin: 0 auto;
+  float: none;
+}
+.hy-alert .foot .aui_close {
+  position: static;
+}
+.aui_content {
+  padding: 0 !important;
+  width: 350px;
+  background-color: #ffffff;
+}
+.aui_titleBar {
+  position: relative;
+}
+.aui_close {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 999;
+  font-size: 18px;
+  font-family: \5fae\8f6f\96c5\9ed1;
+}
+.aui_close:hover,
+.aui_close:focus {
+  text-decoration: none;
+  outline: none;
+}
+.aui_close:hover {
+  color: #f3623b;
+}
+.aui_state_focus {
+  background-color: #ffffff;
+  z-index: 9999999;
+}
+.u-texticon {
+  position: relative;
+}
+.u-texticon:before {
+  display: block;
+  content: '';
+  position: absolute;
+  width: 32px;
+  height: 33px;
+  background-image: url(../../common/img/login_sprite.png);
+  background-repeat: no-repeat;
+  left: 1px;
+  top: 1px;
+  z-index: 100;
+  -moz-border-radius: 2px 0 0 2px;
+  -webkit-border-radius: 2px 0 0 2px;
+  -o-border-radius: 2px 0 0 2px;
+  border-radius: 2px 0 0 2px;
+  outline: none;
+}
+.u-texticon-un:before {
+  background-position: 0 0;
+}
+.u-texticon-pw:before {
+  background-position: 0 -33px;
+}
+.u-texticon-code:before {
+  background-position: 0 -66px;
+}
+.m-loginform {
+  padding: 0 27px 95px 36px;
+}
+.m-getAuthCode {
+  padding-left: 0;
+}
+.m-login-form {
+  width: 350px;
+  background-color: #ffffff;
+}
+.m-login-form .title h1 {
+  padding-bottom: 36px;
+  padding-top: 30px;
+  position: relative;
+  font-size: 18px;
+  text-align: center;
+  font-family: \5fae\8f6f\96c5\9ed1;
+  color: #4c4c4c;
+  margin: 0;
+  font-weight: bold;
+}
+.m-login-form .m-regbar {
+  color: #68686a;
+  text-align: center;
+  margin-top: 10px;
+}
+.m-login-form .m-regbar a {
+  color: #4166d3;
+}
+.m-login-form .form-group label {
+  padding-right: 0;
+}
+.m-login-form .getAuthCode {
+  padding: 6px;
+  background-color: #e35c6a;
+  color: #ffffff;
+  font-size: 14px;
+  font-family: \5fae\8f6f\96c5\9ed1;
+  width: 100%;
+}
+.m-login-form .form-group {
+  margin-bottom: 0;
+}
+.m-login-form .btn-login {
+  width: 100%;
+  font-size: 16px;
+  font-family: \5b8b\4f53;
+  padding: 8px 0;
+  color: #ffffff;
+  letter-spacing: 6px;
+  background-color: #f3623b;
+  font-weight: bold;
+}
+.m-login-form .btn-login:hover,
+.m-login-form .btn-login:focus,
+.m-login-form .btn-login.focus {
+  color: #ffffff;
+  text-decoration: none;
+  opacity: 0.9;
+  filter: alpha(opacity=90);
+  -moz-opacity: 0.9;
+}
+.m-login-form .form-control {
+  outline: none;
+  color: #bbb9b9;
+  font-size: 12px;
+  padding: 6px 0 6px 46px;
+  height: 35px;
+  font-family: \5b8b\4f53;
+  border: solid #b5b5b5 1px;
+  -moz-border-radius: 2px 2px 2px 2px;
+  -webkit-border-radius: 2px 2px 2px 2px;
+  -o-border-radius: 2px 2px 2px 2px;
+  border-radius: 2px 2px 2px 2px;
+}
+.m-login-form .form-control:focus {
+  border-color: #e9c77e;
+  font-size: 14px;
+  font-family: Arial;
+  color: #4c4c4c;
+}
+.m-login-form .form-control.z-click {
+  font-size: 14px;
+  font-family: Arial;
+  color: #4c4c4c;
+}
+.g-ft-login {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 9999999;
+}
+.m-loginbar {
+  margin-top: 60px;
+}
+.m-tip {
+  height: 24px;
+  line-height: 24px;
+  text-align: right;
+  position: relative;
+  font-size: 12px;
+}
+.m-tip .J-tip {
+  position: absolute;
+  display: none;
+  widows: 100%;
+  height: 24px;
+  line-height: 24px;
+  font-size: 12px;
+  font-family: \5b8b\4f53;
+  right: 0;
+  top: 0;
+  color: #f3623b;
+  transition: all 2s;
+  -moz-transition: all 2s;
+  -webkit-transition: all 2s;
+  -o-transition: all 2s;
+}
+.m-tip .J-hide {
+  display: none;
+}
+.m-tip .J-show {
+  display: block;
+  animation-name: bound;
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+  /* Firefox: */
+  -moz-animation-name: bound;
+  -moz-animation-duration: 0.5s;
+  -moz-animation-fill-mode: forwards;
+  /* Safari and Chrome: */
+  -webkit-animation-name: bound;
+  -webkit-animation-duration: 0.5s;
+  -webkit-animation-fill-mode: forwards;
+  /* Opera: */
+  -o-animation-name: bound;
+  -o-animation-duration: 0.5s;
+  -o-animation-fill-mode: forwards;
+}
+@keyframes bound {
+  0% {
+    right: 5px;
+  }
+  25% {
+    right: -5px;
+  }
+  50% {
+    right: 5px;
+  }
+  75% {
+    right: -5px;
+  }
+  100% {
+    right: 0px;
+  }
+}
+@-moz-keyframes bound {
+  0% {
+    right: 5px;
+  }
+  25% {
+    right: -5px;
+  }
+  50% {
+    right: 5px;
+  }
+  75% {
+    right: -5px;
+  }
+  100% {
+    right: 0px;
+  }
+}
+@-webkit-keyframes bound {
+  0% {
+    right: 5px;
+  }
+  25% {
+    right: -5px;
+  }
+  50% {
+    right: 5px;
+  }
+  75% {
+    right: -5px;
+  }
+  100% {
+    right: 0px;
+  }
+}
+@-o-keyframes bound {
+  0% {
+    right: 5px;
+  }
+  25% {
+    right: -5px;
+  }
+  50% {
+    right: 5px;
+  }
+  75% {
+    right: -5px;
+  }
+  100% {
+    right: 0px;
+  }
+}
+.checkbox-login {
+  margin: 25px 0 10px 0;
+}
+.checkbox-login a,
+.checkbox-login label {
+  font-size: 12px;
+  font-family: \5b8b\4f53;
+}
+.checkbox-login a {
+  color: #666666;
+}

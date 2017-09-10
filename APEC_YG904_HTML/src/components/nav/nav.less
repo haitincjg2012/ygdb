@@ -1,0 +1,44 @@
+/*
+*导航部分
+*/
+#boxContainer{
+  //topNav
+  .topNav {
+    z-index:999;
+    position: fixed;
+    top:0;
+    left:0;
+    right:0;
+    height:60px;
+    .title{
+      font-size: 20px;
+      color:#fff;
+      float:left;
+    }
+    .loginInfo{
+      float:right;
+      margin-right: 20px;
+      color:#fff;
+    }
+    .el-menu-item{
+      padding:0 20px;
+      min-width:100px;
+    }
+  }
+  .el-menu--horizontal>.el-menu-item:hover{
+    border-bottom: 5px solid #324157!important;
+  }
+  //leftNav
+  .leftNav{
+    position: fixed;
+    top:60px;
+    left:0;
+    width:200px;
+    @diff:60px;
+    height: calc(~"100vh - @{diff}");
+    //color:#48576A;
+  }
+}
+
+
+

@@ -1,0 +1,152 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.apec</groupId>
+        <artifactId>framework-parent</artifactId>
+        <version>1.0.1-RELEASE</version>
+    </parent>
+
+    <artifactId>framework-dispatch</artifactId>
+    <name>framework-dispatch</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <!-- 底层业务模块 start-->
+        <dependency>
+            <groupId>com.apec</groupId>
+            <artifactId>framework-common</artifactId>
+            <version>1.0.1-RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>com.apec</groupId>
+            <artifactId>framework-ftp</artifactId>
+            <version>1.0.1-RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.apec</groupId>
+            <artifactId>framework-cache</artifactId>
+            <version>1.0.1-RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>com.apec</groupId>
+            <artifactId>framework-mail</artifactId>
+            <version>1.0.1-RELEASE</version>
+        </dependency>
+        <!-- 底层业务模块 end-->
+
+        <!-- spring boot dependency start -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.tomcat.embed</groupId>
+                    <artifactId>tomcat-embed-el</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jetty</artifactId>
+        </dependency>
+        <!-- ftp 上传start-->
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>3.6</version>
+        </dependency>
+        <!-- ftp 上传end-->
+
+        <!-- spring boot dependency end -->
+
+        <!-- spring cloud dependency start -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-ribbon</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-eureka</artifactId>
+        </dependency>
+        <!-- spring cloud dependency end -->
+    </dependencies>
+	
+	
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Camden.SR5</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <!-- 热部署 -->
+            <!--  <plugin>
+                  <groupId>org.springframework.boot</groupId>
+                  <artifactId>spring-boot-maven-plugin</artifactId>
+                  <dependencies>
+                      &lt;!&ndash;springLoaded hot deploy &ndash;&gt;
+                      <dependency>
+                          <groupId>org.springframework</groupId>
+                          <artifactId>springloaded</artifactId>
+                          <version>1.2.6.RELEASE</version>
+                      </dependency>
+                  </dependencies>
+                  <executions>
+                      <execution>
+                          <goals>
+                              <goal>repackage</goal>
+                          </goals>
+                          <configuration>
+                              <classifier>exec</classifier>
+                          </configuration>
+                      </execution>
+                  </executions>
+              </plugin>-->
+            <!--         <plugin>
+                         <groupId>com.spotify</groupId>
+                         <artifactId>docker-maven-plugin</artifactId>
+                         <version>0.4.11</version>
+                         <configuration>
+                             <imageName>dispatch/${project.artifactId}</imageName>
+                             <baseImage>java:8</baseImage>
+                             <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
+                             <dockerDirectory>src/main/docker</dockerDirectory>
+                             <resources>
+                                 <resource>
+                                     <targetPath>/</targetPath>
+                                     <directory>${project.build.directory}</directory>
+                                     <include>${project.build.finalName}.jar</include>
+                                 </resource>
+                             </resources>
+                         </configuration>
+                     </plugin>-->
+        </plugins>
+    </build>
+</project>

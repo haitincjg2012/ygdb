@@ -1,0 +1,212 @@
+.z-p-home {
+  width: 18.75rem;
+  position: relative;
+}
+.z-p-home .z-header-person-h {
+  padding: 0 0.625rem;
+  position: absolute;
+  top: 0;
+  width: 17.5rem;
+  height: 2.375rem;
+  line-height: 2.375rem;
+}
+.z-p-home .z-header-person-h img {
+  width: 0.85rem;
+  height: 1.125rem;
+  vertical-align: middle;
+}
+.z-p-home .z-p-banner {
+  width: 18.75rem;
+  height: auto;
+  position: relative;
+}
+.z-p-home .z-p-banner .z-banner-img img {
+  display: block;
+  width: 18.75rem;
+  height: auto;
+}
+.z-p-home .z-p-banner .z-canmer {
+  position: absolute;
+  left: 2rem;
+  bottom: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: url("../img/canmer.jpg") no-repeat center;
+  background-size: 2.5rem 2.5rem;
+}
+.z-p-home .z-p-banner .z-canmer .z-imgInput {
+  display: block;
+  width: 2.5rem;
+  height: 2.5rem;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  -moz-opacity: 0;
+}
+.z-p-home .z-p-info {
+  width: 17.75rem;
+  padding: 0 0.5rem;
+  line-height: 2.5rem;
+}
+.z-p-home .z-p-info .z-p-name {
+  font-size: 0.8rem;
+  color: #000;
+  font-weight: bold;
+}
+.z-p-home .z-p-info .z-p-agency {
+  font-size: 0.7rem;
+  color: #0ecb5d;
+  border: 0.05rem solid #0ecb5d;
+  border-radius: 0.1rem;
+}
+.z-p-home .z-p-info .z-p-real {
+  font-size: 0.7rem;
+  color: #0ecb5d;
+  border: 0.05rem solid #0ecb5d;
+  border-radius: 0.1rem;
+}
+.z-p-home .z-p-info .z-p-level {
+  width: 0.9rem;
+  height: 0.775rem;
+  vertical-align: middle;
+}
+.z-p-home .z-space {
+  width: 18.75rem;
+  height: 0.75rem;
+  background-color: #e6e3e3;
+}
+.z-p-home .z-p-concat {
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  margin: 0.5rem 0;
+}
+.z-p-home .z-p-concat .z-p-notice {
+  width: 3.75rem;
+}
+.z-p-home .z-p-concat .z-p-browse {
+  width: 3.75rem;
+}
+.z-p-home .z-p-concat .z-p-c {
+  width: 3.75rem;
+}
+.z-p-home .z-p-concat .z-common-t {
+  font-size: 0.7rem;
+  line-height: 1rem;
+  font-weight: bold;
+  text-align: center;
+}
+.z-p-home .z-p-concat .z-common-t2 {
+  font-size: 0.7rem;
+  line-height: 1rem;
+  text-align: center;
+}
+.z-p-home .z-p-manage-info {
+  line-height: 1.5rem;
+}
+.z-p-home .z-p-manage-info label {
+  margin-left: 0.5rem;
+}
+.z-p-home .z-p-manage-info .z-p-area {
+  font-size: 0.7rem;
+  border-bottom: 0.05rem solid #d6cece;
+}
+.z-p-home .z-p-manage-info .z-p-pz {
+  font-size: 0.7rem;
+}
+.z-p-home .z-description {
+  position: relative;
+}
+.z-p-home .z-description .z-p-edit-save {
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.z-p-home .z-description .z-p-edit-save .z-p-text {
+  width: 80%;
+  font-size: 0.7rem;
+  padding-left: 0.5rem;
+  line-height: 1.5rem;
+}
+.z-p-home .z-description .z-p-edit-save .z-save {
+  width: 15%;
+  color: #fff;
+  font-size: 0.7rem;
+  height: 1.25rem;
+  line-height: 1.25rem;
+  background-color: #0ecb5d;
+  border-radius: 0.25rem;
+  text-align: center;
+  margin-top: 0.125rem;
+}
+.z-p-home .z-description textarea {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 18.75rem;
+  height: 3.75rem;
+  border: none;
+  font-size: 0.75rem;
+  outline: none;
+  resize: none;
+}
+.z-p-home .z-description .z-icon {
+  width: 2rem;
+  height: 2rem;
+  position: absolute;
+  left: 50%;
+  top: 60%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  background: url("../img/edit.png") no-repeat center;
+  background-size: 2rem 2rem;
+}
+.z-p-home .z-des-img .z-des-img-text {
+  padding-left: 0.5rem;
+  font-size: 0.7rem;
+  line-height: 1.5rem;
+}
+.z-p-home .z-des-img .z-add-upload {
+  width: 5rem;
+  background: url("../img/add-9.png") no-repeat center;
+  background-size: 5rem 5rem;
+}
+.z-p-home .z-des-img .z-add-upload input {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  -moz-opacity: 0;
+}
+.z-p-home .z-des-img ul li {
+  float: left;
+  height: 5rem;
+}
+.clear:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+  *zoom: 1;
+}

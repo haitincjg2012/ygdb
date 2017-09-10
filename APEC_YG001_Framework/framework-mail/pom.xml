@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>framework-parent</artifactId>
+        <groupId>com.apec</groupId>
+        <version>1.0.1-RELEASE</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.apec</groupId>
+    <artifactId>framework-mail</artifactId>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+
+        <!-- 底层业务模块 start-->
+        <dependency>
+            <groupId>com.apec</groupId>
+            <artifactId>framework-common</artifactId>
+            <version>1.0.1-RELEASE</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- 底层业务模块 end-->
+
+        <!-- spring boot 邮件支持 start-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <!-- spring boot 邮件支持 end-->
+
+        <!-- thymeleaf 模版 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <!-- freemarker 模版 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-freemarker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.apec</groupId>
+            <artifactId>framework-log</artifactId>
+            <version>1.0.1-RELEASE</version>
+        </dependency>
+
+    </dependencies>
+</project>

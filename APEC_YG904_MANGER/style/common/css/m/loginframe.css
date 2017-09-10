@@ -1,0 +1,309 @@
+.aui_title {
+  text-align: center;
+  font-size: 1rem;
+  font-family: \5fae\8f6f\96c5\9ed1;
+  color: #ffffff;
+  padding: 10px 0;
+  font-weight: 400;
+  background-color: #f53d99;
+}
+.aui_content {
+  padding: 0 !important;
+  width: 16rem;
+}
+.aui_titleBar {
+  position: relative;
+}
+.aui_close {
+  position: absolute;
+  right: -0.5rem;
+  top: -0.5rem;
+  z-index: 999;
+  font-size: 18px;
+  font-family: \5fae\8f6f\96c5\9ed1;
+  color: #f53d99;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: solid 1px #f53d99;
+  -moz-border-radius: 50% 50% 50% 50%;
+  -webkit-border-radius: 50% 50% 50% 50%;
+  -o-border-radius: 50% 50% 50% 50%;
+  border-radius: 50% 50% 50% 50%;
+  background-color: #ffffff;
+  line-height: 1rem;
+  text-align: center;
+}
+.aui_close:hover,
+.aui_close:focus {
+  text-decoration: none;
+  outline: none;
+}
+.aui_state_focus {
+  background-color: #ffffff;
+  z-index: 9999999;
+}
+.u-texticon {
+  position: relative;
+}
+.u-texticon:before {
+  display: block;
+  content: '';
+  position: absolute;
+  width: 1.5rem;
+  height: 1.25rem;
+  background-repeat: no-repeat;
+  background-position: center center;
+  left: 0;
+  top: 50%;
+  transform: translate(0, -50%);
+  -ms-transform: translate(0, -50%);
+  -moz-transform: translate(0, -50%);
+  -webkit-transform: translate(0, -50%);
+  -o-transform: translate(0, -50%);
+  z-index: 100;
+  background-size: 100%;
+}
+.u-texticon-un:before {
+  background-image: url(../../img/unicon.png);
+}
+.u-texticon-pw:before {
+  background-image: url(../../img/pwicon.png);
+}
+.u-texticon-code:before {
+  background-image: url(../../img/codeicon.png);
+}
+.m-loginform {
+  padding: 30px 40px;
+}
+.m-getAuthCode {
+  padding-left: 0;
+}
+.m-login-form {
+  padding: 0;
+  display: block;
+  z-index: 99;
+}
+.m-login-form .m-regbar {
+  color: #68686a;
+  text-align: center;
+  margin-top: 10px;
+}
+.m-login-form .m-regbar a {
+  color: #4166d3;
+}
+.m-login-form .getAuthCode {
+  padding: 6px;
+  background-color: #e35c6a;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-family: \5fae\8f6f\96c5\9ed1;
+  width: 100%;
+}
+.m-login-form .form-group {
+  margin-bottom: 0;
+}
+.m-login-form .btn-login {
+  width: 10rem;
+  font-size: 0.7rem;
+  font-family: \5b8b\4f53;
+  display: block;
+  padding: 8px 0;
+  color: #ffffff;
+  letter-spacing: 6px;
+  background-color: #f53d99;
+  font-weight: bold;
+  border: none;
+  height: 38px;
+  text-align: center;
+  margin: 20px auto;
+  -moz-border-radius: 19px 19px 19px 19px;
+  -webkit-border-radius: 19px 19px 19px 19px;
+  -o-border-radius: 19px 19px 19px 19px;
+  border-radius: 19px 19px 19px 19px;
+}
+.m-login-form .form-control {
+  outline: none;
+  color: #bbb9b9;
+  width: 100%;
+  font-size: 0.6rem;
+  padding: 6px 0 ;
+  height: 35px;
+  font-family: \5b8b\4f53;
+  border: none;
+  border-bottom: solid #71c93f 1px;
+  background-color: transparent;
+  text-align: center;
+}
+.m-login-form .form-control:focus {
+  border-color: #191817;
+  font-size: 0.7rem;
+  font-family: Arial;
+  color: #4c4c4c;
+}
+.m-login-form .form-control.z-click {
+  font-size: 0.7rem;
+  font-family: Arial;
+  color: #4c4c4c;
+}
+.m-tip {
+  height: 24px;
+  line-height: 24px;
+  text-align: right;
+  position: relative;
+  font-size: 0.6rem;
+}
+.m-tip .J-tip {
+  position: absolute;
+  display: none;
+  widows: 100%;
+  height: 24px;
+  line-height: 24px;
+  font-size: 0.6rem;
+  font-family: \5b8b\4f53;
+  right: 0;
+  top: 0;
+  color: #ffcc01;
+  transition: all 2s;
+  -moz-transition: all 2s;
+  -webkit-transition: all 2s;
+  -o-transition: all 2s;
+}
+.m-tip .J-hide {
+  display: none;
+}
+.m-tip .J-show {
+  display: block;
+  animation-name: bound;
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+  /* Firefox: */
+  -moz-animation-name: bound;
+  -moz-animation-duration: 0.5s;
+  -moz-animation-fill-mode: forwards;
+  /* Safari and Chrome: */
+  -webkit-animation-name: bound;
+  -webkit-animation-duration: 0.5s;
+  -webkit-animation-fill-mode: forwards;
+  /* Opera: */
+  -o-animation-name: bound;
+  -o-animation-duration: 0.5s;
+  -o-animation-fill-mode: forwards;
+}
+@keyframes bound {
+  0% {
+    right: 5px;
+  }
+  25% {
+    right: -5px;
+  }
+  50% {
+    right: 5px;
+  }
+  75% {
+    right: -5px;
+  }
+  100% {
+    right: 0px;
+  }
+}
+@-moz-keyframes bound {
+  0% {
+    right: 5px;
+  }
+  25% {
+    right: -5px;
+  }
+  50% {
+    right: 5px;
+  }
+  75% {
+    right: -5px;
+  }
+  100% {
+    right: 0px;
+  }
+}
+@-webkit-keyframes bound {
+  0% {
+    right: 5px;
+  }
+  25% {
+    right: -5px;
+  }
+  50% {
+    right: 5px;
+  }
+  75% {
+    right: -5px;
+  }
+  100% {
+    right: 0px;
+  }
+}
+@-o-keyframes bound {
+  0% {
+    right: 5px;
+  }
+  25% {
+    right: -5px;
+  }
+  50% {
+    right: 5px;
+  }
+  75% {
+    right: -5px;
+  }
+  100% {
+    right: 0px;
+  }
+}
+.m-logo-login {
+  margin-left: 20px;
+}
+.g-ft-login {
+  display: none;
+}
+.m-login-form {
+  width: 100%;
+  bottom: 50%;
+  background-color: #ffffff;
+  -moz-border-radius: 3px 3px 3px 3px;
+  -webkit-border-radius: 3px 3px 3px 3px;
+  -o-border-radius: 3px 3px 3px 3px;
+  border-radius: 3px 3px 3px 3px;
+}
+.m-login-form .loginhd {
+  text-align: center;
+  font-size: 1rem;
+  font-family: \5fae\8f6f\96c5\9ed1;
+  margin-bottom: 20px;
+  color: #ffffff;
+  padding: 10px 0;
+  font-weight: 400;
+  background-color: #f53d99;
+}
+.loginpic {
+  width: 100%;
+  background-size: 80%;
+  background-position: center 0;
+  top: 50%;
+  margin-top: -120px;
+  left: 0;
+}
+.m-logo {
+  margin-left: 20px;
+}
+.m-logo span {
+  display: none;
+}
+.checkbox-login {
+  margin: 10px 0 10px 0;
+}
+.checkbox-login a,
+.checkbox-login label {
+  font-size: 0.75rem;
+  font-family: \5b8b\4f53;
+}
+.checkbox-login a {
+  color: #666666;
+}

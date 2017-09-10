@@ -1,0 +1,229 @@
+@import url("function.less");
+@import url("skin.less");
+input,
+textarea {
+    border: 0;
+    -webkit-appearance: none;
+}
+.clearfix{
+    .clearfix();
+}
+html,body{
+  width:100%;
+  min-height: 100%;
+  position:relative;
+}
+.z-hidden{
+  width:100%;
+  height:100% !important;;
+  overflow:hidden !important;
+  position:relative;
+}
+//无数据时
+.m-nodata{
+    padding:3.125rem 0;
+    .u-nodata{
+        width:110 / @mainw;
+        margin:0 auto;
+        text-align: center;
+    }
+    p{
+        text-align: center;
+        font-size: 0.6rem;
+        color:#999;
+        margin-top: 0.5rem;
+    }
+}
+//弹窗
+.m-th-alert{
+  display:none;
+  .m-alert{
+    position:fixed;
+    left:50%;
+    top:50%;
+    width:520 / @mainw;
+    background-color: #ffffff;
+    padding:0.5rem;
+    z-index: 12;
+    .translate(-50%,-50%);
+    .border-radius(5px,5px,5px,5px);
+  }
+  .m-alert-tt{
+    height:2rem;
+    line-height: 2em;
+    text-align: center;
+    color:@mainc;
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+  .m-alert-con{
+    text-align: center;
+    color:@mainc_sub;
+    font-size: 0.8rem;
+    min-height: 2.25rem;
+    padding:0.3rem 0;
+  }
+  .m-op{
+    width:100%;
+    min-height: 2.25rem;
+    span{
+      display:block;
+      float: left;
+      width:50%;
+      text-align: center;
+      height:2.25rem;
+      line-height: 2.25rem;
+      color:@mainc_sub;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    span.u-confirm{
+      width: 174 / @mainw;
+      height: 60 / @mainw;
+      line-height: 60 / @mainw;
+      background-color: @mainc;
+      margin: 0 auto;
+      float:none;
+      .border-radius(4px,4px,4px,4px);
+      margin-top: 0.5rem;
+    }
+  }
+}
+.m-th-alert.z-crt{
+  display:block;
+}
+//底部
+.g-bottom-fixed{
+  position:fixed;
+  left: 0px;
+  bottom: 0px;
+  width: 100%;
+  display: block;
+  .shadow(0,-1px,1px,rgba(0, 0, 0, .08));
+  z-index: 10;
+  footer{
+    width: 100%;
+    .flex;
+    -webkit-box-pack: justify;
+    -moz-box-pack: justify;
+    -ms-flex-pack: justify;
+    -webkit-box-align: center;
+    -moz-box-align: justify;
+    -ms-flex-align: center;
+    justify-content: space-between;
+    align-content: center;
+    background-color: @mainc_sub;
+    a{
+    text-align: center;
+    display: block;
+    font-size: 1rem;
+    .font-yh();
+    height:2.45rem;
+    line-height: 2.45rem;
+    }
+    .u-navcell{
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    color: #ffffff;
+    }
+    .u-navcell.z-crt{
+      color:@mainc;
+    }
+    .confirm-order{
+       background-color: @mainc;
+      color:@mainc_sub;
+    }
+    .u-navcell.z-disabled{
+      background-color: #999999;
+    }
+    .appoint{
+    -webkit-box-flex: 3;
+    -moz-box-flex: 3;
+    -webkit-flex: 3;
+    -ms-flex: 3;
+    flex: 3;
+    background-color: @mainc;
+    color:@mainc_sub;
+    }
+    .appoint.z-disabled{
+      background-color: #999999;
+    }
+    .share{
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    background-color:@mainc_sub ;
+    color:@mainc;
+    }   
+  }
+}
+
+.u-btn{
+  padding:10px 14px;
+  background-color: @mainc;
+  color:#ffffff;
+  font-size: 12px;
+  display:inline-block;
+  line-height: 1em;
+  border:none;
+  
+  &:hover{
+    color:#ffffff;
+    .opacity(95);
+  }
+
+}
+.u-btn-red{
+  padding:6px 14px;
+  background-color: @mainc;
+  color:#ffffff;
+  font-size: 0.7rem;
+  display:inline-block;
+  line-height: 1em;
+  min-width: 4.4rem;
+  .font-yh();
+  border:solid 1px @mainc; 
+text-align: center;
+  &:hover{
+    .opacity(95);
+  }
+
+}
+
+.u-btn-gray{
+  padding:6px 14px;
+  background-color: #fff;
+  color:#666;
+  border:solid 1px #ccc; 
+  font-size: 0.7rem;
+  display:inline-block;
+  line-height: 1em;
+  min-width: 4.4rem;
+  .font-yh();
+  text-align: center;
+  &:hover{
+    color:#333!important;
+  }
+
+}
+
+//遮罩
+.shadow{
+  background-color: #000000;
+  .opacity(30);
+  bottom: 0;
+  left: 0;
+  outline: 0 none;
+  overflow: hidden;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 11;
+}
+
+

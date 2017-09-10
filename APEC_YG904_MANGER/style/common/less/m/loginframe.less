@@ -1,0 +1,250 @@
+@import url("function.less");
+@import url("skin.less");
+
+ .aui_title{
+    text-align: center;
+            font-size: 1rem;
+            .font-yh();
+            color:#ffffff;
+            padding:10px 0;
+            font-weight: 400;
+            background-color: #f53d99;
+ }
+ .aui_content{
+    padding:0 !important;
+    width: 16rem;
+ }
+ .aui_titleBar{
+    position:relative;
+ }
+ .aui_close{
+    position:absolute;
+    right:-0.5rem;
+    top:-0.5rem;
+    z-index: 999;
+    font-size: 18px;
+    .font-yh();
+    color:#f53d99;
+    width:1.1rem;
+    height:1.1rem;
+    border:solid 1px #f53d99;
+    .border-radius(50%,50%,50%,50%);
+    background-color: #ffffff;
+    line-height: 1rem;
+    text-align: center;
+    &:hover,&:focus{
+        text-decoration: none;
+        outline:none; 
+    }
+ }
+ .aui_state_focus{
+    background-color: #ffffff;
+    z-index: 9999999;
+ }
+//图标
+.u-texticon{
+position:relative;
+&:before{
+    display:block;
+    content: '';
+    position:absolute;
+    width: 1.5rem;
+    height: 1.25rem;
+    background-repeat: no-repeat;
+    background-position: center center;
+    left:0;
+    top:50%;
+    .translate(0,-50%);
+    z-index: 100;
+    background-size: 100%;
+}
+}
+.u-texticon-un{
+   &:before{
+    background-image: url(../../img/unicon.png);
+   } 
+}
+.u-texticon-pw{
+   &:before{
+    background-image: url(../../img/pwicon.png);
+   } 
+}
+.u-texticon-code{
+    &:before{
+   background-image: url(../../img/codeicon.png);
+}
+}
+
+
+
+.m-loginform{
+    padding:30px 40px;
+}
+.m-getAuthCode{
+            padding-left: 0;
+
+    }
+.m-login-form{
+    padding:0;
+    display: block;
+   z-index: 99;
+
+    .m-regbar{
+        color:#68686a;
+        text-align: center;
+        margin-top: 10px;
+        a{
+        color:#4166d3;
+    }
+    }
+
+
+    .getAuthCode{
+        padding:6px;
+         background-color: #e35c6a;
+         color:#ffffff;
+         font-size: 0.7rem;
+         .font-yh();
+         width:100%;
+    }
+    .form-group{
+        margin-bottom: 0;
+    }
+    .btn-login{
+    width:10rem;
+    font-size: 0.7rem;
+    .font-st();
+    display:block;
+    padding:8px 0;
+    color:#ffffff;
+    letter-spacing:6px;
+    background-color: #f53d99;
+    font-weight: bold;
+    border:none;
+    height: 38px;
+    text-align: center;
+    margin:20px auto;
+    .border-radius(19px,19px,19px,19px);
+
+}
+.form-control{
+    outline: none;
+    color:#bbb9b9;
+    width:100%;
+    font-size: 0.6rem;
+    padding: 6px 0 ;
+    height: 35px;
+    .font-st();
+    border:none;
+    border-bottom:solid @mainc 1px;
+    background-color: transparent;
+    text-align: center;
+    &:focus{
+        border-color: @mainc_h;
+        font-size: 0.7rem;
+        font-family: Arial;
+        color:#4c4c4c;
+    }
+    
+}
+.form-control.z-click{
+        font-size: 0.7rem;
+        font-family: Arial;
+        color:#4c4c4c; 
+    }
+
+
+}
+
+
+
+.m-tip{
+    height:24px;
+    line-height: 24px;
+    text-align: right;
+    position:relative;
+    font-size: 0.6rem;
+    .J-tip{
+        position:absolute;
+        display:none;
+        widows: 100%;
+        height: 24px;
+        line-height: 24px;
+        font-size: 0.6rem;
+        .font-st();
+        right:0;
+        top: 0;
+        color:@btnc;
+        .transition(all,2s);
+
+    }
+    .J-hide{
+        display:none;
+    }
+    .J-show{
+        display:block;
+        .bound(bound,0.5s);
+    }
+}
+
+
+    .m-logo-login{
+        margin-left: 20px;
+    }
+    .g-ft-login{
+        display:none;
+    }
+    .m-login-form{
+
+
+        width:100%;
+        bottom:50%;
+
+        background-color: #ffffff;
+        .border-radius(3px,3px,3px,3px);
+        .loginhd{
+            text-align: center;
+            font-size: 1rem;
+            .font-yh();
+            margin-bottom: 20px;
+            color:#ffffff;
+            padding:10px 0;
+            font-weight: 400;
+            background-color: #f53d99;
+
+        }
+    }
+    .loginpic{
+        width:100%;
+        background-size: 80%;
+        background-position: center 0;
+        top: 50%;
+        margin-top: -120px;
+        left:0;
+
+    }
+    .m-logo{
+        margin-left: 20px;
+        span{
+            display:none;
+        }
+    }
+
+
+
+
+
+
+.checkbox-login{
+   margin:10px 0 10px 0;
+    a,label{
+   font-size: 0.75rem;
+   .font-st();
+        }
+        // label{
+        //  color:#636262;   
+        // }
+        a{
+            color:#666666;
+        }
+}

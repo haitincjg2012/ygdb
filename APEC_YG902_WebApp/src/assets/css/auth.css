@@ -1,0 +1,76 @@
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+  *zoom: 1;
+}
+.z-s-header {
+  padding: 0 0.625rem;
+  position: relative;
+  width: 17.5rem;
+  height: 2.375rem;
+  line-height: 2.375rem;
+}
+.z-s-header .z-search {
+  width: 15rem;
+  height: 1.5rem;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  line-height: 1.5rem;
+  border: 0.025rem solid #9d9d9d;
+  border-radius: 1.5rem;
+}
+.z-s-header .z-search img {
+  margin-left: 1rem;
+  width: 0.875rem;
+  height: 0.8rem;
+}
+.z-s-header .return {
+  position: absolute;
+  left: 0.625rem;
+  top: 0;
+}
+.z-s-header .return img {
+  width: 0.85rem;
+  height: 1.125rem;
+  vertical-align: middle;
+}
+.z-authentication {
+  width: 15rem;
+  height: 15rem;
+  margin: 7.5rem auto 0;
+}
+.z-authentication .z-p-text {
+  font-size: 0.75rem;
+  line-height: 2rem;
+  text-align: center;
+}
+.z-authentication .z-pic-t {
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: 1rem auto;
+}
+.z-authentication .z-pic-t img {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+.z-ok {
+  height: 2rem;
+  width: 15rem;
+  margin: auto;
+  line-height: 2rem;
+  text-align: center;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #7ad8a1;
+  border-radius: 1rem;
+}

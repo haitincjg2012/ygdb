@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="146px" height="113px" viewBox="0 0 146 113" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 39.1 (31720) - http://www.bohemiancoding.com/sketch -->
+    <title>box</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="box" transform="translate(1.000000, 0.000000)">
+            <rect id="Rectangle-10" fill="#AFC0D2" x="38" y="16" width="90" height="75"></rect>
+            <polygon id="Combined-Shape" fill="#9AA8B8" points="23 38 38.7148438 15.6289062 38.9960938 90.3203125 23 113"></polygon>
+            <rect id="Rectangle-10" fill="#D1DBE6" x="23" y="38" width="90" height="75"></rect>
+            <polygon id="Rectangle-10" fill="#9AA8B8" points="113 38 128.714844 15.6289062 128.996094 90.3203125 113 113"></polygon>
+            <polygon id="Rectangle-10" fill="#E1EBF5" points="23 38 113 38 101 63 11 63"></polygon>
+            <polygon id="Rectangle-10" fill="#D1DBE6" points="23 24 39 15 23 39 4 49"></polygon>
+            <polygon id="Rectangle-10" fill="#D1DBE6" points="128 16 144 24 134 55 113 38"></polygon>
+            <polygon id="Rectangle-10" fill="#E1EBF5" points="55 0 136 0 128 16 38 16"></polygon>
+            <circle id="Oval-3" fill="#9AA8B8" cx="45" cy="79" r="4"></circle>
+            <circle id="Oval-3" fill="#9AA8B8" cx="85" cy="79" r="4"></circle>
+            <path d="M52.2314453,95.5146484 C52.2314453,95.5146484 64.2392578,80.4609375 76.4257812,95.7675781" id="Path-3" stroke="#9AA8B8" stroke-width="2"></path>
+            <g id="Group-5" transform="translate(120.000000, 73.000000)" stroke="#D1DBE6" stroke-width="2">
+                <path d="M0.818359375,0.166015625 C0.818359375,0.166015625 24.5947581,1.73242187 17.1503906,27.90625" id="Path-4"></path>
+                <path d="M17.5,27 L12,27" id="Line" stroke-linecap="square"></path>
+                <path d="M17.5,28 L15,32" id="Line" stroke-linecap="square"></path>
+                <path d="M17.5,27 L23,30" id="Line" stroke-linecap="square"></path>
+            </g>
+            <g id="Group-5" transform="translate(12.000000, 90.000000) scale(-1, 1) rotate(-360.000000) translate(-12.000000, -90.000000) translate(0.000000, 74.000000)" stroke="#D1DBE6" stroke-width="2">
+                <path d="M0.818359375,0.166015625 C0.818359375,0.166015625 24.5947581,1.73242187 17.1503906,27.90625" id="Path-4"></path>
+                <path d="M17.5,27 L12,27" id="Line" stroke-linecap="square"></path>
+                <path d="M17.5,28 L15,32" id="Line" stroke-linecap="square"></path>
+                <path d="M17.5,27 L23,30" id="Line" stroke-linecap="square"></path>
+            </g>
+        </g>
+    </g>
+</svg>

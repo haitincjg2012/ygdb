@@ -1,0 +1,23 @@
+/*
+* 项目公共样式
+*/
+#mainContainer {
+  position: absolute;
+  top: 60px;
+  left: 200px;
+  bottom: 0;
+  right: 0;
+  width: calc(100vh-60px);
+  height: calc(100vw-200px);
+  padding: 20px;
+}
+.red {
+  color: red;
+}
+.green {
+  color: green;
+}
+.pageNation {
+  margin: 20px;
+  float: right;
+}

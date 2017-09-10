@@ -1,0 +1,302 @@
+@import url("function.less");
+@import url("skin.less");
+
+ .aui_title{
+    height: 38px;
+    line-height:38px;
+    //border-bottom:solid #c7c5c5 1px;
+    position:relative;
+    font-size: 14px;
+    text-align: center;
+    .font-yh();
+    background-color:#e5e5e5;  
+    color:#261f1f;
+ }
+ .hy-alert{
+    .m-imgbox{
+        li{
+            float:left;
+            width: 50%;
+            img{
+                display:block;
+                max-width: 100%;
+                height:auto;
+            }
+        }
+    }
+    .contxt{
+      text-align: center;  
+      margin-top: 30px;
+      padding:0 10px;
+      color:#261f1f;
+      height: 132px;
+      overflow:hidden;
+      .radio{
+        text-align: left;
+        height:100%;
+        overflow-y:auto;
+
+      }
+      .contxtc{
+        text-align: left;
+        overflow-y:auto;
+        height: 120px;
+        padding:0 10px;
+      }
+      label{
+        display:block;
+        font-size: 12px;
+        color: #999999;
+        display:inline-block;
+        margin:5px;
+        font-weight: 400;
+        input{
+            margin-right: 5px;
+        }
+      }
+    }
+    .contxt1{
+        height: 200px;
+    }
+    .foot{
+        padding:20px 50px;
+        height: 76px;
+        .cancel,.comfirn{
+            display:block;
+            float:left;
+            width: 110px;
+            height: 36px;
+            line-height: 36px;
+            text-align: center;
+            color:#ffffff;
+            font-size: 14px;
+            letter-spacing: 3px;
+            cursor: pointer;
+            &:hover{
+                text-decoration: none;
+            }
+        }
+        .cancel{
+            background-color: #dcdcdc;
+
+        }
+        .comfirn{
+            background-color: #fd8248;
+            margin-left: 30px;
+        }
+        .cancelcomfirn{
+            margin:0 auto;
+            float:none;
+        }
+
+        .aui_close{
+            position:static;
+        }
+    }
+    
+ }
+ .aui_content{
+    padding:0 !important;
+    width: 350px;
+    background-color: #ffffff;
+   // min-height: 132px;
+ }
+ .aui_titleBar{
+    position:relative;
+ }
+ .aui_close{
+    position:absolute;
+    right:10px;
+    top:10px;
+    z-index: 999;
+    font-size: 18px;
+    .font-yh();
+    &:hover,&:focus{
+        text-decoration: none;
+        outline:none;
+    }
+    &:hover{
+       color:#f3623b; 
+    }
+ }
+ .aui_state_focus{
+    background-color: #ffffff;
+    z-index: 9999999;
+ }
+//图标
+.u-texticon{
+position:relative;
+&:before{
+    display:block;
+    content: '';
+    position:absolute;
+    width: 32px;
+    height: 33px;
+    background-image: url(../../common/img/login_sprite.png);
+    background-repeat: no-repeat;
+    left:1px;
+    top:1px;
+    z-index: 100;
+    .border-radius(2px,0,0,2px);
+    outline:none;
+}
+}
+.u-texticon-un{
+   &:before{
+    background-position: 0 0;
+   } 
+}
+.u-texticon-pw{
+   &:before{
+    background-position: 0 -33px;
+   } 
+}
+.u-texticon-code{
+    &:before{
+    background-position: 0 -66px;
+}
+}
+.m-loginform{
+    padding:0 27px 95px 36px;
+}
+.m-getAuthCode{
+            padding-left: 0;
+
+    }
+.m-login-form{
+    width: 350px;
+    background-color: #ffffff;
+   .title{
+    h1{
+    padding-bottom: 36px;
+    padding-top: 30px;
+    position:relative;
+    font-size: 18px;
+    text-align: center;
+    .font-yh();
+    color:#4c4c4c;  
+    margin:0;
+    font-weight: bold;
+
+    }
+
+   }
+    .m-regbar{
+        color:#68686a;
+        text-align: center;
+        margin-top: 10px;
+        a{
+        color:#4166d3;
+    }
+    }
+    .form-group{
+        label{
+            padding-right:0;
+        }
+    }
+
+    .getAuthCode{
+        padding:6px;
+         background-color: #e35c6a;
+         color:#ffffff;
+         font-size: 14px;
+         .font-yh();
+         width:100%;
+    }
+    .form-group{
+        margin-bottom: 0;
+    }
+    .btn-login{
+    width:100%;
+    font-size: 16px;
+    .font-st();
+    padding:8px 0;
+    color:#ffffff;
+    letter-spacing:6px;
+    background-color: @loginbtnc;
+    font-weight: bold;
+     &:hover,
+    &:focus,
+    &.focus {
+  color:#ffffff;
+  text-decoration: none;
+  .opacity(90);
+}
+}
+.form-control{
+    outline: none;
+    color:#bbb9b9;
+    font-size: 12px;
+    padding: 6px 0 6px 46px;
+    height: 35px;
+    .font-st();
+    border:solid @logintextbc 1px;
+    .border-radius(2px,2px,2px,2px); 
+    &:focus{
+        border-color: @logintextfocus;
+        font-size: 14px;
+        font-family: Arial;
+        color:#4c4c4c;
+    }
+    
+}
+.form-control.z-click{
+        font-size: 14px;
+        font-family: Arial;
+        color:#4c4c4c; 
+    }
+
+
+}
+.g-ft-login{
+    position:fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 9999999;
+}
+.m-loginbar{
+    margin-top: 60px;
+
+}
+
+.m-tip{
+    height:24px;
+    line-height: 24px;
+    text-align: right;
+    position:relative;
+    font-size: 12px;
+    .J-tip{
+        position:absolute;
+        display:none;
+        widows: 100%;
+        height: 24px;
+        line-height: 24px;
+        font-size: 12px;
+        .font-st();
+        right:0;
+        top: 0;
+        color:@loginbtnc;
+        .transition(all,2s);
+
+    }
+    .J-hide{
+        display:none;
+    }
+    .J-show{
+        display:block;
+        .bound(bound,0.5s);
+    }
+}
+.checkbox-login{
+   margin:25px 0 10px 0;
+    a,label{
+   font-size: 12px;
+   .font-st();
+        }
+        // label{
+        //  color:#636262;   
+        // }
+        a{
+            color:#666666;
+        }
+}

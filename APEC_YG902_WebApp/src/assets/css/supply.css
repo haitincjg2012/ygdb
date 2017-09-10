@@ -1,0 +1,209 @@
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+  *zoom: 1;
+}
+.com:after {
+  content: '';
+  display: block;
+  height: 0.05rem;
+  width: 18.75rem;
+  background: #ece7e7;
+}
+.z-s-header {
+  padding: 0 0.625rem;
+  position: relative;
+  width: 17.5rem;
+  height: 2.375rem;
+  line-height: 2.375rem;
+}
+.z-s-header .z-search {
+  width: 15rem;
+  height: 1.5rem;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  line-height: 1.5rem;
+  border: 0.025rem solid #9d9d9d;
+  border-radius: 1.5rem;
+}
+.z-s-header .z-search img {
+  margin-left: 1rem;
+  width: 0.875rem;
+  height: 0.8rem;
+}
+.z-s-header .z-search input {
+  width: 8.75rem;
+  font-size: 0.75rem;
+  color: #999;
+  border: none;
+  outline: none;
+  height: 19px;
+  vertical-align: text-top;
+}
+.z-s-header .return {
+  position: absolute;
+  left: 0.625rem;
+  top: 0;
+}
+.z-s-header .return img {
+  width: 0.85rem;
+  height: 1.125rem;
+  vertical-align: middle;
+}
+.z-classify-s {
+  width: 18.75rem;
+  height: 2.35rem;
+  padding: 0 0.625rem;
+  font-size: 1rem;
+}
+.z-classify-s li {
+  float: left;
+  width: 5.75rem;
+  height: 2.35rem;
+}
+.z-classify-s li select {
+  border: none;
+  outline: none;
+}
+.z-classify-s li .z-select-s {
+  margin: 0.625rem auto;
+  height: 1.1rem;
+  width: 3.75rem;
+  display: block;
+}
+.z-classify-s li .z-time-s {
+  text-align: center;
+  line-height: 2.35rem;
+  font-size: 0.75rem;
+}
+.z-classify-s li .z-time-s img {
+  width: 0.35rem;
+  height: 0.575rem;
+  margin-left: 0.5rem;
+}
+.z-classify-s li .z-s-s {
+  margin: 0.625rem auto;
+  height: 1.1rem;
+  width: 3rem;
+  display: block;
+}
+.z-list {
+  width: 18.75rem;
+  height: 1.5rem;
+  padding: 0 0.625rem;
+}
+.z-list li {
+  float: left;
+  height: 1.5rem;
+  width: 3rem;
+  background-color: #c3e6df;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  -moz-opacity: 0.5;
+  margin-right: 1.5rem;
+}
+.z-list li select {
+  height: 1rem;
+  width: 3rem;
+  margin: 0.25rem auto;
+  border: none;
+  outline: none;
+  background-color: #c3e6df;
+  color: #000;
+}
+.z-content .bread-com {
+  width: 18.75rem;
+  height: 6.25rem;
+  padding: 0 !important;
+}
+.z-content .bread-com .main {
+  padding: 0 0.625rem;
+  height: 4.75rem;
+  padding-top: 1.5rem;
+}
+.z-content .bread-com .main .pic-com {
+  width: 3.25rem;
+  height: 3.25rem;
+  float: left;
+  position: relative ;
+}
+.z-content .bread-com .main .pic-com img {
+  height: 3.2rem;
+  width: 3.25rem;
+}
+.z-content .bread-com .main .pic-com .z-sell {
+  position: absolute;
+  bottom: 0.05rem;
+  width: 1.8rem;
+  height: 0.6rem;
+}
+.z-content .bread-com .main .pic-com .z-sell img {
+  width: 1.8rem;
+  height: 0.6rem;
+  display: block;
+}
+.z-content .bread-com .main .z-info {
+  width: 14.25rem;
+  padding-left: 0.5rem;
+  float: left;
+}
+.z-content .bread-com .main .z-info .sp-com {
+  font-size: 0.75rem;
+  color: #999;
+  margin-right: 0.25rem;
+  vertical-align: super;
+}
+.z-content .bread-com .main .z-info .z-star {
+  float: right;
+}
+.z-content .bread-com .main .z-info .z-star img {
+  width: 0.65rem;
+  height: 0.5rem;
+  vertical-align: super;
+}
+.z-content .bread-com .main .z-info .z-pos .sp-com-one {
+  color: #ff5803;
+  font-size: 0.75rem;
+  margin-right: 0.5rem;
+}
+.z-content .bread-com .main .z-info .z-pos .sp-two {
+  font-size: 0.75rem;
+}
+.z-content .bread-com .z-address {
+  padding: 0 0.625rem;
+  font-size: 0.5rem;
+}
+.z-content .bread-com .z-address .eye {
+  width: 0.65rem;
+  height: 0.5rem;
+}
+.z-content .bread-com .z-address .z-num {
+  color: red;
+  line-height: 1rem;
+}
+.z-content .bread-com .z-address .sp-com1 {
+  line-height: 1rem;
+}
+.z-content .bread-com .z-address .level {
+  width: 0.775rem;
+  height: 0.6rem;
+  margin-left: 0.625rem;
+}
+.z-content .bread-com .z-address .sp-three {
+  color: #00E8D7;
+  line-height: 1rem;
+}
+.z-content .bread-com .z-address .z-time {
+  float: right;
+  line-height: 1rem;
+}

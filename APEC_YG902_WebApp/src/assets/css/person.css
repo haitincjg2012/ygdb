@@ -1,0 +1,178 @@
+.z-person .z-p-head-t {
+  padding: 0 0.625rem;
+  position: relative;
+  width: 17.5rem;
+  height: 2.375rem;
+  line-height: 2.375rem;
+  text-align: center;
+}
+.z-person .z-p-head-t h1 {
+  font-size: 1rem;
+}
+.z-person .z-p-head-t .return {
+  position: absolute;
+  left: 0.625rem;
+  top: 0;
+}
+.z-person .z-p-head-t .return img {
+  width: 0.55rem;
+  height: 0.975rem;
+  vertical-align: middle;
+}
+.z-person .z-bannerImg {
+  width: 18.75rem;
+  height: auto;
+  position: relative;
+}
+.z-person .z-bannerImg img {
+  width: 100%;
+}
+.z-person .z-bannerImg .z-head-portrait {
+  position: absolute;
+  bottom: -1rem;
+  right: 2.5rem;
+  display: block;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 100%;
+}
+.z-person .z-p-info .z-p-name {
+  padding-left: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: bold;
+  line-height: 1.5rem;
+}
+.z-person .z-p-info .z-p-real {
+  font-size: 0.7rem;
+  line-height: 1.5rem;
+  border-radius: 0.25rem;
+  border: 0.05rem solid #0ecb5d;
+  color: #0ecb5d;
+}
+.z-person .z-p-info .z-p-level {
+  width: 0.9rem;
+  height: 0.775rem;
+  vertical-align: middle;
+}
+.z-person .z-p-info .z-p-x-agency {
+  padding-left: 0.5rem;
+  font-weight: bold;
+  font-size: 0.8rem;
+  line-height: 2.5rem;
+}
+.z-person .z-p-info .z-p-path {
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.z-person .z-p-info .z-p-path .z-p-part {
+  width: 5rem;
+  font-size: 0.7rem;
+}
+.z-person .z-p-info .z-p-path .z-p-part .z-p-number {
+  font-weight: bold;
+}
+.z-person .z-p-info .z-p-path .z-p-part p {
+  line-height: 1.5rem;
+  text-align: center;
+}
+.z-person .z-space {
+  width: 18.75rem;
+  height: 0.75rem;
+  background-color: #e6e3e3;
+}
+.z-person .z-p-des .z-p-des-icon {
+  padding-left: 0.5rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  vertical-align: middle;
+}
+.z-person .z-p-des .z-p-des-area {
+  line-height: 1.5rem;
+}
+.z-person .z-p-des .z-p-des-area label {
+  font-size: 0.7rem;
+}
+.z-person .z-p-des .z-p-des-area span {
+  font-size: 0.7rem;
+}
+.z-person .z-p-des .z-p-des-pz {
+  line-height: 1.5rem;
+}
+.z-person .z-p-des .z-p-des-pz label {
+  font-size: 0.7rem;
+}
+.z-person .z-p-des .z-p-des-pz span {
+  font-size: 0.7rem;
+}
+.z-person .z-p-des .z-p-des-market {
+  line-height: 1.5rem;
+}
+.z-person .z-p-des .z-p-des-market label {
+  font-size: 0.7rem;
+}
+.z-person .z-p-des .z-p-des-market span {
+  font-size: 0.7rem;
+}
+.z-person .z-p-des .z-p-des-text {
+  line-height: 1.5rem;
+  font-size: 0.7rem;
+}
+.z-person .z-p-des .z-p-des-content {
+  padding: 0 0.5rem;
+  line-height: 1.25rem;
+  font-size: 0.7rem;
+  height: 5rem;
+}
+.z-person .z-transaction h4 {
+  padding-left: 0.5rem;
+  line-height: 2rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+.z-person .z-transaction .z-transaction-results {
+  background: #fff;
+  padding: 0.5rem 0 1rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.z-person .z-transaction .z-transaction-results .z-r-totalW {
+  width: 9.375rem;
+}
+.z-person .z-transaction .z-transaction-results .z-r-rank {
+  width: 9.375rem;
+}
+.z-person .z-transaction .z-transaction-results .z-r-s-com {
+  font-size: 0.85rem;
+  color: #f36e44;
+  line-height: 1rem;
+}
+.z-person .z-transaction .z-transaction-results p {
+  text-align: center;
+  font-size: 0.6rem;
+  line-height: 1rem;
+}
+.z-person .z-main {
+  width: 18.75rem;
+  height: 20rem;
+}
+.z-person .z-p-gy {
+  text-align: center;
+}

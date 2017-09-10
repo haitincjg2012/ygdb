@@ -1,0 +1,38 @@
+.u-btn {
+  padding: 0.5em 10px;
+  border: none;
+  -moz-border-radius: 3px 3px 3px 3px;
+  -webkit-border-radius: 3px 3px 3px 3px;
+  -o-border-radius: 3px 3px 3px 3px;
+  border-radius: 3px 3px 3px 3px;
+  background-color: #ffcc01;
+  color: #fff;
+  cursor: pointer;
+}
+.u-btn:hover {
+  background-color: #d51877;
+  color: #fff;
+}
+.u-red-btn {
+  padding: 9px 23px;
+  border: none;
+  -moz-border-radius: 3px 3px 3px 3px;
+  -webkit-border-radius: 3px 3px 3px 3px;
+  -o-border-radius: 3px 3px 3px 3px;
+  border-radius: 3px 3px 3px 3px;
+  background-color: #ffcc01;
+  color: #fff;
+  font-size: 14px;
+  font-family: \5fae\8f6f\96c5\9ed1;
+}
+.u-gray-btn {
+  padding: 0.3em 15px;
+  border: 1px solid #cecece;
+  -moz-border-radius: 3px 3px 3px 3px;
+  -webkit-border-radius: 3px 3px 3px 3px;
+  -o-border-radius: 3px 3px 3px 3px;
+  border-radius: 3px 3px 3px 3px;
+  background-color: #f8f8f8;
+  color: #555555;
+  cursor: pointer;
+}

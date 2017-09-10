@@ -1,0 +1,222 @@
+.z-frame {
+  width: 18.75rem;
+}
+.z-frame .header {
+  padding: 0 0.625rem;
+  position: relative;
+  width: 17.5rem;
+  height: 2.375rem;
+  text-align: center;
+  color: #333;
+  line-height: 2.375rem;
+}
+.z-frame .header h1 {
+  font-size: 1rem;
+}
+.z-frame .header .return {
+  position: absolute;
+  left: 0.625rem;
+  top: 0;
+}
+.z-frame .header .return img {
+  width: 0.85rem;
+  height: 1.125rem;
+  vertical-align: middle;
+}
+.z-frame .good-com {
+  position: relative;
+  padding: 0 0.625rem;
+}
+.z-frame .good-com .z-star-O {
+  background: url("../img/star-1.png") no-repeat center;
+  background-size: 0.4rem 0.375rem;
+  width: 0.4rem;
+  height: 0.375rem;
+  display: block;
+  position: absolute;
+  top: 0.8rem;
+}
+.z-frame .good-com label {
+  margin-left: 0.5rem;
+  font-size: 0.65rem;
+  color: #666;
+  line-height: 2.25rem;
+}
+.z-frame .good-com .input-com {
+  color: red;
+  font-size: 0.65rem;
+  line-height: 2.25rem;
+  width: 9rem;
+  background: transparent;
+}
+.z-frame .good-com .z-pos-o {
+  float: right;
+  height: 2.25rem;
+}
+.z-frame .good-com .z-pos-o img {
+  width: 0.375rem;
+  height: 0.6rem;
+  margin-top: 0.8rem;
+}
+.z-frame .good-com .z-f1 {
+  float: right;
+  height: 2.25rem;
+}
+.z-frame .good-com .z-f1 ul {
+  margin: 0.5rem 0;
+  width: 5.25rem;
+  height: 1.2rem;
+  border-radius: 0.25rem;
+}
+.z-frame .good-com .z-f1 ul li {
+  float: left;
+  width: 2.5rem;
+  font-size: 0.6rem;
+  text-align: center;
+  border: 0.05rem solid #28cba7;
+}
+.z-frame .good-com .z-f1 ul .li-left {
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+  line-height: 1.15rem;
+}
+.z-frame .good-com .z-f1 ul .li-right {
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+  line-height: 1.15rem;
+}
+.z-frame .good-com .z-f1 ul .active-li {
+  background-color: #28cba7;
+  color: #fff;
+}
+.z-frame .good-com .select {
+  position: absolute;
+  top: 0;
+  right: 0.5rem;
+}
+.z-frame .good-com .z-f {
+  float: right;
+  height: 2.25rem;
+  margin-right: 0.2rem;
+  line-height: 2.25rem;
+}
+.z-frame .good-com .z-f input {
+  width: 4.25rem;
+  height: 1.25rem;
+  background: #efefef ;
+  text-align: center;
+  color: #999;
+  line-height: 1.25rem;
+}
+.z-frame .good-com .z-f .sp-O {
+  font-size: 0.6rem;
+  vertical-align: sub;
+}
+.z-frame .good-com .z-sp2 {
+  letter-spacing: 0.1rem;
+  line-height: 2.25rem;
+  color: #999;
+  font-size: 0.6rem;
+}
+.z-frame .good-com .z-valid {
+  float: right;
+  height: 1rem;
+  border-radius: 0.1rem;
+  border: 0.05rem solid #28cba7;
+  margin-top: 0.625rem;
+}
+.z-frame .good-com .z-valid ul {
+  width: 100%;
+  height: 100%;
+}
+.z-frame .good-com .z-valid ul li {
+  float: left;
+  width: 2.5rem;
+  height: 100%;
+  color: #28cba7;
+  line-height: 1rem;
+  text-align: center;
+  font-size: 0.6rem;
+}
+.z-frame .good-com .z-valid ul li:nth-child(2) {
+  border-left: 0.05rem solid #28cba7;
+  border-right: 0.05rem solid #28cba7;
+}
+.z-frame .good-com .z-valid ul .active {
+  background-color: #28cba7;
+  color: #fff;
+}
+.z-frame .pic-show {
+  padding: 0 0.625rem;
+  width: 17.5rem;
+}
+.z-frame .pic-show .z-up-text {
+  color: #999;
+  font-size: 0.7rem;
+}
+.z-frame .pic-show ul {
+  margin-top: 20px;
+}
+.z-frame .pic-show ul li {
+  float: left;
+  height: 4.025rem;
+  position: relative;
+  margin-left: 0.5rem;
+}
+.z-frame .pic-show ul .z-add-one {
+  position: relative;
+}
+.z-frame .pic-show ul .z-add-one input {
+  width: 4.125rem;
+  height: 4.025rem;
+  background-color: transparent;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  -moz-opacity: 0;
+}
+.z-frame .pic-show ul .z-add-one img {
+  display: block;
+  width: 4.125rem;
+  height: 4.025rem;
+}
+.z-frame .submit-s {
+  width: 17.5rem;
+  height: 2rem;
+  color: #fff;
+  font-size: 1rem;
+  line-height: 2rem;
+  text-align: center;
+  background-color: #28cba7 ;
+  border-radius: 0.25rem;
+  margin: 1rem auto;
+  position: relative;
+}
+.com:after {
+  content: '';
+  display: block;
+  height: 0.05rem;
+  width: 18.75rem;
+  background: #ece7e7;
+}
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+  *zoom: 1;
+}
+#z-des {
+  width: 15rem;
+  height: 3.75rem;
+  resize: none;
+  outline: none;
+  display: block;
+  border: none;
+  margin-bottom: 0.25rem;
+}

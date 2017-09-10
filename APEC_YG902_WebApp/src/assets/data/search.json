@@ -1,0 +1,10 @@
+{
+  "pz":[{"keyword":"红富士"}, {"keyword":"2001"}, {"keyword":"嘎啦果"},{"keyword":"金帅"},{"keyword":"红将军"},{"keyword":"乔纳金"},{"keyword":"金富士"},{"keyword":"其他"}],
+  "area":{
+     "parentA":[{"keyword":"威海市","code":3710},{"keyword":"烟台市", "code":3706}],
+      "childA":{
+        "3710":[{"keyword":"全部"},{"keyword": "桥头镇"},{"keyword": "文登市"},{"keyword": "荣成市"},{"keyword": "乳山市"}],
+        "3706":[{"keyword":"全部"},{"keyword": "牟平区"},{"keyword": "龙口市"},{"keyword": "莱阳市"},{"keyword": "莱州市"},{"keyword": "蓬莱市"},{"keyword": "招远市"},{"keyword": "栖霞市"},{"keyword": "海阳市"}]
+      }
+  }
+}

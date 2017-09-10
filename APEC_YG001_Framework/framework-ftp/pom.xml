@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<project
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+        xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.apec</groupId>
+        <artifactId>framework-parent</artifactId>
+        <version>1.0.1-RELEASE</version>
+    </parent>
+
+    <artifactId>framework-ftp</artifactId>
+    <name>framework-ftp</name>
+    <url>http://maven.apache.org</url>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    <dependencies>
+
+        <!-- 底层业务模块 start-->
+        <dependency>
+            <groupId>com.apec</groupId>
+            <artifactId>framework-common</artifactId>
+            <version>1.0.1-RELEASE</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- ftp 上传start-->
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>3.6</version>
+        </dependency>
+        <!-- ftp 上传end-->
+    </dependencies>
+</project>

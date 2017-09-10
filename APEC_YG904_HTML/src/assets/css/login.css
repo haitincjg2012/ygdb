@@ -1,0 +1,61 @@
+/*
+*登录页
+*/
+.loginBox {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.loginBox .loginContent {
+  position: absolute;
+  top: 25%;
+  width: 100%;
+}
+.loginBox .loginContent .logo {
+  text-align: center;
+  margin-left: 40px;
+}
+.loginBox .loginContent .logo img {
+  width: 350px;
+  height: 350px;
+}
+.loginBox .loginContent .formBox {
+  width: 100%;
+  text-align: center;
+}
+.loginBox .loginContent .formBox .title {
+  font-size: 35px;
+  padding-bottom: 30px;
+}
+.loginBox .loginContent .formBox .title .titName {
+  color: #41B883;
+}
+.loginBox .loginContent .formBox .formContent {
+  width: 380px;
+  margin: 0 auto;
+  border-radius: 5px;
+  box-shadow: 0 0 80px #DDD;
+  padding: 40px 20px 20px;
+  background-color: #f6f6f6;
+}
+.loginBox .loginContent .formBox .formContent input[type="text"],
+.loginBox .loginContent .formBox .formContent input[type="password"] {
+  width: 280px;
+}
+.loginBox .loginContent .formBox .formContent .el-form-item__label {
+  padding-right: 0;
+}
+.loginBox .loginContent .formBox .formContent .el-form-item__content {
+  margin-left: 0!important;
+  display: inline-block;
+}
+.loginBox .loginContent .formBox .formContent .login {
+  width: 280px;
+  margin-left: 60px;
+  background-color: #41B883;
+}
+.loginBox .loginContent .formBox .formContent .el-input__inner {
+  border: 1px solid #41B883;
+}

@@ -1,0 +1,35 @@
+/*
+*导航部分
+*/
+#boxContainer .topNav {
+  z-index: 999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+}
+#boxContainer .topNav .title {
+  font-size: 20px;
+  color: #fff;
+  float: left;
+}
+#boxContainer .topNav .loginInfo {
+  float: right;
+  margin-right: 20px;
+  color: #fff;
+}
+#boxContainer .topNav .el-menu-item {
+  padding: 0 20px;
+  min-width: 100px;
+}
+#boxContainer .el-menu--horizontal > .el-menu-item:hover {
+  border-bottom: 5px solid #324157!important;
+}
+#boxContainer .leftNav {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 200px;
+  height: calc(100vh - 60px);
+}

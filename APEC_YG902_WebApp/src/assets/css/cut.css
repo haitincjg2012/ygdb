@@ -1,0 +1,150 @@
+.main-cut {
+  position: relative;
+  width: 18.75rem;
+  height: auto;
+}
+.main-cut .cropper-canvas img {
+  max-width: 18.75rem;
+  display: block;
+}
+.main-cut .cropper-modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #000;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  -moz-opacity: 0.5;
+  height: 100%;
+  width: 100%;
+}
+.main-cut .cropper-crop-box {
+  position: absolute;
+  bottom: 0px;
+  width: 18.75rem;
+  max-height: 7.5rem;
+  top: 0px;
+}
+.main-cut .cropper-crop-box .cropper-view-box {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  outline: 0.05rem solid #6699ff;
+}
+.main-cut .cropper-crop-box .cropper-face {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  opacity: 0.1;
+  filter: alpha(opacity=10);
+  -moz-opacity: 0.1;
+}
+.main-cut .cropper-crop-box .cropper-line {
+  background-color: #69f;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0.1;
+  filter: alpha(opacity=10);
+  -moz-opacity: 0.1;
+}
+.main-cut .cropper-crop-box .line-e {
+  top: 0;
+  right: -3px;
+  width: 5px;
+}
+.main-cut .cropper-crop-box .line-n {
+  top: -3px;
+  left: 0;
+  height: 5px;
+}
+.main-cut .cropper-crop-box .line-w {
+  top: 0;
+  left: -3px;
+  width: 5px;
+}
+.main-cut .cropper-crop-box .line-s {
+  bottom: -3px;
+  left: 0;
+  height: 5px;
+}
+.main-cut .cropper-crop-box .point-ne {
+  top: -3px;
+  right: -3px;
+  cursor: ne-resize;
+}
+.main-cut .cropper-crop-box .point-nw {
+  top: -3px;
+  left: -3px;
+  cursor: nw-resize;
+}
+.main-cut .cropper-crop-box .point-sw {
+  bottom: -3px;
+  left: -3px;
+  cursor: sw-resize;
+}
+.main-cut .cropper-crop-box .point-se {
+  right: -3px;
+  bottom: -3px;
+  width: 10px;
+  height: 10px;
+  cursor: se-resize;
+  filter: alpha(opacity=100);
+  opacity: 1;
+}
+.main-cut .cropper-crop-box .cropper-point {
+  position: absolute;
+  width: 0.25rem;
+  height: 0.25rem;
+  background-color: #69f;
+  opacity: 0.75;
+  filter: alpha(opacity=75);
+  -moz-opacity: 0.75;
+}
+.main-cut .cropper-dashed {
+  position: absolute;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  -moz-opacity: 0.5;
+}
+.main-cut .cropper-dashed .dashed-h {
+  top: 33.33333333%;
+  left: 0;
+  width: 100%;
+  height: 33.33333333%;
+  border-top-width: 0.05rem;
+  border-bottom-width: 0.05rem;
+}
+.main-cut .cropper-dashed .dashed-v {
+  top: 0;
+  left: 33.33333333%;
+  width: 33.33333333%;
+  height: 100%;
+  border-right-width: 0.05rem;
+  border-left-width: 0.05rem;
+}
+.main-cut .imgT {
+  max-width: 18.75rem;
+  height: auto;
+  transform: none;
+}
+.main-cut .tt {
+  margin-top: 0px;
+  transform: none;
+}
+.main-cut .z-cut-ok {
+  position: relative;
+  z-index: 99;
+  color: #fff;
+  background-color: #0ecb5d;
+  line-height: 1.5rem;
+  width: 5rem;
+  text-align: center;
+  margin: auto;
+}
+.mimg {
+  width: 18.75rem;
+}
