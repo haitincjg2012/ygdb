@@ -126,10 +126,10 @@ public class UserViewVO {
      */
     private String bannerImgUrl;
 
-    /**
-     * 实力描述上传的照片
-     */
-    private List<UserStrengthImgUrlVO> userStrengthImgUrlVOS;
+//    /**
+//     * 实力描述上传的照片
+//     */
+//    private List<UserStrengthImgUrlVO> userStrengthImgUrlVOS;
 
 
 }

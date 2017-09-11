@@ -138,28 +138,28 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 更新用户组织缓存
-     * @param userNo 用户ID
-     * @param user 用户对象
+     * @param userNo 用户组织ID
+     * @param userOrgClient 用户组织对象
      */
-    private void updateUserOrgInfoCache(String userNo,UserOrgClient user,List<UserOrgImage> list){
-        String userInfoJson = cacheHashService.hget(RedisHashConstants.HASH_USER_ORG_PREFIX + userNo,RedisHashConstants.HASH_OBJCONTENT_CACHE);
-        UserInfoVO userInfo ;
-        if(StringUtils.isBlank(userInfoJson)){
-            //获取不到数据,记录日志
-            logger.warn("[UserServiceImpl][updateUserInfoCache]Can't find user hash cache. userNo:{}",userNo);
-            userInfo = new UserInfoVO();
-        }else{
-            userInfo = JsonUtil.parseObject(userInfoJson,UserInfoVO.class);
-        }
-        BeanUtil.copyPropertiesIgnoreNullFilds(user,userInfo);
-        userInfo.setUserTypeKey(user.getUserType() == null?"":user.getUserType().getKey());
-        if(StringUtils.isBlank(user.getIdNumber())){
-            userInfo.setIdNumber("");
-        }
-        if(StringUtils.isBlank(user.getRealName())){
-            userInfo.setRealName("");
-        }
-        cacheHashService.hset(RedisHashConstants.HASH_USER_PREFIX + userNo,RedisHashConstants.HASH_OBJCONTENT_CACHE, JsonUtil.toJSONString(userInfo));
+    private void updateUserOrgInfoCache(String userNo,UserOrgClient userOrgClient){
+//        String userInfoJson = cacheHashService.hget(RedisHashConstants.HASH_USER_ORG_PREFIX + userNo,RedisHashConstants.HASH_OBJCONTENT_CACHE);
+//        UserOrgClientInfoVO userOrgClientInfoVO ;
+//        if(StringUtils.isBlank(userInfoJson)){
+//            //获取不到数据,记录日志
+//            logger.warn("[UserServiceImpl][updateUserOrgInfoCache]Can't find user org hash cache. userNo:{}",userNo);
+//            userInfo = new UserInfoVO();
+//        }else{
+//            userInfo = JsonUtil.parseObject(userInfoJson,UserInfoVO.class);
+//        }
+//        BeanUtil.copyPropertiesIgnoreNullFilds(user,userInfo);
+//        userInfo.setUserTypeKey(user.getUserType() == null?"":user.getUserType().getKey());
+//        if(StringUtils.isBlank(user.getIdNumber())){
+//            userInfo.setIdNumber("");
+//        }
+//        if(StringUtils.isBlank(user.getRealName())){
+//            userInfo.setRealName("");
+//        }
+//        cacheHashService.hset(RedisHashConstants.HASH_USER_PREFIX + userNo,RedisHashConstants.HASH_OBJCONTENT_CACHE, JsonUtil.toJSONString(userInfo));
     }
 
     @Override
@@ -189,14 +189,15 @@ public class UserServiceImpl implements UserService {
             user.setReferralId(userVO.getReferralId());
             //TODO 推荐人推荐,获得积分,验证推荐人的正确性
         }
+
         UserOrgClient userOrgClient = new UserOrgClient();
         userOrgClient.setId(idGen.nextId());
         userOrgClient.setEnableFlag(EnableFlag.Y);
         userOrgClient.setCreateDate(date);
-        userOrgClient.setUserAccountType(UserAccountType.IND_ACCOUNT);
+        userOrgClient.setUserAccountType(UserAccountType.INIT_ACCOUNT);
         userOrgClientDAO.save(userOrgClient);
         user.setUserOrgId(userOrgClient.getId());
-        user.setUserAccountType(UserAccountType.IND_MAIN_ACCOUNT); //个人账号
+        user.setUserAccountType(UserAccountType.INIT_MAIN_ACCOUNT); //默认账号
         userDao.save(user);
 
         //初次登陆积分设置
@@ -246,17 +247,19 @@ public class UserServiceImpl implements UserService {
                 if(user.getUserAccountType() == UserAccountType.ORG_MAIN_ACCOUNT){
                     //当后台设置旧用户为主账号True，则主账号修改个人资料编辑组织信息，创建组织，设为组织账号
                     userOrgClient.setUserAccountType(UserAccountType.ORG_ACCOUNT);  //组织账号
-                }else {
+                }else if (user.getUserAccountType() == UserAccountType.IND_MAIN_ACCOUNT){
                     //旧用户设置为个人账号，个人主体账号
                     userOrgClient.setUserAccountType(UserAccountType.IND_ACCOUNT);  //个人账户
-                    user.setUserAccountType(UserAccountType.IND_MAIN_ACCOUNT); // 个人账户主体账号
+                }else{
+                    userOrgClient.setUserAccountType(UserAccountType.INIT_ACCOUNT); //默认账户
+                    user.setUserAccountType(UserAccountType.INIT_MAIN_ACCOUNT);  //默认账号
                 }
             }
             //用户组织VO
             UserOrgClientVO userOrgClientVO = userVO.getUserOrgClientVO();
             List<UserOrgImage> listCacheOrgImage = new ArrayList<>();
             if(userOrgClientVO != null){
-                BeanUtil.copyPropertiesIgnoreNullFilds(userOrgClientVO,userOrgClient,"tags","userOrgImageVOS","userAccountType");
+                BeanUtil.copyPropertiesIgnoreNullFilds(userOrgClientVO,userOrgClient,"elasticId","userOrgImageVOS","userAccountType");
                 //当用户的实力描述图片不为空，Image地址落地
                 if(userOrgClientVO.getUserOrgImageVOS() != null){
                     List<UserOrgImage> userOrgImages = userOrgImageDAO.findByUserOrgIdAndEnableFlagOrderBySort(userOrgClient.getId(),EnableFlag.Y);
@@ -285,7 +288,7 @@ public class UserServiceImpl implements UserService {
                                     if ( StringUtils.equals(userOrgImage.getImageUrl(), vo.getImageUrl())) {
                                         isNotExist = false;
                                         userOrgImage.setSort(vo.getSort());  //更换排序
-                                        userOrgImageDAO.save(userOrgImage);
+                                        userOrgImageDAO.saveAndFlush(userOrgImage);
                                         listCacheOrgImage.add(userOrgImage);
                                     }
                                 }
@@ -299,13 +302,16 @@ public class UserServiceImpl implements UserService {
                                 userOrgImage.setEnableFlag(EnableFlag.Y);
                                 userOrgImage.setCreateBy(userId);
                                 userOrgImage.setCreateDate(new Date());
-                                userOrgImageDAO.save(userOrgImage);
+                                userOrgImageDAO.saveAndFlush(userOrgImage);
                                 listCacheOrgImage.add(userOrgImage);
                             }
                         }
                     }
                 }
             }
+            userOrgClient.setAttentionNum(0);
+            userOrgClient.setViewNum(0);
+            userOrgClient.setProductNum(0);
             userOrgClientDAO.saveAndFlush(userOrgClient);
             //更新组织缓存
         }
@@ -390,7 +396,7 @@ public class UserServiceImpl implements UserService {
         userLoginRecord.setIpAddress(userLoginVO.getIp());
         userLoginRecord.setSource(userLoginVO.getSource() == null? Source.WEIXIN : userLoginVO.getSource());
         userLoginRecord.setCreateDate(nowDate);
-        userLoginRecord.setUser(user);
+        userLoginRecord.setUserId(user.getUserOrgId());
 
         //获取User登录错误次数
         String loginFailCountKey = LoginConstants.PREFIX_LOGIN_FAILED + user.getId();
@@ -491,7 +497,7 @@ public class UserServiceImpl implements UserService {
         UserAuthRecord authRecord = new UserAuthRecord();
         authRecord.setImgOneURL(authRecordVO.getImgOneURL());
         authRecord.setImgTwoURL(authRecordVO.getImgTwoURL());
-        authRecord.setUser(user);
+        authRecord.setUserId(user.getId());
         authRecord.setId(idGen.nextId());
         authRecord.setCreateBy(userId);
         authRecord.setCreateDate(new Date());
@@ -548,7 +554,11 @@ public class UserServiceImpl implements UserService {
             logger.info("[userRealNameEntrue] userAuthRecord had entrue ，id:{}",authRecordVO.getId());
             return ErrorCodeConst.CANOT_DUMBLE_ENTRUE;
         }
-        User user = authRecord.getUser();
+        if(authRecord.getUserId() == null){
+            logger.info("[userRealNameEntrue] user id  is not exist，id:{}",authRecordVO.getId());
+            return Constants.COMMON_ERROR_PARAMS;
+        }
+        User user = userDao.findOne(authRecord.getUserId());
         //审批用户实名认证信息
         authRecord.setRemark(authRecordVO.getRemark());
         authRecord.setSuccess(authRecordVO.getSuccess());
@@ -742,10 +752,10 @@ public class UserServiceImpl implements UserService {
             {
                 predicates.add(QUser.user.mobile.eq(vo.getMobile()));
             }
-            if(!StringUtils.isBlank(vo.getCompanyName()))
-            {
-                predicates.add(QUser.user.companyName.like("%" + vo.getCompanyName() + "%"));
-            }
+//            if(!StringUtils.isBlank(vo.getCompanyName()))
+//            {
+//                predicates.add(QUser.user.companyName.like("%" + vo.getCompanyName() + "%"));
+//            }
             if(!StringUtils.isBlank(vo.getAddress()))
             {
                 predicates.add(QUser.user.address.like("%" + vo.getAddress() + "%"));
@@ -805,11 +815,12 @@ public class UserServiceImpl implements UserService {
         Page<UserAuthRecord> page = userAuthRecordDAO.findAll(getInputConditionUserRealName(userVO),pageRequest);
         PageDTO<UserAuthRecordViewVO> result = new PageDTO<>();
         List<UserAuthRecordViewVO> list = new ArrayList<>();
+        User user ;
         for(UserAuthRecord authRecord:page){
             UserAuthRecordViewVO authRecordVO = new UserAuthRecordViewVO();
-
-            if(authRecord.getUser() != null){
-                BeanUtil.copyPropertiesIgnoreNullFilds(authRecord.getUser(),authRecordVO);
+            user = userDao.findOne(authRecord.getUserId());
+            if(user != null){
+                BeanUtil.copyPropertiesIgnoreNullFilds(user,authRecordVO);
             }
             BeanUtil.copyPropertiesIgnoreNullFilds(authRecord,authRecordVO);
             list.add(authRecordVO);
@@ -926,17 +937,17 @@ public class UserServiceImpl implements UserService {
             userPointVO.setUserLevelKey(point.getUserLevel().getKey());
         }
         viewVO.setUserPoint(userPointVO);
-        List<UserStrengthImgUrlVO> userStrengthImgUrlVOS = new ArrayList<>();
-        //查询用户实力描述上传相关图片
-        Iterable<UserStrengthImgUrl> userStrengthImgUrls = userStrengthImgUrlDAO.findByUserIdAndEnableFlagOrderBySort(user.getId(),EnableFlag.Y);
-        Iterator<UserStrengthImgUrl> it = userStrengthImgUrls.iterator();
-        while(it.hasNext()){
-            UserStrengthImgUrlVO userStrengthImgUrlVO = new UserStrengthImgUrlVO();
-            UserStrengthImgUrl userStrengthImgUrl = it.next();
-            BeanUtil.copyPropertiesIgnoreNullFilds(userStrengthImgUrl,userStrengthImgUrlVO);
-            userStrengthImgUrlVOS.add(userStrengthImgUrlVO);
-        }
-        viewVO.setUserStrengthImgUrlVOS(userStrengthImgUrlVOS);
+//        List<UserStrengthImgUrlVO> userStrengthImgUrlVOS = new ArrayList<>();
+//        //查询用户实力描述上传相关图片
+//        Iterable<UserStrengthImgUrl> userStrengthImgUrls = userStrengthImgUrlDAO.findByUserIdAndEnableFlagOrderBySort(user.getId(),EnableFlag.Y);
+//        Iterator<UserStrengthImgUrl> it = userStrengthImgUrls.iterator();
+//        while(it.hasNext()){
+//            UserStrengthImgUrlVO userStrengthImgUrlVO = new UserStrengthImgUrlVO();
+//            UserStrengthImgUrl userStrengthImgUrl = it.next();
+//            BeanUtil.copyPropertiesIgnoreNullFilds(userStrengthImgUrl,userStrengthImgUrlVO);
+//            userStrengthImgUrlVOS.add(userStrengthImgUrlVO);
+//        }
+       // viewVO.setUserStrengthImgUrlVOS(userStrengthImgUrlVOS);
         return viewVO;
     }
 

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
+ *
  * Title: 用户组织
  *
  * @author yirde  2017/9/6.
@@ -64,9 +65,25 @@ public class UserOrgClientVO  extends BaseVO<Long> {
     private String addressDetail;
 
     /**
-     * 标签集合
+     * 主营品种
      */
-    private String tags;
+    private String mainOperating;
+
+    /**
+     * 销售地址
+     */
+    private String saleAddress;
+
+    /**
+     * 综合排序权重分数
+     * 每晚凌晨三点进行重新排序 更新
+     */
+    private Long orderWeight;
+
+    /**
+     * ES ID
+     */
+    private String elasticId;
 
     /**
      * 实力描述

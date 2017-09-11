@@ -1,6 +1,7 @@
 package com.apec.framework.dto;
 
 import com.apec.framework.common.enumtype.UserAccountType;
+import com.sun.org.apache.xpath.internal.operations.String;
 
 import java.util.List;
 
@@ -11,6 +12,11 @@ import java.util.List;
  * @author yirde  2017/9/7.
  */
 public class UserOrgClientInfoVO {
+
+    /**
+     * 用户组织ID
+     */
+    private Long userOrgId;
 
     /**
      * 组织名称
@@ -43,9 +49,26 @@ public class UserOrgClientInfoVO {
     private String addressDetail;
 
     /**
-     * 标签集合
+     * 主营品种
      */
-    private String tags;
+    private String mainOperating;
+
+    /**
+     * 销售地址
+     */
+    private String saleAddress;
+
+    /**
+     * 综合排序权重分数
+     * 每晚凌晨三点进行重新排序 更新
+     */
+    private Long orderWeight;
+
+    /**
+     * ES ID
+     */
+    private String elasticId;
+
 
     /**
      * 实力描述
@@ -57,10 +80,6 @@ public class UserOrgClientInfoVO {
      */
     private UserAccountType userAccountType;
 
-    /**
-     * 图片集合
-     */
-    private List<UserOrgImageInfoVO> listImage ;
 
     public String getOrgName() {
         return orgName;
@@ -110,12 +129,28 @@ public class UserOrgClientInfoVO {
         this.addressDetail = addressDetail;
     }
 
-    public String getTags() {
-        return tags;
+    public Long getUserOrgId() {
+        return userOrgId;
     }
 
-    public void setTags(String tags) {
-        this.tags = tags;
+    public void setUserOrgId(Long userOrgId) {
+        this.userOrgId = userOrgId;
+    }
+
+    public String getMainOperating() {
+        return mainOperating;
+    }
+
+    public void setMainOperating(String mainOperating) {
+        this.mainOperating = mainOperating;
+    }
+
+    public String getElasticId() {
+        return elasticId;
+    }
+
+    public void setElasticId(String elasticId) {
+        this.elasticId = elasticId;
     }
 
     public String getRemark() {
@@ -132,13 +167,5 @@ public class UserOrgClientInfoVO {
 
     public void setUserAccountType(UserAccountType userAccountType) {
         this.userAccountType = userAccountType;
-    }
-
-    public List<UserOrgImageInfoVO> getListImage() {
-        return listImage;
-    }
-
-    public void setListImage(List<UserOrgImageInfoVO> listImage) {
-        this.listImage = listImage;
     }
 }

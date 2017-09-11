@@ -3,6 +3,7 @@ package com.apec.user.model;
 import com.apec.framework.common.Constants;
 import com.apec.framework.common.enumtype.UserAccountType;
 import com.apec.framework.jpa.model.BaseModel;
+import com.sun.org.apache.xpath.internal.operations.String;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -71,9 +72,25 @@ public class UserOrgClient extends BaseModel<Long> {
     private String addressDetail;
 
     /**
-     * 标签集合
+     * 主营品种
      */
-    private String tags;
+    private String mainOperating;
+
+    /**
+     * 销售地址
+     */
+    private String saleAddress;
+
+    /**
+     * 综合排序权重分数
+     * 每晚凌晨三点进行重新排序 更新
+     */
+    private Long orderWeight;
+
+    /**
+     * ES ID
+     */
+    private String elasticId;
 
     /**
      * 实力描述
