@@ -1,3 +1,6 @@
+.z-coldlist {
+  border-bottom: 0.025rem solid #d7d7d7;
+}
 .z-coldlist .z-com-f {
   width: 18.75rem;
   padding: 0 !important;
@@ -28,55 +31,104 @@
   display: block;
   width: 4.5rem;
   height: 4.5rem;
-  border: 0.05rem solid #7e7e7e;
+  border: 0.025rem solid #d7d7d7;
 }
 .z-coldlist .z-com-f .primaryMain .z-c-info {
-  width: 12.5rem;
+  width: 12rem;
   height: 4.5rem;
-  margin: 0.5rem 0 0.5rem 0.5rem;
+  margin: 0.625rem 0 0.5rem 0.65rem;
 }
 .z-coldlist .z-com-f .primaryMain .z-c-info .z-c-real-info {
-  height: 1.125rem;
+  margin-bottom: 0.5rem;
+  position: relative;
+  height: 0.8rem;
+  line-height: 0.8rem;
+  vertical-align: top;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
 }
-.z-coldlist .z-com-f .primaryMain .z-c-info .z-c-real-info .z-c-r-name {
-  font-size: 0.7rem;
+.z-coldlist .z-com-f .primaryMain .z-c-info .z-c-real-info .z-ag-r-f-partO {
+  font-size: 0;
+  height: 0.8rem;
+}
+.z-coldlist .z-com-f .primaryMain .z-c-info .z-c-real-info .z-ag-r-f-partO .z-c-r-name {
+  font-size: 0.8rem;
   font-weight: bold;
   vertical-align: top;
+  letter-spacing: 0.075rem;
+  color: #222328;
+}
+.z-coldlist .z-com-f .primaryMain .z-c-info .z-c-real-info .z-ag-r-f-partT {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 3.75rem;
+  line-height: 0.75rem;
+  text-align: right;
+}
+.z-coldlist .z-com-f .primaryMain .z-c-info .z-c-real-info .z-ag-r-f-partT .z-ag-r-text {
+  font-size: 0.5rem;
+  color: #74746B;
+}
+.z-coldlist .z-com-f .primaryMain .z-c-info .z-c-real-info .z-ag-r-f-partT .z-ag-r-img {
+  vertical-align: middle;
+  width: 0.6rem;
+  height: 0.7rem;
 }
 .z-coldlist .z-com-f .primaryMain .z-c-info .z-c-storage {
-  height: 1.125rem;
-  line-height: 1.125rem;
+  height: 0.65rem;
+  line-height: 0.65rem;
+  margin-bottom: 0.4rem;
 }
 .z-coldlist .z-com-f .primaryMain .z-c-info .z-c-storage .z-c-storage-text {
   font-size: 0.65rem;
   vertical-align: top;
+  color: #646464;
 }
 .z-coldlist .z-com-f .primaryMain .z-c-info .z-c-real {
-  height: 1.125rem;
+  height: 0.75rem;
+  vertical-align: top;
+  line-height: 0.75rem;
+  font-size: 0;
+}
+.z-coldlist .z-com-f .primaryMain .z-c-info .z-c-real .z-c-r,
+.z-coldlist .z-com-f .primaryMain .z-c-info .z-c-real .z-c-r-e {
+  font-size: 0.575rem;
+  border-radius: 0.125rem;
+  padding: 0.075rem 0.125rem;
+  letter-spacing: 0.025rem;
 }
 .z-coldlist .z-com-f .primaryMain .z-c-info .z-c-real .z-c-r {
-  font-size: 0.65rem;
-  background-color: #93ecb8;
-  border: 0.05rem solid #93ecb8;
-  color: #7e7e7e;
+  border: 0.025rem solid #2ac9a4;
+  color: #2AC9A4;
+  margin-right: 0.5rem;
 }
 .z-coldlist .z-com-f .primaryMain .z-c-info .z-c-real .z-c-r-e {
-  font-size: 0.65rem;
-  background-color: #fff;
-  border: 0.05rem solid #d6d0d0;
-  color: #000;
+  border: 0.025rem solid #fd9e24;
+  color: #FD9E24;
 }
 .z-coldlist .z-com-f .primaryMain .z-c-info .z-c-address {
-  position: relative;
-  line-height: 1.125rem;
-  height: 1.125rem;
+  height: 0.625rem;
+  line-height: 0.625rem;
+  margin-bottom: 0.625rem;
+  vertical-align: top;
 }
 .z-coldlist .z-com-f .primaryMain .z-c-info .z-c-address .pos-pic {
-  width: 0.575rem;
-  height: 0.65rem;
+  width: 0.45rem;
+  height: 0.55rem;
+  vertical-align: middle;
 }
 .z-coldlist .z-com-f .primaryMain .z-c-info .z-c-address .z-c-add {
   font-size: 0.65rem;
-  line-height: 1.125rem;
-  vertical-align: top ;
+  color: #646464;
+  letter-spacing: 0.075rem;
 }

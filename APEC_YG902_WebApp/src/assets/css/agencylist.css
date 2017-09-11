@@ -1,3 +1,7 @@
+.z-agencylist {
+  border-bottom: 0.025rem solid #d7d7d7;
+  letter-spacing: 0.025rem;
+}
 .z-agencylist .z-com-f {
   width: 18.75rem;
   padding: 0 !important;
@@ -28,15 +32,17 @@
   display: block;
   width: 4.5rem;
   height: 4.5rem;
-  border: 0.05rem solid #7e7e7e;
+  border: 0.025rem solid #d7d7d7;
 }
 .z-agencylist .z-com-f .primaryMain .z-ag-info {
-  width: 12.5rem;
+  width: 12rem;
   height: 4.5rem;
-  margin: 0.5rem 0 0.5rem 0.5rem;
+  margin: 0.5rem 0 0.5rem 0.65rem;
 }
 .z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-real-info {
-  height: 1.25rem;
+  height: 0.75rem;
+  margin-bottom: 0.75rem;
+  position: relative;
   display: -webkit-box;
   /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
   display: -moz-box;
@@ -50,59 +56,88 @@
   display: flex;
 }
 .z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-real-info .z-ag-r-f-partO {
-  width: 10rem;
+  font-size: 0;
 }
 .z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-real-info .z-ag-r-f-partO .z-ag-r-name {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: bold;
   vertical-align: top;
+  letter-spacing: 0.075rem;
+  line-height: 0.75rem;
 }
 .z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-real-info .z-ag-r-f-partO .z-ag-r {
-  font-size: 0.7rem;
-  border-radius: 0.25rem;
-  border: 0.05rem solid #0ecb5d;
-  color: #0ecb5d;
+  font-size: 0.5rem;
+  border-radius: 0.125rem;
+  border: 0.025rem solid #1960df;
+  color: #1960DF;
+  padding: 0.075rem 0.175rem;
+  height: 0.7rem;
   vertical-align: top;
+  line-height: 0.7rem;
 }
 .z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-real-info .z-ag-r-f-partO .z-ag-level {
-  width: 0.9rem;
-  height: 0.775rem;
+  width: 0.75rem;
+  height: 0.75rem;
   vertical-align: top;
+  margin: 0 0.4rem;
 }
 .z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-real-info .z-ag-r-f-partT {
-  width: 2.5rem;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 3.75rem;
+  line-height: 0.75rem;
+  text-align: right;
+}
+.z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-real-info .z-ag-r-f-partT .z-ag-r-text {
+  font-size: 0.5rem;
+  color: #74746B;
+}
+.z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-real-info .z-ag-r-f-partT .z-ag-r-img {
+  vertical-align: middle;
+  width: 0.6rem;
+  height: 0.7rem;
 }
 .z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-address {
-  height: 1rem;
+  height: 0.625rem;
+  line-height: 0.625rem;
+  margin-top: 0.65rem;
+  vertical-align: top;
 }
 .z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-address .pos-pic {
-  width: 0.575rem;
-  height: 0.65rem;
+  width: 0.425rem;
+  height: 0.55rem;
   vertical-align: middle;
 }
 .z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-address .z-ag-addr {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
+  color: #969696;
 }
 .z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-result {
-  height: 1rem;
-  line-height: 1rem;
+  height: 0.65rem;
+  line-height: 0.65rem;
+  margin-bottom: 0.4rem;
+  color: #646464;
+  font-size: 0;
+  vertical-align: top;
 }
 .z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-result .z-ag-res {
-  font-size: 0.7rem;
-  vertical-align: sub;
+  font-size: 0.65rem;
 }
 .z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-result .z-ag-r-num {
-  font-size: 0.7rem;
+  font-size: 0.625rem;
   font-weight: bold;
-  vertical-align: sub;
-  color: red;
+  margin-right: 0.2rem;
+  color: #F54A41;
 }
 .z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-main {
   position: relative;
-  line-height: 1.25rem;
-  height: 1.25rem;
+  line-height: 0.6rem;
+  height: 0.6rem;
+  font-size: 0;
+  vertical-align: top;
 }
 .z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-main .z-ag-main-com-t {
-  font-size: 0.7rem;
-  vertical-align: top;
+  font-size: 0.65rem;
+  color: #646464;
 }

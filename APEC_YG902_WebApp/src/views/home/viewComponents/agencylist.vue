@@ -12,24 +12,26 @@
            <div class="z-ag-real-info" :data-id = "item.id">
               <div class="z-ag-r-f-partO">
                 <span class="z-ag-r-name">张三丰</span>
+                <!--<img :src="item.imgLevel" class="z-ag-level">-->
+                <img src="../../../assets/img/rateOne.png" class="z-ag-level">
                 <span class="z-ag-r">实名认证</span>
-                <img :src="item.imgLevel" class="z-ag-level">
               </div>
                <div class="z-ag-r-f-partT">
-                    <img src="#">
-                    <span>1200</span>
+                    <img src="../../../assets/img/fireIcon.png" class="z-ag-r-img">
+                    <span class="z-ag-r-text">1200</span>
                </div>
            </div>
            <div class="z-ag-result">
-              <span class="z-ag-res">累计调果:</span>
-              <span class="z-ag-r-num">283000斤</span>
+              <span class="z-ag-res">累计调果：</span>
+              <span class="z-ag-r-num">283000</span>
+              <span class="z-ag-res">斤</span>
            </div>
            <div class="z-ag-main clearfix" :data-id = "item.id">
-             <span class="z-ag-main-com-t">主营:</span>
+             <span class="z-ag-main-com-t">擅长：</span>
              <span class="z-ag-main-com-t">红富士 70# 80#</span>
            </div>
            <div class="z-ag-address">
-             <img class="pos-pic" src="../../../assets/img/pos.png">
+             <img class="pos-pic" src="../../../assets/img/placeIcon.png">
              <span class="z-ag-addr">烟台栖霞桃村镇</span>
            </div>
          </div>
@@ -42,11 +44,17 @@
 </style>
 <script>
    export default{
+     data(){
+       return {
+
+       }
+     },
        methods:{
            xq(){
                 this.$router.push({name:"xqframe",query:{name:"ag"}})
            }
        },
+
        props:{
            item:null
        }

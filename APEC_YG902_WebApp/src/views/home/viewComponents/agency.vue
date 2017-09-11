@@ -3,11 +3,11 @@
       <div class="z-header-com">
         <!--<h1>代办</h1>-->
         <div class="return" @click="back">
-          <img src="../../../assets/img/ret.png">
+          <img src="../../../assets/img/arrowLeft.png">
         </div>
         <div class="z-agency-search">
           <img src="../../../assets/img/search.png">
-          <input type="text" placeholder="" @change="search"/>
+          <input type="text" placeholder="请输入查询内容" @change="search"/>
         </div>
       </div>
 
