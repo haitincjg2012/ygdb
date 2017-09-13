@@ -92,5 +92,4 @@ public class ArticleVO extends BaseVO<Long> {
      */
     private String priv;
 
-
 }

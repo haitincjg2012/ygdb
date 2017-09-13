@@ -5,7 +5,7 @@ var server = exports = module.exports = express();
 var config = require('config');
 
 // Reids Error Hand
-var redis = require('./midware-server/redis');
+var redis = require('./midware_server/redis');
 redis.on('error', function(err){
   console.log("\n[Error] Redis error: 请确认redis是否连接正确\n");
   redis.disconnect();
@@ -13,7 +13,7 @@ redis.on('error', function(err){
 });
 
 //Elasticsearch
-var elasticsearch = require('./midware-server/elasticsearch');
+var elasticsearch = require('./midware_server/elasticsearch');
 elasticsearch.ping({
   requestTimeout: 3000,
 }, function (error) {
@@ -27,3 +27,4 @@ elasticsearch.ping({
 //routter
 server.use(require('./product'));
 server.use(require('./user'));
+server.use(require('./user_org'));

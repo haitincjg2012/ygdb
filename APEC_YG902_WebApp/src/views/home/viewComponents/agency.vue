@@ -3,7 +3,7 @@
       <div class="z-header-com">
         <!--<h1>代办</h1>-->
         <div class="return" @click="back">
-          <img src="../../../assets/img/arrowLeft.png">
+          <img src="../../../assets/img/ret.png">
         </div>
         <div class="z-agency-search">
           <img src="../../../assets/img/search.png">
@@ -55,7 +55,7 @@
 <script>
   import childT from "./agencylist.vue"
   import childPZ from "./PZ.vue"
-  import IMG from "./gqimg.vue"
+  import IMG from "../../../components/gqimg.vue"
   import Region from './region.vue'
   import API from '../../../api/api'
   import dataConfig from "../../../assets/data/search.json"

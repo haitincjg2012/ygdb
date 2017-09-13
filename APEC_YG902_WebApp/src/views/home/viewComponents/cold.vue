@@ -13,12 +13,12 @@
 
     <div class="z-c-select">
       <div class="z-c-a" @click="dropdown" data-path = "0">
-        <span class="sp-text-com">综合排序</span>
+        <span class="sp-text-com">区域</span>
         <span class="triangle"></span>
         <span class="z-vertical-line"></span>
       </div>
       <div class="z-c-s" @click="dropdown" data-path = "1">
-        <span class="sp-text-com">区域</span>
+        <span class="sp-text-com">筛选</span>
         <span class="triangle"></span>
       </div>
     </div>
@@ -217,22 +217,20 @@
           }
         });
         if(path == 0){
-          this.itemA = null;
-          this.itemS = null;
-
-          alert("等待数据");
-//          if(fn.aD){
-//            this.itemS = fn.aD;
-//          }else{
-//            fn.secondC.bind(this)(path);
-//          }
-        }else if(path == 1){
-
+//          alert("等待数据");
           if(fn.aD){
             this.itemS = fn.aD;
           }else{
             fn.secondC.bind(this)(path);
           }
+        }else if(path == 1){
+          this.itemA = null;
+          this.itemS = null;
+//          if(fn.aD){
+//            this.itemS = fn.aD;
+//          }else{
+//            fn.secondC.bind(this)(path);
+//          }
         }
       },
       pzSearch(param){

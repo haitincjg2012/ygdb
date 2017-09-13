@@ -115,6 +115,7 @@
       },
       login(){
         const self = this;
+        var storage = window.localStorage;
         $('.l-info-call').hide();
         var phoneNum = self.phoneNum;
         var code = self.code;
@@ -159,6 +160,7 @@
               }
               if(data.userId){
                 self.$store.commit("incrementUserID", {'userId': data.userId});//用户ID
+                storage.id = data.userId;
                 c_js.setLocalValue('userId',data.userId);
               }
               self.$store.commit("incrementPoint", {'point': data.point || 0});//积分

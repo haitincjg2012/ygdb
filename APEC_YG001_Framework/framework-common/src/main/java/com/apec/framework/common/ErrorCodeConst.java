@@ -24,6 +24,9 @@ public interface ErrorCodeConst
     String ERROR_OLDPASSWORD = "800013";//用户密码输入错误
     String ERROR_MOBILE = "800014";//手机号不合法
     String ERROR_ORG_CHILDACCOUNT_EDITERR = "800015";//抱歉，非主账号不能编辑
+    String ERRPR_ORG_ISNULL = "800016"; //ORG　为空
+    String ERRPR_ORG_ISPUSH = "800017"; //该组织已经推送
+    String ERRPR_TAGS = "800018"; //标签不存在
 
     //=========== DISPATCH错误码start===================
     String ERROR_600001 = "600001";//session超时

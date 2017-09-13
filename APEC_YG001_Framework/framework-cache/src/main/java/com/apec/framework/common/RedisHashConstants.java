@@ -66,4 +66,19 @@ public interface RedisHashConstants {
      */
     String HASH_PRO_VIEW_NUM = "view_num";
 
+    /**
+     * 用户列表
+     */
+    String HASH_ORG_USERLIST = "user_list";
+
+    /**
+     * 组织类型
+     */
+    String HASH_ORG_ACCOUNTTYPE = "org_type";
+    
+    /**
+     * 代办上传总量
+     * */
+    String HASH_VOUCHER_NUM = "voucher_num";
+
 }

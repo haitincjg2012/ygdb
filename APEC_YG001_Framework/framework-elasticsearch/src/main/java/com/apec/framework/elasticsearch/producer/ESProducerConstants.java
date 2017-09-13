@@ -38,13 +38,22 @@ public interface ESProducerConstants {
     String INDEX_URL_PRODUCT = "/apec/myblog/";
 
     /**
-     * 索引路径  热门推荐
-     */
-    String INDEX_URL_RECOMMEND = "/blog/recommend/" ;
-
-    /**
      * 索引路径  下架供求
      */
     String INDEX_URL_OFF_SELL = "/product/offsell/" ;
 
+    /**
+     * 仓库索引
+     */
+    String INDEX_URL_DEPORT_ORG = "/depot/orginfo";
+
+    /**
+     * 代办索引
+     */
+    String INDEX_URL_DAIBAN_ORG = "/agency/orginfo";
+
+    /**
+     * 客商索引
+     */
+    String INDEX_URL_KESHAN_ORG = "/merchant/orginfo";
 }

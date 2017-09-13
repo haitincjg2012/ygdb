@@ -43,7 +43,10 @@
           province:'',//省
           county:'', //县
           city:'',//市
-          country:''//镇
+          country:'',//镇
+        countyS:'', //县
+        cityS:'',//市
+        countryS:''//镇
       }
     },
     mounted(){
@@ -75,7 +78,9 @@
               "activeCls": index ==0 ? "m-v-tz active" : 'm-v-tz',
               "id": item.id
             });
+
               if(index == 0){
+                self.cityS = item.name;
                 self.fircityaddrCode = item.code;
                 self.city = item.code;//缓存市code
                 self.province = item.parentId; //缓存省code
@@ -112,7 +117,7 @@
         let params = {
           api: "/yg-systemConfig-service/regionLevel/listRegionLevel.apec",
           data: {
-            parentId:code
+            parentId:code,
           }
         }
         try {
@@ -130,6 +135,7 @@
                   "id": item.id
                 })
                 if(index == 0){
+                  self.countyS = item.name;
                   self.county = item.code;//缓存县code
                   self.fircountyaddrCode = item.code;
                 }
@@ -165,7 +171,7 @@
         let params = {
           api: "/yg-systemConfig-service/regionLevel/listRegionLevel.apec",
           data: {
-            parentId:code
+            parentId:code,
           }
         }
         try {
@@ -182,7 +188,11 @@
                   "id": item.id
                 })
                 if(index ==0)
-                    self.country = item.code;
+                {
+                  self.countryS = item.name;
+                  self.country = item.code;
+                }
+
               });
             } else {
             }
@@ -208,7 +218,8 @@
             i.activeCls = 'm-v-tz'
         });
         self.city = item.code;
-        self.getsecAddrList(item.code);
+        self.city = item.name;
+        self.getsecAddrList(item.code, item.name);
       },
       selSecAddr(e,item){
         const self = this;
@@ -221,7 +232,9 @@
             i.activeCls = 'm-v-tz'
         });
         self.county = item.code;
-        self.getthirAddrList(item.code);
+        self.countyS = item.name;
+        console.log(self.countyS, 9999)
+        self.getthirAddrList(item.code, item.name);
       },
       selThirAddr(e,item){
         const self = this;
@@ -234,35 +247,42 @@
             i.activeCls = 'm-v-tz'
         })
         self.country = item.code;
+        self.countryS = item.name;
+
       },
       saveBtn(){
         const self = this;
-        let params = {
-          api: "/yg-user-service/user/updateUserInfo.apec",
-          data: {
-            provinceId:self.province,
-            cityId:self.city,
-            areaId:self.county,
-            townId:self.country,
-          }
-        }
-        try {
-          api.post(params).then((res) =>{
-            var item = res.data;
-            if (item.succeed) {
-              Toast("地址保存成功~");
-              this.$router.go(-1);
-            } else {
-              Toast("地址保存失败，请稍后重试");
-              this.$router.go(-1);
-            }
-          }).catch((error) =>{
-              console.log(error)
-            }
-          )
-        } catch (error) {
-          console.log(error)
-        }
+        var address = self.cityS + self.countyS + self.countryS;
+//        let params = {
+//          api: "/yg-user-service/user/updateUserInfo.apec",
+//          data: data
+//        }
+         var flag = this.$route.query.flag;
+         if(flag == "addr"){
+           this.$store.state.addr = address;
+         }else if(flag == "saleAddr"){
+             console.log(flag);
+           this.$store.state.saleAddr = address;
+         }
+
+        this.$router.push({name:"pcInfo",query:{Flag:1}});
+//        try {
+//          api.post(params).then((res) =>{
+//            var item = res.data;
+//            if (item.succeed) {
+//              Toast("地址保存成功~");
+//              this.$router.go(-1);
+//            } else {
+//              Toast("地址保存失败，请稍后重试");
+//              this.$router.go(-1);
+//            }
+//          }).catch((error) =>{
+//              console.log(error)
+//            }
+//          )
+//        } catch (error) {
+//          console.log(error)
+//        }
       }
     },
 

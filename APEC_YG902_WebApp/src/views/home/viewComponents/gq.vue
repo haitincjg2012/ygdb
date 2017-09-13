@@ -93,7 +93,7 @@
   import goodD from  './goodlist.vue'
   import API from '../../../api/api'
   import {Loadmore} from 'mint-ui';
-  import QG from './gqimg.vue'
+  import QG from '../../../components/gqimg.vue'
   import CITY from  './city.vue'
   import URBAN from './urban.vue'
   import dataConfig from "../../../api/data"

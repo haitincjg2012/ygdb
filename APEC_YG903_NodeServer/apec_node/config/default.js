@@ -11,16 +11,35 @@ module.exports = {
       index: "product",
       type: "offsell"
   },
+  "orgDepotIndex": {
+      index:"depot",
+      type:"orginfo"
+  },
+  "orgAgencyIndex": {
+        index:"agency",
+        type:"orginfo"
+  },
+  "orgMerchantIndex": {
+      index:"merchant",
+      type:"orginfo"
+  },
   "productSearchFields": ["skuName^3","userTypeName^2", "productTypeName^2","showUserName^2","goodsName","marketPreFix","productAttrs.attrValue","address","addressDetail","remark"],
+  "orgDepotSearchFields": ["orgName^3","orgTags.tagName^2","address^2","mainOperating","orgStockCap"],
+  "orgAgencySearchFields": ["orgName^3","orgTags.tagName^2","address^2","mainOperating","saleAddress"],
+  "orgMerchantSearchFields": ["orgName^3","orgTags.tagName^2","address^2","mainOperating"],
   "elasticsearchSize": 15,    //Elasticsearch 分页查询默认页大小15
-  "createProductNum": 100 ,  //未实名认证只能发布5次供求信息
+  "createProductNum": 100,  //未实名认证只能发布5次供求信息
   "userSessionOutCode": "600001", //Session out Eror Code
   "userTokenPrefix": "token_", //User Token Prefix
   "userSignPrefix":"sign_",   //用户签到的KEY  sign_token
   "userCaptchaPrefix": "captcha_", //
   "userInfoPrefix": "user:",  //User Info Prefix
+  "userOrgInfoPrefix":"user_org:" , // User Org Prefix
+  "userOrgViewNumPrefix": "view_num" ,  // User org view num prefix
+  "userOrgPhoneKey": "phone_num",   //  电话联系数KEY
   "userDataKey": "data", //User Info key
   "userViewKey": "view_user", //User View Key
+  "userVoucherNumKey": "voucher_num", // 调果数量
   "userProductHisKey": "product_his",  //User Create ProductHis Key
   "userSearchKey": "search_his", //用户搜索记录
   "userProductNumKey": "product_num",  //客户发布供求次数的key

@@ -17,7 +17,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserOrgClientVO  extends BaseVO<Long> {
+public class UserOrgClientVO{
+
+    private Long id;
 
     /**
      * 仓库组名称
@@ -39,7 +41,7 @@ public class UserOrgClientVO  extends BaseVO<Long> {
      */
     private String orgStockCap;
 
-    /*
+    /**
      * 关注数
      */
     private int attentionNum;
@@ -99,5 +101,16 @@ public class UserOrgClientVO  extends BaseVO<Long> {
      * 实力描述上传的照片
      */
     private List<UserOrgImageVO> userOrgImageVOS;
+
+    /**
+     * 组织拥有的标签
+     */
+    private List<UserTagsVO> userTagsVOS;
+
+    /**
+     * 开关，
+     */
+    private boolean pushFlag;
+
 
 }

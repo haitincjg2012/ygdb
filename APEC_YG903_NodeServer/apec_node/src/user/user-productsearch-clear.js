@@ -5,7 +5,7 @@ router = require('express').Router();
 module.exports = router;
 bodyParser = require('body-parser')();
 var config = require('config');
-var redis = require('../midware-server/redis');
+var redis = require('../midware_server/redis');
 var ef = require('../ef');
 var resdata = require('../resdata');
 

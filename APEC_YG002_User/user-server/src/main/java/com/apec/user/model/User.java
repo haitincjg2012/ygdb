@@ -72,7 +72,7 @@ public class User extends Authenticatable {
     /**
      * 用户身份子类型
      */
-    @Column(nullable = false)
+    @Column()
     @Enumerated(EnumType.STRING)
     private UserDetailType userDetailType;
 
@@ -168,6 +168,8 @@ public class User extends Authenticatable {
      */
     @Enumerated(EnumType.STRING)
     private UserAccountType userAccountType;
+
+
 
     @Transient
     public void password(final String mobile,final String password) {

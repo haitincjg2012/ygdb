@@ -2,7 +2,7 @@
 
 var config = require('config');
 var datautil = require('./datautil');
-var redis = require('./midware-server/redis');
+var redis = require('./midware_server/redis');
 var ef = require('./ef');
 
 //API 返回结果集

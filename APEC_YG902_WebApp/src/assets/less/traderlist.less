@@ -1,0 +1,87 @@
+@import "./function.less";
+@unitsize:40rem;
+
+.z-traderlist{
+  border-bottom:1/@unitsize solid #D7D7D7;
+  .z-com-f{
+    width: 750/@unitsize;
+    padding: 0 !important;
+
+    .primaryMain{
+      padding: 0 20/@unitsize;
+      .flex();
+      .flexRow();
+      .pic-com{
+        margin: 20/@unitsize 0;
+        width: 184/@unitsize;
+        position: relative;
+        img{
+          display: block;
+          width: 180/@unitsize;
+          height: 180/@unitsize;
+          border: 1/@unitsize solid #D7D7D7;
+        }
+      }
+      .z-t-info{
+        width: 500/@unitsize;
+        height: 180/@unitsize;
+        margin: 24/@unitsize 0  20/@unitsize 20/@unitsize;
+        .z-t-real-info{
+          height: 32/@unitsize;
+          margin-bottom:25/@unitsize;
+          font-size:0;
+          .z-t-r-name{
+            font-size: 32/@unitsize;
+            font-weight: bold;
+            vertical-align: top;
+            letter-spacing: 3/@unitsize;
+            height: 32/@unitsize;
+            line-height: 32/@unitsize;
+            color:#222328;
+          }
+          .z-t-r{
+            font-size: 20/@unitsize;
+            border-radius: 5/@unitsize;
+            border: 1/@unitsize solid #1960DF;
+            color:#1960DF;
+            padding:3/@unitsize 7/@unitsize;
+            height: 28/@unitsize;
+            vertical-align: top;
+            line-height: 28/@unitsize;
+          }
+
+          .z-t-level{
+            width: 30/@unitsize;
+            height: 30/@unitsize;
+            vertical-align: top;
+            margin:0  16/@unitsize;
+
+          }
+        }
+        .z-t-address{
+          height:30/@unitsize;
+          line-height:30/@unitsize;
+          color:#646464;
+          letter-spacing: 1/@unitsize;
+          .z-t-addr-T{
+            font-size: 30/@unitsize;
+          }
+          .z-t-addr{
+            font-size: 30/@unitsize;
+          }
+        }
+        .z-t-main{
+          height:30/@unitsize;
+          line-height: 30/@unitsize;
+          vertical-align:top;
+          margin-bottom: 60/@unitsize;
+          .z-t-main-com-t{
+            font-size: 30/@unitsize;
+            color:#646464;
+            letter-spacing: 1/@unitsize;
+          }
+        }
+      }
+    }
+  }
+}

@@ -57,6 +57,12 @@ const router = new VueRouter({
       component: require('../views/pc/viewComponents/ranking.vue'),
       meta: {requiresAuth: true}
     },
+    {//我的关注
+      name: 'myAttention',
+      path: '/myAttention',
+      component: require('../views/pc/viewComponents/myAttention.vue'),
+      meta: {requiresAuth: true}
+    },
     {
       name: 'updateSecret',
       path: '/updateSecret',
@@ -156,6 +162,16 @@ const router = new VueRouter({
       name: 'agency',
       path: '/agency',
       component: require('../views/home/viewComponents/agency.vue'),
+    },
+    {
+      name: 'news',
+      path: '/news',
+      component: require('../views/home/viewComponents/news.vue'),
+    },
+    {
+      name: 'newsDetail',
+      path: '/newsDetail',
+      component: require('../views/home/viewComponents/newsDetail.vue'),
     },
     {
       name: 'xqframe',

@@ -1,6 +1,7 @@
 package com.apec.user.dao;
 
 import com.apec.framework.common.enumtype.EnableFlag;
+import com.apec.framework.common.enumtype.UserAccountType;
 import com.apec.framework.common.enumtype.UserRealAuth;
 import com.apec.user.model.User;
 import com.apec.framework.jpa.dao.BaseDAO;
@@ -43,6 +44,23 @@ public interface UserDAO extends BaseDAO<User, Long> {
     List<User> findByIdNumberAndEnableFlagOrderByCreateDateDesc(String idNumber, EnableFlag enableFlag);
 
     /**
+     * 根据用户组织ID查询记录
+     * @param userOrgId 用户组织ID
+     * @param enableFlag 用户状态
+     * @return
+     */
+    List<User> findByUserOrgIdAndEnableFlag(Long userOrgId,EnableFlag enableFlag);
+
+    /**
+     * 通过组织id和用户账号类型查询用户
+     * @param userOrgId
+     * @param enableFlag
+     * @param userAccountType
+     * @return
+     */
+    List<User> findByUserOrgIdAndEnableFlagAndUserAccountType(Long userOrgId, EnableFlag enableFlag, UserAccountType userAccountType);
+
+    /**
      * 统计该身份证用户个数
      * @param idNumber
      * @param enableFlag
@@ -58,5 +76,6 @@ public interface UserDAO extends BaseDAO<User, Long> {
     @Modifying(clearAutomatically = true)
     @Query(value = "update user set enable_flag = 'N',last_update_date = now(),last_update_by = :userId where id in :ids and enable_flag = 'Y'",nativeQuery = true)
     int deleteUserList(@Param("ids") List<Long> ids,@Param("userId") String userId);
+
 
 }

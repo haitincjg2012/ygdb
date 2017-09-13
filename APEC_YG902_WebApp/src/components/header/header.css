@@ -1,0 +1,32 @@
+/**
+* Created by gsy on 2017/9/11.
+* header
+* <!--<cartControl :food="food"></cartControl>-->
+*/
+.header {
+  padding: 0 0.75rem;
+  background-color: #f4f4f4;
+  text-align: center;
+  border-bottom: 0.025rem solid #d7d7d7;
+}
+.header h1 {
+  position: relative;
+  font-size: 0.825rem;
+  height: 2.175rem;
+  line-height: 2.175rem;
+  letter-spacing: 0.075rem;
+  color: #222222;
+}
+.header h1 i {
+  font-style: normal;
+  position: absolute;
+  left: 0.275rem;
+  top: 0.775rem;
+  width: 0.4rem;
+  height: 0.7rem;
+}
+.header h1 i img {
+  width: 0.4rem;
+  height: 0.7rem;
+  display: block;
+}

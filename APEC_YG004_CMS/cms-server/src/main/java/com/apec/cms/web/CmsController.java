@@ -1,15 +1,19 @@
 package com.apec.cms.web;
 
+import com.apec.cms.dto.NewsDTO;
 import com.apec.cms.service.CmsService;
 import com.apec.cms.vo.ArticleVO;
 import com.apec.cms.vo.ChannelListVO;
 import com.apec.cms.vo.ChannelVO;
+import com.apec.cms.vo.NewsVO;
 import com.apec.framework.common.Constants;
+import com.apec.framework.common.PageDTO;
 import com.apec.framework.common.ResultData;
 import com.apec.framework.common.exception.BusinessException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import com.apec.framework.log.InjectLogger;
 
@@ -103,6 +107,99 @@ public class CmsController extends MyBaseController {
             setErrorResultDate(resultData, Constants.SYS_ERROR);
         }
         return resultData;
+    }
+
+    /**
+     * 根据ID查找文章
+     * @param jsonStr 字符
+     * @return ResultData
+     */
+    @RequestMapping(value = "/article/queryById", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String getArticleById(@RequestBody String jsonStr) {
+        try {
+            ArticleVO articleVO = getFormJSON(jsonStr,ArticleVO.class);
+            articleVO = cmsService.queryById(articleVO);
+            if(articleVO == null) {
+                return super.getResultJSONStr(false, null, Constants.DATA_ISNULL);
+            }
+            return super.getResultJSONStr(true, articleVO, "", "");
+        } catch (BusinessException e) {
+            log.error("[Cms][createArticle] Create Article BusinessException", e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }catch (Exception e) {
+            log.error("[Cms][createArticle]  Create Article Exception", e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
+    /**
+     * 根据ID查找文章
+     * @param jsonStr 字符
+     * @return ResultData
+     */
+    @RequestMapping(value = "/article/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResultData<String> updateArticleById(@RequestBody String jsonStr) {
+        ResultData<String> resultData = new ResultData<>();
+        try {
+            ArticleVO articleVO = getFormJSON(jsonStr,ArticleVO.class);
+            String returnCode = cmsService.updateArticleInfo(articleVO, getUserInfo(jsonStr));
+            if (StringUtils.equals(returnCode, Constants.RETURN_SUCESS)) {
+                resultData.setSucceed(true);
+            } else {
+                setErrorResultDate(resultData, returnCode);
+            }
+        } catch (BusinessException e) {
+            log.error("[Cms][updateArticleById] Create Article BusinessException", e);
+            setErrorResultDate(resultData, e.getErrorCode());
+        }catch (Exception e) {
+            log.error("[Cms][updateArticleById]  Create Article Exception", e);
+            setErrorResultDate(resultData, Constants.SYS_ERROR);
+        }
+        return resultData;
+    }
+
+    /**
+     * 根据ID查找文章
+     * @param jsonStr 字符
+     * @return ResultData
+     */
+    @RequestMapping(value = "/article/delete", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResultData<String> deleteArticleById(@RequestBody String jsonStr) {
+        ResultData<String> resultData = new ResultData<>();
+        try {
+            ArticleVO articleVO = getFormJSON(jsonStr,ArticleVO.class);
+            String returnCode = cmsService.deleteArticleInfo(articleVO);
+            if (StringUtils.equals(returnCode, Constants.RETURN_SUCESS)) {
+                resultData.setSucceed(true);
+            } else {
+                setErrorResultDate(resultData, returnCode);
+            }
+        } catch (BusinessException e) {
+            log.error("[Cms][updateArticleById] Create Article BusinessException", e);
+            setErrorResultDate(resultData, e.getErrorCode());
+        }catch (Exception e) {
+            log.error("[Cms][updateArticleById]  Create Article Exception", e);
+            setErrorResultDate(resultData, Constants.SYS_ERROR);
+        }
+        return resultData;
+    }
+
+    /**
+     * 获取栏目下所有的行情
+     * @param jsonStr 字符
+     * @return ResultData
+     */
+    @RequestMapping(value = "/news/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResultData<PageDTO<NewsVO>> queryNewsList(@RequestBody String jsonStr) {
+        try {
+            NewsDTO newsDTO = getFormJSON(jsonStr,NewsDTO.class);
+            PageRequest pageRequest = genPageRequest(newsDTO);
+            PageDTO<NewsVO> newsList = cmsService.queryNewsList(newsDTO, pageRequest);
+            return super.getResultData(true, newsList, "", "");
+        } catch (Exception e) {
+            log.error("[Cms][createArticle]  Create Article Exception", e);
+            return super.getResultData(false, null, Constants.SYS_ERROR, "系统异常");
+        }
     }
 
 

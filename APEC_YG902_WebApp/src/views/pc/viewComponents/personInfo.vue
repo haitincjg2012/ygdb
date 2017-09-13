@@ -1,5 +1,5 @@
 <template>
-  <div class="person-info-page">
+  <div class="person-info-page" style="background-color: #fff">
     <div class="z-p-info-header">
       <div class="z-title">编辑资料</div>
       <div class="return" @click="back">
@@ -15,27 +15,27 @@
           <input type="file" accept="image/*" capture="camera" class="p-v-info-upload" @change="handImg"/>
         </div>
       </div>
-      <split></split>
-      <div class="p-v-form-cli">
+      <!--<split></split>-->
+      <div class="p-v-form-cli" @click.stop.prevent="updateName">
         <span class="label">昵称</span>
         <span class="value">{{name}}</span>
-        <a class="updateBtn" @click.stop.prevent="updateName">修改昵称</a>
+        <!--<a class="updateBtn" @click.stop.prevent="updateName">修改昵称</a>-->
         <img class="arrow-com" src="../../../assets/img/back.png">
       </div>
       <div class="solid-line">
       </div>
-      <div class="p-v-form-cli">
+      <div class="p-v-form-cli" @click.stop.prevent="updatePhone">
         <span class="label">电话</span>
         <span class="value">{{mobile}}</span>
-        <a class="updateBtn" @click.stop.prevent="updatePhone">更换手机号码</a>
+        <!--<a class="updateBtn" @click.stop.prevent="updatePhone">更换手机号码</a>-->
         <img class="arrow-com" src="../../../assets/img/back.png">
       </div>
       <div class="solid-line">
       </div>
-      <div class="p-v-form-cli">
+      <div class="p-v-form-cli" @click.stop.prevent="updateAur">
         <span class="label">身份</span>
         <div class="s-a-box-db"><span>{{userTypeKey}}</span>
-          <a class="updateBtn" @click.stop.prevent="updateAur">修改身份</a>
+          <!--<a class="updateBtn" @click.stop.prevent="updateAur">修改身份</a>-->
         </div>
         <img class="arrow-com" src="../../../assets/img/back.png">
       </div>
@@ -49,54 +49,68 @@
            </li>
         </ul>
       </div>
-      <!--<div class="p-v-bg">-->
-          <!--<p class="p-v-bg-text">背景图片</p>-->
-          <!--<input class="p-v-bg-upload" type="file" accept="image/*">-->
-          <!--<img class="arrow-com" src="../../../assets/img/back.png">-->
-      <!--</div>-->
-      <split></split>
       <div class="z-p-warehouse" v-if="Identity.warehouse">
          <label for="warehouse">仓库名称</label>
-         <input type="text" placeholder="填写仓库的名称" id="warehouse">
+         <input type="text" placeholder="填写仓库的名称" id="warehouse" readonly v-model="organiza.name" class="c-pos-r">
       </div>
       <div class="z-p-storageCapacity" v-if="Identity.storage">
         <label for="storage">仓库库容</label>
-        <input type="text" placeholder="填写仓库的库容" id="storage">
+        <input type="text" placeholder="填写仓库的库容" id="storage" readonly v-model="organiza.storage" class="c-pos-r">
       </div>
-      <div @click.stop="addSelect" class="p-v-form-cli">
+
+      <div class="z-p-warehouse" v-if="coopF">
+        <label for="coop">合 作 社</label>
+        <input type="text" placeholder="填写仓库的名称" id="coop" v-model="organiza.name" class="c-pos-r">
+      </div>
+      <div class="p-v-form-cli" v-if="coldBG">
         <span class="label">所在地区</span>
-        <span class="value">{{addr}}</span>
+        <span class="value c-pos-r">{{organiza.addr}}</span>
         <img class="arrow-com" src="../../../assets/img/back.png">
       </div>
-      <div class="solid-line-p">
+      <div @click.stop="addSelect" class="p-v-form-cli" v-if="!coldBG">
+        <span class="label">所在地区</span>
+        <span class="value c-pos-r">{{organiza.addr}}</span>
+        <img class="arrow-com" src="../../../assets/img/back.png">
       </div>
-      <div class="p-v-form-cli">
+      <div class="solid-line-p"></div>
+      <div class="p-v-form-cli" v-if="coldBG">
+        <span class="label">销售区域</span>
+        <span class="value c-pos-r">{{organiza.saleAddr}}</span>
+        <img class="arrow-com" src="../../../assets/img/back.png">
+      </div>
+      <div @click.stop="saleArea" class="p-v-form-cli" v-if="!coldBG">
+        <span class="label">销售区域</span>
+        <span class="value c-pos-r">{{organiza.saleAddr}}</span>
+        <img class="arrow-com" src="../../../assets/img/back.png">
+      </div>
+      <div class="solid-line-p"></div>
+      <div class="p-v-form-cli" v-if="coldBG">
         <span class="label">详细地址</span>
-        <span class="value">{{addrDetail}}</span>
-        <a class="updateBtn" @click.stop.prevent="updateAddrDetail">修改详细地址</a>
+        <span class="value c-pos-r">{{organiza.addrDetail}}</span>
+        <img class="arrow-com" src="../../../assets/img/back.png">
+      </div>
+      <div class="p-v-form-cli" @click.stop.prevent="updateAddrDetail" v-if="!coldBG">
+        <span class="label">详细地址</span>
+        <span class="value c-pos-r">{{organiza.addrDetail}}</span>
         <img class="arrow-com" src="../../../assets/img/back.png">
       </div>
       <div class="solid-line-p">
       </div>
-      <div class="p-v-form-cli">
+      <div class="p-v-form-cli" v-if="coldBG">
         <span class="label">主营品种</span>
-        <span class="value">{{zySort}}</span>
-        <a class="updateBtn" @click.stop.prevent="updatezySort">修改主营品种</a>
+        <span class="value c-pos-r">{{organiza.pz}}</span>
         <img class="arrow-com" src="../../../assets/img/back.png">
       </div>
-      <div class="solid-line-p">
+      <div class="p-v-form-cli" @click.stop.prevent="updatezySort" v-if="!coldBG">
+        <span class="label">主营品种</span>
+        <span class="value c-pos-r">{{organiza.pz}}</span>
+        <img class="arrow-com" src="../../../assets/img/back.png">
       </div>
-      <!--<div class="p-v-form-cli">-->
-        <!--<span class="label">从业年限</span>-->
-        <!--<span class="value">{{workYear}}</span>-->
-        <!--<a class="updateBtn" @click.stop.prevent="updateWorkY">修改从业年限</a>-->
-        <!--<img class="arrow-com" src="../../../assets/img/back.png">-->
-      <!--</div>-->
       <div class="solid-line-p">
       </div>
       <div class="z-p-description">
          <p class="z-p-text">实力描述:</p>
-         <textarea placeholder="还没有实力描述，赶快填写吧，让更多用户关注你" ref="edit"></textarea>
+         <textarea placeholder="还没有实力描述，赶快填写吧，让更多用户关注你" ref="edit" ></textarea>
       </div>
       <div class="z-des-img">
         <p class="z-des-img-text">最多能上传5张</p>
@@ -107,6 +121,9 @@
           </li>
         </ul>
       </div>
+    </div>
+    <div class="c-commit" @click="submit">
+        提交
     </div>
     <key-board></key-board>
   </div>
@@ -128,7 +145,7 @@
   const api = new API();
   var fn = {
     img:[],
-    DB:[{id:"10000",path:0,keyword:"调果员A",sh:false},{id:"1000",path:1,keyword:"调果员B",sh:false}],
+    DB:[{id:"10000",path:0,keyword:"调果代办",sh:false},{id:"1000",path:1,keyword:"收果代办",sh:false}],
     LK:[{id:"80000",path:0,keyword:"老板",sh:false},{id:"80000",path:1,keyword:"保管",sh:false}],
     bannerImg:function () {
     },
@@ -149,6 +166,11 @@
     addImage:function (data) {
       var dt = data.data;
 
+    },
+    submit:function(data){
+        if(data.succeed){
+            this.$router.push({name:"pc"});
+        }
     }
   }
   export default {
@@ -164,17 +186,40 @@
         zySort: '',//主营品种
         workYear: '',
         userType:'',
+        userDetailType:"",
+        userDetailTypeKey:"",
+        organiza:{
+          saleAddr:'',
+          addr:"",
+          addrDetail:'',
+          pz:'',
+          name:'',
+          storage:''
+        },
         items:null,
         itemId:null,
         Identity:{
           pIDF:false,
           warehouse:false,
           storage:false
-        }
+        },
+        coldBG:true,//冷库-仓库保管员
+        coopF:false
       }
     },
     activated(){
-      this.getUserInfo();
+        var flag = this.$route.query.Flag;
+        if(!this.$store.state.addr && !this.$store.state.saleAddr){
+          this.getUserInfo();
+        }else{
+            if(this.$store.state.addr){
+              this.organiza.addr = this.$store.state.addr;
+            }
+            if(this.$store.state.saleAddr){
+              this.organiza.saleAddr = this.$store.state.saleAddr;
+            }
+
+        }
     },
     methods: {
         back(){
@@ -186,6 +231,8 @@
           self.Identity.pIDF = false;
           self.Identity.warehouse = false;
           self.Identity.storage = false;
+          self.coldBG = false;
+          self.coopF = false;
         },
       selectID(e){
             var e = e || window.event;
@@ -201,17 +248,32 @@
             current.sh = false;
           }
         })
+
         if(id == "80000"){
           var el = document.getElementById("warehouse");
           var e2 = document.getElementById("storage");
            if(value == "保管"){
+               this.userDetailType = "LK_BG";
+               this.coldBG = true;
                el.readOnly = true;
                e2.readOnly = true;
            }else{
+             this.userDetailType = "LK_LB";
+             this.coldBG = false;
              el.readOnly = false;
              e2.readOnly = false;
            }
+        }else if(id == "10000"){
+            console.log(value);
+          if(value == "调果代办"){
+            this.userDetailType = "DB_DG";
+          }else{
+            this.userDetailType = "DB_SG";
+          }
         }
+      },
+      initCold(){
+          this.coldBG = false;
       },
       updateName(){
         MessageBox.prompt('请输入新的姓名').then(({value, action}) => {
@@ -219,11 +281,12 @@
           var dl = {
             name: value
           };
-          self.setUserInfo(dl, value, function () {
-            self.name = value;
-            self.$store.commit("incrementName", {'name': value});//用户名
-            c_js.setLocalValue('name',value);
-          });
+          self.name = value;
+//          self.setUserInfo(dl, value, function () {
+//            self.name = value;
+//            self.$store.commit("incrementName", {'name': value});//用户名
+//            c_js.setLocalValue('name',value);
+//          });
         });
       },
       handImg(evt){
@@ -273,14 +336,16 @@
 
       },
       updateAddrDetail(){
+        var self = this;
         MessageBox.prompt('如xx村xx街道xx号','请输入详细地址').then(({value, action}) => {
-          var self = this;
+
           var dl = {
             addressDetail: value
           };
-          self.setUserInfo(dl, value, function () {
-            self.addrDetail = value;
-          });
+          self.organiza.addrDetail = value;
+//          self.setUserInfo(dl, value, function () {
+//            self.addrDetail = value;
+//          });
         });
       },
       updatezySort(){
@@ -289,9 +354,7 @@
           var dl = {
             mainOperating: value
           };
-          self.setUserInfo(dl, value, function () {
-            self.zySort = value;
-          });
+          self.organiza.pz = value;
         });
       },
       updateWorkY(){
@@ -313,43 +376,57 @@
       },
       updateAurCall(db){
         var self = this;
-        var ID = db.aurKey;
-        if(ID == "LK"){
+        var type = db.aurKey;
+        this.userType = db.aurKey;
+        this.userTypeKey = db.aurName;
+        if(type == "LK"){
           self.itemId = fn.LK;
             self.Identity.pIDF = true;
             self.Identity.warehouse = true;
             self.Identity.storage = true;
-        }else if(ID == "DB"){
+            this.coldBG = true;
+          this.coopF = false;
+        }else if(type == "DB"){
           self.itemId = fn.DB;
           self.Identity.pIDF = true;
           self.Identity.warehouse = false;
           self.Identity.storage = false;
+          this.coopF = false;
+          this.initCold();
         }else{
           self.reset();
+          this.initCold();
+          if(type == "HZS"){
+              this.coopF = true;
+          }
         }
-        var dl = {
-          userType: db.aurKey
-        };
-        self.setUserInfo(dl, '', function () {
-          self.userTypeKey = db.aurName;
-          self.$store.commit("incrementUType", {'userTypeName': db.aurKey});//用户身份 'DB'
-          c_js.setLocalValue('userTypeName',db.aurKey);
-        });
+
       },
       addSelect(){
-        this.$router.push({name: 'addressInfo'});
+        this.$router.push({name: 'addressInfo',query:{flag:"addr"}});
+      },
+      saleArea(){
+        this.$router.push({name: 'addressInfo',query:{flag:"saleAddr"}});
       },
       getUserInfo(){
         const self = this;
+
+        var storage = window.localStorage;
+        var id = storage.userId;
         let params = {
-          api: "/_node_user/_info.apno",
-          data: {}
+          api:"/yg-user-service/user/findUserInfo.apec",
+          data:{
+            id:id
+          }
         }
         try {
           api.post(params).then((res) => {
             var item = res.data;
+
             if (item.succeed) {
-              var data = JSON.parse(item.data);
+//              var data = JSON.parse(item.data);
+              var data = item.data;
+
               self.addr = data.address || '请修改地区';
               self.addrDetail = data.addressDetail || '请修改详细地址';
               self.zySort = data.mainOperating || '请修改主营品种';
@@ -359,6 +436,12 @@
               self.userTypeKey = data.userTypeKey || this.$store.state.userTypeKey || c_js.getLocalValue('userTypeKey');
               self.userType = data.userType;
               self.mobile = data.mobile;
+              self.organiza.addr = data.userOrgClientVO.address;
+              self.organiza.saleAddr = data.userOrgClientVO.saleAddress;
+              self.organiza.addrDetail = data.userOrgClientVO.addressDetail;
+              self.organiza.pz = data.userOrgClientVO.mainOperating;
+              self.organiza.name = data.userOrgClientVO.orgName;
+              self.organiza.storage = data.userOrgClientVO.orgStockCap;
               if(self.userTypeKey == "代办"){
                 self.itemId = fn.DB;
                 self.Identity.pIDF = true;
@@ -369,6 +452,9 @@
                 self.Identity.pIDF = true;
                 self.Identity.warehouse = true;
                 self.Identity.storage = true;
+                this.initCold();
+              }else{
+                  this.initCold();
               }
               self.itemId.forEach(function (current,index) {
                 current.sh = false;
@@ -430,6 +516,66 @@
           console.log(error)
         }
       },
+      submit(){
+        var el = this.$refs.edit;
+        var remark = el.value;
+        var self = this;
+        if(self.userTypeKey == "代办"){
+          if(self.name == ""){
+            Toast("对不起，请您填写用户名称");
+            return;
+          }
+            console.log(self.userDetailType);
+          if(self.userDetailType == ""){
+            Toast("对不起，请您选择身份");
+            return;
+          }
+        }else if(self.userTypeKey == "冷库"){
+            if(self.name == ""){
+              Toast("对不起，请您填写用户名称");
+              return;
+            }
+          if(self.userDetailType == ""){
+            Toast("对不起，请您选择身份");
+            return;
+          }
+        }
+          var data = {
+            name:self.name,//用户名称
+            userType:self.userType,//用户身份类型
+            userDetailType:self.userDetailType,//用户的详细身份
+            userOrgClientVO:{
+              remark:remark,//用户评价
+              address:self.organiza.addr,//所在区域
+              saleAddress:self.organiza.saleAddr,//销售区域
+              addressDetail:self.organiza.addrDetail,//详细地址
+              mainOperating:self.organiza.pz,//主营品种
+              orgStockCap:self.organiza.storage,//库容量
+              orgName:self.organiza.name,//库容名称
+              userOrgImageVOS:[]
+            }
+          };
+
+        let params = {
+          api: "/yg-user-service/user/updateUserInfo.apec",
+          data: data
+        }
+       console.log(params);
+//        return;
+        this.post(params, fn.submit.bind(this));
+      },
+      post(params, fn){
+        try {
+          api.post(params).then((res) => {
+            var data = res.data;
+            fn(data);
+          }).catch((error) => {
+            console.log(error)
+          })
+        } catch (error) {
+          console.log(error)
+        }
+      },
     },
 
     created() {
@@ -437,7 +583,7 @@
     },
 
     components: {
-      split,
+//      split,
       topBar,
       keyBoard
     }
@@ -530,7 +676,9 @@
         color #7e7e7e
       .value
         color #111111
-        margin-left (30 /_rem)
+        margin-left (10 /_rem)
+        display inline-block
+        width (250/_rem)
       span
         font-size (15 /_rem)
     .solid-line

@@ -11,7 +11,8 @@
         <div class="z-t-info clearfix" :data-id = "item.id">
           <div class="z-t-real-info" :data-id = "item.id">
              <span class="z-t-r-name">张三丰</span>
-             <img src="../../../assets/img/rateOne.png" class="z-t-level">
+             <!--<img src="../../../assets/img/rateOne.png" class="z-t-level">-->
+            <img :src="r" class="z-t-level">
              <span class="z-t-r">实名认证</span>
           </div>
           <div class="z-t-main clearfix" :data-id = "item.id">
@@ -42,7 +43,7 @@
     methods:{
 
         xq(){
-          this.$router.push({name:"xqframe",query:{name:"trader"}})
+          this.$router.push({name:"xqframe",query:{id:"trader"}})
         }
     },
     props:{

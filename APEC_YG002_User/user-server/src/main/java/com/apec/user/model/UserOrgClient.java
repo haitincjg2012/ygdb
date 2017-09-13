@@ -3,7 +3,6 @@ package com.apec.user.model;
 import com.apec.framework.common.Constants;
 import com.apec.framework.common.enumtype.UserAccountType;
 import com.apec.framework.jpa.model.BaseModel;
-import com.sun.org.apache.xpath.internal.operations.String;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -101,8 +100,14 @@ public class UserOrgClient extends BaseModel<Long> {
      * 账号类型：
      *   ORG_ACCOUNT("组织账户"),
      *   IND_ACCOUNT("个体账户")
+     *   INIT_ACCOUNT("默认账户")
      */
     @Enumerated(EnumType.STRING)
     private UserAccountType userAccountType;
+
+    /**
+     * 开关，
+     */
+    private boolean pushFlag;
 
 }

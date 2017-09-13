@@ -1,6 +1,7 @@
 package com.apec.user.web;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.apec.framework.cache.CacheHashService;
 import com.apec.framework.cache.CacheService;
 import com.apec.framework.common.*;
@@ -11,6 +12,7 @@ import com.apec.framework.common.util.JsonUtil;
 import com.apec.framework.common.util.ValidateUtil;
 import com.apec.framework.dto.ImageUploadVO;
 import com.apec.user.dto.UserDTO;
+import com.apec.user.model.UserTags;
 import com.apec.user.service.UserService;
 import com.apec.user.vo.*;
 import org.apache.commons.lang.math.NumberUtils;
@@ -139,7 +141,7 @@ public class UserController extends MyBaseController {
             //判断用户是否重新上传了图片，是则保存新上传的图片路径
             if(!StringUtils.isBlank(imageUrl)){
                 userVO.setImgUrl(imageUrl);
-                result = userService.updateUserInfo(userVO,String.valueOf(getUserId(json)),data);
+                result = userService.updateImage(userVO,String.valueOf(getUserId(json)),data);
             }
         } catch (Exception e) {
             log.error("[user][uploadImage] Exception：{}", e);
@@ -180,7 +182,7 @@ public class UserController extends MyBaseController {
                 userOrgClientVO.setOrgFirstBannerUrl(firstImageUrl);
                 userOrgClientVO.setOrgBannerUrl(imageUrl);
                 userVO.setUserOrgClientVO(userOrgClientVO);//用户上传banner图
-                result = userService.updateUserInfo(userVO,String.valueOf(getUserId(json)),data);
+                result = userService.updateBanner(userVO,String.valueOf(getUserId(json)),data);
             }
         } catch (Exception e) {
             log.error("[User][UploadBanner] Exception：{}", e);
@@ -601,6 +603,129 @@ public class UserController extends MyBaseController {
             return super.getResultJSONStr(true, users, "");
         } catch (Exception e) {
             log.error("[user][listUserInfo] Exception：{}", e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
+    /**
+     * 用户信息查询
+     */
+    @RequestMapping(value = "/findOrgList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String findOrgList(@RequestBody String json){
+        try {
+            List<UserOrgClientVO> userOrgClientVOS  = userService.findOrgList();
+            return super.getResultJSONStr(true, userOrgClientVOS, "");
+        } catch (Exception e) {
+            log.error("[user][findOrgList] Exception：{}", e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
+    /**
+     * 分页查询所有的账户信息
+     */
+    @RequestMapping(value = "/pageUserOrg", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String pageUserOrg(@RequestBody String json){
+        PageDTO<UserOrgClientVO> page = new PageDTO<>();
+        //获取前端用户传来的实名验证相关信息
+        UserOrgClientDTO dto = getFormJSON(json,UserOrgClientDTO.class);
+        PageRequest pageRequest = genPageRequest(dto);
+        try {
+            UserOrgClientVO userOrgClientVO = new UserOrgClientVO();
+            BeanUtil.copyPropertiesIgnoreNullFilds(dto, userOrgClientVO);
+            page = userService.findOrgPage(pageRequest, userOrgClientVO);
+            return super.getResultJSONStr(true, page, "");
+        } catch (Exception e) {
+            log.error("[user][pageUserOrg] Exception：{}", e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
+    /**
+     * 推送用户与组织，设置用户账户信息
+     */
+    @RequestMapping(value = "/pushUserAndOrg", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String pushUserAndOrg(@RequestBody String json){
+        UserVO userVO = getFormJSON(json, UserVO.class);
+        try {
+            String result = userService.pushUserAndOrg(userVO,String.valueOf(getUserId(json)));
+            if(StringUtils.equals(Constants.RETURN_SUCESS,result)){
+                return super.getResultJSONStr(true, null, null);
+            }else{
+                return super.getResultJSONStr(false, null, result);
+            }
+
+        } catch (Exception e) {
+            log.error("[user][pushUserAndOrg] Exception：{}", e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
+    /**
+     * 设置组织标签
+     */
+    @RequestMapping(value = "/setOrgTags", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String setOrgTags(@RequestBody String json){
+        UserOrgClientVO userOrgClientVO = getFormJSON(json,UserOrgClientVO.class);
+        try {
+            if(userOrgClientVO == null || userOrgClientVO.getId() == null || userOrgClientVO.getId() == 0L){
+                return super.getResultJSONStr(false, null, Constants.ERROR_100003);
+            }
+            String result = userService.setOrgTags(userOrgClientVO,String.valueOf(getUserId(json)));
+            if(StringUtils.equals(Constants.RETURN_SUCESS,result)){
+                return super.getResultJSONStr(true, null, "");
+            }else{
+                return super.getResultJSONStr(false, null, result);
+            }
+
+        } catch (Exception e) {
+            log.error("[user][setOrgTags] Exception：{}", e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
+    /**
+     * 删除组织
+     */
+    @RequestMapping(value = "/deleteOrg", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String deleteOrg(@RequestBody String json){
+        UserOrgClientVO userOrgClientVO = getFormJSON(json,UserOrgClientVO.class);
+        try {
+            if(userOrgClientVO == null || userOrgClientVO.getId() == null || userOrgClientVO.getId() == 0L){
+                return super.getResultJSONStr(false, null, Constants.ERROR_100003);
+            }
+            String result = userService.deleteOrg(userOrgClientVO,String.valueOf(getUserId(json)));
+            if(StringUtils.equals(Constants.RETURN_SUCESS,result)){
+                return super.getResultJSONStr(true, null, null);
+            }else{
+                return super.getResultJSONStr(false, null, result);
+            }
+
+        } catch (Exception e) {
+            log.error("[user][deleteOrg] Exception：{}", e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
+    /**
+     * 修改组织信息
+     */
+    @RequestMapping(value = "/updateOrg", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String updateOrg(@RequestBody String json){
+        UserOrgClientVO userOrgClientVO = getFormJSON(json,UserOrgClientVO.class);
+        try {
+            if(userOrgClientVO == null || userOrgClientVO.getId() == null || userOrgClientVO.getId() == 0L){
+                return super.getResultJSONStr(false, null, Constants.ERROR_100003);
+            }
+            String result = userService.updateOrg(userOrgClientVO,String.valueOf(getUserId(json)));
+            if(StringUtils.equals(Constants.RETURN_SUCESS,result)){
+                return super.getResultJSONStr(true, null, null);
+            }else{
+                return super.getResultJSONStr(false, null, result);
+            }
+
+        } catch (Exception e) {
+            log.error("[user][updateOrg] Exception：{}", e);
             return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
         }
     }

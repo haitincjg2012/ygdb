@@ -51,6 +51,11 @@ public enum PointRuleType  implements BaseEnum{
      */
     SHARE_PROMOTION("分享推广",RuleGroup.PROMOTION),
 
+    /**
+     * 抽奖
+     */
+    LOTTERY_LUCK("抽奖获得积分",RuleGroup.LOTTERY),
+
 
     /**分界线：分界线以上的为积分规则，分界线已下的为积分消耗规则**/
 

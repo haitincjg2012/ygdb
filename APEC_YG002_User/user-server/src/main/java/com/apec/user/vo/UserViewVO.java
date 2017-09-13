@@ -1,9 +1,6 @@
 package com.apec.user.vo;
 
-import com.apec.framework.common.enumtype.Sex;
-import com.apec.framework.common.enumtype.UserRealAuth;
-import com.apec.framework.common.enumtype.UserStatus;
-import com.apec.framework.common.enumtype.UserType;
+import com.apec.framework.common.enumtype.*;
 import lombok.Data;
 
 import java.util.List;
@@ -52,6 +49,13 @@ public class UserViewVO {
     private UserType userType;
 
     private String userTypeKey;
+
+    /**
+     * 用户身份子类型
+     */
+    private UserDetailType userDetailType;
+
+    private String userDetailTypeKey;
 
     /**
      * 用户状态
@@ -117,19 +121,18 @@ public class UserViewVO {
     private String townId;
 
     /**
-     * 实力描述信息
+     * 组织信息
      */
-    private String strengthDescription;
+    private UserOrgClientVO userOrgClientVO;
 
     /**
-     * 上传banner图地址
+     * 账号类型：
+     *  ORG_MAIN_ACCOUNT("组织账户主体账号"),
+     *  ORG_CHILD_ACCOUNT("组织账户子级账号"),
+     *  IND_MAIN_ACCOUNT("个体账号");
      */
-    private String bannerImgUrl;
+    private UserAccountType userAccountType;
 
-//    /**
-//     * 实力描述上传的照片
-//     */
-//    private List<UserStrengthImgUrlVO> userStrengthImgUrlVOS;
-
+    private String userAccountTypeKey;
 
 }

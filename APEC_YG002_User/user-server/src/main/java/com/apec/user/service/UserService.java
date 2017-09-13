@@ -2,7 +2,6 @@ package com.apec.user.service;
 
 import com.apec.framework.common.PageDTO;
 import com.apec.framework.common.enumtype.UserStatus;
-import com.apec.user.dto.UserAuthRecordDTO;
 import com.apec.user.dto.UserDTO;
 import com.apec.user.vo.*;
 import org.springframework.data.domain.PageRequest;
@@ -153,5 +152,67 @@ public interface UserService {
      */
     String deleteUserList(List<Long> ids,String userId);
 
+    /**
+     * 修改用户个人头像
+     * @param userVO
+     * @param userId
+     * @param resultMap
+     * @return
+     */
+    String updateImage(UserVO userVO,String userId, Map<String,String> resultMap);
+
+    /**
+     * 修改组织Banner图
+     * @param userVO
+     * @param userId
+     * @param resultMap
+     * @return
+     */
+    String updateBanner(UserVO userVO,String userId, Map<String,String> resultMap);
+
+
+    /**
+     * 查询所有的账户信息
+     * @return
+     */
+    List<UserOrgClientVO> findOrgList();
+
+    /**
+     * 分页查询所有的账户信息
+     * @return
+     */
+    PageDTO<UserOrgClientVO> findOrgPage(PageRequest pageRequest,UserOrgClientVO vo);
+
+    /**
+     * 设置用户账户信息
+     * @param userVO
+     * @param userId
+     * @return
+     */
+    String pushUserAndOrg(UserVO userVO , String userId);
+
+    /**
+     * 设置组织标签信息
+     * @param userOrgClientVO
+     * @param userId
+     * @return
+     */
+    String setOrgTags(UserOrgClientVO userOrgClientVO, String userId);
+
+    /**
+     * 删除组织
+     * @param userOrgClientVO
+     * @param userId
+     * @return
+     */
+    String deleteOrg(UserOrgClientVO userOrgClientVO, String userId);
+
+    /**
+     * 修改组织信息
+     * @param userOrgClientVO
+     * @param userId
+     * @return
+     */
+    String updateOrg(UserOrgClientVO userOrgClientVO, String userId);
 
 }

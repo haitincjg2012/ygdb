@@ -3,6 +3,7 @@ package com.apec.voucher.service.impl;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.apec.framework.cache.CacheHashService;
 import com.apec.framework.cache.CacheService;
 import com.apec.framework.common.Constants;
 import com.apec.framework.common.ErrorCodeConst;
 import com.apec.framework.common.PageDTO;
+import com.apec.framework.common.RedisHashConstants;
 import com.apec.framework.common.ResultData;
 import com.apec.framework.common.enums.MqTag;
 import com.apec.framework.common.enumtype.EnableFlag;
@@ -93,6 +97,9 @@ public class VoucherServiceImpl implements VoucherService{
 	@Autowired
 	private VoucherBSDAO voucherBSDAO;
 	
+	@Autowired
+	private CacheHashService cacheHashService;
+	
 	@Override
 	@Transactional
 	public String addVoucherInfo(VoucherVO voucherVO) {
@@ -149,6 +156,8 @@ public class VoucherServiceImpl implements VoucherService{
 		//上传凭据累加积分
 		Double number = 200000.00;
 		totalNumber = totalNumber == null?0.0:totalNumber;
+		
+		cacheHashService.hset(RedisHashConstants.HASH_USER_PREFIX+voucherVO.getUserId(),RedisHashConstants.HASH_VOUCHER_NUM,String.valueOf(totalNumber+voucherNumber));
 		Double remainder = totalNumber % number;
 		if ((remainder+voucherNumber)<number){
 			return Constants.VOUCHER_NOT_EXCEED;
@@ -404,6 +413,92 @@ public class VoucherServiceImpl implements VoucherService{
 			proportionMap.put(String.valueOf(obj[0]), propertion+"%");
 		}
 		return proportionMap;
+	}
+
+	@Override
+	public DBNumberRankViewVO findNumberRankViewVO(Long userId) {
+		
+		//代办个人排名信息
+		List<Object[]> objs = voucherDAO.findDBNumberRankInfo(userId);
+		DBNumberRankViewVO dbNumberRankViewVO = new DBNumberRankViewVO();
+		//代办没上传单据，排在最后一名
+		if (CollectionUtils.isEmpty(objs)){
+			int rankNo = voucherDAO.findLastRankNo();
+			dbNumberRankViewVO.setTotalNumber(0);
+			dbNumberRankViewVO.setRankNo(rankNo+1);
+			return dbNumberRankViewVO;
+		}
+		dbNumberRankViewVO.setRankNo((Double)objs.get(0)[0]);
+		dbNumberRankViewVO.setName(String.valueOf(objs.get(0)[1]));
+		dbNumberRankViewVO.setType(UserType.valueOf(UserType.class,String.valueOf(objs.get(0)[2])));
+		dbNumberRankViewVO.setTotalNumber((Double)objs.get(0)[3]);
+		
+		//代办个人规格数量
+		List<Object[]> attrNumbers = voucherDAO.listAttrNumber(userId);
+		Map<String, String> attrNumberMap = new HashMap<String, String>();
+		double partNumber = 0;
+		for (Object[] attrNumber : attrNumbers){
+			attrNumberMap.put(String.valueOf(attrNumber[0]), String.valueOf(attrNumber[1]));
+			partNumber = partNumber+Double.parseDouble(String.valueOf(attrNumber[1]));
+		}
+		Double totalNumber = voucherGoodsDAO.findTotalNumberByUserId(userId);
+		//其他数量
+		attrNumberMap.put("other", String.valueOf(totalNumber-partNumber));
+		dbNumberRankViewVO.setAttrNumberMap(attrNumberMap);
+		return dbNumberRankViewVO;
+	}
+
+	@Override
+	public PageDTO<DBNumberRankViewVO> listMonthDBNumberRankViewVO(VoucherDTO voucherDTO) {
+		
+        // 获取当月的第一天  
+		Calendar cale = Calendar.getInstance(); 
+        cale = Calendar.getInstance();  
+        cale.add(Calendar.MONTH, 0);  
+        cale.set(Calendar.DAY_OF_MONTH, 1);  
+        
+        //获取当前日期
+        voucherDTO.setDeliveryStartDate(cale.getTime());
+        voucherDTO.setDeliveryEndDate(new Date());
+		//获取数量排行信息
+		PageDTO<Object[]> pageDTO = voucherBSDAO.listDBVoucherInfo(voucherDTO);
+		PageDTO<DBNumberRankViewVO> dbNumberRankViewVOPage = new PageDTO<DBNumberRankViewVO>();
+		List<Object[]> objs = pageDTO.getRows();
+		List<DBNumberRankViewVO> dbNumberRankViewVOList = new LinkedList<DBNumberRankViewVO>();
+		for (Object[] obj : objs){
+			DBNumberRankViewVO dbNumberRankViewVO = new DBNumberRankViewVO();
+			dbNumberRankViewVO.setName((String)obj[0]);
+			dbNumberRankViewVO.setType(UserType.valueOf(UserType.class, String.valueOf(obj[1])));
+			dbNumberRankViewVO.setTotalNumber((double)obj[2]);
+			dbNumberRankViewVOList.add(dbNumberRankViewVO);
+		}
+		dbNumberRankViewVOPage.setNumber(pageDTO.getNumber());
+		dbNumberRankViewVOPage.setRows(dbNumberRankViewVOList);
+		dbNumberRankViewVOPage.setTotalElements(pageDTO.getTotalElements());
+		dbNumberRankViewVOPage.setTotalPages(pageDTO.getTotalPages());
+		return dbNumberRankViewVOPage;
+	}
+
+	@Override
+	public PageDTO<DBNumberRankViewVO> listTotalDBNumberRankViewVO(VoucherDTO voucherDTO) {
+		
+		//获取数量排行信息
+		PageDTO<Object[]> pageDTO = voucherBSDAO.listDBVoucherInfo(voucherDTO);
+		PageDTO<DBNumberRankViewVO> dbNumberRankViewVOPage = new PageDTO<DBNumberRankViewVO>();
+		List<Object[]> objs = pageDTO.getRows();
+		List<DBNumberRankViewVO> dbNumberRankViewVOList = new LinkedList<DBNumberRankViewVO>();
+		for (Object[] obj : objs){
+			DBNumberRankViewVO dbNumberRankViewVO = new DBNumberRankViewVO();
+			dbNumberRankViewVO.setName((String)obj[0]);
+			dbNumberRankViewVO.setType(UserType.valueOf(UserType.class, String.valueOf(obj[1])));
+			dbNumberRankViewVO.setTotalNumber((double)obj[2]);
+			dbNumberRankViewVOList.add(dbNumberRankViewVO);
+		}
+		dbNumberRankViewVOPage.setNumber(pageDTO.getNumber());
+		dbNumberRankViewVOPage.setRows(dbNumberRankViewVOList);
+		dbNumberRankViewVOPage.setTotalElements(pageDTO.getTotalElements());
+		dbNumberRankViewVOPage.setTotalPages(pageDTO.getTotalPages());
+		return dbNumberRankViewVOPage;
 	}
 }
 

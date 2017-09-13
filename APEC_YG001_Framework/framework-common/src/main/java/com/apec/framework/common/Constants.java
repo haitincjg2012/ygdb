@@ -204,8 +204,6 @@ public interface Constants
 
     String EN_DEFAULT_LANG = "en-US";
 
-    String SUCCESS = "success";
-
     String POST = "POST";
 
     String GET = "GET";
@@ -421,6 +419,7 @@ public interface Constants
     /*************************上传凭据*****************************/
     String VOUCHER = "voucher_";//上传凭据缓存前缀
     String VOUCHER_NOT_EXCEED = "上传累加没满100吨";
+    String TOTALNUMBER = "totalNumber_";//上传总数量缓存前缀
     
     /********************站内信发送人为系统**********************/
     String MESSAGE_SENDER_SYSTEM = "messageSenderSystem";

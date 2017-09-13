@@ -11,8 +11,8 @@ public enum UserDetailType  implements BaseEnum {
 
     DB_SG("收果代办"),
     DB_DG("调果代办"),
-    LK_LB("冷库老板"),
-    LK_BG("冷库保管");
+    LK_LB("老板"),
+    LK_BG("保管");
 
     private final String key;
 

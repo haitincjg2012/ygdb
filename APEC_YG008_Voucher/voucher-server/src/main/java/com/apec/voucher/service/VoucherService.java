@@ -4,6 +4,7 @@ import org.springframework.data.domain.PageRequest;
 
 import com.apec.framework.common.PageDTO;
 import com.apec.voucher.dto.VoucherDTO;
+import com.apec.voucher.viewvo.DBNumberRankViewVO;
 import com.apec.voucher.viewvo.DBVoucherViewVO;
 import com.apec.voucher.viewvo.VoucherBSViewVO;
 import com.apec.voucher.viewvo.VoucherRespViewVO;
@@ -73,4 +74,26 @@ public interface VoucherService {
 	 * @return DBVoucherViewVO
 	 * */
 	DBVoucherViewVO listDBVoucherInfo(VoucherDTO voucherDTO);
+	
+	/**
+	 * 获取代办个人调果排行
+	 * @param Long userId
+	 * @return DBNumberRankViewVO
+	 * */
+	DBNumberRankViewVO findNumberRankViewVO(Long userId);
+	
+	/**
+	 * 获取当月代办上传单据数量排行旁
+	 * @param VoucherDTO voucherDTO
+	 * @return PageDTO<DBNumberRankViewVO>
+	 * */
+	PageDTO<DBNumberRankViewVO> listMonthDBNumberRankViewVO(VoucherDTO voucherDTO);
+	
+	/**
+	 * 获取代办上传单据数量总榜
+	 * @param VoucherDTO voucherDTO
+	 * @return PageDTO<DBNumberRankViewVO>
+	 * */
+	PageDTO<DBNumberRankViewVO> listTotalDBNumberRankViewVO(VoucherDTO voucherDTO);
+	
 }

@@ -25,14 +25,14 @@ public interface UserPointDAO extends BaseDAO<UserPoint,Long> {
      */
      UserPoint findByUserIdAndEnableFlag(Long userId, EnableFlag enableFlag);
 
-    /**
-     * 分页查询用户积分信息(通过用户姓名模糊查询)
-     * @param userName
-     * @param enableFlag
-     * @param pageable
-     * @return
-     */
-    Page<UserPoint> findByUser_nameLikeAndEnableFlagOrderByCreateDateDesc(String userName, EnableFlag enableFlag, Pageable pageable);
+//    /**
+//     * 分页查询用户积分信息(通过用户姓名模糊查询)
+//     * @param userName
+//     * @param enableFlag
+//     * @param pageable
+//     * @return
+//     */
+//    Page<UserPoint> findByUser_nameLikeAndEnableFlagOrderByCreateDateDesc(String userName, EnableFlag enableFlag, Pageable pageable);
 
     /**
      * 修改用户积分

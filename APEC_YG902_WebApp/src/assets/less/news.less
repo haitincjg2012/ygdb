@@ -1,0 +1,180 @@
+/*
+* 市场行情+行情详情
+* created by gsy on 2017/9/11
+*/
+@rem:40rem;
+
+//市场行情
+.newsContainer{
+  .myheader{
+    position: fixed;
+    left:0;
+    right:0;
+    top:0;
+
+  }
+  .newsScroll{
+    position: fixed;
+    left:0;
+    right:0;
+    top:88/@rem;
+    bottom:0;
+    overflow: hidden;
+    .carousel{
+      width:100%;
+      height:360/@rem;
+      img{
+        width:100%;
+        height:100%;
+        vertical-align:middle;
+      }
+      .mint-swipe-items-wrap{
+
+      }
+      .mint-swipe-item{
+        //position: relative;
+        float:left;
+        height:100%;
+        .wordWrapper,h1{
+          position: absolute;
+          bottom:0;
+          left: 0;
+          right:0;
+          height:70/@rem;
+          line-height:70/@rem;
+        }
+        .wordWrapper{
+          background-color: #000;
+          opacity: 0.3;
+          width:100%;
+        }
+        h1{
+          color:#fff;
+          font-size: 30/@rem;
+          letter-spacing: 3/@rem;
+          padding-left: 30/@rem;
+        }
+      }
+      .mint-swipe-indicators{
+        right:0;
+        left:initial;
+        //position: absolute;
+        height:70/@rem;
+        bottom: 0;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        .mint-swipe-indicator{
+          width:12/@rem;
+          height: 12/@rem;
+          opacity: 1;
+          background:#646464;
+          margin:0 0 0 26/@rem;
+          &.is-active{
+            background-color: #fff;
+          }
+        }
+      }
+    }
+    .newsList{
+      width:100%;
+      background-color: #fff;
+      li{
+        width:100%;
+        border-bottom: 1/@rem solid #D7D7D7;
+        .newsItem{
+          padding:25/@rem 30/@rem;
+          display: flex;
+          flex-direction: row;
+          .newslistR{
+            width:216/@rem;
+            height:152/@rem;
+            margin-right:30/@rem;
+            display: inline-block;
+            img{
+              width:100%;
+              height:100%;
+            }
+          }
+          .newslistL{
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding-bottom: 20/@rem;
+            max-width: 446/@rem;
+            letter-spacing: 2/@rem;
+            h2{
+              color:#222328;
+              font-size:30/@rem;
+
+            }
+            p{
+              font-size:24/@rem;
+              color:#646464;
+
+              span{
+                margin-left:26/@rem;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+//行情详情
+.newsDetail{
+  width:100%;
+  height:100%;
+  background-color: #fff;
+  .myheader{
+    position: fixed;
+    left:0;
+    right:0;
+    top:0;
+    background-color: #f4f4f4;
+  }
+  .newsDetailScroll{
+    position: fixed;
+    left:0;
+    right:0;
+    top:88/@rem;
+    bottom: 0;
+    overflow: hidden;
+  }
+  .newsDetailMain{
+    width:100%;
+    .newsDtop{
+       padding:39/@rem 30/@rem 20/@rem;
+       border-bottom:1/@rem solid #D7D7D7;
+      h1{
+        font-size:40/@rem;
+        line-height: 60/@rem;
+        letter-spacing: 3/@rem;
+        font-weight: bold;
+        margin-bottom:32/@rem;
+        color:#222328;
+      }
+      p{
+        font-size: 30/@rem;
+        line-height: 30/@rem;
+        letter-spacing: 2/@rem;
+        color:#646464;
+        span{
+          margin-left: 34/@rem;
+        }
+      }
+    }
+    .newsDbtm{
+      padding:26/@rem 30/@rem;
+      p{
+        text-indent:2em;
+        text-align: justify;
+        color:#323232;
+        font-size: 32/@rem;
+        letter-spacing: 2/@rem;
+        line-height:48/@rem;
+      }
+    }
+  }
+}

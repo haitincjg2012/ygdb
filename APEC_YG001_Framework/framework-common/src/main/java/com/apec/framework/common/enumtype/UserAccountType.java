@@ -12,11 +12,9 @@ public enum UserAccountType implements BaseEnum {
 
     ORG_ACCOUNT("组织账户"),
     IND_ACCOUNT("个体账户"),
-    INIT_ACCOUNT("默认账户"),
     ORG_MAIN_ACCOUNT("组织账户主体账号"),
     ORG_CHILD_ACCOUNT("组织账户子级账号"),
-    IND_MAIN_ACCOUNT("个体账号"),
-    INIT_MAIN_ACCOUNT("默认账号");
+    IND_MAIN_ACCOUNT("个体账号");
 
     private final String key;
 

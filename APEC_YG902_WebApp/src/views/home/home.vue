@@ -28,42 +28,67 @@
       <div class="tool">
         <ul class="clearfix">
           <li class="li-com" @click.stop="apple">
-            <img src="../../assets/img/supply.png" />
-            <p>苹果详情</p>
+            <img src="../../assets/img/xq.png" />
+            <p>苹果行情</p>
           </li>
           <li @click.stop="agency" class="li-com">
-            <img src="../../assets/img/Agency.png" />
+            <img src="../../assets/img/db.png" />
             <p>找代办</p>
           </li>
           <li @click.stop="cold" class="li-com">
-            <img src="../../assets/img/ColdStorage.png" />
+            <img src="../../assets/img/coldS.png" />
             <p>找冷库</p>
           </li>
           <li class="li-com" @click.stop="trade">
-            <img src="../../assets/img/buy.png" />
+            <img src="../../assets/img/ks.png" />
             <p>找客商</p>
           </li>
         </ul>
       </div>
+      <div class="c-sign">
+         <div class="c-sign-title">
+            <img src="../../assets/img/date.png">
+            <span class="c-sign-sp">珍惜今天的拥有,明天才会富有</span>
+         </div>
+         <div class="c-sign-v">
+            <div class="v-line"></div>
+         </div>
+         <div class="c-sign-img">
+           <img src="../../assets/img/sign.png">
+         </div>
+      </div>
       <div class="z-home-gq">
            <div class="z-h-com">
-               <img src="../../assets/img/supply.png" @click.stop="buy"/>
-                <p>供应信息</p>
+               <img src="../../assets/img/gy.png" @click.stop="buy"/>
+                <!--<p>供应信息</p>-->
            </div>
-           <div class="z-h-com">
-               <img src="../../assets/img/buy.png" @click.stop="sell"/>
-               <p>求购信息</p>
+           <div class="z-h-com c-right">
+               <img src="../../assets/img/qg.png" @click.stop="sell"/>
+               <!--<p>求购信息</p>-->
            </div>
       </div>
-      <div class="z-banner" @click="signIn">
-        <img src="../../assets/img/banner.png" v-if="showpic"/>
-        <img :src="bannerSrc">
+      <!--<div class="z-banner" @click="signIn">-->
+        <!--<img src="../../assets/img/banner.png" v-if="showpic"/>-->
+        <!--<img :src="bannerSrc">-->
+      <!--</div>-->
+      <div class="c-h-news">
+          <h4 class="c-news-title">市场详情</h4>
+           <div class="c-news-more">
+                <span class="c-sp">更多</span>
+                <img src="../../assets/img/m.png" class="c-img">
+           </div>
       </div>
-      <div class="z-recommend clearfix">
-        <div class="z-title-pic">
-          <img src="../../assets/img/recommend.jpg">
-        </div>
+      <div>
+           使用新闻列表的详情的内容
       </div>
+      <div class="c-gq-info">
+        <h4 class="c-gq-title">供求信息</h4>
+      </div>
+      <!--<div class="z-recommend clearfix">-->
+        <!--<div class="z-title-pic">-->
+          <!--<img src="../../assets/img/recommend.jpg">-->
+        <!--</div>-->
+      <!--</div>-->
       <div v-if="sh">
         <ul class="z-h-ul">
 
@@ -184,7 +209,7 @@
   import ZS from '../../assets/img/Diamonds.png'//砖石
   import DS from '../../assets/img/Ancrown@3x.png'//大师
 
-  import QG from './viewComponents/gqimg.vue'
+  import QG from '../../components/gqimg.vue'
   import c_js from '../../assets/js/common'
   import store from '../../store/store'
   import API from '../../api/api'
@@ -746,7 +771,7 @@
         this.$router.push({name: 'agency',query:{name:"AG"}});
       },
       apple(){
-
+        this.$router.push({name:'news'});
       },
       trade(){
         this.$router.push({name: 'trader',query:{name:"TR"}});

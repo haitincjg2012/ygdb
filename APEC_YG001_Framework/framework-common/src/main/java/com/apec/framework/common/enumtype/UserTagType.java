@@ -9,7 +9,8 @@ import com.apec.framework.common.enums.BaseEnum;
  */
 public enum UserTagType implements BaseEnum {
 
-    GYLJRHZK("供应链金融合作库");
+    GYLJRHZK("供应链金融合作库"),
+    QYRZ("企业认证");
 
     private final String key;
 

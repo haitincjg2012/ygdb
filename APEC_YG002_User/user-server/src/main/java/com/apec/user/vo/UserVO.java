@@ -185,7 +185,18 @@ public class UserVO extends BaseVO<Long>{
     private UserAccountType userAccountType;
 
     /**
+     * OrgId 用户组织ID
+     */
+    private Long  userOrgId;
+
+    /**
      * 用户组织
      */
     private UserOrgClientVO userOrgClientVO;
+
+    /**
+     * 开关，
+     */
+    private boolean pushFlag;
+
 }

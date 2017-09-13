@@ -60,6 +60,12 @@
         <span>调果排行榜</span>
         <img class="arrow" src="../../assets/img/back.png">
       </div>
+      <div class="dash-line"></div>
+      <div @click.stop="routerInfo('myAttention')" class="p-form-cli">
+        <img class="label" src="../../assets/img/Bill.png">
+        <span>我的关注</span>
+        <img class="arrow" src="../../assets/img/back.png">
+      </div>
       <split></split>
       <div @click.stop="routerInfo('myCo')" class="p-form-cli">
         <img class="label" src="../../assets/img/Group0.png">
@@ -166,6 +172,9 @@
               break;
             case 'ranking'://调果排行榜
               this.$router.push({name:'ranking'});
+              break;
+            case 'myAttention'://我的关注
+              this.$router.push({name:'myAttention'});
               break;
             case 'upSecret'://修改密码
               this.$router.push({name: 'updateSecret'});

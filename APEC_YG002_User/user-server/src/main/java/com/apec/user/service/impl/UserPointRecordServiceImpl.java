@@ -271,28 +271,28 @@ public class UserPointRecordServiceImpl implements UserPointRecordService {
      */
     @Override
     public PageDTO<UserPointVO> pageUserPoints(UserDTO dto, PageRequest pageRequest) {
-        UserVO userVO = new UserVO();
-        BeanUtil.copyPropertiesIgnoreNullFilds(dto,userVO);
-
-        Page<UserPoint> page = userPointDAO.findAll(getInputCondition(userVO),pageRequest);
+//        UserVO userVO = new UserVO();
+//        BeanUtil.copyPropertiesIgnoreNullFilds(dto,userVO);
+//
+//        Page<UserPoint> page = userPointDAO.findAll(getInputCondition(userVO),pageRequest);
         PageDTO<UserPointVO> result = new PageDTO<>();
-        List<UserPointVO> list = new ArrayList<>();
-        if(page != null){
-            User user;
-            for(UserPoint point:page){
-                user = userDAO.findOne(point.getUserId());
-                UserPointVO vo = new UserPointVO();
-                BeanUtil.copyPropertiesIgnoreNullFilds(point,vo);
-                if(user != null){
-                    vo.setUserName(user.getName());
-                }
-                list.add(vo);
-            }
-            result.setNumber(page.getNumber()+1);
-            result.setTotalElements(page.getTotalElements());
-            result.setTotalPages(page.getTotalPages());
-        }
-        result.setRows(list);
+//        List<UserPointVO> list = new ArrayList<>();
+//        if(page != null){
+//            User user;
+//            for(UserPoint point:page){
+//                user = userDAO.findOne(point.getUserId());
+//                UserPointVO vo = new UserPointVO();
+//                BeanUtil.copyPropertiesIgnoreNullFilds(point,vo);
+//                if(user != null){
+//                    vo.setUserName(user.getName());
+//                }
+//                list.add(vo);
+//            }
+//            result.setNumber(page.getNumber()+1);
+//            result.setTotalElements(page.getTotalElements());
+//            result.setTotalPages(page.getTotalPages());
+//        }
+//        result.setRows(list);
         return result;
     }
 
@@ -328,18 +328,18 @@ public class UserPointRecordServiceImpl implements UserPointRecordService {
      * @param vo 用户对象（以积分表中用户对象的信息去进行条件查询）
      * @return
      */
-    private Predicate getInputCondition(UserVO vo)
-    {
-        List<BooleanExpression> predicates = new ArrayList<>();
-        if(null != vo)
-        {
-            if(StringUtils.isNotBlank(vo.getName()))
-            {
-                predicates.add(QUserPoint.userPoint.user.name.like("%" + vo.getName() + "%"));
-            }
-        }
-        predicates.add(QUserPoint.userPoint.enableFlag.eq(EnableFlag.Y));
-        return BooleanExpression.allOf(predicates.toArray(new BooleanExpression[predicates.size()]));
-    }
+//    private Predicate getInputCondition(UserVO vo)
+//    {
+//        List<BooleanExpression> predicates = new ArrayList<>();
+//        if(null != vo)
+//        {
+//            if(StringUtils.isNotBlank(vo.getName()))
+//            {
+//                predicates.add(QUserPoint.userPoint.user.name.like("%" + vo.getName() + "%"));
+//            }
+//        }
+//        predicates.add(QUserPoint.userPoint.enableFlag.eq(EnableFlag.Y));
+//        return BooleanExpression.allOf(predicates.toArray(new BooleanExpression[predicates.size()]));
+//    }
 
 }

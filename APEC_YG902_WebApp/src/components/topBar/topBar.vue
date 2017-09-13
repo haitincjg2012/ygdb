@@ -89,8 +89,8 @@
         font-size 20px
         color #28CBA7
       img
-        width (17 / _rem)
-        height (23 / _rem)
+        width (12.5 / _rem)
+        height (20 / _rem)
     .btn-menu
       position absolute
       top 0

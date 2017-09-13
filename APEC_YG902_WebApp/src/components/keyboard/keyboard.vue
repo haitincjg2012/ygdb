@@ -78,6 +78,8 @@ export default{
         else
           i.class = 's-a-box-db'
       })
+
+
     },
     canleBtn(){
       this.popupVisible= false;

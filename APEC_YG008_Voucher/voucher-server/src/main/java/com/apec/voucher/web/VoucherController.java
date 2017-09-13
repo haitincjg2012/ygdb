@@ -26,6 +26,7 @@ import com.apec.framework.dto.UserInfoVO;
 import com.apec.framework.log.InjectLogger;
 import com.apec.voucher.dto.VoucherDTO;
 import com.apec.voucher.service.VoucherService;
+import com.apec.voucher.viewvo.DBNumberRankViewVO;
 import com.apec.voucher.viewvo.DBVoucherViewVO;
 import com.apec.voucher.viewvo.VoucherBSViewVO;
 import com.apec.voucher.viewvo.VoucherRespViewVO;
@@ -318,6 +319,75 @@ public class VoucherController extends MyBaseController{
 			VoucherDTO voucherDTO = getFormJSON(json, VoucherDTO.class);
 			DBVoucherViewVO dbVoucherViewVO = voucherService.listDBVoucherInfo(voucherDTO);
 			return getResultData(true, dbVoucherViewVO, "");
+		} catch(BusinessException e){
+			log.error("Add BusinessException :{}",e);
+			return getResultData(false, null, Constants.SERVER_RESEST_EXCEPTION);
+		} catch (Exception e) {
+			log.error("Add Excetion :{}",e);
+			return getResultData(false, null, Constants.SYS_ERROR);
+	    }
+	}
+	
+	/**
+	 * 获取代办个人调果排行
+	 * @param String json
+	 * @return ResultData<PageDTO<DBNumberRankViewVO>>
+	 * */
+	@RequestMapping(value = "/getNumberRankViewVO", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	public ResultData<DBNumberRankViewVO> getNumberRankViewVO(@RequestBody String json){
+		
+		try {
+			PageJSON<String> pageJson = super.getPageJSON(json, String.class);
+			VoucherDTO voucherDTO = JsonUtil.parseObject(pageJson.getFormJSON(), VoucherDTO.class);
+			//区分代办个人中心和找代办所传的userId
+			Long userId = voucherDTO.getUserId();//找代办userid
+			if (voucherDTO.getUserId() == null){
+				userId = getUserId(json);//代办个人中心userid
+			}
+			DBNumberRankViewVO data = voucherService.findNumberRankViewVO(userId);
+			return getResultData(true, data, "");		
+		} catch(BusinessException e){
+			log.error("Add BusinessException :{}",e);
+			return getResultData(false, null, Constants.SERVER_RESEST_EXCEPTION);
+		} catch (Exception e) {
+			log.error("Add Excetion :{}",e);
+			return getResultData(false, null, Constants.SYS_ERROR);
+	    }
+	}
+	
+	/**
+	 * 获取代办上传单据数量月榜
+	 * @param json
+	 * @return ResultData<PageDTO<DBNumberRankViewVO>>
+	 * */
+	@RequestMapping(value = "/listMonthDBNumberRankViewVO", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	public ResultData<PageDTO<DBNumberRankViewVO>> listMonthDBNumberRankViewVO(@RequestBody(required = false) String json){
+
+		try {
+			VoucherDTO voucherDTO = getFormJSON(json, VoucherDTO.class);
+			PageDTO<DBNumberRankViewVO> data = voucherService.listMonthDBNumberRankViewVO(voucherDTO);
+			return getResultData(true, data, "");		
+		} catch(BusinessException e){
+			log.error("Add BusinessException :{}",e);
+			return getResultData(false, null, Constants.SERVER_RESEST_EXCEPTION);
+		} catch (Exception e) {
+			log.error("Add Excetion :{}",e);
+			return getResultData(false, null, Constants.SYS_ERROR);
+	    }
+	}
+	
+	/**
+	 * 获取代办上传单据数量总榜
+	 * @param json
+	 * @return ResultData<PageDTO<DBNumberRankViewVO>>
+	 * */
+	@RequestMapping(value = "/listTotalDBNumberRankViewVO", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	public ResultData<PageDTO<DBNumberRankViewVO>> listTotalDBNumberRankViewVO(@RequestBody(required = false) String json){
+
+		try {
+			VoucherDTO voucherDTO = getFormJSON(json, VoucherDTO.class);
+			PageDTO<DBNumberRankViewVO> data = voucherService.listTotalDBNumberRankViewVO(voucherDTO);
+			return getResultData(true, data, "");		
 		} catch(BusinessException e){
 			log.error("Add BusinessException :{}",e);
 			return getResultData(false, null, Constants.SERVER_RESEST_EXCEPTION);

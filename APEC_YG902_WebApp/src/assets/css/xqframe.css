@@ -26,35 +26,73 @@
 }
 .z-person .z-bannerImg img {
   width: 100%;
+  display: block;
 }
 .z-person .z-bannerImg .z-head-portrait {
   position: absolute;
-  bottom: -1rem;
-  right: 2.5rem;
+  bottom: -2rem;
+  right: 1.5rem;
   display: block;
-  width: 3rem;
-  height: 3rem;
+  width: 4rem;
+  height: 4rem;
+  border: 0.05rem solid #000000;
   border-radius: 100%;
+}
+.z-person .z-p-info {
+  margin-top: 1rem;
+}
+.z-person .z-p-info .c-t-info {
+  line-height: 1.5rem;
+}
+.z-person .z-p-info .z-p-flag {
+  padding-top: 1rem;
 }
 .z-person .z-p-info .z-p-name {
   padding-left: 0.5rem;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   font-weight: bold;
-  line-height: 1.5rem;
+}
+.z-person .z-p-info .z-cold-name {
+  padding-left: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+  width: 8.375rem;
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+}
+.z-person .z-p-info .c-p-tx {
+  font-size: 0.7rem;
+  color: #fd9e24;
+  border: 0.05rem solid #fd9e24;
+  border-radius: 0.1rem;
+  vertical-align: top;
 }
 .z-person .z-p-info .z-p-real {
   font-size: 0.7rem;
-  line-height: 1.5rem;
-  border-radius: 0.25rem;
-  border: 0.05rem solid #0ecb5d;
-  color: #0ecb5d;
+  border: 0.05rem solid #077cf5;
+  color: #077cf5;
+}
+.z-person .z-p-info .c-p-c-real {
+  vertical-align: top;
 }
 .z-person .z-p-info .z-p-level {
-  width: 0.9rem;
-  height: 0.775rem;
+  padding-left: 0.5rem;
+  width: 0.75rem;
+  height: 0.75rem;
   vertical-align: middle;
 }
+.z-person .z-p-info .z-p-represent {
+  margin: 0 0.2rem;
+  padding: 0 0.1rem;
+  background-color: #e6c23d;
+  font-size: 0.7rem;
+  line-height: 2.5rem;
+}
 .z-person .z-p-info .z-p-x-agency {
+  display: none;
   padding-left: 0.5rem;
   font-weight: bold;
   font-size: 0.8rem;
@@ -72,6 +110,7 @@
   display: -ms-flexbox;
   /* IE 10 */
   display: flex;
+  margin-bottom: 0.5rem;
 }
 .z-person .z-p-info .z-p-path .z-p-part {
   width: 3.75rem;
@@ -79,6 +118,7 @@
 }
 .z-person .z-p-info .z-p-path .z-p-part .z-p-number {
   font-weight: bold;
+  font-size: 0.8rem;
 }
 .z-person .z-p-info .z-p-path .z-p-part p {
   line-height: 1.5rem;
@@ -91,8 +131,8 @@
   position: relative;
 }
 .z-person .z-p-info .z-p-path .z-p-follow .z-p-f {
-  width: 3rem;
-  margin-left: 3.75rem;
+  width: 4.2rem;
+  margin: auto;
   margin-top: 1.25rem;
   border: 0.05rem solid #000000;
   line-height: 1.25rem;
@@ -103,59 +143,59 @@
 .z-person .z-p-info .z-p-path .z-p-follow .active {
   color: #0ecb5d;
 }
-.z-person .z-space {
-  width: 18.75rem;
-  height: 0.75rem;
-  background-color: #e6e3e3;
+.z-person .z-p-des {
+  margin-left: 0.5rem;
 }
 .z-person .z-p-des .z-p-des-icon {
-  padding-left: 0.5rem;
-  width: 0.75rem;
-  height: 0.75rem;
-  vertical-align: middle;
+  padding-right: 0.5rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  vertical-align: sub;
 }
-.z-person .z-p-des .z-p-des-area {
-  line-height: 1.5rem;
+.z-person .z-p-des .z-p-des-w {
+  font-size: 0.85rem;
+  height: 2.3rem;
+  line-height: 2.3rem;
+  border-bottom: 0.05rem solid #d6cece;
 }
-.z-person .z-p-des .z-p-des-area label {
-  font-size: 0.7rem;
-}
-.z-person .z-p-des .z-p-des-area span {
-  font-size: 0.7rem;
-}
-.z-person .z-p-des .z-p-des-pz {
-  line-height: 1.5rem;
-}
-.z-person .z-p-des .z-p-des-pz label {
-  font-size: 0.7rem;
-}
-.z-person .z-p-des .z-p-des-pz span {
-  font-size: 0.7rem;
-}
-.z-person .z-p-des .z-p-des-market {
-  line-height: 1.5rem;
-}
-.z-person .z-p-des .z-p-des-market label {
-  font-size: 0.7rem;
-}
-.z-person .z-p-des .z-p-des-market span {
-  font-size: 0.7rem;
-}
-.z-person .z-p-des .z-p-des-text {
-  line-height: 1.5rem;
-  font-size: 0.7rem;
+.z-person .z-p-des .z-p-des-w input {
+  width: 11.5rem;
+  height: 0.95rem;
+  font-size: 0.85rem;
+  text-align: right;
 }
 .z-person .z-p-des .z-p-des-content {
   padding: 0 0.5rem;
   line-height: 1.25rem;
-  font-size: 0.7rem;
-  height: 5rem;
+  font-size: 0.75rem;
+  color: #919191;
+  margin-bottom: 1rem;
 }
-.z-transaction h4 {
-  padding-left: 0.5rem;
-  line-height: 2rem;
+.z-space {
+  width: 18.75rem;
+  height: 0.05rem;
+  background-color: #e6e3e3;
+  margin-bottom: 0.75rem;
+}
+.z-space-com {
+  width: 18.75rem;
+  height: 0.05rem;
+  background-color: #e6e3e3;
+}
+.z-transaction .z-h4-title {
   font-size: 0.8rem;
-  font-weight: bold;
+  height: 1.75rem;
+  line-height: 1.75rem;
+  color: #ff8400;
+}
+.z-transaction .z-h4-title:before {
+  content: "";
+  width: 0.2rem;
+  height: 0.75rem;
+  background-color: #ff8400;
+  display: inline-block;
+  margin: 0 0.75rem 0 0.5rem;
+  vertical-align: middle;
 }
 .z-transaction .z-transaction-results {
   background: #fff;
@@ -173,25 +213,114 @@
   display: flex;
 }
 .z-transaction .z-transaction-results .z-r-totalW {
-  width: 9.375rem;
+  width: 9.25rem;
 }
 .z-transaction .z-transaction-results .z-r-rank {
-  width: 9.375rem;
+  width: 9.25rem;
+}
+.z-transaction .z-transaction-results .z-vertical-line {
+  height: 2.5rem;
+  line-height: 2.5rem;
+  width: 0.25rem;
+}
+.z-transaction .z-transaction-results .z-vertical-line .z-v-line {
+  display: inline-block;
+  width: 0.1rem;
+  height: 1.5rem;
+  background-color: #7e7e7e;
+  vertical-align: middle;
 }
 .z-transaction .z-transaction-results .z-r-s-com {
   font-size: 0.85rem;
   color: #f36e44;
-  line-height: 1rem;
+  line-height: 1.25rem;
 }
 .z-transaction .z-transaction-results p {
   text-align: center;
   font-size: 0.6rem;
-  line-height: 1rem;
+  line-height: 1.25rem;
+  height: 1.25rem;
 }
-.Zmain {
+.z-num-main .z-num-main-t {
+  font-size: 0.8rem;
+  height: 1.75rem;
+  line-height: 1.75rem;
+}
+.z-num-main .z-num-main-t:before {
+  content: "";
+  width: 0.2rem;
+  height: 0.75rem;
+  background-color: #27cba8;
+  display: inline-block;
+  margin: 0 0.75rem 0 0.5rem;
+  vertical-align: middle;
+}
+.z-num-main .Zmain {
   width: 18.75rem;
-  height: 20rem;
+  height: 15rem;
+}
+.z-phone {
+  width: 18.75rem;
+  position: fixed;
+  top: 30.85rem;
+  border-bottom: 0;
+  background-color: #2fcaa7;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  text-align: center;
+}
+.z-phone a {
+  color: #fff;
+  font-size: 0.8rem;
 }
 .z-p-gy {
   padding-left: 0.5rem;
+}
+.z-cold-mobile {
+  display: block;
+  width: 18.75rem;
+  position: relative;
+  top: -12.1rem;
+  background-color: #fff;
+}
+.z-cold-mobile .c-text {
+  height: 2.3rem;
+  line-height: 2.3rem;
+  font-size: 0.8rem;
+  color: #323232;
+}
+.z-cold-mobile .c-com {
+  height: 3.55rem;
+  line-height: 3.55rem;
+  font-size: 0.8rem;
+  color: #323232;
+  display: block;
+  text-align: initial;
+}
+.z-cold-mobile .c-cancel {
+  height: 2.45rem;
+  line-height: 2.45rem;
+  font-size: 0.8rem;
+  color: #323232;
+}
+.z-cold-mobile .c-img-com {
+  width: 2.2rem;
+  height: 2.2rem;
+  margin: 0 1rem 0 1.5rem;
+  vertical-align: middle;
+}
+.z-cold-mobile .c-m-icon-com {
+  width: 0.85rem;
+  height: 0.85rem;
+  vertical-align: middle;
+  margin-left: 8.75rem;
+}
+.z-cold-mobile .c-icon-t {
+  margin-left: 9.625rem;
+}
+.Cshow {
+  display: none;
+}
+.c-border-none {
+  border: none;
 }
