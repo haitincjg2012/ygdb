@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="z-trader">
     <div class="z-header-com">
       <!--<h1>客商</h1>-->
       <div class="return" @click.stop="back">
@@ -13,15 +13,12 @@
 
     <div class="z-t-select">
          <div class="z-t-a" @click="dropdown" data-path = "0">
-             <span class="sp-text-com">综合排序</span>
+             <span class="sp-text-com">区域</span>
              <span class="triangle"></span>
-             <span class="z-vertical-line"></span>
+             <!--<span class="z-vertical-line"></span>-->
          </div>
-        <!--<div class="z-t-vertical-line">-->
-           <!--<div class="vertical-line"></div>-->
-        <!--</div>-->
          <div class="z-t-s" @click="dropdown" data-path = "1">
-           <span class="sp-text-com">区域</span>
+           <span class="sp-text-com">筛选</span>
            <span class="triangle"></span>
          </div>
     </div>
@@ -33,14 +30,23 @@
         ></li>
       </ul>
       <div class="z-t-shadow" v-if="shadowF">
-        <ul class="z-t-listS clearfix">
+        <ul class="z-t-listS clearfix" v-if="firstF">
           <li :is = "item.ss"
               v-for="item in itemS"
               :item = "item"
               v-on:rs="pzSearch">
           </li>
         </ul>
-        <ul class="z-t-listA clearfix">
+        <ul class="c-filter" v-if="firstTF">
+          <li v-for="item in itemFilter" class="c-filter-com" @click="filteBtn(item)">
+            <span :class="{Cactive:item.sh}">{{item.keyword}}</span>
+            <!--<img>-->
+          </li>
+          <li class="c-filter-ok">
+            <div class="z-f-ok" @click="searchOk">确认</div>
+          </li>
+        </ul>
+        <ul class="z-t-listA clearfix" v-if="secondF">
           <li :is = "item.ss"
               v-for="item in itemA"
               :item = "item"
@@ -56,6 +62,7 @@
   @import "../../../assets/css/trader.css";
 </style>
 <script>
+  import IMG from "../../../components/gqimg.vue"
   import childT from "./traderlist"
   import API from '../../../api/api'
   import childPZ from "./PZ.vue"
@@ -65,13 +72,16 @@
   var fn = {
     aD:null,//地区的数据
     r:null,//临时数据
+    filter:null,
     achildD:{
       code:-1,
       rg:null,
-    },//具体地区的数据
+    },
+    traderData:[],//具体地区的数据
     reset:function () {
       fn.achildD.code = -1;
       fn.achildD.rg = null;
+      fn.traderData = []
     },
     init:function (data) {
           var arr = [];
@@ -86,7 +96,6 @@
          }
 
          this.itemC = arr;
-        console.log(this.itemC);
       },
     secondC:function () {
       var index = arguments[0];
@@ -94,9 +103,8 @@
 
       for(var key in dt){
         switch (key){
-          case "TEST":
-//            fn.pzD = format(dt[key], key, 100);
-            console.log(1233);
+          case "filter1":
+            fn.filter = format(dt[key], key, 100);
             break;
           case "area":
             fn.aD = format(dt["area"]["parentA"], 10000);
@@ -105,10 +113,9 @@
       }
 
       if(index == 0){
-//        this.itemS = fn.aD;
-        console.log(fn.aD, 11111);
-      }else if(index == 1){
         this.itemS = fn.aD;
+      }else if(index == 1){
+        this.itemFilter = fn.filter;
       }
 
       function format(rows, flag) {
@@ -146,6 +153,35 @@
       });
       fn.r = arr;
       this.itemA = arr;
+    },
+    list(data){
+      if(!data.succeed){
+        return;
+      }
+      var arr = [];
+      var rows = data.data.rows;
+
+      rows.forEach(function (current, index) {
+        var obj = {
+          showOrgTagsInfo:{}
+        };
+        obj.path =index;
+        obj.id = current.userId;
+        obj.ss = childT;
+        obj.orgId = current.orgId ? current.orgId:"-999";
+        obj.userId = current.userId ? current.userId:"-1000";
+        obj.orgName = current.orgName;//用户姓名
+        obj.orgFirstBannerUrl = current.orgFirstBannerUrl;//左侧图片
+        obj.userLevelName = IMG.methods.userLevel(current.userLevelName);//用户等级
+        obj.userRealAuthKey = current.userRealAuthKey == ""?false:true;//用户是否实名认证
+        obj.mainOperating = current.mainOperating;//用户主营品种
+        obj.saleAddress = current.saleAddress;//用户的销售区域
+        obj.address = current.address;
+        arr.push(obj);
+      });
+
+      fn.traderData = fn.traderData.concat(arr);
+      this.itemC = fn.traderData;
     }
   };
 export default{
@@ -155,6 +191,13 @@ export default{
           itemS:null,
           itemA:null,
           shadowF:false,
+          searchType:"",
+          pageNumber:1,
+          ky:"",
+          itemFilter:null,
+          firstF:false,
+          firstTF:false,
+          secondF:false,
         }
     },
     methods:{
@@ -163,7 +206,8 @@ export default{
          fn.pzD = null;
          fn.aD = null;
          this.itemA = null;
-         fn.reset()
+         fn.reset();
+         this.initPagination();
          var p = document.querySelector(".z-t-select"),
            child = p.children;
          [].forEach.call(child,function (current, index) {
@@ -181,11 +225,22 @@ export default{
            this.$router.go(-1);
 
        },
+      initPagination(){
+           fn.traderData = [];
+           this.pageNumber = 1;
+      },
+      reset(){
+        this.firstF = false;
+        this.firstTF = false;
+        this.secondF = false;
+      },
       remove(){
         this.shadowF = false;
       },
       search(){
-
+        this.searchType = "";
+        this.initPagination();
+        this.list(1);
       },
       dropdown(e){
         var e = e || window.event;
@@ -221,16 +276,16 @@ export default{
           }
         });
         if(path == 0){
-          this.itemA = null;
-          this.itemS = null;
-          alert("数据在开发中");
-//          if(fn.aD){
-//            this.itemS = fn.aD;
-//          }else{
-//            fn.secondC.bind(this)(path);
-//          }
+          if(fn.aD){
+            this.itemS = fn.aD;
+          }else{
+            fn.secondC.bind(this)(path);
+          }
+          this.reset();
+          this.firstF = true
         }else if(path == 1){
-
+          this.reset();
+          this.firstTF = true
           if(fn.aD){
             this.itemS = fn.aD;
           }else{
@@ -249,6 +304,7 @@ export default{
           case "100":
             //品种
             fn.reset();
+//            this.initPagination();
             this.shadowF = false;
 //            fn.pzD.forEach(function (current,index) {
 //              if(path == index){
@@ -279,11 +335,12 @@ export default{
             }else{
               fn.region.bind(this)(code, value);
             }
-
+            this.secondF = true;
             break;
         }
       },
       searchArea(param){
+
         var value = param,key;
         var path = param.path;
         var code = param.code;
@@ -297,6 +354,8 @@ export default{
             current.sh = false;
           }
         });
+        this.initPagination();
+        this.list(1);
       },
       post(params, fn){
         try {
@@ -309,10 +368,93 @@ export default{
         } catch (error) {
           console.log(error)
         }
-      }
+      },
+      list(){
+        var pg = arguments[0] || this.pageNumber;
+        var that = this;
+        let params = {
+          api: "/_node_user_org/_merchant_list.apno",
+          data: {
+            keyWord: that.ky,
+            orderType: that.firstSearch,
+            searchType: that.searchType,
+            pageNumber: pg,
+          }
+        }
+        this.post(params, fn.list.bind(this));
+      },
+      searchOk(){
+        fn.aD.forEach(function (current,index) {
+          current.sh = false;
+        });
+        if(fn.achildD.rg){
+          fn.achildD.rg.forEach(function (current) {
+            current.sh = false;
+          });
+        }
+
+        this.initPagination();
+        fn.traderData = [];
+        this.shadowF = false;
+        this.firstTF = false;
+
+        this.list(0);
+      },
+      filteBtn(data){
+        var str = data.keyword;
+        var searchType = "";
+        if(str == "企业认证"){
+          searchType = "QYRZ";
+        }else if(str == "供应金融链合作库"){
+          searchType = "GYLJRHZK";
+        }
+        var path = data.path;
+        this.itemFilter.forEach(function (current, index) {
+          if(path == index){
+            current.sh = true;
+          }else{
+            current.sh = false;
+          }
+
+        });
+
+        this.searchType = searchType;
+      },
     },
     activated(){
-      fn.init.bind(this)();
+        this.initPagination();
+        this.list(1);
+    },
+     menuList(evt){
+    var e = evt || window.event;
+    var el = document.querySelector(".z-trader")
+    if(el){
+      var target = e.target || e.srcElement;
+      var offsetH = target.body.scrollTop;
+      var sHeight = target.body.scrollHeight;
+      var that = this;
+      if(sHeight - offsetH - this.bheight == 0){
+        if(this.pageCount > this.pageNumber){
+          this.pageNumber ++;
+          this.pageNum(this.pageNumber);
+        }else{
+          Toast('数据加载完...')
+        }
+
+      }
     }
+  },
+      pageNum(aa){
+    var argument = [].slice.call(arguments);
+    var number = argument[0];
+    var that = this;
+    function l() {
+      that.list(aa);
+    }
+    setTimeout(l, 1000)
+  },
+   created(){
+    window.addEventListener('scroll', this.menuList, false);
+  }
 }
 </script>

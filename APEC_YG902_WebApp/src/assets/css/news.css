@@ -68,47 +68,55 @@
 .newsContainer .newsScroll .carousel .mint-swipe-indicators .mint-swipe-indicator.is-active {
   background-color: #fff;
 }
-.newsContainer .newsScroll .newsList {
+.newsList {
   width: 100%;
   background-color: #fff;
 }
-.newsContainer .newsScroll .newsList li {
+.newsList li {
   width: 100%;
   border-bottom: 0.025rem solid #d7d7d7;
 }
-.newsContainer .newsScroll .newsList li .newsItem {
+.newsList li .newsItem {
   padding: 0.625rem 0.75rem;
   display: flex;
   flex-direction: row;
 }
-.newsContainer .newsScroll .newsList li .newsItem .newslistR {
+.newsList li .newsItem .newslistR {
   width: 5.4rem;
   height: 3.8rem;
   margin-right: 0.75rem;
   display: inline-block;
 }
-.newsContainer .newsScroll .newsList li .newsItem .newslistR img {
+.newsList li .newsItem .newslistR img {
   width: 100%;
   height: 100%;
 }
-.newsContainer .newsScroll .newsList li .newsItem .newslistL {
+.newsList li .newsItem .newslistL {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.25rem;
   max-width: 11.15rem;
   letter-spacing: 0.05rem;
 }
-.newsContainer .newsScroll .newsList li .newsItem .newslistL h2 {
+.newsList li .newsItem .newslistL h2 {
   color: #222328;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
 }
-.newsContainer .newsScroll .newsList li .newsItem .newslistL p {
+.newsList li .newsItem .newslistL p {
   font-size: 0.6rem;
   color: #646464;
 }
-.newsContainer .newsScroll .newsList li .newsItem .newslistL p span {
+.newsList li .newsItem .newslistL p span {
   margin-left: 0.65rem;
+}
+.newsList .liLast {
+  border-bottom: 0 none;
+  text-align: center;
+  font-size: 0.7rem;
+  color: #646464;
+  letter-spacing: 0.05rem;
+  padding-bottom: 0.25rem;
 }
 .newsDetail {
   width: 100%;
@@ -154,8 +162,16 @@
 .newsDetail .newsDetailMain .newsDtop p span {
   margin-left: 0.85rem;
 }
+.newsDetail .newsDetailMain .newsImg {
+  height: 9rem;
+  padding: 0.65rem 0.75rem 0;
+}
+.newsDetail .newsDetailMain .newsImg img {
+  width: 100%;
+  height: 100%;
+}
 .newsDetail .newsDetailMain .newsDbtm {
-  padding: 0.65rem 0.75rem;
+  padding: 0.5rem 0.75rem;
 }
 .newsDetail .newsDetailMain .newsDbtm p {
   text-indent: 2em;

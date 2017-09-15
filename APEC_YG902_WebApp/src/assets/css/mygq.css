@@ -1,0 +1,223 @@
+.my-bread-com-f {
+  width: 18.75rem;
+  padding: 0 !important;
+}
+.my-bread-com-f .primaryMain {
+  padding: 0 0.625rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  -moz-flex-flow: row wrap;
+  flex-flow: row wrap;
+}
+.my-bread-com-f .primaryMain .pic-com {
+  margin: 0.5rem 0;
+  width: 4.5rem;
+  position: relative;
+}
+.my-bread-com-f .primaryMain .pic-com img {
+  width: 4.5rem;
+  height: 4.5rem;
+}
+.my-bread-com-f .primaryMain .z-info {
+  width: 12.5rem;
+  margin: 0.5rem 0 0.5rem 0.5rem;
+}
+.my-bread-com-f .primaryMain .z-info .c-introduce {
+  height: 1rem;
+  width: 12.75rem;
+  line-height: 1rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.my-bread-com-f .primaryMain .z-info .c-introduce .z-gq {
+  height: 1rem;
+}
+.my-bread-com-f .primaryMain .z-info .c-introduce .z-gq .z-gq-t {
+  font-size: 0.6rem;
+  color: #fff ;
+  background-color: #ff4535 ;
+  height: 0.8rem;
+  border-radius: 0.2rem;
+  padding: 0 0.15rem;
+  margin: 0.1rem auto;
+}
+.my-bread-com-f .primaryMain .z-info .c-introduce .c-sp-com {
+  font-family: \5fae\8f6f\96c5\9ed1;
+  height: 1rem;
+}
+.my-bread-com-f .primaryMain .z-info .c-introduce .c-sp-com .z-c-sku {
+  font-size: 0.75rem;
+  color: #222328;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 10.5rem;
+  margin-left: 0.5rem;
+  font-weight: 600;
+}
+.my-bread-com-f .primaryMain .z-info .c-introduce .bg {
+  background-color: #28CBA7 !important;
+}
+.my-bread-com-f .primaryMain .z-info .c-introduce .g-time {
+  font-size: 0.6rem;
+  color: #AAB6C6;
+  vertical-align: super;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 1.25rem;
+  display: inline-block;
+}
+.my-bread-com-f .primaryMain .z-info .c-pos {
+  height: 1rem;
+  line-height: 1rem;
+}
+.my-bread-com-f .primaryMain .z-info .c-pos .g-sp-money {
+  font-size: 0.9rem;
+}
+.my-bread-com-f .primaryMain .z-info .c-pos .g-sp-com {
+  color: #747474;
+  font-size: 0.6rem;
+}
+.my-bread-com-f .primaryMain .z-info .c-pos .g-sp-price {
+  font-size: 0.9rem;
+}
+.my-bread-com-f .primaryMain .z-info .c-pos .g-unit {
+  display: inline-block;
+  overflow: auto;
+}
+.my-bread-com-f .primaryMain .z-info .c-pos .qg {
+  display: inline-block;
+  max-width: 4.75rem;
+}
+.my-bread-com-f .primaryMain .z-info .c-pos .gy {
+  display: inline-block;
+  max-width: 2.25rem;
+}
+.my-bread-com-f .primaryMain .z-info .c-pos .g-weight {
+  display: inline-block;
+  overflow: auto;
+}
+.my-bread-com-f .primaryMain .z-info .c-pos .g-agency {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #747474;
+}
+.my-bread-com-f .primaryMain .z-info .c-level {
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  height: 1.5rem;
+  line-height: 1.5rem;
+}
+.my-bread-com-f .primaryMain .z-info .c-level .g-level {
+  height: 1.5rem;
+  width: 1.25rem;
+}
+.my-bread-com-f .primaryMain .z-info .c-level .g-level .z-img img {
+  width: 1.05rem;
+  height: 1.05rem;
+  vertical-align: middle;
+}
+.my-bread-com-f .primaryMain .z-info .c-level .z-g-agency {
+  line-height: 1.5rem;
+}
+.my-bread-com-f .primaryMain .z-info .c-level .z-g-agency .z-g-d {
+  font-size: 0.6rem;
+  color: #0080fd;
+  border: 0.05rem solid #0080fd;
+  border-radius: 0.2rem;
+  padding: 0 0.15rem;
+}
+.my-bread-com-f .primaryMain .z-info .c-level .z-g-person {
+  width: 0.75rem;
+}
+.my-bread-com-f .primaryMain .z-info .c-level .z-g-name {
+  height: 1.5rem;
+  line-height: 1.5rem;
+  font-size: 0.6rem;
+  color: #aab6c6;
+}
+.my-bread-com-f .primaryMain .z-info .c-level .g-text {
+  height: 1.5rem;
+  line-height: 1.5rem;
+  font-size: 0.6rem;
+  color: #aab6c6;
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-left: 0.2rem;
+}
+.my-bread-com-f .primaryMain .z-info .c-level .g-star {
+  margin-left: 0.75rem;
+  width: 0.65rem;
+  height: 0.5rem;
+}
+.my-bread-com-f .primaryMain .z-info .c-level .g-star-num {
+  font-size: 0.6rem;
+  color: #AAB6C6;
+}
+.my-bread-com-f .primaryMain .z-info .c-level .g-eye-h {
+  margin-left: 0.25rem;
+  width: 0.475rem;
+  height: 0.475rem;
+}
+.my-bread-com-f .primaryMain .z-info .c-price {
+  height: 1rem;
+  font-size: 0.6rem;
+  line-height: 1rem;
+}
+.my-bread-com-f .primaryMain .z-info .c-price .g-price-com-f {
+  color: #ff4535;
+  font-size: 0.8rem;
+}
+.my-bread-com-f .primaryMain .z-info .c-price .g-unit {
+  color: #ff4535;
+}
+.my-bread-com-f .primaryMain .z-info .c-price .g-eye-num {
+  font-size: 0.6rem;
+  color: #AAB6C6;
+  margin-left: 0.2rem;
+}
+.my-bread-com-f .primaryMain .z-info .c-price .g-time {
+  font-size: 0.6rem;
+  color: #AAB6C6;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 3.5rem;
+  text-align: right;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+.my-bread-com-f .primaryMain .z-info .c-price .g-right {
+  float: right;
+}

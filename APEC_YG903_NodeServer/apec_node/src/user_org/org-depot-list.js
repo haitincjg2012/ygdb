@@ -66,10 +66,7 @@ router.post('/_node_user_org/_depot_list' + config.urlSuffix, bodyParser, functi
            minimum_should_match: "30%"
          }
      };
-  };
-  console.log("#############API:/_node_user_org/_depot_list/ [Node query]: ")
-  console.log(JSON.stringify(searchParams));
-  console.log("##############[END] ")
+  }; 
   var done = (returnData,total,err) => {
     if(err != 200 ){
       console.log("#############API:/_node_user_org/_depot_list/ [Error]: ")

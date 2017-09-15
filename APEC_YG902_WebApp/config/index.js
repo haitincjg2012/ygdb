@@ -32,6 +32,10 @@ module.exports = {
         target: 'http://192.168.7.111',
         changeOrigin: true
       },
+      '/_node_user_org': {
+        target: 'http://192.168.7.111',
+        changeOrigin: true
+      },
       '/yg-voucher-service': {
         target: 'http://192.168.7.111',
         changeOrigin: true

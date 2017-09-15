@@ -18,7 +18,7 @@
       <!--<split></split>-->
       <div class="p-v-form-cli" @click.stop.prevent="updateName">
         <span class="label">昵称</span>
-        <span class="value">{{name}}</span>
+        <span class="value c-com-w">{{name}}</span>
         <!--<a class="updateBtn" @click.stop.prevent="updateName">修改昵称</a>-->
         <img class="arrow-com" src="../../../assets/img/back.png">
       </div>
@@ -26,7 +26,7 @@
       </div>
       <div class="p-v-form-cli" @click.stop.prevent="updatePhone">
         <span class="label">电话</span>
-        <span class="value">{{mobile}}</span>
+        <span class="value c-com-w">{{mobile}}</span>
         <!--<a class="updateBtn" @click.stop.prevent="updatePhone">更换手机号码</a>-->
         <img class="arrow-com" src="../../../assets/img/back.png">
       </div>
@@ -51,11 +51,11 @@
       </div>
       <div class="z-p-warehouse" v-if="Identity.warehouse">
          <label for="warehouse">仓库名称</label>
-         <input type="text" placeholder="填写仓库的名称" id="warehouse" readonly v-model="organiza.name" class="c-pos-r">
+         <input type="text" placeholder="填写仓库的名称" id="warehouse" v-model="organiza.name" class="c-pos-r">
       </div>
       <div class="z-p-storageCapacity" v-if="Identity.storage">
         <label for="storage">仓库库容</label>
-        <input type="text" placeholder="填写仓库的库容" id="storage" readonly v-model="organiza.storage" class="c-pos-r">
+        <input type="text" placeholder="填写仓库的库容" id="storage" v-model="organiza.storage" class="c-pos-r">
       </div>
 
       <div class="z-p-warehouse" v-if="coopF">
@@ -73,14 +73,17 @@
         <img class="arrow-com" src="../../../assets/img/back.png">
       </div>
       <div class="solid-line-p"></div>
-      <div class="p-v-form-cli" v-if="coldBG">
+      <div class="p-v-form-cli c-p-sale" v-if="coldBG">
         <span class="label">销售区域</span>
-        <span class="value c-pos-r">{{organiza.saleAddr}}</span>
+        <!--<span class="value c-pos-r">{{organiza.saleAddr}}</span>-->
+        <input type="text" placeholder="销售区域"  v-model="organiza.saleAddr" readonly class="c-pos-r">
         <img class="arrow-com" src="../../../assets/img/back.png">
       </div>
-      <div @click.stop="saleArea" class="p-v-form-cli" v-if="!coldBG">
+      <!--<div @click.stop="saleArea" class="p-v-form-cli" v-if="!coldBG">-->
+      <div class="p-v-form-cli c-p-sale" v-if="!coldBG">
         <span class="label">销售区域</span>
-        <span class="value c-pos-r">{{organiza.saleAddr}}</span>
+        <!--<span class="value c-pos-r">{{organiza.saleAddr}}</span>-->
+        <input type="text" placeholder="销售区域"  v-model="organiza.saleAddr" class="c-pos-r">
         <img class="arrow-com" src="../../../assets/img/back.png">
       </div>
       <div class="solid-line-p"></div>
@@ -110,14 +113,14 @@
       </div>
       <div class="z-p-description">
          <p class="z-p-text">实力描述:</p>
-         <textarea placeholder="还没有实力描述，赶快填写吧，让更多用户关注你" ref="edit" ></textarea>
+         <textarea placeholder="还没有实力描述，赶快填写吧，让更多用户关注你" ref="edit" v-model="organiza.remark" ></textarea>
       </div>
       <div class="z-des-img">
         <p class="z-des-img-text">最多能上传5张</p>
         <ul class="clear">
-          <li :is="item.SS" v-for="item in items" v-on:selecttype="delImage"></li>
+          <li :is="item.SS" v-for="item in items" :item="item" v-on:selecttype="delImage"></li>
           <li class="z-add-upload">
-            <input type="file" accept="image/*"  @change="addImage">
+            <input type="file" accept="image/*" multiple @change="addImage">
           </li>
         </ul>
       </div>
@@ -165,6 +168,18 @@
     },
     addImage:function (data) {
       var dt = data.data;
+      var value = dt[0][0].imagePath;
+      var name = dt[0][0].imageName;
+      var obj = {
+        SS:DEL,
+//        srcM:dt[1].imagePath,
+        src:value,
+//        srcT:dt[2].imagePath,
+        name:name,
+        index:0
+      };
+
+      this.items.push(obj);
 
     },
     submit:function(data){
@@ -194,9 +209,10 @@
           addrDetail:'',
           pz:'',
           name:'',
-          storage:''
+          storage:'',
+          remark:''
         },
-        items:null,
+        items:[],
         itemId:null,
         Identity:{
           pIDF:false,
@@ -204,7 +220,8 @@
           storage:false
         },
         coldBG:true,//冷库-仓库保管员
-        coopF:false
+        coopF:false,
+        recordImg:{}
       }
     },
     activated(){
@@ -264,7 +281,6 @@
              e2.readOnly = false;
            }
         }else if(id == "10000"){
-            console.log(value);
           if(value == "调果代办"){
             this.userDetailType = "DB_DG";
           }else{
@@ -388,6 +404,7 @@
           this.coopF = false;
         }else if(type == "DB"){
           self.itemId = fn.DB;
+
           self.Identity.pIDF = true;
           self.Identity.warehouse = false;
           self.Identity.storage = false;
@@ -410,14 +427,14 @@
       },
       getUserInfo(){
         const self = this;
-
-        var storage = window.localStorage;
-        var id = storage.userId;
+//        var storage = window.localStorage;
+//        var id = storage.userId;
         let params = {
-          api:"/yg-user-service/user/findUserInfo.apec",
-          data:{
-            id:id
-          }
+          api:"/yg-user-service/user/findSelfInfo.apec",
+//          api:"/yg-user-service/user/findUserInfo.apec",
+//          data:{
+//            id:id
+//          }
         }
         try {
           api.post(params).then((res) => {
@@ -433,29 +450,62 @@
               self.workYear = data.workOfYear || '请修改工作年限';
               self.name = data.name || '请修改昵称';
               self.imgUrl = data.imgUrl || userImgUrl;
+
               self.userTypeKey = data.userTypeKey || this.$store.state.userTypeKey || c_js.getLocalValue('userTypeKey');
+
               self.userType = data.userType;
               self.mobile = data.mobile;
-              self.organiza.addr = data.userOrgClientVO.address;
-              self.organiza.saleAddr = data.userOrgClientVO.saleAddress;
-              self.organiza.addrDetail = data.userOrgClientVO.addressDetail;
-              self.organiza.pz = data.userOrgClientVO.mainOperating;
-              self.organiza.name = data.userOrgClientVO.orgName;
-              self.organiza.storage = data.userOrgClientVO.orgStockCap;
+              if(data.userOrgClientVO){
+                self.organiza.addr = data.userOrgClientVO.address;
+                self.organiza.saleAddr = data.userOrgClientVO.saleAddress;
+                self.organiza.addrDetail = data.userOrgClientVO.addressDetail;
+                self.organiza.pz = data.userOrgClientVO.mainOperating;
+                self.organiza.name = data.userOrgClientVO.orgName;
+                self.organiza.storage = data.userOrgClientVO.orgStockCap;
+                self.organiza.remark = data.userOrgClientVO.remark;
+
+                var arr = [];
+                data.userOrgClientVO.userOrgImageVOS.forEach(function (current,index) {
+                    var name = "";
+                  var obj = {
+                    SS:DEL,
+                    src:current.imageUrl,
+                    name:current.createDate,
+                    index:index
+                  };
+
+                  arr.push(obj);
+                })
+                self.items = arr;
+
+              }
+
+              var userDetailType = data.userDetailType;
+
               if(self.userTypeKey == "代办"){
                 self.itemId = fn.DB;
                 self.Identity.pIDF = true;
                 self.Identity.warehouse = false;
                 self.Identity.storage = false;
               }else if(self.userTypeKey == "冷库"){
-                  self.itemId = fn.LK;
+
                 self.Identity.pIDF = true;
                 self.Identity.warehouse = true;
                 self.Identity.storage = true;
                 this.initCold();
+                if(userDetailType == "LK_LB"){
+                  fn.LK[0].sh = true;
+                  self.userDetailType = userDetailType;
+                }else{
+                  fn.LK[1].sh = true;
+                  self.userDetailType = userDetailType;
+                }
+                self.itemId =fn.LK ;
+                return;
               }else{
                   this.initCold();
               }
+
               self.itemId.forEach(function (current,index) {
                 current.sh = false;
               })
@@ -488,17 +538,45 @@
           console.log(error)
         }
       },
-      delImage(){
+      delImage(data){
+         var name = data.name;
+         this.items.forEach(function (current, index) {
+           if(current.name == name){
+               this.items.splice(index, 1);
+           }else{
+               return;
+           }
+         });
 
+         console.log(this.items);
       },
       addImage(e){
         var e = e || window.event;
         var target = e.toElement || e.srcElement;
         var files = target.files;
+        var size = files.size/(1000*1000);
+        if(size > 10){
+          Toast({
+            message:"对不起，您上传的图片过大，请您重新上传图片",
+            duration:1000
+          })
+          return;
+        }
+//        var name = file.name;
+//        var nameA = name.split(".");
+//        var n = encodeURI(nameA[0]);
+//        var obj =this.recordImg ;
+//        if(obj.hasOwnProperty(n)){
+//          return;
+//        }
+
+        if(this.items.length > 5){
+            return;
+        }
         var fd = new FormData();
         fd.append("file",files[0]);
         let params = {
-          api:"/yg-user-service/user/uploadBanner/uploadFile.apec",
+          api:"/common/uploadImg.apec",
           data: fd
         }
 
@@ -525,7 +603,6 @@
             Toast("对不起，请您填写用户名称");
             return;
           }
-            console.log(self.userDetailType);
           if(self.userDetailType == ""){
             Toast("对不起，请您选择身份");
             return;
@@ -535,11 +612,20 @@
               Toast("对不起，请您填写用户名称");
               return;
             }
+          console.log(self.userDetailType);
           if(self.userDetailType == ""){
             Toast("对不起，请您选择身份");
             return;
           }
         }
+
+        var arrT = [];
+        this.items.forEach(function (current, index) {
+          var obj = {};
+          obj.imageUrl = current.src;
+          arrT.push(obj)
+        });
+
           var data = {
             name:self.name,//用户名称
             userType:self.userType,//用户身份类型
@@ -552,7 +638,7 @@
               mainOperating:self.organiza.pz,//主营品种
               orgStockCap:self.organiza.storage,//库容量
               orgName:self.organiza.name,//库容名称
-              userOrgImageVOS:[]
+              userOrgImageVOS:arrT
             }
           };
 
@@ -560,8 +646,8 @@
           api: "/yg-user-service/user/updateUserInfo.apec",
           data: data
         }
-       console.log(params);
-//        return;
+       console.log(params, 9090909);
+
         this.post(params, fn.submit.bind(this));
       },
       post(params, fn){
@@ -603,7 +689,7 @@
         line-height (90 / _rem)
         .p-v-info-person
           height (20 / _rem)
-          font-size (15/_rem)
+          font-size (16/_rem)
           color #7e7e7e
         .p-v-info-user
           height (60 /_rem)
@@ -680,7 +766,7 @@
         display inline-block
         width (250/_rem)
       span
-        font-size (15 /_rem)
+        font-size (16 /_rem)
     .solid-line
       margin 0 0 0(15 /_rem)
       height 1px

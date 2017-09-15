@@ -4,24 +4,25 @@
          :data-path = "item.path"
          :data-id = "item.id"
          @click="xq">
+
       <div class="primaryMain clearfix" :data-id = "item.id">
         <div class="pic-com" :data-id = "item.id">
-          <img :src ="item.img" :data-id = "item.id"/>
+          <img :src ="item.orgFirstBannerUrl" :data-id = "item.id"/>
         </div>
         <div class="z-t-info clearfix" :data-id = "item.id">
           <div class="z-t-real-info" :data-id = "item.id">
-             <span class="z-t-r-name">张三丰</span>
+             <span class="z-t-r-name">{{item.orgName}}</span>
              <!--<img src="../../../assets/img/rateOne.png" class="z-t-level">-->
-            <img :src="r" class="z-t-level">
-             <span class="z-t-r">实名认证</span>
+            <img :src="item.userLevelName" class="z-t-level">
+             <span class="z-t-r" v-if="item.userRealAuthKey">实名认证</span>
           </div>
           <div class="z-t-main clearfix" :data-id = "item.id">
             <span class="z-t-main-com-t">主营：</span>
-            <span class="z-t-main-com-t">红富士 70# 80#</span>
+            <span class="z-t-main-com-t">{{item.mainOperating}}</span>
           </div>
           <div class="z-t-address">
-            <span class="z-t-addr-T">调果区域：</span>
-            <span class="z-t-addr">烟台栖霞</span>
+            <span class="z-t-addr-T">地址：</span>
+            <span class="z-t-addr">{{item.address}}</span>
           </div>
 
         </div>
@@ -33,17 +34,20 @@
   @import "../../../assets/css/traderlist.css";
 </style>
 <script>
-  import R from "../../../assets/img/AuthenticationTips.png"
+//  import R from "../../../assets/img/AuthenticationTips.png"
   export default{
     data(){
       return{
-        r:R
+//        r:R
       }
     },
     methods:{
 
         xq(){
-          this.$router.push({name:"xqframe",query:{id:"trader"}})
+             let id= this.item.id;
+          let orgId = this.item.orgId;
+          let userId = this.item.userId;
+          this.$router.push({name:"xqframe",query:{flag:"trader",id:id,orgId:orgId,userId:userId}})
         }
     },
     props:{

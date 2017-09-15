@@ -307,26 +307,33 @@ public class VoucherServiceImpl implements VoucherService{
 
 	@Override
 	@Transactional
-	public int deleteVoucherInfo(Long voucherId) {
-		int number = voucherDAO.deleteVoucher(voucherId);
-		return number;
-	}
+	public int deleteVoucherInfo(VoucherDTO voucherDTO) {
+		
+		//查询这条单据更改之前上传总数
+		Double lastNumber = voucherGoodsDAO.findNumberByVoucherId(voucherDTO.getVoucherId());
+		//查询用户上传数量
+		Double totalNumber = voucherGoodsDAO.findTotalNumberByUserId(voucherDTO.getUserId());
+		int updateNumber = voucherDAO.deleteVoucher(voucherDTO.getVoucherId());
+		
+		//缓存用户上传数量
+		cacheHashService.hset(RedisHashConstants.HASH_USER_PREFIX+voucherDTO.getUserId(), RedisHashConstants.HASH_VOUCHER_NUM, String.valueOf(totalNumber-lastNumber));
 
-	@Override
-	@Transactional
-	public String addVoucherGoodsInfo(VoucherGoodsVO voucherGoodsVO) {
-		VoucherGoods voucherGoods = new VoucherGoods();
-		voucherGoods.setId(idGen.nextId());
-		voucherGoods.setSkuName(voucherGoodsVO.getSkuName());
-		voucherGoods.setSkuId(voucherGoodsVO.getSkuId());
-		voucherGoods.setNumber(voucherGoodsVO.getNumber());
-		voucherGoods.setAmount(voucherGoodsVO.getAmount());
-		voucherGoods.setTotalAmount(voucherGoodsVO.getTotalAmount());
-		Voucher voucher = new Voucher();
-		voucher.setId(voucherGoodsVO.getVoucherGoodsId());
-		voucherGoods.setVoucher(voucher);
-		voucherGoodsDAO.save(voucherGoods);
-		return Constants.RETURN_SUCESS;
+		//如果余数小于单据总数减50积分
+		Double number = 200000.00;
+		Double remainder = totalNumber % number;
+		if (remainder<lastNumber){
+			UserPointRecordVO userPointRecordVO = new UserPointRecordVO();
+			userPointRecordVO.setId(idGen.nextId());
+			userPointRecordVO.setPointsChanged(50);//用户获取到的积分
+			userPointRecordVO.setPointsChangedType(PointsChangedType.REDUCTION);
+			userPointRecordVO.setPointRuleType(PointRuleType.PUBLISH_FALSE_INFORMATION);
+			List<Long> userIdList = new LinkedList<>();
+			userIdList.add(voucherDTO.getUserId());
+			userPointRecordVO.setUserIds(userIdList);
+			mqProducerClient.sendConcurrently(MqTag.USER_POINT_TAG_SUBSCRI_POINT.getKey(), String.valueOf(userPointRecordVO.getId()), userPointRecordVO);
+		}
+		
+		return updateNumber;
 	}
 
 	@Override
@@ -345,9 +352,13 @@ public class VoucherServiceImpl implements VoucherService{
 		List<VoucherGoods> voucherGoodsList = new LinkedList<VoucherGoods>();
 		List<VoucherGoodsVO> VoucherGoodsVOList = voucherVO.getVoucherGoodsVO();
 		List<Long> ids = new LinkedList<Long>();
+		double voucherNumber = 0;
 		for (VoucherGoodsVO voucherGoodsVO : VoucherGoodsVOList){
 			VoucherGoods voucherGoods = new VoucherGoods();
 			BeanUtil.copyPropertiesIgnoreNullFilds(voucherGoodsVO, voucherGoods);
+			
+			//获取单据更改之后上传总数
+			voucherNumber = voucherNumber+voucherGoods.getNumber();
 			
 			//是否是新添加数据
 			if (voucherGoodsVO.getVoucherGoodsId() == null){
@@ -363,7 +374,45 @@ public class VoucherServiceImpl implements VoucherService{
 		}
 		
 		voucher.setVoucherGoods(voucherGoodsList);
+		
+		//查询这条单据更改之前上传总数
+		Double lastNumber = voucherGoodsDAO.findNumberByVoucherId(voucherVO.getVoucherId());
+		//查询用户上传数量
+		Double totalNumber = voucherGoodsDAO.findTotalNumberByUserId(voucherVO.getUserId());
+		//如果余数小于单据总数减50积分
+		Double number = 200000.00;
+		Double remainder = totalNumber % number;
+		if (remainder<lastNumber){
+			UserPointRecordVO userPointRecordVO = new UserPointRecordVO();
+			userPointRecordVO.setId(idGen.nextId());
+			userPointRecordVO.setPointsChanged(50);//用户获取到的积分
+			userPointRecordVO.setPointsChangedType(PointsChangedType.REDUCTION);
+			userPointRecordVO.setPointRuleType(PointRuleType.PUBLISH_FALSE_INFORMATION);
+			List<Long> userIdList = new LinkedList<>();
+			userIdList.add(voucherVO.getUserId());
+			userPointRecordVO.setUserIds(userIdList);
+			mqProducerClient.sendConcurrently(MqTag.USER_POINT_TAG_SUBSCRI_POINT.getKey(), String.valueOf(userPointRecordVO.getId()), userPointRecordVO);
+		}
+		
 		voucherDAO.save(voucher);
+		
+		//缓存用户上传数量
+		cacheHashService.hset(RedisHashConstants.HASH_USER_PREFIX+voucherVO.getUserId(), RedisHashConstants.HASH_VOUCHER_NUM, String.valueOf(totalNumber-lastNumber+voucherNumber));
+		
+		//累加积分
+		boolean flag = (totalNumber-lastNumber)%number+voucherNumber<number?true:false;
+		if (flag){
+			return Constants.VOUCHER_NOT_EXCEED;
+		}
+		UserPointRecordVO userPointRecordVO = new UserPointRecordVO();
+		userPointRecordVO.setId(idGen.nextId());
+		userPointRecordVO.setPointsChanged(50);//用户获取到的积分
+		userPointRecordVO.setPointsChangedType(PointsChangedType.PLUS);
+		userPointRecordVO.setPointRuleType(PointRuleType.MEACH_SEND_ORDER);
+		List<Long> userIdList = new LinkedList<>();
+		userIdList.add(voucherVO.getUserId());
+		userPointRecordVO.setUserIds(userIdList);
+		mqProducerClient.sendConcurrently(MqTag.USER_POINT_TAG_SUBSCRI_POINT.getKey(), String.valueOf(userPointRecordVO.getId()), userPointRecordVO);
 		return Constants.RETURN_SUCESS;
 	}
 
@@ -398,7 +447,7 @@ public class VoucherServiceImpl implements VoucherService{
 
 	/**
 	 * 查询代办数量规格占比信息
-	 * @param VoucherDTO
+	 * @param
 	 * @return Map<String, String>
 	 * */
 	private Map<String, String> getDBPropertionInfo(VoucherDTO voucherDTO) {
@@ -443,7 +492,7 @@ public class VoucherServiceImpl implements VoucherService{
 		}
 		Double totalNumber = voucherGoodsDAO.findTotalNumberByUserId(userId);
 		//其他数量
-		attrNumberMap.put("other", String.valueOf(totalNumber-partNumber));
+		attrNumberMap.put("其它", String.valueOf(totalNumber-partNumber));
 		dbNumberRankViewVO.setAttrNumberMap(attrNumberMap);
 		return dbNumberRankViewVO;
 	}
@@ -491,7 +540,7 @@ public class VoucherServiceImpl implements VoucherService{
 			DBNumberRankViewVO dbNumberRankViewVO = new DBNumberRankViewVO();
 			dbNumberRankViewVO.setName((String)obj[0]);
 			dbNumberRankViewVO.setType(UserType.valueOf(UserType.class, String.valueOf(obj[1])));
-			dbNumberRankViewVO.setTotalNumber((double)obj[2]);
+			dbNumberRankViewVO.setTotalNumber((double)obj[2]);     
 			dbNumberRankViewVOList.add(dbNumberRankViewVO);
 		}
 		dbNumberRankViewVOPage.setNumber(pageDTO.getNumber());

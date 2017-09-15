@@ -31,4 +31,12 @@ public interface VoucherGoodsDAO extends BaseDAO<VoucherGoods, Long>{
 	@Query(value = "select sum(number) from voucher_goods where enable_flag='Y' and voucher_id in (select id from voucher v where v.enable_flag='Y'"
 			+ " and v.user_id=:userId)",nativeQuery = true)
 	public Double findTotalNumberByUserId(@Param("userId")Long userId);
+	
+	/**
+	 * 根据voucherId查询交收单数量
+	 * @param voucherId Long
+	 * @return double 交收单单次数量
+	 * */
+	@Query(value = "select sum(number) from voucher_goods where enable_flag='Y' and voucher_id=:voucherId", nativeQuery = true)
+	Double findNumberByVoucherId(@Param("voucherId") Long voucherId);
 }

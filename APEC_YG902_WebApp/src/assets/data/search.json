@@ -6,5 +6,8 @@
         "3710":[{"keyword":"全部"},{"keyword": "桥头镇"},{"keyword": "文登市"},{"keyword": "荣成市"},{"keyword": "乳山市"}],
         "3706":[{"keyword":"全部"},{"keyword": "牟平区"},{"keyword": "龙口市"},{"keyword": "莱阳市"},{"keyword": "莱州市"},{"keyword": "蓬莱市"},{"keyword": "招远市"},{"keyword": "栖霞市"},{"keyword": "海阳市"}]
       }
-  }
+  },
+  "filter": [{"keyword":"企业认证"}, {"keyword":"供应金融链合作库"}],
+  "filter1": [{"keyword":"企业认证"}]
+
 }

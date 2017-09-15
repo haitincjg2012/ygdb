@@ -184,7 +184,7 @@ public class FileUploadServiceImpl implements FileUploadService
                                 {
                                     //上传缩略图名称
                                     String tinyUploadImageName = userNo + seq + "_" + i + "." + fileSuffix;
-                                    String tinyUploadPath = FileUtils.getFileRelativePath( imageUploadPath ) + i;
+                                    String tinyUploadPath = FileUtils.getFileRelativePath( imageUploadPath ) + i + "/";
                                     //压缩后的图片
                                     BufferedImage tinyImage = ImageUtils
                                         .compressImage( bufferedImage, fileSuffix, Integer

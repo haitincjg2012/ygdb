@@ -74,8 +74,12 @@ exports = module.exports = function (elastic,total,err,done,saveProductArr) {
              elasticUserId[i].view_num = (results[i][1].view_num)?results[i][1].view_num:0;
              elasticUserId[i].save_num = (results[i][1].save_num)?results[i][1].save_num:0;
           }
-          for(var j = 0  ; j < userId.length ; j++ ){
-              if(results[i][1] && results[i][1].userLevelName) userId[j].userLevelName = results[i][1].userLevelName;
+          var userResult;
+          for(var j = 0  ; j < userId.length ; j++ ){ 
+              if(results[i][1]) {
+                 userResult = JSON.parse(results[i][1]);
+                 userId[j].userLevelName = userResult.userLevelName;
+               }
               i++;
           }
           var flagUserName;

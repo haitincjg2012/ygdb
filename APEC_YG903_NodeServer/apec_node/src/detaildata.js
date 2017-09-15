@@ -32,6 +32,7 @@ exports = module.exports = function (elastic,total,err,done,saveProductFlag) {
        "saveNum": 0 ,  //收藏人数
        "saveFlag": false,   //是否收藏
        "userLevelName":"QT",  //用户等级
+       "orgId":"", //用户组织
        "marketPreFix":elasticSource.marketPreFix,
        "startAmount": elasticSource.startAmount,
        "endAmount": elasticSource.endAmount,
@@ -67,6 +68,7 @@ exports = module.exports = function (elastic,total,err,done,saveProductFlag) {
           var userInfo = JSON.parse(results[1][1]);
           returnObj.userTypeName =(userInfo.userTypeKey)?userInfo.userTypeKey:"" ;
           returnObj.imgUrl =  (userInfo.imgUrl)?(userInfo.imgUrl):"";
+          returnObj.orgId =  (userInfo.userOrgId)?(userInfo.userOrgId):"";
           userInfo = JSON.parse(results[2][1]);
           returnObj.userLevelName =(userInfo.userLevelName)?userInfo.userLevelName:"QT" ;
           returnObj.userRealAuthFlag = (userInfo.userRealAuthName=="NORMAL")?true:false;

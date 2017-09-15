@@ -61,7 +61,12 @@ let commonJs = {
     }).then(action =>{
       window.location.href='https://shop.ap-ec.cn/welcome.html';
     });
+  },
+  //trim方法
+  trimStr:function(str){
+    return str.replace(/(^\s*)|(\s*$)/g,"");
   }
+
 };
 
 export  default  commonJs;

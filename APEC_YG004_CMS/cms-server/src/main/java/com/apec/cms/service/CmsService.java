@@ -6,13 +6,11 @@ import com.apec.cms.vo.ChannelListVO;
 import com.apec.cms.vo.ChannelVO;
 import com.apec.cms.vo.NewsVO;
 import com.apec.framework.common.PageDTO;
-import com.apec.framework.common.enumtype.CategoryType;
 import com.apec.framework.dto.UserInfoVO;
 import org.springframework.data.domain.PageRequest;
 
 import java.text.ParseException;
 import java.util.List;
-import java.util.Map;
 
 /**
  *  CMS相关服务

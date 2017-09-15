@@ -557,7 +557,6 @@
             current.children[1].classList.remove("activeTri")
           }
         });
-
       },
       search(event){
         var evt = event || window.event;
@@ -939,7 +938,7 @@
         }
       },
       st(aa){
-        var argument = [].slice(arguments);
+        var argument = [].slice.call(arguments);
         var number = argument[0];
         var that = this;
         function l() {

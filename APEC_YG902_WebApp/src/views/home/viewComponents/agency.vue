@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="z-ag">
       <div class="z-header-com">
         <!--<h1>代办</h1>-->
         <div class="return" @click="back">
@@ -13,9 +13,9 @@
 
       <div class="z-ag-select">
         <div class="z-ag-a" @click="dropdown" data-path = "0">
-          <span class="sp-text-com">综合排序</span>
+          <span class="sp-text-com">品种</span>
           <span class="triangle"></span>
-          <span class="z-vertical-line"></span>
+          <!--<span class="z-vertical-line"></span>-->
         </div>
         <div class="z-ag-s" @click="dropdown" data-path = "1">
           <span class="sp-text-com">区域</span>
@@ -68,7 +68,8 @@
     achildD:{
         code:-1,
         rg:null,
-    },//具体地区的数据
+    },
+    agData:[],//具体地区的数据
     init:function (data) {
       var arr = [];
       for(var i = 0; i < 3; i++){
@@ -142,6 +143,36 @@
       });
      fn.r = arr;
      this.itemA = arr;
+    },
+    list(data){
+      if(!data.succeed){
+        return;
+      }
+      var arr = [];
+      var rows = data.data.rows;
+
+      rows.forEach(function (current, index) {
+        var obj = {
+          showOrgTagsInfo:{}
+        };
+        obj.path =index;
+        obj.id = current.userId;//用户userId
+        obj.orgId = current.orgId ? current.orgId:"-999";
+        obj.userId = current.userId ? current.userId:"-1000";
+        obj.ss = childT;
+        obj.orgName = current.orgName;//用户名称
+        obj.address = current.address;//用户地址
+        obj.viewNum = current.viewNum;//浏览数量
+        obj.orgFirstBannerUrl = current.orgFirstBannerUrl;//左侧图片
+        obj.showOrgTagsInfo.tagName = current.showOrgTagsInfo.tagName;//企业认证
+        obj.userLevelName = IMG.methods.userLevel(current.userLevelName);//用户等级
+        obj.userRealAuthKey = current.userRealAuthKey == ""?false:true;//用户是否实名认证
+        obj.voucherNum = current.voucherNum;//用户调用量
+        obj.mainOperating = current.mainOperating;//用户主营品种
+        arr.push(obj);
+      });
+       fn.agData = fn.agData.concat(arr);
+      this.itemC = fn.agData
     }
   };
   export default{
@@ -152,6 +183,10 @@
             itemA:null,
           shadowF:false,
            recordIndex:0,//记录上一次点击的按钮
+          searchType:"",
+          pageNumber:0,
+          pageCount:1000,
+          ky:""
         }
       },
     methods:{
@@ -180,6 +215,13 @@
         this.$router.go(-1);
       },
       search(){
+        this.searchType = "";
+        this.initPagination();
+        this.list(1);
+      },
+      initPagination(){
+        fn.agData = [];
+        this.pageNumber = 1;
       },
       remove(){
         this.shadowF = false;
@@ -206,6 +248,9 @@
               fn.aD.forEach(function (current,index) {
                   current.sh = false;
               });
+              this.searchType = value;
+              this.initPagination();
+              this.list(1);
                 break;
             case "10000":
                 //区域
@@ -230,7 +275,7 @@
           }
       },
       searchArea(param){
-          var value = param,key;
+          var value = param.key;
           var path = param.path;
           var code = param.code;
           this.shadowF = false;
@@ -243,6 +288,10 @@
                 current.sh = false;
             }
           });
+
+        this.searchType = value;
+        this.initPagination();
+        this.list(1);
       },
       dropdown(e){
           var e = e || window.event;
@@ -291,11 +340,68 @@
               fn.secondC.bind(this)(path);
             }
           }
+      },
+      post(params, fn){
+        try {
+          api.post(params).then((res) => {
+            var data = res.data;
+            fn(data);
+          }).catch((error) => {
+            console.log(error)
+          })
+        } catch (error) {
+          console.log(error)
+        }
+      },
+      list(){
+        var pg = arguments[0] || this.pageNumber;
+        var that = this;
+        let params = {
+          api: "/_node_user_org/_agency_list.apno",
+          data: {
+            keyWord: that.ky,
+            searchType: that.searchType,
+            pageNumber: pg,
+          }
+        }
+        this.post(params, fn.list.bind(this));
+      },
+      menuList(evt){
+        var e = evt || window.event;
+        var el = document.querySelector(".z-ag")
+        if(el){
+          var target = e.target || e.srcElement;
+          var offsetH = target.body.scrollTop;
+          var sHeight = target.body.scrollHeight;
+          var that = this;
+          if(sHeight - offsetH - this.bheight == 0){
+            if(this.pageCount > this.pageNumber){
+              this.pageNumber ++;
+              this.pageNum(this.pageNumber);
+            }else{
+              Toast('数据加载完...')
+            }
+
+          }
+        }
+      },
+      pageNum(aa){
+        var argument = [].slice.call(arguments);
+        var number = argument[0];
+        var that = this;
+        function l() {
+          that.list(aa);
+        }
+        setTimeout(l, 1000)
       }
     },
     activated(){
-          fn.init.bind(this)();
-      console.log(this.itemS);
+      this.initPagination();
+          this.list(1);
+//          fn.init.bind(this)();
+    },
+    created(){
+      window.addEventListener('scroll', this.menuList, false);
     }
   }
 </script>

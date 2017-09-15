@@ -8,6 +8,7 @@ import VueScroller from 'vue-scroller'
 import vueg from 'vueg'
 import 'vueg/css/transition-min.css'
 import './assets/js/dateFormat.js'
+import myfilter from './filters/filter.js'//过滤器
 
 
 //mint-ui

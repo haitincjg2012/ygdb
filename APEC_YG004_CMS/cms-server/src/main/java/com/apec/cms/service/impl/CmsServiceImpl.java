@@ -232,8 +232,13 @@ public class CmsServiceImpl implements CmsService {
             logger.warn("[CmsServiceImpl][listArticleInfo] Can't find Article info .The Channel encoding not exists");
             return  new PageDTO<>();
         }
+        boolean nameFlag = newsDTO.getAuthor() == null || StringUtils.isBlank(newsDTO.getAuthor());
+        boolean beginDateFlag = newsDTO.getBeginDate() == null;
+        boolean endDateFlag = newsDTO.getEndDate() == null;
+        newsDTO.getPubDate();
         PageRequest page = new PageRequest(pageRequest.getPageNumber(),pageRequest.getPageSize());
-        Page<Object[]> listModel = articleDAO.queryByChannelAndEnableFlagOrderByOrdinal(String.valueOf(channel.getId()), EnableFlag.Y.name(), page);
+        Page<Object[]> listModel = articleDAO.queryByChannelAndEnableFlagOrderByOrdinal(String.valueOf(channel.getId()), EnableFlag.Y.name(), nameFlag, newsDTO.getAuthor(),
+                beginDateFlag, newsDTO.getBeginDate(), endDateFlag, newsDTO.getEndDate(), page);
         logger.info("[APP]Query News List: ChannelCode:{},size:{}",newsDTO.getChannelCode(),listModel.getTotalElements());
         List<NewsVO> listNews = new ArrayList<>();
         if(!CollectionUtils.isEmpty(listModel.getContent())) {
@@ -246,7 +251,7 @@ public class CmsServiceImpl implements CmsService {
                 obj = String.valueOf(ob[1]);
                 newsVO.setCreateBy(StringUtils.isBlank(obj)||StringUtils.equals(obj,"null")?"":obj);
                 obj = String.valueOf(ob[2]);
-                if(obj != null){
+                if(!(StringUtils.isBlank(obj)||StringUtils.equals(obj,"null"))){
                     Date d = sdf.parse(obj);
                     newsVO.setCreateDate(d);
                 }
@@ -262,7 +267,7 @@ public class CmsServiceImpl implements CmsService {
                 obj = String.valueOf(ob[9]);
                 newsVO.setPriv(StringUtils.isBlank(obj)||StringUtils.equals(obj,"null")?"":obj);
                 obj = String.valueOf(ob[10]);
-                if(obj != null){
+                if(!(StringUtils.isBlank(obj)||StringUtils.equals(obj,"null"))){
                     Date d = sdf.parse(obj);
                     newsVO.setPubDate(d);
                 }

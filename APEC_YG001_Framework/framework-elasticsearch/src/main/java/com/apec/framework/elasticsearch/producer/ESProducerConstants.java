@@ -45,15 +45,15 @@ public interface ESProducerConstants {
     /**
      * 仓库索引
      */
-    String INDEX_URL_DEPORT_ORG = "/depot/orginfo";
+    String INDEX_URL_DEPORT_ORG = "/depot/orginfo/";
 
     /**
      * 代办索引
      */
-    String INDEX_URL_DAIBAN_ORG = "/agency/orginfo";
+    String INDEX_URL_DAIBAN_ORG = "/agency/orginfo/";
 
     /**
      * 客商索引
      */
-    String INDEX_URL_KESHAN_ORG = "/merchant/orginfo";
+    String INDEX_URL_KESHAN_ORG = "/merchant/orginfo/";
 }

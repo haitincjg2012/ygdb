@@ -80,7 +80,7 @@
         <div class="pic-show">
             <p class="z-up-text">上传图片(* 建议横屏拍照)</p>
             <ul class="clearfix z-list-pic" >
-                <li :is="item.SS" v-for="item in items" :src="item.src" :index="item.index" v-on:selecttype="delItems"></li>
+                <li :is="item.SS" v-for="item in items" :item="item" v-on:selecttype="delItems"></li>
                 <li>
                     <div class="z-add-one">
                         <img src="../../../assets/img/add-9.png"/>
@@ -367,8 +367,9 @@
       },
       delItems(timeTamp){
           var items = this.items;
+          var index = timeTamp.index;
           for(var key in items){
-              if(items[key].index == timeTamp){
+              if(items[key].index == index){
                   items.splice(key,1);
                   return;
               }

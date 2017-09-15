@@ -62,8 +62,8 @@
 
           </div>
           <div class="c-price clearfix" :data-id = "item.id">
-            <span :data-id = "item.id" class="g-price-com-f" :class="{qg:item.qg, gy:item.gy}" v-if="item.indentification == 0 ?true:false">{{item.startAmount}}~{{item.endAmount}}</span>
-            <span :data-id = "item.id" class="g-price-com-f" :class="{qg:item.qg, gy:item.gy}" v-if="item.indentification == 1 ? true:false">{{item.amount}}</span>
+            <span :data-id = "item.id" class="g-price-com-f" :class="{qg:item.qg, gy:item.gy}" v-if="item.indentification == 0 ?true:false">&yen;{{item.startAmount}}~{{item.endAmount}}</span>
+            <span :data-id = "item.id" class="g-price-com-f" :class="{qg:item.qg, gy:item.gy}" v-if="item.indentification == 1 ? true:false">&yen;{{item.amount}}</span>
             <span class="g-sp-com g-unit" >{{item.priceUnit}}</span>
             <span class="g-time g-right" :data-id = "item.id">{{item.showCredateTime}}</span>
             <span class="g-eye-num g-right" :data-id = "item.id" >{{item.number}}人浏览</span>

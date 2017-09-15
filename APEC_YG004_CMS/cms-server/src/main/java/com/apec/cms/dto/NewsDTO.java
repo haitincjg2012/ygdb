@@ -79,5 +79,14 @@ public class NewsDTO extends BaseDTO{
      */
     private String priv;
 
+    /**
+     * 开始时间
+     */
+    private Date beginDate;
+
+    /**
+     * 结束时间
+     */
+    private Date endDate;
 
 }

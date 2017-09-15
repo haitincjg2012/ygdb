@@ -76,50 +76,59 @@
         }
       }
     }
-    .newsList{
-      width:100%;
-      background-color: #fff;
-      li{
-        width:100%;
-        border-bottom: 1/@rem solid #D7D7D7;
-        .newsItem{
-          padding:25/@rem 30/@rem;
-          display: flex;
-          flex-direction: row;
-          .newslistR{
-            width:216/@rem;
-            height:152/@rem;
-            margin-right:30/@rem;
-            display: inline-block;
-            img{
-              width:100%;
-              height:100%;
-            }
-          }
-          .newslistL{
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding-bottom: 20/@rem;
-            max-width: 446/@rem;
-            letter-spacing: 2/@rem;
-            h2{
-              color:#222328;
-              font-size:30/@rem;
 
-            }
-            p{
-              font-size:24/@rem;
-              color:#646464;
+  }
+}
+.newsList{
+  width:100%;
+  background-color: #fff;
+  li{
+    width:100%;
+    border-bottom: 1/@rem solid #D7D7D7;
+    .newsItem{
+      padding:25/@rem 30/@rem;
+      display: flex;
+      flex-direction: row;
+      .newslistR{
+        width:216/@rem;
+        height:152/@rem;
+        margin-right:30/@rem;
+        display: inline-block;
+        img{
+          width:100%;
+          height:100%;
+        }
+      }
+      .newslistL{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-bottom: 10/@rem;
+        max-width: 446/@rem;
+        letter-spacing: 2/@rem;
+        h2{
+          color:#222328;
+          font-size:32/@rem;
 
-              span{
-                margin-left:26/@rem;
-              }
-            }
+        }
+        p{
+          font-size:24/@rem;
+          color:#646464;
+
+          span{
+            margin-left:26/@rem;
           }
         }
       }
     }
+  }
+  .liLast{
+    border-bottom: 0 none;
+    text-align: center;
+    font-size: 28/@rem;
+    color:#646464;
+    letter-spacing: 2/@rem;
+    padding-bottom: 10/@rem;
   }
 }
 //行情详情
@@ -165,8 +174,16 @@
         }
       }
     }
+    .newsImg{
+        height:360/@rem;
+        padding:26/@rem 30/@rem 0;
+      img{
+        width:100%;
+        height:100%;
+      }
+    }
     .newsDbtm{
-      padding:26/@rem 30/@rem;
+      padding:20/@rem 30/@rem;
       p{
         text-indent:2em;
         text-align: justify;

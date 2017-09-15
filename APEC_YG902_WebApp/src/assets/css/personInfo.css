@@ -60,7 +60,7 @@
 }
 .z-p-description .z-p-text {
   margin-left: 0.75rem;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   line-height: 2.25rem;
   color: #7e7e7e;
 }
@@ -82,7 +82,7 @@
 }
 .z-des-img .z-des-img-text {
   padding-left: 0.5rem;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   line-height: 1.5rem;
 }
 .z-des-img .z-add-upload {
@@ -179,4 +179,20 @@
 }
 .c-pos-r {
   text-align: right;
+}
+.c-com-w {
+  width: 14rem !important;
+  text-align: right;
+}
+.c-p-sale {
+  margin-left: 0.75rem;
+  line-height: 2.25rem;
+  font-size: 0.75rem;
+  color: #7e7e7e;
+}
+.c-p-sale input {
+  font-size: 0.75rem;
+  height: 1rem;
+  width: 12.5rem;
+  margin-left: 0.5rem;
 }

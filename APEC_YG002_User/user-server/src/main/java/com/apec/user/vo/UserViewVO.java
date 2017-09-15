@@ -3,8 +3,6 @@ package com.apec.user.vo;
 import com.apec.framework.common.enumtype.*;
 import lombok.Data;
 
-import java.util.List;
-
 /**
  * Created by hmy on 2017/8/5.
  */
@@ -134,5 +132,10 @@ public class UserViewVO {
     private UserAccountType userAccountType;
 
     private String userAccountTypeKey;
+
+    /**
+     * OrgId 用户组织ID
+     */
+    private Long  userOrgId;
 
 }

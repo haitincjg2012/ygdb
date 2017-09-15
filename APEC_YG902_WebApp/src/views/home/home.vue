@@ -48,12 +48,12 @@
       <div class="c-sign">
          <div class="c-sign-title">
             <img src="../../assets/img/date.png">
-            <span class="c-sign-sp">珍惜今天的拥有,明天才会富有</span>
+            <span class="c-sign-sp">珍惜今天的拥有,明天才会富有!</span>
          </div>
          <div class="c-sign-v">
             <div class="v-line"></div>
          </div>
-         <div class="c-sign-img">
+         <div class="c-sign-img" @click="signIn">
            <img src="../../assets/img/sign.png">
          </div>
       </div>
@@ -73,14 +73,15 @@
       <!--</div>-->
       <div class="c-h-news">
           <h4 class="c-news-title">市场详情</h4>
-           <div class="c-news-more">
+           <div class="c-news-more" @click="apple">
                 <span class="c-sp">更多</span>
                 <img src="../../assets/img/m.png" class="c-img">
            </div>
       </div>
-      <div>
-           使用新闻列表的详情的内容
-      </div>
+      <!--<div>-->
+      <my-newslist :listFilter="newsData" :loadMflag="loadMflag"></my-newslist>
+      <div class="greyBlock"></div>
+      <!--</div>-->
       <div class="c-gq-info">
         <h4 class="c-gq-title">供求信息</h4>
       </div>
@@ -147,8 +148,8 @@
                     </div>
                   </div>
                   <div class="c-price clearfix" :data-id = "item.id">
-                    <span :data-id = "item.id" class="g-price-com-f" :class="{qg:item.qg, gy:item.gy}" v-if="item.indentification == 0 ?true:false">{{item.startAmount}}~{{item.endAmount}}</span>
-                    <span :data-id = "item.id" class="g-price-com-f" :class="{qg:item.qg, gy:item.gy}" v-if="item.indentification == 1 ? true:false">{{item.amount}}</span>
+                    <span :data-id = "item.id" class="g-price-com-f" :class="{qg:item.qg, gy:item.gy}" v-if="item.indentification == 0 ?true:false">&yen;{{item.startAmount}}~{{item.endAmount}}</span>
+                    <span :data-id = "item.id" class="g-price-com-f" :class="{qg:item.qg, gy:item.gy}" v-if="item.indentification == 1 ? true:false">&yen;{{item.amount}}</span>
                     <span class="g-sp-com g-unit" :data-id = "item.id">{{item.priceUnit}}</span>
                     <span class="g-time g-right" :data-id = "item.id">{{item.showCredateTime}}</span>
                     <span class="g-eye-num g-right" :data-id = "item.id" >{{item.number}}人浏览</span>
@@ -200,16 +201,18 @@
 <style>
   @import "../../assets/css/home.css";
   @import "../../assets/css/gsyhome.css";
+  @import "../../assets/css/news.css";
 </style>
 <script>
-  import QT from '../../assets/img/copper@3x.png'//铜牌
-  import BY from '../../assets/img/silver@3x.png'//银牌
-  import HJ from '../../assets/img/gold@3x.png'//金牌
-  import BJ from '../../assets/img/Pt@3x.png'//铂金
-  import ZS from '../../assets/img/Diamonds.png'//砖石
+  import QT from '../../assets/img/t.png'//铜牌
+  import BY from '../../assets/img/y.png'//银牌
+  import HJ from '../../assets/img/j.png'//金牌
+  import BJ from '../../assets/img/bj-1.png'//铂金
+  import ZS from '../../assets/img/zs.png'//砖石
   import DS from '../../assets/img/Ancrown@3x.png'//大师
 
   import QG from '../../components/gqimg.vue'
+  import newslist from './viewComponents/newslist.vue'//新闻列表
   import c_js from '../../assets/js/common'
   import store from '../../store/store'
   import API from '../../api/api'
@@ -457,6 +460,11 @@
   export default{
     data(){
       return {
+        //新闻列表
+        newsData:[],
+        pageNum:1,//新闻页码
+        pageSize:3,//新闻页容量
+        loadMflag:true,//控制是否显示“无更多”提示
         //积分抽奖
         lotteryShow:false,//正式为false
         cardAFlipped: false,
@@ -527,9 +535,41 @@
           this.sh = false;
           this.sh2 = true;
         }
-      }
+      };
+      //新闻列表
+      vm.newslist();
     },
     methods: {
+      //获取新闻列表
+      newslist(){
+        var vm=this;
+        Indicator.open({
+          text:'加载中...',
+          spinnerType:'fading-circle'
+        });
+        let params={
+          api:"/yg-cms-service/cms/newsList.apec",
+          data:{
+            //固参
+            channelCode:"NEWS",
+            category:"NEWS",
+            //分页信息
+            pageNumber:vm.pageNum,//页码
+            pageSize:vm.pageSize//页容量
+          }
+        };
+        vm.post(params,vm.newslistCb);
+      },
+      newslistCb(data){
+        var vm=this;
+        Indicator.close();
+        if(data.succeed){
+          vm.newsData=data.data.rows;
+        }
+        else{
+          Toast(data.errorMsg);
+        }
+      },
       //算积分
       getScore(){
           var vm=this;
@@ -785,6 +825,7 @@
       },
       update(){
 //        this.messageN();
+
         var id = this.$route.query.flag - 0;
         if (!isNaN(id)) {
           if (id == 0) {
@@ -795,6 +836,13 @@
             this.sh2 = true;
           }
         }
+
+        setTimeout(function () {
+          var el = document.querySelector(".z-add");
+          if(el){
+            el.scrollIntoView();
+          }
+        }, 500)
       },
       messageN(){
           let params = {
@@ -955,7 +1003,6 @@
       },
     },
     activated(){
-
       this.del = {};
       this.isActivated = true;
       this.messageN();
@@ -987,6 +1034,9 @@
       pageNumber:function () {
 //        this.stopFlag = false;
       }
+    },
+    components:{
+      'my-newslist':newslist
     }
   }
 </script>

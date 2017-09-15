@@ -52,9 +52,7 @@
     <div class="z-p-x">
       <div @click.stop="routerPerInfo" class="peoson-info clearfix">
         <div class="z-img-person">
-          <!--<img src="../../../assets/img/p.png">-->
           <img :src="dataDetail.imgRT">
-         <!--<div>{{dataDetail.imgRT}}</div>-->
         </div>
         <div class="z-p-info">
           <div class="z-p-text">{{dataDetail.showUserName}}</div>
@@ -72,9 +70,9 @@
       </div>
     </div>
     <div class="z-my-publishes">
-        <div class="z-my-goods" @click ="popup">
-          <p>我发布的商品</p>
-        </div>
+        <!--<div class="z-my-goods" @click ="popup">-->
+          <!--<p>我发布的商品</p>-->
+        <!--</div>-->
       <div class="wrapper" ref="wrapper" v-if="pp">
         <div>
           <div class="top-tip">
@@ -148,11 +146,11 @@
   import hezuoshang from  '../../../assets/img/hezuoshang.png'//合作商
 
 
-  import QT from '../../../assets/img/copper@3x.png'//铜牌
-  import BY from '../../../assets/img/silver@3x.png'//银牌
-  import HJ from '../../../assets/img/gold@3x.png'//金牌
-  import BJ from '../../../assets/img/Pt@3x.png'//铂金
-  import ZS from '../../../assets/img/Diamonds.png'//砖石
+  import QT from '../../../assets/img/t.png'//铜牌
+  import BY from '../../../assets/img/y.png'//银牌
+  import HJ from '../../../assets/img/j.png'//金牌
+  import BJ from '../../../assets/img/bj-1.png'//铂金
+  import ZS from '../../../assets/img/zs.png'//砖石
   import DS from '../../../assets/img/Ancrown@3x.png'//大师
   import goodD from  './goodlist.vue'
 
@@ -200,7 +198,7 @@
         self.dataDetail.phoneNum = dt.phoneNum-0?dt.phoneNum:0;
         self.dataDetail.saveFlag = dt.saveFlag;
         self.dataDetail.userId = dt.userId;
-        self.dataDetail.imgRT = dt.firstImageUrl;
+        self.dataDetail.imgRT = dt.imgUrl;
 
         if(dt.productImages.length){
           self.detailUrl = dt.productImages;
@@ -420,8 +418,9 @@
       routerPerInfo(){
         if(!this.dataDetail.userId)
             return;
+        var id = this.dataDetail.userId;
 //        this.$router.push({path: '/supplyInfo/' + this.dataDetail.userId});
-        this.$router.push({name:"person"});
+        this.$router.push({name:"personXq",query:{userId:id}});
       },
       back(){
         this.$router.go(-1);

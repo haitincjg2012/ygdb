@@ -24,17 +24,16 @@
 }
 .z-coldlist .z-com-f .primaryMain .pic-com {
   margin: 0.5rem 0;
-  width: 4.6rem;
+  width: 4.5rem;
   position: relative;
 }
 .z-coldlist .z-com-f .primaryMain .pic-com img {
   display: block;
   width: 4.5rem;
   height: 4.5rem;
-  border: 0.025rem solid #d7d7d7;
 }
 .z-coldlist .z-com-f .primaryMain .z-c-info {
-  width: 12rem;
+  width: 12.25rem;
   height: 4.5rem;
   margin: 0.625rem 0 0.5rem 0.65rem;
 }
@@ -56,33 +55,31 @@
   /* IE 10 */
   display: flex;
 }
-.z-coldlist .z-com-f .primaryMain .z-c-info .z-c-real-info .z-ag-r-f-partO {
-  font-size: 0;
-  height: 0.8rem;
+.z-coldlist .z-com-f .primaryMain .z-c-info .z-c-real-info .c-r-info-title {
+  width: 9.75rem;
 }
-.z-coldlist .z-com-f .primaryMain .z-c-info .z-c-real-info .z-ag-r-f-partO .z-c-r-name {
+.z-coldlist .z-com-f .primaryMain .z-c-info .z-c-real-info .c-r-info-title .z-c-r-name {
+  width: 100%;
   font-size: 0.8rem;
   font-weight: bold;
-  vertical-align: top;
   letter-spacing: 0.075rem;
   color: #222328;
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
-.z-coldlist .z-com-f .primaryMain .z-c-info .z-c-real-info .z-ag-r-f-partT {
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 3.75rem;
-  line-height: 0.75rem;
-  text-align: right;
+.z-coldlist .z-com-f .primaryMain .z-c-info .z-c-real-info .c-r-info-bs {
+  width: 2.5rem;
+  line-height: 0.8rem;
 }
-.z-coldlist .z-com-f .primaryMain .z-c-info .z-c-real-info .z-ag-r-f-partT .z-ag-r-text {
-  font-size: 0.5rem;
-  color: #74746B;
+.z-coldlist .z-com-f .primaryMain .z-c-info .z-c-real-info .c-r-info-bs img {
+  width: 0.55rem;
+  height: 0.6rem;
 }
-.z-coldlist .z-com-f .primaryMain .z-c-info .z-c-real-info .z-ag-r-f-partT .z-ag-r-img {
-  vertical-align: middle;
-  width: 0.6rem;
-  height: 0.7rem;
+.z-coldlist .z-com-f .primaryMain .z-c-info .z-c-real-info .c-r-info-bs span {
+  font-size: 0.6rem;
+  color: #74746b;
 }
 .z-coldlist .z-com-f .primaryMain .z-c-info .z-c-storage {
   height: 0.65rem;

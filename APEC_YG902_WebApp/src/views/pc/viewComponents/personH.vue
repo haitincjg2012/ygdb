@@ -8,11 +8,11 @@
             <img :src="person.bannerImgUrl">
            <!--<img src="../../../assets/img/xqimg1.png">-->
          </div>
-          <div class="z-canmer">
-            <input type="file" class="z-imgInput" @change="modify">
+          <div class="z-canmer" v-if="person.poritable">
+            <input type="file" class="z-imgInput" multiple @change="modify">
           </div>
           <div class="z-h-t">
-             <img src="../../../assets/img/p.png">
+             <img :src="person.portrait">
           </div>
       </div>
       <div class="z-p-info">
@@ -24,20 +24,20 @@
       </div>
       <div class="z-p-concat">
          <div class="z-p-notice">
-            <p class="z-common-t">289</p>
+            <p class="z-common-t">{{person.notice}}</p>
             <p class="z-common-t2">关注</p>
          </div>
         <div class="z-p-browse">
-          <p class="z-common-t">123</p>
+          <p class="z-common-t">{{person.bs}}</p>
           <p class="z-common-t2">浏览</p>
         </div>
         <div class="z-p-c">
-          <p class="z-common-t">123</p>
+          <p class="z-common-t">{{person.concat}}</p>
           <p class="z-common-t2">联系</p>
         </div>
-        <div class="z-p-economy">
-           <span class="z-p-economy-text">供应链金融合作库</span>
-        </div>
+        <!--<div class="z-p-economy">-->
+           <!--<span class="z-p-economy-text">供应链金融合作库</span>-->
+        <!--</div>-->
       </div>
       <div class="z-space"></div>
       <div class="z-p-manage-info">
@@ -133,13 +133,15 @@
   import DEL from '../../../components/del.vue'
   import IMG from '../../../components/gqimg.vue'
   import T from "../../../assets/img/t.png"
-  import DBanner from "../../../assets/img/xqimg1.png"
+  import DBanner from "../../../assets/img/defaultBg.png"
+  import P from "../../../assets/img/icon.png"
   const api = new API();
   var ec = require("../../../assets/js/echarts.min");
 
   var fn = {
       img:[],
-      bannerImg:function () {
+      bannerImg:function (data) {
+        this.person.bannerImgUrl = data.data.orgBannerURL;
       },
       init:function (data) {
         var isobj = data.data;
@@ -188,27 +190,54 @@
             break;
 
         }
-          if(dt.imgUrl == "" || dt.img){
+
+          if(dt.imgUrl == "" || !dt.imgUrl){
+             this.person.portrait = P;
+          }else{
+            this.person.portrait = dt.imgUrl;
+
+          }
+          if(!dt.userOrgClientVO){
             this.person.bannerImgUrl = DBanner;
           }else{
-            this.person.bannerImgUrl = dt.imgUrl;
+              if(dt.userOrgClientVO.orgBannerUrl == ""){
+                this.person.bannerImgUrl = DBanner;
+              }else{
+                this.person.bannerImgUrl = dt.userOrgClientVO.orgBannerUrl;
+              }
+
           }
 
           this.person.name = dt.name;
           this.person.levelSrc =IMG.methods.userLevel(dt.userPoint.userLevel);
           this.person.useType = dt.userTypeKey;
           this.person.real = dt.userRealAuth =="UNREALAUTH"?false:true;
+          if(dt.userOrgClientVO){
+            this.person.cold =dt.userOrgClientVO.orgName ;
+            this.person.kr =dt.userOrgClientVO.orgStockCap ;
+            this.person.hzs =dt.userOrgClientVO.orgName ;
+            this.person.address =dt.userOrgClientVO.address ;
+            this.person.pz = dt.userOrgClientVO.mainOperating;
+            this.person.xsq = dt.userOrgClientVO.saleAddress;
+            this.person.des = dt.userOrgClientVO.remark;
+          }
 
-          this.person.cold =dt.userOrgClientVO.orgName ;
-          this.person.kr =dt.userOrgClientVO.orgStockCap ;
-           this.person.hzs =dt.userOrgClientVO.orgName ;
-        this.person.address =dt.userOrgClientVO.address ;
-          this.person.pz = dt.userOrgClientVO.mainOperating;
-        this.person.xsq = dt.userOrgClientVO.saleAddress;
-        this.person.des = dt.userOrgClientVO.remark;
+          if(dt.userDetailType == "LK_BG"){
+               this.person.poritable = false;
+          }else{
+              this.person.poritable = true;
+          }
+
+        let params3 = {
+          api:"/_node_user_org/_view_org_info.apno",
+          data:{
+            orgId:dt.userOrgClientVO.id
+          }
+        }
+
+        this.post(params3,this.bs);
       },
-      addImage:function (data) {
-          console.log(data);
+      addImage:function (data){
         var dt = data.data;
 
       },
@@ -220,6 +249,12 @@
         color: ['#27cba8'],
         title: {
           text: '',
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
         },
         tooltip: {
           axisPointer : {            // 坐标轴指示器，坐标轴触发有效
@@ -283,7 +318,11 @@
               bannerImgUrl:"#",
               market:"深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市",
               xsq:"深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市",
-              des:""
+              des:"",
+              notice:0,
+              bs:0,
+              concat:0,
+              portrait:null
             },
             battlefield:{
                 number:"0",
@@ -310,6 +349,7 @@
               var files = target.files;
               var type = files[0].type;
               var fd = new FormData();
+             fd.append("whetherCompression",1);
              fd.append("file", files[0]);
             let params = {
               api:"/yg-user-service/user/uploadBanner/uploadFile.apec",
@@ -376,20 +416,29 @@
           var dt = data.data;
           this.battlefield.number = dt.totalNumber;
           this.battlefield.rank = dt.rankNo;
-        }
+          if(dt.attrNumberMap){
+            fn.init(dt.attrNumberMap);
+          }
+        },
+        bs(data){
+          var dt = data.data;
+          this.person.notice = dt.attenNum;
+          this.person.bs = dt.viewNum;
+          this.person.concat = dt.phoneNum;
+        },
       },
     activated(){
-
-      var storage = window.localStorage;
-      var id = storage.userId;
+//      var storage = window.localStorage;
+//      var id = storage.userId;
       let params = {
-        api:"/yg-user-service/user/findUserInfo.apec",
-        data:{
-            id:id
-        }
+//        api:"/yg-user-service/user/findUserInfo.apec",
+        api:"/yg-user-service/user/findSelfInfo.apec",
+//        data:{
+//            id:""
+//        }
       }
       this.post(params, fn.init.bind(this));
-      fn.initChat();
+
     }
   }
 </script>

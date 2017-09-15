@@ -215,4 +215,11 @@ public interface UserService {
      */
     String updateOrg(UserOrgClientVO userOrgClientVO, String userId);
 
+    /**
+     * 查询组织下的所有用户信息
+     * @param userVO
+     * @return
+     */
+    List<UserViewVO> findUserByOrgId(UserVO userVO);
+
 }

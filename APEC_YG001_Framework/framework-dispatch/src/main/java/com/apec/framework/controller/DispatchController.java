@@ -40,6 +40,9 @@ public class DispatchController extends BaseController
     @Value("${spring.profiles.active}")
     private String profile;
 
+    @Value("${dispatch.error.sendmail}")
+    private boolean sendFlag;
+
     /**
      * 请求分发
      * @param serverName 服务名称
@@ -87,13 +90,15 @@ public class DispatchController extends BaseController
         catch (DispatchException e)
         {
             //发生异常 发送邮件 消息格式： 环境 + 服务名称 + 方法名称 + 错误信息
-            String title = "environment [%s] call service Error  serviceName: [%s]  methodName:[%s]";
-            title = String.format(title, profile, serverName, methodName);
-            String content = "Request Url: [%s] \n Erorr Message : \n %s";
-            content = String.format(content, request.getRequestURI(), e.getMessage());
-            Mail mail = new Mail(title, content);
-            mailService.sendMail(mail);
-            logger.error("调用服务异常，发送邮件通知 serviceName:{} methodName:{}",serverName,methodName);
+            if(sendFlag) {
+                String title = "environment [%s] call service Error  serviceName: [%s]  methodName:[%s]";
+                title = String.format(title, profile, serverName, methodName);
+                String content = "Request Url: [%s] \n Erorr Message : \n %s";
+                content = String.format(content, request.getRequestURI(), e.getMessage());
+                Mail mail = new Mail(title, content);
+                mailService.sendMail(mail);
+                logger.error("调用服务异常，发送邮件通知 serviceName:{} methodName:{}", serverName, methodName);
+            }
             return super.getResultJSONStr( false, "", e.getErrorCode() );
         }
         return ret;

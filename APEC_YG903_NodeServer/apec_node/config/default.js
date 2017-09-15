@@ -35,7 +35,10 @@ module.exports = {
   "userCaptchaPrefix": "captcha_", //
   "userInfoPrefix": "user:",  //User Info Prefix
   "userOrgInfoPrefix":"user_org:" , // User Org Prefix
+  "userOrgUserInfoPrefix":"user_list" , // User Org  User List Prefix
   "userOrgViewNumPrefix": "view_num" ,  // User org view num prefix
+  "userOrgAttentionKey": "atten_num",  // User org Attention num key
+  "userOrgAttentUserKey": "atten_users",  // User org Attention  key
   "userOrgPhoneKey": "phone_num",   //  电话联系数KEY
   "userDataKey": "data", //User Info key
   "userViewKey": "view_user", //User View Key
@@ -47,6 +50,7 @@ module.exports = {
   "userProductOffKey": "product_off_sell_info",
   "userMessageCountKey": "message_count",  // User MessageCount key
   "userProSaveKey": "pro_save",    //用户收藏的key
+  "userOrgSaveKey": "org_save",    //用户关注的组织用户的key
   "productReCommendKey": "pro_recommend", //热门推荐
   "productAllView": "pro_allviewnum", //产品总的浏览数
   "productAllSave": "pro_allsavenum",//产品总的收藏数

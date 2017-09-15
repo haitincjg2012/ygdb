@@ -7,14 +7,18 @@
     <div class="myheader">
       <my-header :headTitle="title"></my-header>
     </div>
-    <my-scroll class="newsDetailScroll" :pullup="pullup" @scrollToEnd="loadMore">
+    <my-scroll class="newsDetailScroll" :data="contentArray" :pullup="pullup">
       <div class="newsDetailMain">
         <div class="newsDtop">
           <h1>{{detailData.title}}</h1>
-          <p>{{detailData.websit}}<span>{{detailData.time}}</span></p>
+          <p>{{detailData.author}}<span>{{detailData.createDate|ymdFilter}}</span></p>
+        </div>
+        <div class="newsImg">
+          <img :src="detailData.url" />
         </div>
         <div class="newsDbtm">
-          <p v-for="item in detailData.content">{{item}}</p>
+          <!--<p>{{detailData.content}}</p>-->
+          <p v-for="item in contentArray">{{item}}</p>
         </div>
       </div>
     </my-scroll>
@@ -25,14 +29,17 @@
     import {Indicator,Toast} from 'mint-ui'
     import header from '@/components/header/header'
     import scroll from '@/components/scroll/scroll'
+    import commJs from '@/assets/js/common.js'
     import API from '@/api/api'
     const api=new API();
     export default{
         data(){
             return {
               title:'市场行情',
-              id:"",
-              detailData:{
+//              id:"",
+              detailData:[],
+              contentArray:[],
+             /* detailData:{
                  id:1,
                  title:"2018年红富士苹果走货令人担忧",
                  time:"2017-8-25",
@@ -44,25 +51,57 @@
                     '冷库纸夹膜红富士苹果现在走货价格在1.6-1.75元，颜色好的很。在这里我心里现在还是为存苹果的客商和代办捏了一把汗，不管价格咋样，主要是客商今年少的很，看2017年红富士苹果走货还要看市场走货情况了，望存货老板看好时机及时出货。',
                     '现在走货价格在1.6-1.75元，颜色好的很。在这里我心里现在还是为存苹果的客商和代办捏了一把汗，不管价格咋样，主要是客商今年少的很，看2017年红富士苹果走货还要看市场走货情况了，望存货老板看好时机及时出货。'
                  ]
-              },
+              },*/
               /*分页参数--上拉加载更多*/
-              pullup:true,
-              loadMflag:true,
-              pageNum:1,//页码
-              pageSize:10
+              pullup:true
+
             }
         },
-        mounted(){
+        activated(){
           var vm=this;
           vm.id=vm.$route.query.id;
           console.log("id:"+vm.id);
+          vm.newsDetailist();
         },
         methods: {
-          //上拉加载更多
-          loadMore(){
-            if(this.loadMflag){
-              this.pageNum++;
-              console.log("上拉加载更多："+this.pageNum);
+          //获取行情详情
+          newsDetailist(){
+            var vm=this;
+            Indicator.open({
+              text:'加载中...',
+              spinnerType:'fading-circle'
+            });
+            let params={
+              api:'/yg-cms-service/cms/articleQueryById.apec',
+              data:{
+                id:vm.id //用户id
+              }
+            };
+            vm.post(params,vm.newsDetailistCb);
+          },
+          newsDetailistCb(data){
+            var vm=this;
+            Indicator.close();
+            if(data.succeed){
+              vm.detailData=data.data;
+              var content=vm.detailData.content;
+              vm.contentArray=commJs.trimStr(content).split("\n");
+//              console.log("新闻内容："+vm.contentArray);
+
+            }
+          },
+
+          //封装post请求
+          post(params, fn){
+            try {
+              api.post(params).then((res) => {
+                var data = res.data;
+              fn(data);
+            }).catch((error) => {
+                console.log(error)
+            })
+            } catch (error) {
+              console.log(error)
             }
           }
         },

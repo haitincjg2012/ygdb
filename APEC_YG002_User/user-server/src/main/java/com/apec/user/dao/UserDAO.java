@@ -61,6 +61,15 @@ public interface UserDAO extends BaseDAO<User, Long> {
     List<User> findByUserOrgIdAndEnableFlagAndUserAccountType(Long userOrgId, EnableFlag enableFlag, UserAccountType userAccountType);
 
     /**
+     * 通过组织id和用户账号类型查询用户
+     * @param userOrgId
+     * @param enableFlag
+     * @param userAccountType
+     * @return
+     */
+    List<User> findByUserOrgIdAndEnableFlagAndUserAccountTypeNot(Long userOrgId, EnableFlag enableFlag, UserAccountType userAccountType);
+
+    /**
      * 统计该身份证用户个数
      * @param idNumber
      * @param enableFlag

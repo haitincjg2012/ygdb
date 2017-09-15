@@ -56,7 +56,7 @@
       </div>
       <div class="dash-line"></div>
       <div @click.stop="routerInfo('ranking')" class="p-form-cli">
-        <img class="label" src="../../assets/img/Bill.png">
+        <img class="label" src="../../assets/img/rankG.png">
         <span>调果排行榜</span>
         <img class="arrow" src="../../assets/img/back.png">
       </div>
@@ -81,22 +81,20 @@
       <div class="dash-line"></div>
       <div @click.stop="routerInfo('rnAur')" class="p-form-cli">
         <img class="label" src="../../assets/img/Visa_Card.png">
-        <span>实名验证</span>
+        <span>实名认证</span>
         <span class="aur-is-not">{{userRealAuthKey}}</span>
         <img class="arrow" src="../../assets/img/back.png">
       </div>
       <div class="dash-line"></div>
 
       <a href="tel:0535-3143298" class="p-form-cli">
-        <img class="label" src="../../assets/img/Group9.png">
+        <img class="label" src="../../assets/img/kf.png">
         <span>客服电话</span>
         <img class="arrow" src="../../assets/img/back.png">
       </a>
-
-
       <div class="dash-line"></div>
       <div @click.stop="routerInfo('upSecret')" class="p-form-cli">
-        <img class="label" src="../../assets/img/camera.png">
+        <img class="label" src="../../assets/img/script.png">
         <span>修改密码</span>
         <img class="arrow" src="../../assets/img/back.png">
       </div>
@@ -131,6 +129,7 @@
   import ZS from '../../assets/img/Diamonds.png'//砖石
   import DS from '../../assets/img/Ancrown@3x.png'//大师
 
+  import IMG from '../../components/gqimg.vue'
   import backgroudImg from '../../assets/img/bj.png'
 
   const api = new API();
@@ -262,9 +261,11 @@
             var item = res.data;
             if (item.succeed && item.data) {
               var data = JSON.parse(item.data);
+              console.log(data, 9999);
               self.point = data.point;
               self.userLevelKey = data.userLevelKey;
-              self.userLevelName = self.userLevelKeySwitch(data.userLevelName);
+//              self.userLevelName = self.userLevelKeySwitch(data.userLevelName);
+              self.userLevelName = IMG.methods.userLevel(data.userLevelName);
               self.userRealAuthKey = data.userRealAuthKey;
               self.userRealAuthName = data.userRealAuthName;
 
@@ -348,6 +349,7 @@
           api: "/yg-user-service/login/loginOut.apec",
           data: {}
         }
+
         try {
           api.post(params).then((res) => {
             var item = res.data;
@@ -393,7 +395,7 @@
     height 100%;
     width 100%;
     .p-info
-      background url('../../assets/img/bj.png') center 0 no-repeat;
+      background url('../../assets/img/mybg.png') center 0 no-repeat;
       background-size cover;
       width 100%
       height (150 /_rem)

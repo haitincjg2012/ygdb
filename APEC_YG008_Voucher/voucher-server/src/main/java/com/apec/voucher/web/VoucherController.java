@@ -213,42 +213,14 @@ public class VoucherController extends MyBaseController{
 	public ResultData<Integer> deleteVoucherInfo(@RequestBody String json){
 		
 		VoucherDTO voucherDTO = getFormJSON(json, VoucherDTO.class);
-		if (voucherDTO.getVoucherId() == null){
-			log.warn("param is null,[id:{}]" ,voucherDTO.getVoucherId());
+		if (voucherDTO.getVoucherId() == null || voucherDTO.getUserId() == null){
+			log.warn("param is null,[voucherid:{},userid:{}]" ,voucherDTO.getVoucherId(),voucherDTO.getUserId());
 			return getResultData(false, null, Constants.ERROR_100003);
 		}
 		try {
-			int resultCode = voucherService.deleteVoucherInfo(voucherDTO.getVoucherId());
+			int resultCode = voucherService.deleteVoucherInfo(voucherDTO);
 			return getResultData(true, resultCode, "");
 		} catch(BusinessException e){
-			log.error("Add BusinessException :{}",e);
-			return getResultData(false, null, Constants.SERVER_RESEST_EXCEPTION);
-		} catch (Exception e) {
-			log.error("Add Excetion :{}",e);
-			return getResultData(false, null, Constants.SYS_ERROR);
-		}
-	}
-	
-	/**
-	 * 增加交收单商品数据
-	 * @param json
-	 * @return ResultData<String>
-	 * */
-	@RequestMapping(value = "/addVoucherGoodsInfo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-	public ResultData<String> addVoucherGoodsInfo(@RequestBody String json){
-		
-		try {
-			PageJSON<String> pageJson = super.getPageJSON(json, String.class);
-			VoucherGoodsVO voucherGoodsVO = JsonUtil.parseObject(pageJson.getFormJSON(), VoucherGoodsVO.class);
-			if (voucherGoodsVO.getAmount() == null || voucherGoodsVO.getNumber() == null || voucherGoodsVO.getTotalAmount() == null
-					|| voucherGoodsVO.getSkuId() == null || voucherGoodsVO.getVoucherGoodsId() == null || StringUtils.isEmpty(voucherGoodsVO.getSkuName())){
-				log.warn("param is null,[amount:{},number:{},totalAmount:{},skuId:{},voucherGoodsId:{},skuName:{}]",voucherGoodsVO.getAmount(),voucherGoodsVO.getNumber()
-						,voucherGoodsVO.getTotalAmount(),voucherGoodsVO.getSkuId(),voucherGoodsVO.getVoucherGoodsId(),voucherGoodsVO.getSkuName());
-				return getResultData(false,"", Constants.COMMON_MISSING_PARAMS);
-			}
-			String resultCode = voucherService.addVoucherGoodsInfo(voucherGoodsVO);
-			return getResultData(true, resultCode, "");
-		} catch (BusinessException e) {
 			log.error("Add BusinessException :{}",e);
 			return getResultData(false, null, Constants.SERVER_RESEST_EXCEPTION);
 		} catch (Exception e) {
@@ -343,6 +315,9 @@ public class VoucherController extends MyBaseController{
 			Long userId = voucherDTO.getUserId();//找代办userid
 			if (voucherDTO.getUserId() == null){
 				userId = getUserId(json);//代办个人中心userid
+			}
+			if (userId == null){
+				return getResultData(false, null, Constants.ERROR_100003);
 			}
 			DBNumberRankViewVO data = voucherService.findNumberRankViewVO(userId);
 			return getResultData(true, data, "");		

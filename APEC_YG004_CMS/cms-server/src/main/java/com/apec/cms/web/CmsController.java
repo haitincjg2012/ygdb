@@ -10,12 +10,15 @@ import com.apec.framework.common.Constants;
 import com.apec.framework.common.PageDTO;
 import com.apec.framework.common.ResultData;
 import com.apec.framework.common.exception.BusinessException;
+import com.apec.framework.log.InjectLogger;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.web.bind.annotation.*;
-import com.apec.framework.log.InjectLogger;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +65,7 @@ public class CmsController extends MyBaseController {
      * @param jsonStr  channelName 栏目名称  whichCategory 栏目分类
      * @return ResultData
      */
-    @RequestMapping(value = "/channel/create", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/channelCreate", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultData<String> createChannel(@RequestBody String jsonStr) {
         ResultData<String> resultData = new ResultData<>();
         try {
@@ -88,7 +91,7 @@ public class CmsController extends MyBaseController {
      * @param jsonStr 字符
      * @return ResultData
      */
-    @RequestMapping(value = "/article/create", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/articleCreate", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultData<String> createArticle(@RequestBody String jsonStr) {
         ResultData<String> resultData = new ResultData<>();
         try {
@@ -114,7 +117,7 @@ public class CmsController extends MyBaseController {
      * @param jsonStr 字符
      * @return ResultData
      */
-    @RequestMapping(value = "/article/queryById", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/articleQueryById", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String getArticleById(@RequestBody String jsonStr) {
         try {
             ArticleVO articleVO = getFormJSON(jsonStr,ArticleVO.class);
@@ -137,7 +140,7 @@ public class CmsController extends MyBaseController {
      * @param jsonStr 字符
      * @return ResultData
      */
-    @RequestMapping(value = "/article/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/articleUpdate", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultData<String> updateArticleById(@RequestBody String jsonStr) {
         ResultData<String> resultData = new ResultData<>();
         try {
@@ -163,7 +166,7 @@ public class CmsController extends MyBaseController {
      * @param jsonStr 字符
      * @return ResultData
      */
-    @RequestMapping(value = "/article/delete", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/articleDelete", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultData<String> deleteArticleById(@RequestBody String jsonStr) {
         ResultData<String> resultData = new ResultData<>();
         try {
@@ -189,7 +192,7 @@ public class CmsController extends MyBaseController {
      * @param jsonStr 字符
      * @return ResultData
      */
-    @RequestMapping(value = "/news/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/newsList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultData<PageDTO<NewsVO>> queryNewsList(@RequestBody String jsonStr) {
         try {
             NewsDTO newsDTO = getFormJSON(jsonStr,NewsDTO.class);

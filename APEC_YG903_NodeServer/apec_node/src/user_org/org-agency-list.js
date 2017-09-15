@@ -55,9 +55,6 @@ router.post('/_node_user_org/_agency_list' + config.urlSuffix, bodyParser, funct
          }
      };
   };
-  console.log("#############API:/_node_user_org/_agency_list/ [Node query]: ")
-  console.log(JSON.stringify(searchParams));
-  console.log("##############[END] ")
   var done = (returnData,total,err) => {
     if(err != 200 ){
       console.log("#############API:/_node_user_org/_agency_list/ [Error]: ")

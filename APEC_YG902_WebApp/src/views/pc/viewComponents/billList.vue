@@ -84,6 +84,7 @@
     },
     activated(){
       this.getHistoryList();
+      this._initScroll();
     },
     methods: {
       selXItem(e, item, ind){
@@ -423,7 +424,7 @@
       margin (35 /_rem) (15 /_rem) 0 (15 /_rem)
       .btn-login-c
         color #ffffff
-        line-height (15 /_rem)
+        font-size (15 /_rem)
         height (40 /_rem)
         border-radius: 5px;
         display: inline-block;

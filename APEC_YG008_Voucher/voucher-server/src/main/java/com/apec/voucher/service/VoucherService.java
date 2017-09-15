@@ -9,7 +9,6 @@ import com.apec.voucher.viewvo.DBVoucherViewVO;
 import com.apec.voucher.viewvo.VoucherBSViewVO;
 import com.apec.voucher.viewvo.VoucherRespViewVO;
 import com.apec.voucher.viewvo.VoucherViewVO;
-import com.apec.voucher.vo.VoucherGoodsVO;
 import com.apec.voucher.vo.VoucherVO;
 
 /**
@@ -48,18 +47,10 @@ public interface VoucherService {
 	
 	/**
 	 * 删除交收单数据
-	 * @param id Long voucher表id
+	 * @param VoucherDTO voucherDTO
 	 * @return String 是否成功
 	 * */
-	int deleteVoucherInfo(Long id);
-	
-	/**
-	 * 增加交收单商品数据
-	 * @param voucherId Long
-	 * @param VoucherGoodsVO
-	 * @return String 是否成功
-	 * */
-	String addVoucherGoodsInfo(VoucherGoodsVO voucherGoodsVO);
+	int deleteVoucherInfo(VoucherDTO voucherDTO);
 	
 	/**
 	 * 更新交收单数据

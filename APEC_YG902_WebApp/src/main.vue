@@ -59,9 +59,11 @@
                 this.time = 1;
               }
               obj.flag = this.time;
+
             }
 
             this.$router.push({name: 'home',query:obj});
+
             break;
           case 1:
             var obj = {};

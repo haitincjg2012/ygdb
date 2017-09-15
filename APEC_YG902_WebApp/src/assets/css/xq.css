@@ -257,9 +257,6 @@
   width: 50%;
   float: left;
 }
-.footer ul .z-phone {
-  height: 100%;
-}
 .footer ul .z-phone a {
   background-color: #3d3b59;
   display: block;
@@ -305,8 +302,8 @@
   top: 0;
 }
 .z-s-header-O .return img {
-  width: 0.85rem;
-  height: 1.125rem;
+  width: 0.55rem;
+  height: 0.975rem;
   vertical-align: middle;
 }
 .z-cs {

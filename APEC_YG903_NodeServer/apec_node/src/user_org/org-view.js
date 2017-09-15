@@ -1,6 +1,5 @@
 'use strict';
 
-//用户浏览供求，更新数目
 var router,bodyParser;
 router = require('express').Router();
 module.exports = router;
@@ -10,13 +9,10 @@ var redis = require('../midware_server/redis');
 var ef = require('../ef');
 var resdata = require('../resdata');
 
-//代办客商冷库更新
+//代办客商冷库浏览数更新
 router.post('/_node_user_org/_view_org' + config.urlSuffix , bodyParser, function(req, res, next) {
     var orgId = req.body.orgId;
     var viewType = req.body.vieType;
-    console.log(orgId);
-    console.log(viewType);
-    console.log((!orgId) || (!viewType));
     if((!orgId) || (!viewType)){
          return resdata(res,false,null,"");
     }
@@ -35,6 +31,8 @@ router.post('/_node_user_org/_view_org' + config.urlSuffix , bodyParser, functio
         if(results){
           redis.hincrby(config.userOrgInfoPrefix + orgId, proKey, 1);
           return done(true,"");
+        }else{
+          return done(false,"");
         }
     });
 });

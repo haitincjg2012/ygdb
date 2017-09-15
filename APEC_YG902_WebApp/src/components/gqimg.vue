@@ -8,12 +8,12 @@
   import lengku from '../assets/img/AgencyTipsL.png'//冷库
   import hezuoshang from  '../assets/img/hezuoshang.png'//合作商
 
-  import QT from '../assets/img/copper@3x.png'//铜牌
-  import BY from '../assets/img/silver@3x.png'//银牌
-  import HJ from '../assets/img/gold@3x.png'//金牌
-  import BJ from '../assets/img/Pt@3x.png'//铂金
-  import ZS from '../assets/img/Diamonds.png'//钻石
-  import DS from '../assets/img/Ancrown@3x.png'//大师
+  import QT from '../assets/img/t.png'//铜牌
+  import BY from '../assets/img/y.png'//银牌
+  import HJ from '../assets/img/j.png'//金牌
+  import BJ from '../assets/img/bj-1.png'//铂金
+  import ZS from '../assets/img/zs.png'//钻石
+//  import DS from '../assets/img/ds.png'//大师
 
   export default{
       methods:{
@@ -46,19 +46,19 @@
         },
         userLevel(key){
           switch (key) {
-            case '铜牌':
+            case 'QT':
               return QT;
-            case '银牌':
+            case 'BY':
               return BY;
-            case '金牌':
+            case 'HJ':
               return HJ;
-            case '铂金':
+            case 'BJ':
               return BJ;
               break;
-            case '钻石':
+            case 'ZS':
               return ZS;
               break;
-            case '大师':
+            case 'DS':
               return DS;
               break;
             default:

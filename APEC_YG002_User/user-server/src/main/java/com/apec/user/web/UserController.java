@@ -172,9 +172,9 @@ public class UserController extends MyBaseController {
             }
             String imageUrl = "";
             String firstImageUrl = "";
-            if(null != imageUploadVOS && imageUploadVOS.size() >0){
-                firstImageUrl = imageUploadVOS.get(0).getImagePath();
-                imageUrl = imageUploadVOS.get(1).getImagePath();
+            if(null != imageUploadVOS && imageUploadVOS.size() >1){
+                firstImageUrl = imageUploadVOS.get(1).getImagePath();
+                imageUrl = imageUploadVOS.get(0).getImagePath();
             }
             //判断用户是否重新上传了图片，是则保存新上传的图片路径
             if(!StringUtils.isBlank(imageUrl)){
@@ -558,11 +558,12 @@ public class UserController extends MyBaseController {
      */
     @RequestMapping(value = "/findUserInfo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String findUserInfo(@RequestBody String json) {
-        Map<String,String> data = new HashMap<>();
         try {
             UserVO userVO = getFormJSON(json, UserVO.class);
-            if (userVO == null || userVO.getId() == null || userVO.getId() == 0L) {
+            if(userVO == null){
                 userVO = new UserVO();
+            }
+            if (userVO.getId() == null || userVO.getId() == 0L) {
                 userVO.setId(getUserId(json));
             }
             UserViewVO viewVO = userService.findUserInfo(userVO);
@@ -570,6 +571,28 @@ public class UserController extends MyBaseController {
 
         } catch (Exception e) {
             log.error("[user][findUserInfo]  Exception：{}", e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
+    /**
+     * 查询用户自己的信息
+     * @param json
+     * @return
+     */
+    @RequestMapping(value = "/findSelfInfo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String findSelfInfo(@RequestBody String json) {
+        try {
+            UserVO userVO = getFormJSON(json, UserVO.class);
+            if(userVO == null)  userVO = new UserVO();
+
+            if (userVO.getId() == null || userVO.getId() == 0L)  userVO.setId(getUserId(json));
+
+            UserViewVO viewVO = userService.findUserInfo(userVO);
+            return super.getResultJSONStr(true, viewVO, "");
+
+        } catch (Exception e) {
+            log.error("[user][findSelfInfo]  Exception：{}", e);
             return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
         }
     }
@@ -608,7 +631,7 @@ public class UserController extends MyBaseController {
     }
 
     /**
-     * 用户信息查询
+     * 所有组织账号信息查询
      */
     @RequestMapping(value = "/findOrgList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String findOrgList(@RequestBody String json){
@@ -726,6 +749,25 @@ public class UserController extends MyBaseController {
 
         } catch (Exception e) {
             log.error("[user][updateOrg] Exception：{}", e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
+    /**
+     * 修改组织信息
+     */
+    @RequestMapping(value = "/findUserByOrgId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String findUserByOrgId(@RequestBody String json){
+        UserVO userVO = getFormJSON(json,UserVO.class);
+        try {
+            if(userVO.getIds() == null || userVO.getId() == 0L){
+                userVO.setId(getUserId(json));
+            }
+            List<UserViewVO> userViewVOS = userService.findUserByOrgId(userVO);
+            return super.getResultJSONStr(true, userViewVOS, null);
+
+        } catch (Exception e) {
+            log.error("[user][findUserByOrgId] Exception：{}", e);
             return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
         }
     }
