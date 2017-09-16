@@ -10,6 +10,7 @@ import common from '~/views/common/common.vue'
 import home from '~/views/home/home.vue'
 import member from '~/views/member/member.vue'
 import certificate from '~/views/member/certificate.vue'
+import newsIssue from '~/views/transaction/newsIssue.vue'
 
 Vue.use(Router);
 
@@ -36,6 +37,7 @@ const router=new Router({
                     path:'/home',
                     component:home
                 },
+                /*客户模块*/
                 {//会员
                     name:'member',
                     path:'/member',
@@ -45,6 +47,12 @@ const router=new Router({
                     name:'certificate',
                     path:'/certificate',
                     component:certificate
+                },
+                /*交易模块*/
+                {//行情发布
+                    name:'newsIssue',
+                    path:'/newsIssue',
+                    component:newsIssue
                 }
             ]
         }

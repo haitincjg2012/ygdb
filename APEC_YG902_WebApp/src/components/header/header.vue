@@ -5,11 +5,10 @@
 */
 <template>
   <div class="header">
-    <h1>
-      <i class="return" @click="goBack" v-if="iconFlag">
-        <img src="../../assets/img/arrowLeft.png">
-      </i>
-      {{headTitle}}</h1>
+    <i class="return" @click="goBack" v-if="iconFlag">
+      <img src="../../assets/img/arrowLeft.png">
+    </i>
+    <h1>{{headTitle}}</h1>
   </div>
 </template>
 

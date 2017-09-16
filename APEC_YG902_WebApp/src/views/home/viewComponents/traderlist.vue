@@ -18,7 +18,7 @@
           </div>
           <div class="z-t-main clearfix" :data-id = "item.id">
             <span class="z-t-main-com-t">主营：</span>
-            <span class="z-t-main-com-t">{{item.mainOperating}}</span>
+            <span class="z-t-main-com-t c-t-main-t">{{item.mainOperating}}</span>
           </div>
           <div class="z-t-address">
             <span class="z-t-addr-T">地址：</span>

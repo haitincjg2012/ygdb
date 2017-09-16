@@ -1,7 +1,6 @@
 package com.apec.framework.dto;
 
 import com.apec.framework.common.enumtype.UserAccountType;
-import com.sun.org.apache.xpath.internal.operations.String;
 
 /**
  * Title: 用户组织缓存VO

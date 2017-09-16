@@ -3,6 +3,8 @@ package com.apec.user.vo;
 import com.apec.framework.common.enumtype.*;
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * Created by hmy on 2017/8/5.
  */
@@ -10,6 +12,8 @@ import lombok.Data;
 public class UserViewVO {
 
     private Long id;
+
+    private Date createDate;
 
     /**
      * 登陆名

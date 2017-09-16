@@ -10,6 +10,7 @@ Vue.use(Vuex);
 
 const store=new Vuex.Store({
     state:{
+        staticFlag:false, //true加载静态数据，false请求后台接口
         authToken:commonjs.getValue('authToken') || '',//登录token
         userName:commonjs.getValue('userName') || '' //用户名
     },

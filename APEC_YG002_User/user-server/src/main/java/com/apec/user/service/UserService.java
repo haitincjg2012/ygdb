@@ -114,7 +114,7 @@ public interface UserService {
      * @param pageRequest
      * @return
      */
-    PageDTO<UserViewVO> pageUserInfo(UserDTO dto, PageRequest pageRequest);
+    PageDTO<UserAllInfo> pageUserInfo(UserDTO dto, PageRequest pageRequest);
 
     /**
      * 查询用户信息
@@ -221,5 +221,12 @@ public interface UserService {
      * @return
      */
     List<UserViewVO> findUserByOrgId(UserVO userVO);
+
+    /**
+     * 我的关注(组织账号信息)
+     * @param userId
+     * @return
+     */
+    List<UserViewVO> findUserFocusOrg(Long userId,PageRequest pageRequest);
 
 }

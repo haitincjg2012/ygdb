@@ -12,7 +12,7 @@
           <span class="p-v-info-person">头像</span>
           <img class="p-v-info-user" :src="imgUrl">
           <img class="arrow-img" src="../../../assets/img/back.png">
-          <input type="file" accept="image/*" capture="camera" class="p-v-info-upload" @change="handImg"/>
+          <input type="file" accept="image/*"  class="p-v-info-upload" @change="handImg"/>
         </div>
       </div>
       <!--<split></split>-->
@@ -184,6 +184,9 @@
     },
     submit:function(data){
         if(data.succeed){
+          sessionStorage.clear();
+          window.sessionStorage.setItem("newName","1111");
+          console.log(window.localStorage.getItem("newName"), 9999);
             this.$router.push({name:"pc"});
         }
     }
@@ -483,10 +486,20 @@
               var userDetailType = data.userDetailType;
 
               if(self.userTypeKey == "代办"){
-                self.itemId = fn.DB;
+
                 self.Identity.pIDF = true;
                 self.Identity.warehouse = false;
                 self.Identity.storage = false;
+                if(userDetailType == "DB_DG"){
+//                   调果代办
+                   fn.DB[0].sh = true;
+                  self.userDetailType = userDetailType;
+                }else{
+                  fn.DB[1].sh = true;
+                  self.userDetailType = userDetailType;
+                }
+                self.itemId = fn.DB;
+                return;
               }else if(self.userTypeKey == "冷库"){
 
                 self.Identity.pIDF = true;
@@ -646,7 +659,6 @@
           api: "/yg-user-service/user/updateUserInfo.apec",
           data: data
         }
-       console.log(params, 9090909);
 
         this.post(params, fn.submit.bind(this));
       },

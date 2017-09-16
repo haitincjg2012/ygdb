@@ -2,10 +2,7 @@ package com.apec.user.dto;
 
 import com.apec.framework.common.enums.Realm;
 import com.apec.framework.common.enums.Source;
-import com.apec.framework.common.enumtype.Sex;
-import com.apec.framework.common.enumtype.UserRealAuth;
-import com.apec.framework.common.enumtype.UserStatus;
-import com.apec.framework.common.enumtype.UserType;
+import com.apec.framework.common.enumtype.*;
 import com.apec.framework.dto.BaseDTO;
 import com.apec.user.model.UserAuthRecord;
 import com.apec.user.model.UserLoginRecord;
@@ -161,5 +158,10 @@ public class UserDTO extends BaseDTO {
      * 性别
      */
     private Sex sex;
+
+    /**
+     * 用户账号类型
+     */
+    private UserAccountType userAccountType;
 
 }

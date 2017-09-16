@@ -1,6 +1,7 @@
 .z-traderlist .z-com-f {
   width: 18.75rem;
   padding: 0 !important;
+  border-bottom: 0.05rem solid #d7d7d7;
 }
 .z-traderlist .z-com-f .primaryMain {
   padding: 0 0.5rem;
@@ -74,4 +75,11 @@
   font-size: 0.65rem;
   line-height: 1rem;
   vertical-align: middle;
+  display: inline-block;
+}
+.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-main .c-t-main-t {
+  max-width: 10rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }

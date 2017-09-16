@@ -39,6 +39,11 @@ public class DBNumberRankViewVO {
 	private double totalNumber;
 	
 	/**
+	 * 重量单位
+	 * */
+	private String weight;
+	
+	/**
 	 * 规格数量
 	 * key：规格；value：数量
 	 * */

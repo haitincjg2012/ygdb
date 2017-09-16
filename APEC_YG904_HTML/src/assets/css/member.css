@@ -1,0 +1,43 @@
+/*
+* 客户模块
+*/
+.photoBox .el-dialog {
+  width: 30%;
+  min-width: 400px;
+}
+.photoBox .el-dialog__body {
+  text-align: center;
+}
+.photoBox .el-dialog {
+  margin-bottom: 0;
+}
+.photoImg {
+  width: 100px;
+  height: 75px;
+  margin: 5px 0;
+  vertical-align: middle;
+  float: left;
+}
+.photoBig {
+  width: 100%;
+  height: auto;
+}
+.img1 {
+  margin-right: 10px;
+}
+.accountForm .el-form-item {
+  width: 100%;
+}
+.accountForm .el-form-item .el-form-item__content {
+  display: inline-block;
+  width: 80%;
+}
+.accountForm .el-form-item .el-form-item__content .el-input__inner {
+  border: 0 none;
+}
+.orgSearch {
+  margin: 20px 0 10px;
+}
+.orgSearch .el-form .el-form-item .el-form-item__content {
+  width: 160px;
+}

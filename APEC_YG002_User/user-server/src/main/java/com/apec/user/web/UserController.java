@@ -491,7 +491,7 @@ public class UserController extends MyBaseController {
      */
     @RequestMapping(value = "/pageUserInfo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String pageUserInfo(@RequestBody String json){
-        PageDTO<UserViewVO> page = new PageDTO<>();
+        PageDTO<UserAllInfo> page = new PageDTO<>();
         //获取前端用户传来的实名验证相关信息
         UserDTO dto = getFormJSON(json,UserDTO.class);
         PageRequest pageRequest = genPageRequest(dto);
@@ -768,6 +768,23 @@ public class UserController extends MyBaseController {
 
         } catch (Exception e) {
             log.error("[user][findUserByOrgId] Exception：{}", e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
+    /**
+     * 我的关注(组织账号信息)
+     */
+    @RequestMapping(value = "/findUserFocusOrg", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String findUserFocusOrg(@RequestBody String json){
+        try {
+            UserDTO userDTO = getFormJSON(json,UserDTO.class);
+            PageRequest pageRequest = genPageRequest(userDTO);
+            List<UserViewVO> userViewVOS = userService.findUserFocusOrg(getUserId(json),pageRequest);
+            return super.getResultJSONStr(true, userViewVOS, null);
+
+        } catch (Exception e) {
+            log.error("[user][findUserFocusOrg] Exception：{}", e);
             return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
         }
     }

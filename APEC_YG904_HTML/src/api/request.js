@@ -17,9 +17,9 @@ const ax={
     config.data=params.data;
     var url=params.url;
     //返回请求数据
-    axios.get(url,{},config).then((res)=>{
-      //var data=res.data.rows?JSON.parse(res.data):(res.data?JSON.parse(res.data):[]);
-      var data=res.data?JSON.parse(res.data):[];
+    axios.get(url,{params:config.data},config).then((res)=>{
+    //var data=res.data?JSON.parse(res.data):[];
+    var data=typeof(res.data)!="object"?JSON.parse(res.data):res.data;
     this.successCb(data,sucCb);
   }).catch((err)=>{
       //请求失败的回调函数
@@ -54,23 +54,15 @@ const ax={
     var url=params.url;
     //返回请求数据
     axios.post(url,{},config).then((res)=>{
-      var data=res.data?JSON.parse(res.data):[];
+      if(res.data){
+      var data=typeof(res.data)!="object"?JSON.parse(res.data):res.data;
+    }else{
+      var data=[];
+    }
+      //var data=res.data?JSON.parse(res.data):[];
       this.successCb(data,sucCb);
-      //console.log("res.errorCode:"+data.errorCode);
-      //if(data.errorCode=='300014'){
-      //  console.log("这是错误300014");
-      //  router.push({name:'certificate'});
-      //}
-      ////用户认证审核中300015
-      //else if(data.errorCode=='300015'){
-      //  MessageBox.alert("您的认证申请正在审核中，请稍后再试！","提示");
-      //}
-      //else{
-      //  successCb(data);
-      //}
 
-
-    }).catch((err)=>{
+  }).catch((err)=>{
       //请求失败的回调函数
       this.failCb(err);
     });
@@ -81,8 +73,11 @@ const ax={
     if(data.succeed){
       sucCb(data);
     }
+    //暂时备注
     else{
       if(data.errorCode=='600001'){//登录超时且不是登陆页就跳转到登陆页面
+        console.log(data.errorMsg);
+        Message.error("您的登录信息已超时,请重新登录！");
         var reg=new RegExp(/login/);
         var a=reg.exec(router.currentRoute.fullPath);
         if(a==null){

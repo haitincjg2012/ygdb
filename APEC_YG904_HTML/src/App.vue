@@ -25,6 +25,5 @@
 <style>
   @import './assets/css/reset.css';
   @import './assets/css/common.css';
-  @import './assets/css/files.css';
 
 </style>

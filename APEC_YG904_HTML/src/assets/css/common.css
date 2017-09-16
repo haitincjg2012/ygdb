@@ -11,6 +11,22 @@
   height: calc(100vw-200px);
   padding: 20px;
 }
+/*搜索栏*/
+.mysearch {
+  background-color: #F6F6F6;
+  margin: 20px 0 3px;
+}
+.mysearch .el-form {
+  padding: 20px 20px 10px;
+}
+.mysearch .el-form .el-form-item {
+  margin-bottom: 10px;
+}
+/*批量删除*/
+.batchGroup {
+  margin-bottom: 3px;
+  float: right;
+}
 .red {
   color: red;
 }
@@ -20,4 +36,67 @@
 .pageNation {
   margin: 20px;
   float: right;
+}
+/*表单详情页*/
+.myformDetail {
+  width: 90%;
+  margin-top: 30px;
+}
+.myformDetail .el-form-item {
+  width: 100%;
+}
+.myformDetail .el-form-item .el-form-item__label {
+  width: 120px;
+}
+.myformDetail .el-form-item .el-form-item__content {
+  width: 390px;
+  display: inline-block;
+}
+.myformDetail .el-form-item .selRegion {
+  Width: 24%;
+}
+.myformDetail .el-form-item .selRegion:last-child {
+  width: 50%;
+}
+.myformDetail .el-form-item .el-input.is-disabled .el-input__inner {
+  background-color: #fff;
+  border: 0 none;
+  color: #000;
+  cursor: default;
+}
+.myformDetail .el-form-item .el-textarea.is-disabled .el-textarea__inner {
+  background-color: #fff;
+  border: 0 none;
+  color: #000;
+  cursor: default;
+}
+.myformDetail .btnGroup {
+  padding-left: 120px;
+}
+.formBorder .el-input__inner {
+  border: 0 none;
+}
+/*上传图片*/
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #20a0ff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
 }

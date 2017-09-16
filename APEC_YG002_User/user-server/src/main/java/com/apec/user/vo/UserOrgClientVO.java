@@ -98,6 +98,11 @@ public class UserOrgClientVO{
     private UserAccountType userAccountType;
 
     /**
+     * 账户类型
+     */
+    private String userAccountTypeKey;
+
+    /**
      * 实力描述上传的照片
      */
     private List<UserOrgImageVO> userOrgImageVOS;

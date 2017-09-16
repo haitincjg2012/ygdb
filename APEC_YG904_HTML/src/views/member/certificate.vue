@@ -4,7 +4,7 @@
 */
 <template>
     <div class="certificate">
-        <my-header :headTitle="title"></my-header>
+        <my-header :fatherTitle="fatitle" :headTitle="title" :viewFlag="viewFlag" :editFlag="editFlag" :addFlag="addFlag"></my-header>
         <!--搜索-->
         <div class="mysearch">
             <el-form :inline="true" class="search">
@@ -17,9 +17,13 @@
         </div>
         <!--表格列表-->
         <div class="tableList">
-            <el-table :data="dataList" border stripe style="width:100%">
+            <el-table :data="dataList" border stripe v-loading.body="loadFlag" style="width:100%;">
                 <el-table-column type="selection"></el-table-column>
-                <el-table-column prop="realName" label="客户姓名" ></el-table-column>
+                <el-table-column prop="realName" label="客户姓名" >
+                    <template scope="scope">
+                        <div>{{scope.row.realName}}</div>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="mobile" label="手机号"></el-table-column>
                 <el-table-column prop="idNumber" label="身份证号"></el-table-column>
                 <el-table-column label="照片" width="250">
@@ -66,8 +70,14 @@
     export default{
         data(){
             return {
+                fatitle:'客户',
                 title:'会员实名认证审核',
+                /*header参数*/
+                viewFlag:false,
+                editFlag:false,
+                addFlag:false,
                 name:"",
+                loadFlag:false,//加载显示
                 dataList:[],
                 imgUrl:"",
                 dialogFormVisible:false,//显示大图对话框
@@ -84,6 +94,10 @@
         created(){
             var vm=this;
             vm.getTableList();
+        },
+        deactivated(){
+            var vm=this;
+            vm.loadFlag=false;//避免超时闪现加载图标
         },
 
         methods: {
@@ -187,7 +201,8 @@
             },
             //获取列表数据
             getTableList(){
-              var vm=this;
+                var vm=this;
+                vm.loadFlag=true;
                 let params={
                     url:vm.apiUrl.certificate.tableUrl,
                     data:{
@@ -200,6 +215,7 @@
             },
             tableListCb(data){
                 var vm=this;
+                vm.loadFlag=false;
                 vm.pageData=data.data;
                 console.log("页码:"+vm.pageData.totalElements);
                 vm.dataList=data.data.rows;
@@ -237,6 +253,6 @@
     }
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
-
+<style scoped>
+    @import '../../assets/css/member.css';
 </style>

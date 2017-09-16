@@ -301,8 +301,8 @@ public class VoucherController extends MyBaseController{
 	}
 	
 	/**
-	 * 获取代办个人调果排行
-	 * @param String json
+	 * 首页获取个人平台调果排行
+	 * @param json
 	 * @return ResultData<PageDTO<DBNumberRankViewVO>>
 	 * */
 	@RequestMapping(value = "/getNumberRankViewVO", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
@@ -311,11 +311,7 @@ public class VoucherController extends MyBaseController{
 		try {
 			PageJSON<String> pageJson = super.getPageJSON(json, String.class);
 			VoucherDTO voucherDTO = JsonUtil.parseObject(pageJson.getFormJSON(), VoucherDTO.class);
-			//区分代办个人中心和找代办所传的userId
-			Long userId = voucherDTO.getUserId();//找代办userid
-			if (voucherDTO.getUserId() == null){
-				userId = getUserId(json);//代办个人中心userid
-			}
+			Long userId = voucherDTO.getUserId();
 			if (userId == null){
 				return getResultData(false, null, Constants.ERROR_100003);
 			}
@@ -328,6 +324,30 @@ public class VoucherController extends MyBaseController{
 			log.error("Add Excetion :{}",e);
 			return getResultData(false, null, Constants.SYS_ERROR);
 	    }
+	}
+
+	/**
+	 * 个人主页获取个人平台调果排行
+	 * @param json
+	 * @return ResultData<PageDTO<DBNumberRankViewVO>>
+	 * */
+	@RequestMapping(value = "/getSelfNumberRankViewVO", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	public ResultData<DBNumberRankViewVO> getSelfNumberRankViewVO(@RequestBody String json){
+
+		try {
+			Long userId = getUserId(json);
+			if (userId == null){
+				return getResultData(false, null, Constants.ERROR_100003);
+			}
+			DBNumberRankViewVO data = voucherService.findNumberRankViewVO(userId);
+			return getResultData(true, data, "");
+		} catch(BusinessException e){
+			log.error("getSelfNumberRankViewVO Add BusinessException :{}",e);
+			return getResultData(false, null, Constants.SERVER_RESEST_EXCEPTION);
+		} catch (Exception e) {
+			log.error("getSelfNumberRankViewVO Add Excetion :{}",e);
+			return getResultData(false, null, Constants.SYS_ERROR);
+		}
 	}
 	
 	/**

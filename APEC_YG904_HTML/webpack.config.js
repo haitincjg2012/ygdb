@@ -55,7 +55,8 @@ module.exports = (options = {}) => ({
     }
   },
   devServer: {
-    host: '127.0.0.1',
+    host: '192.168.7.141',
+    //host: '127.0.0.1',
     port: 8040,
     proxy: {
       '/api/': {
@@ -73,8 +74,20 @@ module.exports = (options = {}) => ({
         target: 'http://192.168.7.111',
         changeOrigin: true
       },
+      '/yg-systemConfig-service/': {//查询所需地区信息
+        target: 'http://192.168.7.111',
+        changeOrigin: true
+      },
       '/images/': {//图片地址转发
         target: 'http://192.168.7.21',
+        changeOrigin: true
+      },
+      '/common/': {//上传图片
+        target: 'http://192.168.7.111',
+        changeOrigin: true
+      },
+      '/yg-cms-service/': {//行情
+        target: 'http://192.168.7.111',
         changeOrigin: true
       }
     },

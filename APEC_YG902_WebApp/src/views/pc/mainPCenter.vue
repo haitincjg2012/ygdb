@@ -142,7 +142,8 @@
     data() {
       return {
         imgUrl: this.$store.state.imgUrl || c_js.getLocalValue('imgUrl') || userImgUrl,//用户头像
-        name: this.$store.state.name || c_js.getLocalValue('name') || '',//用户名
+//        name: this.$store.state.name || c_js.getLocalValue('name') || '',//用户名
+        name: '',//用户名
         userTypeName: this.userTypeNameSwitch(this.$store.state.userTypeName || c_js.getLocalValue('userTypeName')),//用户身份
         userRealAuthKey: '',//用户是否验证
         userRealAuthName:'',
@@ -261,7 +262,6 @@
             var item = res.data;
             if (item.succeed && item.data) {
               var data = JSON.parse(item.data);
-              console.log(data, 9999);
               self.point = data.point;
               self.userLevelKey = data.userLevelKey;
 //              self.userLevelName = self.userLevelKeySwitch(data.userLevelName);
@@ -365,11 +365,15 @@
     },
 
     activated(){
+
+
       this.GetUserLevel();
       this.GetMessageCount();
       this.imgUrl = this.$store.state.imgUrl || c_js.getLocalValue('imgUrl') || userImgUrl;//用户头像
-      this.name= this.$store.state.name || c_js.getLocalValue('name') || '';
+      window.sessionStorage.setItem("newName", this.$store.state.name || c_js.getLocalValue('name') || '');
       this.userTypeName=this.userTypeNameSwitch(this.$store.state.userTypeName || c_js.getLocalValue('userTypeName'));
+      this.name = window.sessionStorage.getItem("newName");
+      console.log(window.sessionStorage.getItem("newName"));
     },
 
     created() {

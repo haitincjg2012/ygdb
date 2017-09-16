@@ -111,18 +111,25 @@
              </div>
           </div>
       </div>
-      <div class="z-num-main"  v-if="role.agencyF">
+      <div class="z-num-main" :class="{show:!role.agencyF}">
          <h4 class="z-num-main-t">调果数据</h4>
         <div class="z-space"></div>
         <div id="mainS" class="z-p-main"></div>
       </div>
-      <!--<div class="c-test">-->
-         <!--<div class="c-t-com" @click="test1">代办</div>-->
-        <!--<div class="c-t-com" @click="test2">客商</div>-->
-        <!--<div class="c-t-com" @click="test3">种植户</div>-->
-        <!--<div class="c-t-com" @click="test4">冷库</div>-->
-        <!--<div class="c-t-com" @click="test5">合作社</div>-->
-      <!--</div>-->
+      <div class="z-p-gy-T">
+        <h4 class="c-p-gy-x">供求</h4>
+        <div class="c-gy-v"></div>
+        <div>
+          <ul class="c-gq-list">
+            <li
+              :is="item.ss"
+              :item="item"
+              v-for="item in itemGQ" v-on:xq="initD">
+
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
 </template>
 <style scoped>
@@ -135,6 +142,7 @@
   import T from "../../../assets/img/t.png"
   import DBanner from "../../../assets/img/defaultBg.png"
   import P from "../../../assets/img/p.png"
+  import MYGQList from "../../home/viewComponents/mygqlist.vue"
   const api = new API();
   var ec = require("../../../assets/js/echarts.min");
 
@@ -236,14 +244,26 @@
         var dt = data.data;
 
       },
-    initChat:function (data) {
+    initChat:function (data, weight) {
       var el = document.getElementById("mainS");
       var myChart = ec.echarts.init(el);
+      var xData = [];
+      var yData = [];
+      for(var key in data){
+        xData.push(key);
+        yData.push(data[key]);
+      }
       var nameData = ["70#一二","75#一二","80#一二","85#一二",];
       var option = {
         color: ['#27cba8'],
         title: {
           text: '',
+        },
+        grid: {
+          left: '3%',
+          right: '13%',
+          bottom: '15%',
+          containLabel: true
         },
         tooltip: {
           axisPointer : {            // 坐标轴指示器，坐标轴触发有效
@@ -255,35 +275,127 @@
           selectedMode:false,
         },
         xAxis: {
-          data: nameData,
+          data: xData,
           name:"种类",
 //            max:5,
 //            splitNumber:10,
           boundaryGap: ['120%', '120%'],
-          axisLabel:{
-            rotate:45
-          },
+
           axisTick:{
-            interval:1,
+            interval:0,
 //                length:10
+          },
+          axisLabel:{
+            interval:0 ,
+            rotate:45
+//            formatter:function(val){
+//              return val.split("").join("\n");
+//            }
           }
         },
         yAxis: {
-          name:"重量",
+          name:"重量("+weight+")",
           splitLine:{
             show:false
           }
         },
         series: [{
-          name: '数量',
+          name: '数量' ,
           type: 'bar',
           barWidth:"30%",
-          data: [5, 20, 36, 10]
+//          data: [5, 20, 36, 20, 36, 10]
+          data:yData
         }]
       };
 
       // 使用刚指定的配置项和数据显示图表。
       myChart.setOption(option);
+    },
+    initgq(data){
+      if(!data.succeed){
+        return;
+      }
+      var rows = data.data.rows;
+      var arr = [];
+      var that = this;
+      rows.forEach(function (current, index) {
+        var obj = {};
+        var len = 0;
+        obj.ss = MYGQList;
+        obj.skuName = current.skuName;
+        obj.showCredateTime = current.showCredateTime;
+        var id = current.userId;
+        obj.id = id;
+        obj.levelImg =IMG.methods.userLevel(current.userLevelName);
+        obj.img = current.firstImageUrl;
+        obj.local = current.address;
+        obj.name = current.showUserName;
+        obj.Flag = that.name;
+        obj.userId = current.userId;//userId和orgId是相同的
+        obj.orgId = current.userId;
+        obj.priceUnit = current.priceUnit;
+        obj.agency = current.userTypeName;
+        obj.number = current.viewNum;
+        obj.star = current.saveNum;
+        obj.starFlag = current.saveFlag;
+        var wU = current.weightUnit;
+        var t = "";
+        if(wU){
+          t = wU;
+        }
+        obj.weight = current.weight +" " + t;
+        len += obj.weight.length;
+        obj.path = index;
+
+        var goodTime = current.showSecondInfo;
+        var text = goodTime.join(" ");
+
+        obj.fruitdate = text;
+
+        var Identification = current.productTypeName;
+        obj.gq = current.productTypeName;
+        //单一的排序
+        //只有求购和供应
+        if(Identification == "求购"){
+          obj.bg = true;
+          obj.indentification = 0;
+          obj.endAmount = current.endAmount.toString();
+          len += obj.endAmount.length;
+          obj.startAmount = current.startAmount.toString();
+          len += obj.startAmount.length;
+        }else{
+          obj.bg = false;
+          obj.indentification = 1;
+          obj.amount = current.amount.toString();
+          len += obj.amount.length;
+        }
+        var n = (250 - (len + 3 + 3 + 3) * 10)/20;
+        obj.wh = n;
+
+        var pattern =/[0-9]*/g;
+        var pt = /([a-z]*|[A-Z]*|(\s*))/g;
+        var st = obj.name +"";
+        var arrttt =st.match(pattern);
+        var arrtttt = st.match(pt);
+        var lF = 0,lt = 0;
+
+        arrttt.forEach(function (current) {
+          lF += current.length;
+        })
+
+        arrtttt.forEach(function (current) {
+          lt += current.length;
+        })
+        obj.addreeWh = (185 - (obj.name.toString().length + obj.agency.length) * 12 + lF * 6 + lt*8)/20;;
+        obj.productTypeName = IMG.methods.img(current.productTypeName);
+        if(that.del.hasOwnProperty(id)){
+          return;
+        }
+        that.del[id] = 0;
+        arr.push(obj);
+      });
+      that.itemGQ = arr;
+      console.log(that.itemGQ);
     }
   }
   export default{
@@ -322,7 +434,10 @@
                 coldF:false,
                 traderF:false,
               cooperativeF:false,
-            }
+            },
+            itemGQ:null,//供求信息
+            pageNumber:1,//供求信息的页码
+            del:{},//记录数据条数
           }
       },
       methods:{
@@ -411,21 +526,50 @@
           this.person.bs = dt.viewNum;
           this.person.concat = dt.phoneNum;
         },
+        gqlist(){
+          var pg = arguments[0] || this.pageNumber;
+          var that = this;
+          let params = {
+            api:"/_node_user/_product_list.apno",
+            data:{
+              orgId:that.orgId,
+              pageNumber: "1",
+            }
+          }
+          this.post(params,fn.initgq.bind(this));
+        },
       },
     activated(){
 //      var storage = window.localStorage;
 //      var id = storage.userId;
       var id = this.$route.query.userId;
-      let params = {
-//        api:"/yg-user-service/user/findUserInfo.apec",
-        api:"/yg-user-service/user/findSelfInfo.apec",
-        data:{
+      var usertype = this.$route.query.type;
+      var params;
+      if(usertype == "冷库"){
+        params = {
+          api:"/yg-user-service/user/findUserInfo.apec",
+          data:{
+            userOrgId:id
+          }
+        };
+      }else{
+        params = {
+          api:"/yg-user-service/user/findUserInfo.apec",
+          data:{
             id:id
-        }
+          }
+        };
       }
+//      let params = {
+////        api:"/yg-user-service/user/findUserInfo.apec",
+//        api:"/yg-user-service/user/findSelfInfo.apec",
+//        data:{
+//            id:id
+//        }
+//      }
       this.post(params, fn.init.bind(this));
+      this.gqlist(1);
 
-      fn.initChat();
     }
   }
 </script>

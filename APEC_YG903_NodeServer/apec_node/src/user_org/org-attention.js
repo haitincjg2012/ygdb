@@ -1,6 +1,5 @@
 'use strict';
-
-//用户收藏商品
+ 
 var router,bodyParser;
 router = require('express').Router();
 module.exports = router;

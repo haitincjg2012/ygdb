@@ -90,8 +90,8 @@
         </div>
          <!--<textarea placeholder="赶快填写吧，让更多用户关注你" ref="edit" disabled></textarea>-->
          <p class="z-edit-p">{{person.des == ""?"赶快填写吧，让更多用户关注你":person.des}}</p>
-         <div class="z-icon" @click="edit">
-         </div>
+         <!--<div class="z-icon" @click="edit">-->
+         <!--</div>-->
       </div>
       <div class="z-transship-ret" v-if="role.agencyF || role.traderF">
           <h4 class="z-transship-title">平台战绩</h4>
@@ -114,7 +114,7 @@
       <div class="z-num-main"  v-if="role.agencyF">
          <h4 class="z-num-main-t">调果数据</h4>
         <div class="z-space"></div>
-        <div id="mainS" class="z-p-main"></div>
+        <div id="mainST" class="z-p-main"></div>
       </div>
       <!--<div class="c-test">-->
          <!--<div class="c-t-com" @click="test1">代办</div>-->
@@ -160,11 +160,11 @@
              this.role.coldF = true;
               break;
           case "DB":
-              var userId = window.localStorage.userId;
+//              var userId = window.localStorage.userId;
               var params = {
                   api:"/yg-voucher-service/voucher/getNumberRankViewVO.apec",
                   data:{
-                      userId:userId
+//                      userId:userId
                   }
               }
               this.post(params, this.DBRet);
@@ -172,11 +172,11 @@
           case "KS":
             this.role.agencyF = false;
             this.role.traderF = true;
-            var userId = window.localStorage.userId;
+//            var userId = window.localStorage.userId;
             var params = {
               api:"/yg-voucher-service/voucher/getNumberRankViewVO.apec",
               data:{
-                userId:userId
+//                userId:userId
               }
             }
             this.post(params, this.DBRet);
@@ -241,10 +241,23 @@
         var dt = data.data;
 
       },
-    initChat:function (data) {
-      var el = document.getElementById("mainS");
+    initChat:function (data, weight) {
+
+      var el = document.getElementById("mainST");
       var myChart = ec.echarts.init(el);
-      var nameData = ["70#一二","75#一二","80#一二","85#一二",];
+      var xData = [];
+      var yData = [];
+      for(var key in data){
+        xData.push(key);
+        yData.push(data[key]);
+      }
+      var tw;
+      if(weight){
+        tw ="重量("+weight+")";
+      }else{
+        tw ="重量";
+      }
+      var nameData = ["70#一二","75#一二","80#一二","85#一二","95#一二","89#一二"];
       var option = {
         color: ['#27cba8'],
         title: {
@@ -252,8 +265,8 @@
         },
         grid: {
           left: '3%',
-          right: '4%',
-          bottom: '3%',
+          right: '13%',
+          bottom: '15%',
           containLabel: true
         },
         tooltip: {
@@ -266,30 +279,36 @@
           selectedMode:false,
         },
         xAxis: {
-          data: nameData,
+          data: xData,
           name:"种类",
 //            max:5,
 //            splitNumber:10,
           boundaryGap: ['120%', '120%'],
-          axisLabel:{
-            rotate:45
-          },
+
           axisTick:{
-            interval:1,
+            interval:0,
 //                length:10
+          },
+          axisLabel:{
+            interval:0 ,
+            rotate:45
+//            formatter:function(val){
+//              return val.split("").join("\n");
+//            }
           }
         },
         yAxis: {
-          name:"重量",
+          name:tw,
           splitLine:{
             show:false
           }
         },
         series: [{
-          name: '数量',
+          name: '数量' ,
           type: 'bar',
           barWidth:"30%",
-          data: [5, 20, 36, 10]
+//          data: [5, 20, 36, 20, 36, 10]
+          data:yData
         }]
       };
 
@@ -304,20 +323,20 @@
             editFlag:true,
             items:null,
             person:{
-                  name:'李义山',
-              lk:"栖霞冷库",
-              kr:"5000吨",
-              hzs:"深圳深圳",
+                  name:'',
+              lk:"",
+              kr:"",
+              hzs:"",
                   address:'',
                   useType:'',
-                  real:"实名认证",
+                  real:"",
               levelSrc:T,
-              address:"烟台市栖霞镇五万存",
-              dhq:"深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市",
-              pz:'红富士 70# 80#',
+              address:"",
+              dhq:"",
+              pz:'',
               bannerImgUrl:"#",
-              market:"深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市",
-              xsq:"深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市深圳市",
+              market:"",
+              xsq:"",
               des:"",
               notice:0,
               bs:0,
@@ -412,12 +431,15 @@
           this.postImg(params, fn.addImage.bind(this))
         },
         DBRet(data){
-//            console.log(data);
           var dt = data.data;
-          this.battlefield.number = dt.totalNumber;
+          var weight = dt.weight;
+          this.battlefield.number = dt.totalNumber + weight;
           this.battlefield.rank = dt.rankNo;
+
           if(dt.attrNumberMap){
-            fn.init(dt.attrNumberMap);
+            fn.initChat(dt.attrNumberMap, weight);
+          }else{
+            fn.initChat(dt.attrNumberMap, weight);
           }
         },
         bs(data){

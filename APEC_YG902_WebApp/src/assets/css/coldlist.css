@@ -1,9 +1,7 @@
-.z-coldlist {
-  border-bottom: 0.025rem solid #d7d7d7;
-}
 .z-coldlist .z-com-f {
   width: 18.75rem;
   padding: 0 !important;
+  border-bottom: 0.025rem solid #d7d7d7;
 }
 .z-coldlist .z-com-f .primaryMain {
   padding: 0 0.5rem;
@@ -71,6 +69,7 @@
 }
 .z-coldlist .z-com-f .primaryMain .z-c-info .z-c-real-info .c-r-info-bs {
   width: 2.5rem;
+  text-align: right;
   line-height: 0.8rem;
 }
 .z-coldlist .z-com-f .primaryMain .z-c-info .z-c-real-info .c-r-info-bs img {

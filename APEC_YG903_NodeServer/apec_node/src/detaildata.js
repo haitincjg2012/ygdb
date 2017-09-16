@@ -69,6 +69,7 @@ exports = module.exports = function (elastic,total,err,done,saveProductFlag) {
           returnObj.userTypeName =(userInfo.userTypeKey)?userInfo.userTypeKey:"" ;
           returnObj.imgUrl =  (userInfo.imgUrl)?(userInfo.imgUrl):"";
           returnObj.orgId =  (userInfo.userOrgId)?(userInfo.userOrgId):"";
+          returnObj.showUserName = (userInfo.name)?(userInfo.name):"";
           userInfo = JSON.parse(results[2][1]);
           returnObj.userLevelName =(userInfo.userLevelName)?userInfo.userLevelName:"QT" ;
           returnObj.userRealAuthFlag = (userInfo.userRealAuthName=="NORMAL")?true:false;

@@ -111,7 +111,7 @@
     </div>
     <div class="footer">
        <ul>
-           <li class="z-phone">
+           <li class="z-phone-T">
              <a @click.stop="phoneClick" :href="`tel:${dataDetail.mobile}`">打电话</a>
            </li>
            <li @click.stop="collect($event,dataDetail.id)" class="z-t z-collect" :class="{activeDel:dataDetail.saveFlag}">{{save_cl}}</li>
@@ -419,8 +419,9 @@
         if(!this.dataDetail.userId)
             return;
         var id = this.dataDetail.userId;
+        var type = this.dataDetail.userTypeName;
 //        this.$router.push({path: '/supplyInfo/' + this.dataDetail.userId});
-        this.$router.push({name:"personXq",query:{userId:id}});
+        this.$router.push({name:"personXq",query:{userId:id,type:type}});
       },
       back(){
         this.$router.go(-1);

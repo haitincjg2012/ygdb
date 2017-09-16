@@ -65,6 +65,7 @@ exports = module.exports = function (elastic,total,err,done,saveProductArr) {
       uniqueArr(userId);
       userId.forEach(function(obj,index){
          pipeline.hget(config.userInfoPrefix + obj.userId,config.userViewKey);
+         pipeline.hget(config.userInfoPrefix + obj.userId,config.userDataKey);
       });
       return ef(done, bind$(pipeline, 'exec') ,function(results){
           if(!results) return done(returnData,total,err);
@@ -75,19 +76,29 @@ exports = module.exports = function (elastic,total,err,done,saveProductArr) {
              elasticUserId[i].save_num = (results[i][1].save_num)?results[i][1].save_num:0;
           }
           var userResult;
-          for(var j = 0  ; j < userId.length ; j++ ){ 
+          for(var j = 0  ; j < userId.length ; j++ ){
               if(results[i][1]) {
                  userResult = JSON.parse(results[i][1]);
                  userId[j].userLevelName = userResult.userLevelName;
-               }
-              i++;
+              }
+              if(results[i+1][1]){
+                userResult = JSON.parse(results[i+1][1]);
+                userId[j].userTypeName = userResult.userTypeKey;
+                userId[j].showUserName = userResult.name;
+              }
+              i = i + 2;
           }
+ 
           var flagUserName;
           elasticUserId.forEach(function(obj,ind){
               flagUserName =  userId.filter((p) => {
                   return p.userId == obj.userId;
               })[0];
-              if(flagUserName) obj.userLevelName = flagUserName.userLevelName;
+              if(flagUserName) {
+                obj.userLevelName = flagUserName.userLevelName
+                obj.userTypeName = flagUserName.userTypeName;
+                obj.showUserName = flagUserName.showUserName;
+              };
               flagUserName = null;
           });
           userId = [];
@@ -110,6 +121,8 @@ exports = module.exports = function (elastic,total,err,done,saveProductArr) {
                obj.phoneNum = userObj.phone_num;
                obj.userLevelName = userObj.userLevelName;
                obj.saveNum = userObj.save_num;
+               obj.userTypeName = userObj.userTypeName;
+               obj.showUserName = userObj.showUserName;
              }
              userObj = null;
          });

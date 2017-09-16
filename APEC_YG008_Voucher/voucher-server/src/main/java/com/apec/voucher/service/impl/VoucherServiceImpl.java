@@ -467,20 +467,31 @@ public class VoucherServiceImpl implements VoucherService{
 	@Override
 	public DBNumberRankViewVO findNumberRankViewVO(Long userId) {
 		
-		//代办个人排名信息
+		//平台个人排名信息
 		List<Object[]> objs = voucherDAO.findDBNumberRankInfo(userId);
 		DBNumberRankViewVO dbNumberRankViewVO = new DBNumberRankViewVO();
-		//代办没上传单据，排在最后一名
+		//没上传单据，排在最后一名
 		if (CollectionUtils.isEmpty(objs)){
 			int rankNo = voucherDAO.findLastRankNo();
 			dbNumberRankViewVO.setTotalNumber(0);
+			dbNumberRankViewVO.setWeight("万斤");
 			dbNumberRankViewVO.setRankNo(rankNo+1);
 			return dbNumberRankViewVO;
 		}
 		dbNumberRankViewVO.setRankNo((Double)objs.get(0)[0]);
 		dbNumberRankViewVO.setName(String.valueOf(objs.get(0)[1]));
 		dbNumberRankViewVO.setType(UserType.valueOf(UserType.class,String.valueOf(objs.get(0)[2])));
-		dbNumberRankViewVO.setTotalNumber((Double)objs.get(0)[3]);
+		double totalNumber = (Double)objs.get(0)[3];
+		NumberFormat nf = NumberFormat.getInstance();
+		nf.setMaximumFractionDigits(2);
+		double voucherTotalNumber = Double.parseDouble(nf.format(totalNumber/10000));
+		dbNumberRankViewVO.setTotalNumber(voucherTotalNumber);
+		dbNumberRankViewVO.setWeight("万斤");
+		
+		//如果是客商则不需要个人规格数量
+		if (dbNumberRankViewVO.getType().equals(UserType.KS)){
+			return dbNumberRankViewVO;
+		}
 		
 		//代办个人规格数量
 		List<Object[]> attrNumbers = voucherDAO.listAttrNumber(userId);
@@ -490,7 +501,6 @@ public class VoucherServiceImpl implements VoucherService{
 			attrNumberMap.put(String.valueOf(attrNumber[0]), String.valueOf(attrNumber[1]));
 			partNumber = partNumber+Double.parseDouble(String.valueOf(attrNumber[1]));
 		}
-		Double totalNumber = voucherGoodsDAO.findTotalNumberByUserId(userId);
 		//其他数量
 		attrNumberMap.put("其它", String.valueOf(totalNumber-partNumber));
 		dbNumberRankViewVO.setAttrNumberMap(attrNumberMap);

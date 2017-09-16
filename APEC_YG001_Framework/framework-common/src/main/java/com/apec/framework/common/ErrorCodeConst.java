@@ -28,6 +28,7 @@ public interface ErrorCodeConst
     String ERRPR_ORG_ISPUSH = "800017"; //该组织已经推送
     String ERRPR_TAGS = "800018"; //标签不存在
     String ORG_OWN_MAIN = "800019"; //该组织已经绑定主账号
+    String ORG_PUSH_USERTYPE = "800020"; //只有客商，冷库，代办可以进行认证操作
 
     //=========== DISPATCH错误码start===================
     String ERROR_600001 = "600001";//session超时

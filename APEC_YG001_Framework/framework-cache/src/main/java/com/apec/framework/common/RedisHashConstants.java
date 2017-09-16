@@ -81,4 +81,9 @@ public interface RedisHashConstants {
      * */
     String HASH_VOUCHER_NUM = "voucher_num";
 
+    /**
+     * 我的关注
+     * */
+    String ORG_SAVE = "org_save";
+
 }

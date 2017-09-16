@@ -9,12 +9,11 @@
 .z-person .z-p-head-t h1 {
   font-size: 1rem;
 }
-.z-person .z-p-head-t .return {
+.z-person .z-p-head-t .return-t {
   position: relative;
-  left: 0.625rem;
   top: 0;
 }
-.z-person .z-p-head-t .return img {
+.z-person .z-p-head-t .return-t img {
   width: 0.55rem;
   height: 0.975rem;
   vertical-align: middle;
@@ -26,7 +25,7 @@
 }
 .z-person .z-bannerImg img {
   width: 100%;
-  height: 10rem;
+  height: 8.125rem;
   display: block;
 }
 .z-person .z-bannerImg .z-head-portrait {
@@ -34,24 +33,26 @@
   bottom: -2rem;
   right: 1.5rem;
   display: block;
-  width: 4rem;
-  height: 4rem;
-  border: 0.05rem solid #000000;
+  width: 3.6rem;
+  height: 3.6rem;
+  border: 0.05rem solid #969696;
   border-radius: 100%;
 }
 .z-person .z-p-info {
   margin-top: 1rem;
 }
 .z-person .z-p-info .c-t-info {
-  line-height: 2.5rem;
+  line-height: 2.75rem;
+  height: 2.75rem;
 }
 .z-person .z-p-info .z-p-flag {
   padding-top: 1rem;
 }
 .z-person .z-p-info .z-p-name {
   padding-left: 0.5rem;
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: bold;
+  color: #242424;
 }
 .z-person .z-p-info .z-cold-name {
   padding-left: 0.5rem;
@@ -113,7 +114,6 @@
   display: -ms-flexbox;
   /* IE 10 */
   display: flex;
-  margin-bottom: 0.5rem;
 }
 .z-person .z-p-info .z-p-path .z-p-part {
   width: 3.75rem;
@@ -125,7 +125,11 @@
 }
 .z-person .z-p-info .z-p-path .z-p-part p {
   line-height: 1.5rem;
+  height: 1.5rem;
   text-align: center;
+}
+.z-person .z-p-info .z-p-path .z-p-part span {
+  vertical-align: 0.15rem;
 }
 .z-person .z-p-info .z-p-path .z-p-follow {
   width: 7.5rem;
@@ -150,7 +154,7 @@
   margin-left: 0.5rem;
 }
 .z-person .z-p-des .z-p-des-icon {
-  padding-right: 0.5rem;
+  padding-right: 0.25rem;
   width: 1.1rem;
   height: 1.1rem;
   vertical-align: sub;
@@ -159,54 +163,57 @@
   font-size: 0.85rem;
   height: 2.3rem;
   line-height: 2.3rem;
-  border-bottom: 0.05rem solid #d6cece;
+  border-bottom: 0.05rem solid #d7d7d7;
+}
+.z-person .z-p-des .z-p-des-w .z-x-sp-com {
+  color: #323232;
 }
 .z-person .z-p-des .z-p-des-w input {
-  width: 11.5rem;
+  width: 12.5rem;
   height: 1.05rem;
   font-size: 0.85rem;
   vertical-align: 0.05rem;
   text-align: right;
+  color: #646464;
 }
 .z-person .z-p-des .z-p-des-content {
-  padding: 0 0.5rem;
+  padding: 0 1.6rem;
   line-height: 1.25rem;
   font-size: 0.75rem;
-  color: #919191;
+  color: #646464;
   margin-bottom: 1rem;
 }
 .z-space {
   width: 18.75rem;
   height: 0.05rem;
-  background-color: #e6e3e3;
-  margin-bottom: 0.75rem;
+  background-color: #d7d7d7;
 }
 .z-space-com {
   width: 18.75rem;
   height: 0.05rem;
-  background-color: #e6e3e3;
+  background-color: #d7d7d7;
 }
 .c-space-t {
   width: 100%;
 }
 .z-transaction .z-h4-title {
   font-size: 0.8rem;
-  height: 1.75rem;
-  line-height: 1.75rem;
-  color: #ff8400;
+  height: 2rem;
+  line-height: 2rem;
+  color: #323232;
 }
 .z-transaction .z-h4-title:before {
   content: "";
   width: 0.2rem;
-  height: 0.75rem;
+  height: 0.85rem;
   background-color: #ff8400;
   display: inline-block;
-  margin: 0 0.75rem 0 0.5rem;
-  vertical-align: middle;
+  margin: 0 0.5rem;
+  vertical-align: -0.1rem;
 }
 .z-transaction .z-transaction-results {
   background: #fff;
-  padding: 0.5rem 0 1rem;
+  padding: 0.75rem 0 0.75rem;
   display: -webkit-box;
   /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
   display: -moz-box;
@@ -232,14 +239,15 @@
 }
 .z-transaction .z-transaction-results .z-vertical-line .z-v-line {
   display: inline-block;
-  width: 0.1rem;
+  width: 0.05rem;
   height: 1.5rem;
   background-color: #7e7e7e;
   vertical-align: middle;
 }
 .z-transaction .z-transaction-results .z-r-s-com {
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   color: #f36e44;
+  font-weight: bold;
   line-height: 1.25rem;
 }
 .z-transaction .z-transaction-results p {
@@ -250,17 +258,18 @@
 }
 .z-num-main .z-num-main-t {
   font-size: 0.8rem;
-  height: 1.75rem;
-  line-height: 1.75rem;
+  height: 2rem;
+  line-height: 2rem;
+  color: #323232;
 }
 .z-num-main .z-num-main-t:before {
   content: "";
   width: 0.2rem;
-  height: 0.75rem;
+  height: 0.85rem;
   background-color: #27cba8;
   display: inline-block;
-  margin: 0 0.75rem 0 0.5rem;
-  vertical-align: middle;
+  margin: 0 0.5rem;
+  vertical-align: -0.1rem;
 }
 .z-num-main .Zmain {
   width: 18.75rem;
@@ -288,23 +297,27 @@
 .z-p-gy {
   position: relative;
   width: 18.75rem;
-  border-bottom: 0.05rem solid #cac9c9;
-  height: 2.3rem;
+  min-height: 5rem;
   line-height: 2.3rem;
   z-index: 0;
 }
+.z-p-gy .c-gy-v {
+  border-bottom: 0.05rem solid #d7d7d7;
+}
 .z-p-gy .c-p-gy-x {
-  font-size: 0.75rem;
-  margin-left: 1rem;
+  height: 2rem;
+  line-height: 2rem;
+  color: #323232;
+  font-size: 0.8rem;
 }
 .z-p-gy .c-p-gy-x:before {
   content: "";
   display: inline-block;
   width: 0.2rem;
-  height: 0.75rem;
+  height: 0.85rem;
   background-color: #ff4535;
-  margin-right: 0.5rem;
-  vertical-align: middle;
+  margin: 0 0.5rem;
+  vertical-align: -0.1rem;
 }
 .z-cold-mobile {
   display: block;
@@ -355,4 +368,12 @@
 }
 .c-border-none {
   border: none !important;
+}
+.c-gq-list {
+  margin-bottom: 2rem;
+}
+.z-space-h {
+  height: 0.5rem;
+  width: 100%;
+  background-color: #f3f3f3;
 }

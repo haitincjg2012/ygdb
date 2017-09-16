@@ -43,14 +43,14 @@ public interface VoucherDAO extends BaseDAO<Voucher, Long>{
 	Voucher findVoucherInfo(@Param("voucherId")Long voucherId);
 	
 	/**
-	 * 代办个人数量排名信息
+	 * 平台个人数量排名信息（代办、客商）
 	 *@param userId Long
 	 *@return Object[][]
 	 * */
 	@Query(value = "select t.rankNo,t.name,t.user_type,t.sumNuber from "
 			+ "(SELECT (@rank_no\\:=@rank_no+1) as rankNo,v.user_id,u.name,u.user_type,sum(g.number) as sumNuber FROM (select @rank_no\\:=0) r"
 			+ " inner join voucher_goods g inner join voucher v inner join user u "
-			+ "on v.id = g.voucher_id and v.user_id = u.id and u.user_type = 'DB' and "
+			+ "on v.id = g.voucher_id and v.user_id = u.id and u.user_type in ('DB','KS') and "
 			+ "g.enable_flag='Y' and v.enable_flag= 'Y' and u.enable_flag='Y' group by v.user_id ORDER BY sumNuber DESC) t "
 			+ "where t.user_id=:userId",nativeQuery = true)
 	List<Object[]> findDBNumberRankInfo(@Param("userId")Long userId);
@@ -69,10 +69,10 @@ public interface VoucherDAO extends BaseDAO<Voucher, Long>{
 	List<Object[]> listAttrNumber(@Param("userId") Long userId);
 	
 	/**
-	 * 查询代办调果排行最后一名
+	 * 查询平台调果排行最后一名
 	 * @return int
 	 * */
 	@Query(value = "select COUNT(DISTINCT(v.user_id)) FROM voucher v INNER JOIN `user` u ON"
-			+ " v.user_id=u.id and v.enable_flag='Y' and u.enable_flag='Y' and u.user_type='DB'",nativeQuery = true)
+			+ " v.user_id=u.id and v.enable_flag='Y' and u.enable_flag='Y' and u.user_type in ('DB','KS')",nativeQuery = true)
 	int findLastRankNo();
 }

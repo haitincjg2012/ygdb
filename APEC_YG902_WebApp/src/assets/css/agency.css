@@ -18,9 +18,10 @@
   padding: 0 0.625rem;
   position: relative;
   width: 17.5rem;
-  height: 2.375rem;
+  height: 2.2rem;
   color: #333;
-  line-height: 2.375rem;
+  background-color: #f4f4f4;
+  line-height: 2.2rem;
 }
 .z-header-com h1 {
   font-size: 1rem;
@@ -37,7 +38,7 @@
 }
 .z-header-com .z-agency-search {
   width: 15rem;
-  height: 1.5rem;
+  height: 1.3rem;
   position: relative;
   top: 50%;
   left: 50%;
@@ -46,9 +47,10 @@
   -moz-transform: translate(-50%, -50%);
   -webkit-transform: translate(-50%, -50%);
   -o-transform: translate(-50%, -50%);
-  line-height: 1.5rem;
-  border: 0.05rem solid #9d9d9d;
+  line-height: 1.3rem;
+  border: 0.05rem solid transparent;
   border-radius: 1.5rem;
+  background-color: #fff;
 }
 .z-header-com .z-agency-search img {
   margin-left: 1rem;
@@ -66,7 +68,10 @@
   line-height: 0.9rem;
   vertical-align: middle;
 }
-.z-ag-select {
+.z-ag {
+  background-color: #fff;
+}
+.z-ag .z-ag-select {
   border-bottom: 0.05rem solid #dcd7d7;
   display: -webkit-box;
   /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
@@ -80,12 +85,12 @@
   /* IE 10 */
   display: flex;
 }
-.z-ag-select .z-ag-a {
+.z-ag .z-ag-select .z-ag-a {
   width: 9.375rem;
-  line-height: 2.35rem;
+  line-height: 2rem;
   text-align: center;
 }
-.z-ag-select .z-ag-a .z-vertical-line {
+.z-ag .z-ag-select .z-ag-a .z-vertical-line {
   width: 0.05rem;
   height: 1.5rem;
   display: inline-block;
@@ -94,18 +99,18 @@
   position: relative;
   right: -2.5rem;
 }
-.z-ag-select .z-ag-s {
-  line-height: 2.35rem;
+.z-ag .z-ag-select .z-ag-s {
+  line-height: 2rem;
   text-align: center;
   width: 9.375rem;
 }
-.z-ag-select .sp-text-com {
+.z-ag .z-ag-select .sp-text-com {
   font-size: 0.75rem;
   color: #333;
   line-height: 1.5rem;
   margin-left: 0.5rem;
 }
-.z-ag-select .triangle {
+.z-ag .z-ag-select .triangle {
   width: 0;
   height: 0;
   border-left: 0.25rem solid transparent;
@@ -115,29 +120,30 @@
   top: 0.75rem;
   left: 0.5rem;
 }
-.z-ag-select .activeC {
+.z-ag .z-ag-select .activeC {
   color: #28cba7;
 }
-.z-ag-select .activeTri {
+.z-ag .z-ag-select .activeTri {
   border-top-color: #28cba7;
   border-bottom-color: #28cba7;
 }
-.z-ag-frame {
+.z-ag .z-ag-frame {
   position: relative;
 }
-.z-ag-frame .z-ag-shadow {
+.z-ag .z-ag-frame .z-ag-shadow {
   position: absolute;
   top: 0;
   left: 0;
   z-index: 100;
   height: 100%;
 }
-.z-ag-frame .z-ag-listS {
-  padding: 0 0.625rem;
+.z-ag .z-ag-frame .z-ag-listS {
+  padding: 0.5rem 0.625rem 0;
   width: 17.5rem;
   background-color: #fff;
+  border-bottom: 0.025rem solid #d7d7d7;
 }
-.z-ag-frame .z-ag-listS li {
+.z-ag .z-ag-frame .z-ag-listS li {
   float: left;
   width: 5.75rem;
   height: 100%;
@@ -145,7 +151,7 @@
   margin-bottom: 0.5rem;
   text-align: center;
 }
-.z-ag-frame .z-ag-listS li .pitch {
+.z-ag .z-ag-frame .z-ag-listS li .pitch {
   height: 1.75rem;
   color: #333;
   width: 4rem;
@@ -155,27 +161,27 @@
   border-radius: 0.25rem;
   background-color: #f1f2f6;
 }
-.z-ag-frame .z-ag-listS li .pitch span {
+.z-ag .z-ag-frame .z-ag-listS li .pitch span {
   font-size: 0.75rem;
 }
-.z-ag-frame .z-ag-listS li .pitch img {
+.z-ag .z-ag-frame .z-ag-listS li .pitch img {
   width: 0.65rem;
   height: 0.5rem;
   display: none;
 }
-.z-ag-frame .z-ag-listS li .on {
+.z-ag .z-ag-frame .z-ag-listS li .on {
   color: #28cba7;
   border-color: #28CBA7;
 }
-.z-ag-frame .z-ag-listS li .on img {
+.z-ag .z-ag-frame .z-ag-listS li .on img {
   display: inline-block;
 }
-.z-ag-frame .z-ag-listA {
+.z-ag .z-ag-frame .z-ag-listA {
   padding: 0 0.625rem;
   width: 17.5rem;
   background-color: #fff;
 }
-.z-ag-frame .z-ag-listA li {
+.z-ag .z-ag-frame .z-ag-listA li {
   float: left;
   width: 5.75rem;
   height: 100%;
@@ -183,7 +189,7 @@
   margin-bottom: 0.5rem;
   text-align: center;
 }
-.z-ag-frame .z-ag-listA li .pitch {
+.z-ag .z-ag-frame .z-ag-listA li .pitch {
   height: 1.75rem;
   color: #333;
   width: 4rem;
@@ -193,22 +199,22 @@
   border-radius: 0.25rem;
   background-color: #f1f2f6;
 }
-.z-ag-frame .z-ag-listA li .pitch span {
+.z-ag .z-ag-frame .z-ag-listA li .pitch span {
   font-size: 0.75rem;
 }
-.z-ag-frame .z-ag-listA li .pitch img {
+.z-ag .z-ag-frame .z-ag-listA li .pitch img {
   width: 0.65rem;
   height: 0.5rem;
   display: none;
 }
-.z-ag-frame .z-ag-listA li .on {
+.z-ag .z-ag-frame .z-ag-listA li .on {
   color: #28cba7;
   border-color: #28CBA7;
 }
-.z-ag-frame .z-ag-listA li .on img {
+.z-ag .z-ag-frame .z-ag-listA li .on img {
   display: inline-block;
 }
-.z-ag-frame .shadow {
+.z-ag .z-ag-frame .shadow {
   min-height: 30rem;
   height: 100%;
   width: 18.75rem;

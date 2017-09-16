@@ -28,6 +28,10 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
+      '/_node_org': {
+        target: 'http://192.168.7.111',
+        changeOrigin: true
+      },
       '/yg-user-service': {
         target: 'http://192.168.7.111',
         changeOrigin: true

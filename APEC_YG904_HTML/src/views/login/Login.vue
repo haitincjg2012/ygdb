@@ -52,34 +52,58 @@
         methods: {
             loginBtn:function(formName){
                 var vm = this;
-                vm.$refs[formName].validate((valid)=>{
-                    if(valid){
-                        //console.log("url:"+vm.apiUrl.loginUrl);
-                        let params = {
-                            url: vm.apiUrl.loginUrl,
-                            data: {
-                                userName:vm.loginForm.username,
-                                password:vm.loginForm.password
+                var staticFlag=vm.$store.state.staticFlag;
+                console.log("staticFlag:"+staticFlag);
+                if(!staticFlag){
+                    //请求后台方法
+                     vm.$refs[formName].validate((valid)=>{
+                     if(valid){
+                     //console.log("url:"+vm.apiUrl.loginUrl);
+                     let params = {
+                     url: vm.apiUrl.loginUrl,
+                     data: {
+                     userName:vm.loginForm.username,
+                     password:vm.loginForm.password
+                     }
+                     }
+                     vm.ax.post(params,vm.sucCb);
+                     }else{
+                     console.log("验证未通过");
+                     }
+                     });
+                }
+                else{
+                    //引入静态数据
+                    vm.$refs[formName].validate((valid)=>{
+                        if(valid){
+                            let params = {
+                            url:vm.staticUrl.loginUrl,
+                                data: {
+                                    userName:vm.loginForm.username,
+                                    password:vm.loginForm.password
+                                }
                             }
-                        }
-                        vm.ax.post(params,vm.sucCb);
-                    }else{
-                        console.log("验证未通过");
-                    }
+                            vm.ax.get(params,vm.sucCb);
+                        }else{
+                            console.log("验证未通过");
+                }
                 });
+                }
+
 
             },
             sucCb(data){
+                //暂时备注防止跳转
                 var vm=this;
                 vm.userInfo=data.data;
-//                console.log("登录成功!用户名："+vm.userInfo.name);
+                console.log("登录成功!用户名："+vm.userInfo.name);
                 //获取token
-                vm.storageJs.setValue('authToken',data.data.token);
+                vm.commonJs.setValue('authToken',data.data.token);
                 vm.$store.commit('changeAuthToken',vm.userInfo);
                 //记住登录名
-                vm.storageJs.setValue('phone',data.data.phone);
+                vm.commonJs.setValue('phone',data.data.phone);
                 //获取用户名
-                vm.storageJs.setValue('userName',data.data.name);
+                vm.commonJs.setValue('userName',data.data.name);
                 vm.$store.commit('changeUserName',vm.userInfo);
                 console.log("name："+vm.$store.state.userName+" token："+vm.$store.state.authToken+" phone："+data.data.phone);
                 //跳转到“历史记录路径”或者“客户认证页”（默认）
@@ -95,9 +119,9 @@
         mounted(){
             var vm=this;
             //登录成功记住用户名
-            var phone=vm.storageJs.getValue('phone');
+            var phone=vm.commonJs.getValue('phone');
             if(phone){
-                vm.loginForm.username=vm.storageJs.getValue('phone');
+                vm.loginForm.username=vm.commonJs.getValue('phone');
             }
         }
 

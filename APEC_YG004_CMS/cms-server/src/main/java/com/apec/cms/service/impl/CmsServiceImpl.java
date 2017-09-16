@@ -126,7 +126,7 @@ public class CmsServiceImpl implements CmsService {
         BeanUtil.copyPropertiesIgnoreNullFilds(articleVO,article);
         article.setId(idGen.nextId());
         int orderId = 0;
-        if(obj != null || obj[0] != null){
+        if(obj != null && obj[0] != null){
             orderId = Integer.valueOf(String.valueOf(obj[0])) + 1;
         }
         article.setOrdinal(orderId);
@@ -237,7 +237,7 @@ public class CmsServiceImpl implements CmsService {
         boolean endDateFlag = newsDTO.getEndDate() == null;
         newsDTO.getPubDate();
         PageRequest page = new PageRequest(pageRequest.getPageNumber(),pageRequest.getPageSize());
-        Page<Object[]> listModel = articleDAO.queryByChannelAndEnableFlagOrderByOrdinal(String.valueOf(channel.getId()), EnableFlag.Y.name(), nameFlag, newsDTO.getAuthor(),
+        Page<Object[]> listModel = articleDAO.queryByChannelAndEnableFlagOrderByCreateDate(String.valueOf(channel.getId()), EnableFlag.Y.name(), nameFlag, newsDTO.getAuthor(),
                 beginDateFlag, newsDTO.getBeginDate(), endDateFlag, newsDTO.getEndDate(), page);
         logger.info("[APP]Query News List: ChannelCode:{},size:{}",newsDTO.getChannelCode(),listModel.getTotalElements());
         List<NewsVO> listNews = new ArrayList<>();

@@ -20,17 +20,20 @@
   height: 1rem;
   vertical-align: middle;
 }
-.p-v-bg {
+.person-info-page {
+  overflow: auto;
+}
+.person-info-page .p-v-bg {
   position: relative;
   height: 2.25rem;
 }
-.p-v-bg .p-v-bg-text {
+.person-info-page .p-v-bg .p-v-bg-text {
   line-height: 2.25rem;
   margin-left: 0.75rem;
   font-size: 0.7rem;
   color: #7e7e7e;
 }
-.p-v-bg .p-v-bg-upload {
+.person-info-page .p-v-bg .p-v-bg-upload {
   position: absolute;
   top: 0;
   left: 0;
@@ -41,30 +44,30 @@
   filter: alpha(opacity=0);
   -moz-opacity: 0;
 }
-.arrow-com {
+.person-info-page .arrow-com {
   position: absolute;
   top: 0.85rem;
   right: 0.5rem;
   width: 0.3rem;
   height: 0.55rem;
 }
-.arrow-img {
+.person-info-page .arrow-img {
   position: relative;
   width: 0.3rem;
   height: 0.55rem;
   vertical-align: middle;
   margin-left: 0.25rem;
 }
-.z-p-description {
+.person-info-page .z-p-description {
   position: relative;
 }
-.z-p-description .z-p-text {
+.person-info-page .z-p-description .z-p-text {
   margin-left: 0.75rem;
   font-size: 0.8rem;
   line-height: 2.25rem;
   color: #7e7e7e;
 }
-.z-p-description textarea {
+.person-info-page .z-p-description textarea {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -76,21 +79,21 @@
   resize: none;
   padding-left: 0.5rem;
 }
-.z-des-img {
+.person-info-page .z-des-img {
   color: #7e7e7e;
   padding-bottom: 2.5rem;
 }
-.z-des-img .z-des-img-text {
+.person-info-page .z-des-img .z-des-img-text {
   padding-left: 0.5rem;
   font-size: 0.8rem;
   line-height: 1.5rem;
 }
-.z-des-img .z-add-upload {
+.person-info-page .z-des-img .z-add-upload {
   width: 5rem;
   background: url("../img/add-9.png") no-repeat center;
   background-size: 5rem 5rem;
 }
-.z-des-img .z-add-upload input {
+.person-info-page .z-des-img .z-add-upload input {
   display: block;
   width: 100%;
   height: 100%;
@@ -98,66 +101,66 @@
   filter: alpha(opacity=0);
   -moz-opacity: 0;
 }
-.z-des-img ul li {
+.person-info-page .z-des-img ul li {
   float: left;
   height: 5rem;
 }
-.z-p-identity {
+.person-info-page .z-p-identity {
   border-bottom: 0.05rem solid #d7d7d7;
   margin-left: 0.75rem;
 }
-.z-p-identity .z-p-identity-text {
+.person-info-page .z-p-identity .z-p-identity-text {
   line-height: 2.25rem;
   font-size: 0.7rem;
   color: #c5bfbf;
 }
-.z-p-identity .z-ul {
+.person-info-page .z-p-identity .z-ul {
   margin-bottom: 0.5rem;
   margin-right: 0.75rem;
 }
-.z-p-identity .z-ul .z-p-id-li-com {
+.person-info-page .z-p-identity .z-ul .z-p-id-li-com {
   line-height: 1.25rem;
   float: left;
   margin-right: 0.5rem;
 }
-.z-p-identity .z-ul .z-p-id-li-com .z-p-id-li-ct {
+.person-info-page .z-p-identity .z-ul .z-p-id-li-com .z-p-id-li-ct {
   padding: 0.2rem;
   font-size: 0.7rem;
   color: #7e7e7e;
   border: 0.05rem solid #7e7e7e;
   border-radius: 0.25rem;
 }
-.z-p-identity .z-ul .z-p-id-li-com .activeL {
+.person-info-page .z-p-identity .z-ul .z-p-id-li-com .activeL {
   color: #0ecb5d;
   border-color: #0ecb5d;
 }
-.z-p-warehouse {
+.person-info-page .z-p-warehouse {
   border-bottom: 0.05rem solid #d7d7d7;
   margin-left: 0.75rem;
   line-height: 2.25rem;
   font-size: 0.75rem;
   color: #7e7e7e;
 }
-.z-p-warehouse input {
+.person-info-page .z-p-warehouse input {
   font-size: 0.75rem;
   height: 1rem;
   width: 12.5rem;
   margin-left: 0.5rem;
 }
-.z-p-storageCapacity {
+.person-info-page .z-p-storageCapacity {
   border-bottom: 0.05rem solid #d7d7d7;
   margin-left: 0.75rem;
   line-height: 2.25rem;
   font-size: 0.75rem;
   color: #7e7e7e;
 }
-.z-p-storageCapacity input {
+.person-info-page .z-p-storageCapacity input {
   font-size: 0.75rem;
   width: 12.5rem;
   margin-left: 0.5rem;
   height: 1rem;
 }
-.c-commit {
+.person-info-page .c-commit {
   position: fixed;
   bottom: 0;
   width: 18.75rem;
@@ -168,7 +171,7 @@
   color: #fff;
   background-color: #2fcaa7 ;
 }
-.clear:after {
+.person-info-page .clear:after {
   visibility: hidden;
   display: block;
   font-size: 0;
@@ -177,20 +180,20 @@
   height: 0;
   *zoom: 1;
 }
-.c-pos-r {
+.person-info-page .c-pos-r {
   text-align: right;
 }
-.c-com-w {
-  width: 14rem !important;
+.person-info-page .c-com-w {
+  width: 13rem !important;
   text-align: right;
 }
-.c-p-sale {
+.person-info-page .c-p-sale {
   margin-left: 0.75rem;
   line-height: 2.25rem;
   font-size: 0.75rem;
   color: #7e7e7e;
 }
-.c-p-sale input {
+.person-info-page .c-p-sale input {
   font-size: 0.75rem;
   height: 1rem;
   width: 12.5rem;

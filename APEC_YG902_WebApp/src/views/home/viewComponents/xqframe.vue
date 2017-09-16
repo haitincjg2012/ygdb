@@ -3,7 +3,7 @@
     <div class="z-person">
       <div class="z-p-head-t">
         <!--<h1 class="z-p-h-text">{{person.title}}</h1>-->
-        <div class="return" @click="back">
+        <div class="return-t" @click="back">
           <img src="../../../assets/img/ret.png">
         </div>
       </div>
@@ -26,15 +26,15 @@
         <div class="z-p-path">
           <div class="z-p-part">
             <p class="z-p-number">{{person.notice}}</p>
-            <p>关注</p>
+            <p><span>关注</span></p>
           </div>
           <div class="z-p-part">
             <p class="z-p-number">{{person.bs}}</p>
-            <p>浏览</p>
+            <p><span>浏览</span></p>
           </div>
           <div class="z-p-part">
             <p class="z-p-number">{{person.concat}}</p>
-            <p>联系</p>
+            <p><span>联系</span></p>
           </div>
           <!--<div class="z-p-follow">-->
             <!--<div class="z-p-f" :class="{active:person.sh}" @click="notice">-->
@@ -43,27 +43,28 @@
           <!--</div>-->
         </div>
       </div>
-      <div class="z-space"></div>
+
+      <div class="z-space-h"></div>
       <div class="z-p-des">
         <div class="z-p-des-area z-p-des-w" v-if="coldFlag">
           <img class="z-p-des-icon" src="../../../assets/img/kr.png">
-          <span class="z-x-sp-com">库 容 量&nbsp;:</span>
+          <span class="z-x-sp-com">库 容 量&nbsp;</span>
           <input type="text" readonly v-model="person.userOrgClientVO.orgStockCap">
         </div>
         <div class="z-p-des-area z-p-des-w" >
           <img class="z-p-des-icon" src="../../../assets/img/qy.png">
-          <span class="z-x-sp-com">所在区域:</span>
+          <span class="z-x-sp-com">所在区域</span>
           <input type="text" readonly v-model="person.userOrgClientVO.address">
         </div>
         <div class="z-p-des-pz z-p-des-w" v-if="agenyFlag || coldFlag || traderFlag">
           <img class="z-p-des-icon" src="../../../assets/img/zypz.png">
-          <span class="z-x-sp-com">主营品种:</span>
+          <span class="z-x-sp-com">主营品种</span>
           <input type="text" readonly v-model="person.userOrgClientVO.mainOperating">
           <!--<span>{{person.pz}}</span>-->
         </div>
         <div class="z-p-des-pz z-p-des-w" v-if="agenyFlag">
           <img class="z-p-des-icon" src="../../../assets/img/kh.png">
-          <span class="z-x-sp-com">客户市场:</span>
+          <span class="z-x-sp-com">客户市场</span>
           <input type="text" readonly v-model="person.userOrgClientVO.saleAddress">
           <!--<span>{{person.pz}}</span>-->
         </div>
@@ -91,6 +92,7 @@
       <!--<div class="z-space"></div>-->
 
     </div>
+    <div class="z-space-h"></div>
     <div class="z-transaction" v-if="status.ag || status.trader">
       <h4 class="z-h4-title">平台战绩</h4>
       <div class="z-space"></div>
@@ -109,15 +111,18 @@
         </div>
       </div>
     </div>
+    <div class="z-space-h"></div>
     <div class="z-num-main" v-if="status.ag">
       <h4 class="z-num-main-t">调果数据</h4>
       <div class="z-space"></div>
       <div id="main" :class="{Zmain:status.ag}" v-if="status.ag"></div>
     </div>
+    <div class="z-space-h"></div>
     <div class="z-p-gy">
       <h4 class="c-p-gy-x">供求</h4>
+      <div class="c-gy-v"></div>
       <div>
-          <ul>
+          <ul class="c-gq-list">
              <li
                 :is="item.ss"
                 :item="item"
@@ -157,8 +162,10 @@
 </style>
 <script>
   import IMG from "../../../components/gqimg.vue"
+  import P from "../../../assets/img/icon.png"
   import {Swipe, SwipeItem, Indicator,MessageBox, Toast} from 'mint-ui'
-//  import market from "../../../assets/img/"
+  import DBanner from "../../../assets/img/defaultBg.png"
+
   import T from "../../../assets/img/t.png"
   var ec = require("../../../assets/js/echarts.min");
   import API from '../../../api/api'
@@ -167,7 +174,7 @@
   const api = new API();
   var fn = {
       gq:[],
-    init:function (data){
+    init:function (data, weight){
       var el = document.getElementById("main");
       var myChart = ec.echarts.init(el);
       var xData = [];
@@ -176,7 +183,12 @@
           xData.push(key);
           yData.push(data[key]);
       }
-      var nameData = ["70#一二","75#一二","80#一二","85#一二","95#一二","89#一二"];
+      var tw;
+      if(tw){
+          tw ="重量("+weight+")";
+      }else{
+        tw ="重量";
+      }
       var option = {
         color: ['#27cba8'],
         title: {
@@ -184,8 +196,8 @@
         },
         grid: {
           left: '3%',
-          right: '4%',
-          bottom: '3%',
+          right: '13%',
+          bottom: '15%',
           containLabel: true
         },
         tooltip: {
@@ -217,13 +229,13 @@
           }
         },
         yAxis: {
-          name:"重量",
+          name:tw,
           splitLine:{
             show:false
           }
         },
         series: [{
-          name: '数量',
+          name: '数量' ,
           type: 'bar',
           barWidth:"30%",
 //          data: [5, 20, 36, 20, 36, 10]
@@ -237,7 +249,16 @@
     xqContent(data){
 
       var dt = data.data;
-      this.person.portrait= dt.imgUrl;
+      if(dt.imgUrl){
+          if(dt.imgUrl == ""){
+            this.person.portrait= P;
+          }else{
+            this.person.portrait= dt.imgUrl;
+          }
+      }else{
+        this.person.portrait= P;
+      }
+
       this.person.name = dt.userOrgClientVO.orgName;
       this.person.userOrgClientVO.address = dt.userOrgClientVO.address;
       this.person.userOrgClientVO.mainOperating = dt.userOrgClientVO.mainOperating;//主营品种
@@ -245,7 +266,7 @@
       this.person.userOrgClientVO.remark = dt.userOrgClientVO.remark;//实力描述
       this.person.userOrgClientVO.orgStockCap = dt.userOrgClientVO.orgStockCap;//库容量
       this.person.representative = dt.userTypeKey;
-      this.person.bannerImgUrl = dt.userOrgClientVO.orgBannerUrl;
+      this.person.bannerImgUrl = dt.userOrgClientVO.orgBannerUrl || DBanner;
       this.person.level = IMG.methods.userLevel(dt.userPoint.userLevel);
       this.person.userOrgClientVO.address = dt.userOrgClientVO.address;
 
@@ -360,22 +381,22 @@
       data(){
         return{
           person:{
-            bannerImgUrl:"#",
+            bannerImgUrl:DBanner,
             level:"#",
-            ageny:"烟台栖霞苹果合作社",
-            notice:"19",
-            bs:"222",
-            concat:"55",
-            name:"张三丰",
+            ageny:"",
+            notice:"",
+            bs:"",
+            concat:"",
+            name:"",
             real:'',
             weight:"",
             rank:"",
-            representative:"代办",
-            coldName:"烟台栖霞苹果合作社",
-            coldStroage:"5000吨",
-            saleArea:"广州 深圳",
-            address:"烟台栖霞市",
-            pz:"红富士 70# 80#",
+            representative:"",
+            coldName:"",
+            coldStroage:"",
+            saleArea:"",
+            address:"",
+            pz:"",
             coldS:false,
             userOrgClientVO:{},
             sh:false,//是否关注的标志
@@ -574,10 +595,13 @@
       },
       DBRet(data){
         var dt = data.data;
-        this.person.weight = dt.totalNumber;
+        var weight = dt.weight;
+        this.person.weight = dt.totalNumber + weight;
         this.person.rank = dt.rankNo;
         if(dt.attrNumberMap){
-          fn.init(dt.attrNumberMap);
+          fn.init(dt.attrNumberMap, weight);
+        }else{
+            fn.init(dt.attrNumberMap, weight);
         }
       },
       bs(data){

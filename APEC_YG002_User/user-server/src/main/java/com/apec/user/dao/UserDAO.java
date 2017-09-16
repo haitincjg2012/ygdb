@@ -78,12 +78,12 @@ public interface UserDAO extends BaseDAO<User, Long> {
     Long countByIdNumberAndEnableFlag(String idNumber, EnableFlag enableFlag);
 
     /**
-     * 批量删除用户信息
+     * 批量冻结用户信息
      * @param ids
      * @return
      */
     @Modifying(clearAutomatically = true)
-    @Query(value = "update user set enable_flag = 'N',last_update_date = now(),last_update_by = :userId where id in :ids and enable_flag = 'Y'",nativeQuery = true)
+    @Query(value = "update user set user_status = 'FREEZE',last_update_date = now(),last_update_by = :userId where id in :ids and enable_flag = 'Y'",nativeQuery = true)
     int deleteUserList(@Param("ids") List<Long> ids,@Param("userId") String userId);
 
 

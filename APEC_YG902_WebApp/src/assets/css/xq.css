@@ -21,7 +21,7 @@
   vertical-align: middle;
 }
 .z-calcuros {
-  width: 18.75rem;
+  width: 18.7rem;
   height: 9.125rem;
 }
 .z-calcuros img {
@@ -225,7 +225,7 @@
   content: '';
   display: block;
   height: 0.05rem;
-  width: 18.75rem;
+  width: 100%;
   background: #ece7e7;
 }
 .xq {
@@ -252,12 +252,22 @@
 .footer ul {
   height: 2.3rem;
   width: 100%;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
 }
 .footer ul li {
   width: 50%;
-  float: left;
 }
-.footer ul .z-phone a {
+.footer ul .z-phone-T a {
   background-color: #3d3b59;
   display: block;
   width: 100%;
@@ -289,12 +299,13 @@
 .z-s-header-O {
   position: relative;
   width: 18.75rem;
-  height: 2.375rem;
+  height: 2.2rem;
   text-align: center;
-  line-height: 2.375rem;
+  line-height: 2.2rem;
 }
 .z-s-header-O .z-title {
-  font-size: 1rem;
+  font-size: 0.85rem;
+  color: #222222;
 }
 .z-s-header-O .return {
   position: absolute;
@@ -310,7 +321,6 @@
   background-color: #fff;
 }
 .z-table {
-  width: 18.75rem;
   margin: auto;
   border-collapse: collapse;
   border: 0.05rem solid #e5e5e5;

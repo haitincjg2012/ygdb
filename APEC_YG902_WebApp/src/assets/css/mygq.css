@@ -142,10 +142,13 @@
   height: 1.5rem;
   width: 1.25rem;
 }
+.my-bread-com-f .primaryMain .z-info .c-level .g-level .z-img {
+  margin: 0.375rem 0.25rem;
+}
 .my-bread-com-f .primaryMain .z-info .c-level .g-level .z-img img {
-  width: 1.05rem;
-  height: 1.05rem;
-  vertical-align: middle;
+  width: 0.75rem;
+  height: 0.75rem;
+  display: block;
 }
 .my-bread-com-f .primaryMain .z-info .c-level .z-g-agency {
   line-height: 1.5rem;

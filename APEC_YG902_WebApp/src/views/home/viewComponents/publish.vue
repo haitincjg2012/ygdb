@@ -84,7 +84,7 @@
                 <li>
                     <div class="z-add-one">
                         <img src="../../../assets/img/add-9.png"/>
-                      <input type="file" accept="image/*" capture="camera" @change="handleimg"/>
+                      <input type="file" accept="image/*"  @change="handleimg"/>
                     </div>
                 </li>
             </ul>
