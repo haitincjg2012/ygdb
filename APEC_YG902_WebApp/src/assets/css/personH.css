@@ -69,14 +69,15 @@
 }
 .z-p-home .z-p-info .z-p-agency {
   font-size: 0.7rem;
-  color: #fff;
+  color: #28cba5;
   padding: 0 0.15rem;
+  border: 0.05rem solid #28cba5;
   border-radius: 0.1rem;
 }
 .z-p-home .z-p-info .z-p-real {
   font-size: 0.7rem;
-  color: #077cf5;
-  border: 0.05rem solid #077cf5;
+  color: #28cba5;
+  border: 0.05rem solid #28cba5;
   border-radius: 0.1rem;
 }
 .z-p-home .z-p-info .z-p-level {
@@ -219,7 +220,6 @@
   margin-left: 0.5rem;
 }
 .z-p-home .z-description .z-edit-p {
-  width: 18.25rem;
   height: 3.75rem;
   font-size: 0.75rem;
   margin-left: 2rem;

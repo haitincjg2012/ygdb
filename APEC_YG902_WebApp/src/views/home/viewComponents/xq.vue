@@ -129,6 +129,7 @@
   import BScroll from 'better-scroll';
   import topBar from '../../../components/topBar/topBar'
   import suInfo from './supplyInfo.vue'
+  import defaultIcon from "../../../assets/img/defaultForm.png"
 
   import default_1 from '../../../assets/img/xqimg1.png'//默认的详情轮播图
   import default_2 from '../../../assets/img/xqimg2.png'//默认的详情轮播图
@@ -175,6 +176,7 @@
         var dt = data.data;
         var self = this;
         self.dataDetail.id = dt.id;
+        self.dataDetail.orgId = dt.orgId;
         self.dataDetail.skuName = dt.skuName;
         self.dataDetail.address = dt.address;
         self.dataDetail.showCredateTime = dt.showCredateTime;
@@ -198,7 +200,7 @@
         self.dataDetail.phoneNum = dt.phoneNum-0?dt.phoneNum:0;
         self.dataDetail.saveFlag = dt.saveFlag;
         self.dataDetail.userId = dt.userId;
-        self.dataDetail.imgRT = dt.imgUrl;
+        self.dataDetail.imgRT = dt.imgUrl || defaultIcon;
 
         if(dt.productImages.length){
           self.detailUrl = dt.productImages;
@@ -270,7 +272,6 @@
 
         });
 
-         console.log(arr);
          return arr;
       },
       format(){
@@ -420,8 +421,9 @@
             return;
         var id = this.dataDetail.userId;
         var type = this.dataDetail.userTypeName;
+        var orgId = this.dataDetail.orgId;
 //        this.$router.push({path: '/supplyInfo/' + this.dataDetail.userId});
-        this.$router.push({name:"personXq",query:{userId:id,type:type}});
+        this.$router.push({name:"personXq",query:{userId:id,orgId:orgId}});
       },
       back(){
         this.$router.go(-1);

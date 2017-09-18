@@ -138,10 +138,13 @@
                     <el-input v-model="memberForm.userOrgClientVO.orgName" :disabled="viewFlag"></el-input>
                 </el-form-item>
                 <el-form-item label="客户类型：">
-                    <el-input v-model="memberForm.orgAccountTypeKey" :disabled="viewFlag"></el-input>
+                    <el-input v-model="memberForm.userOrgClientVO.userAccountType" :disabled="viewFlag"></el-input>
                 </el-form-item>
                 <el-form-item label="账户类型：">
                     <el-input v-model="memberForm.userAccountTypeKey" :disabled="viewFlag"></el-input>
+                </el-form-item>
+                <el-form-item label="认证标识：">
+                    <el-input v-model="memberForm.userOrgClientVO.pushFlag" :disabled="viewFlag"></el-input>
                 </el-form-item>
                 <el-form-item label="等级：">
                     <el-input v-model="memberForm.userPoint.userLevelKey" :disabled="viewFlag"></el-input>
@@ -149,6 +152,9 @@
                 <el-form-item label="积分：">
                     <el-input v-model="memberForm.userPoint.availablePoints" :disabled="viewFlag"></el-input>
                 </el-form-item>
+               <!-- <el-form-item label="创建时间：">  &lt;!&ndash;暂时没有，等待补充&ndash;&gt;
+                    <el-input v-model="memberForm.createDate" :disabled="viewFlag"></el-input>
+                </el-form-item>-->
                 <el-form-item label="账户状态：">
                     <el-input v-model="memberForm.userStatusKey" :disabled="viewFlag"></el-input>
                 </el-form-item>
@@ -156,10 +162,7 @@
                     <el-input v-model="memberForm.mainOperating" :disabled="viewFlag"></el-input>
                 </el-form-item>
                 <el-form-item label="实力描述：">
-                    <el-input v-model="memberForm.remark" :disabled="viewFlag"></el-input>
-                </el-form-item>
-                <el-form-item label="账户状态：">
-                    <el-input v-model="memberForm.userRealAuthKey" :disabled="true"></el-input>
+                    <el-input v-model="memberForm.userOrgClientVO.remark" :disabled="viewFlag"></el-input>
                 </el-form-item>
                 <el-form-item class="btnGroup">
                     <el-button type="primary" @click="submitForm" v-if="editFlag">保存</el-button>
@@ -317,12 +320,17 @@
                     userDetailTypeKey:"",//用户子身份
                     userOrgClientVO:{
                         orgName:"", //企业名称
-                        userAccountType:""//客户类型
+                        userAccountType:"",//客户类型
+                        pushFlag:"", //认证标识
+                        remark:""
                     },
-                    mainOperating:"",//主营品种
-                    strengthDescription:"",//实力描述
-                    userType:"",//用户身份
-                    userRealAuthKey:""//认证标识
+                    userPoint:{
+                        userLevelKey:"",//等级
+                        availablePoints:""//积分
+                    },
+                    userAccountTypeKey:"",//账户类型
+                    userStatusKey:"",//账户状态
+                    mainOperating:""//主营品种
                 },
                 memberRules:{//暂时无须校验字段,暂放
                     name:[
@@ -713,10 +721,27 @@
                   vm.getTownList(data.data.areaId);//获取镇列表
               }
                 vm.memberForm=vm.dataDetailList;
+                vm.memberForm.userOrgClientVO.pushFlag=vm.dataDetailList.userOrgClientVO.pushFlag==true?"已认证":"未认证";
                 //如果数据为空，显示“无”
                 for(var i in vm.memberForm){
-                    if(!vm.memberForm[i]){
+
+                    if(!vm.memberForm[i] && typeof vm.memberForm[i] !="object"){
                         vm.memberForm[i]="无";
+                    }
+
+                    if(typeof vm.memberForm[i] == "object"){
+
+                        var temp = {}.toString.call(vm.memberForm[i]).slice(8, -1) =="Object" ? {}:[];
+                        for(var key in vm.memberForm[i]){
+                              if(vm.memberForm[i][key] == ""){
+                                  temp[key] = "无";
+                              }else{
+                                  temp[key] = vm.memberForm[i][key];
+                              }
+
+                        }
+
+                        vm.memberForm[i] = temp;
                     }
                 }
               /* 没有需要数据转换的地方，如上直接赋值

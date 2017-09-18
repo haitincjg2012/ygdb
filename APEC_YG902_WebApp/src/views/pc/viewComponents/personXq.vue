@@ -142,6 +142,8 @@
   import T from "../../../assets/img/t.png"
   import DBanner from "../../../assets/img/defaultBg.png"
   import P from "../../../assets/img/p.png"
+  import defaultIcon from "../../../assets/img/defaultForm.png"
+
   import MYGQList from "../../home/viewComponents/mygqlist.vue"
   const api = new API();
   var ec = require("../../../assets/js/echarts.min");
@@ -163,43 +165,48 @@
         var role = dt.userType;
         switch (role){
           case "LK":
+              this.reset();
              this.role.agencyF = false;
              this.role.coldF = true;
               break;
           case "DB":
-              var userId = window.localStorage.userId;
+            this.reset();
+            var browserId = this.browserId;
               var params = {
-                  api:"/yg-voucher-service/voucher/getNumberRankViewVO.apec",
+                  api:"/yg-voucher-service/voucher/getSelfNumberRankViewVO.apec",
                   data:{
-                      userId:userId
+                      userId:browserId
                   }
               }
               this.post(params, this.DBRet);
               break;
           case "KS":
+            this.reset();
             this.role.agencyF = false;
             this.role.traderF = true;
-            var userId = window.localStorage.userId;
+            var browserId = this.browserId;
             var params = {
-              api:"/yg-voucher-service/voucher/getNumberRankViewVO.apec",
+              api:"/yg-voucher-service/voucher/getSelfNumberRankViewVO.apec",
               data:{
-                userId:userId
+                userId:browserId
               }
             }
             this.post(params, this.DBRet);
             break;
           case "HZS":
+            this.reset();
              this.role.agencyF = false;
              this.role.cooperativeF = true;
             break;
           case "ZZH":
+            this.reset();
             this.role.agencyF = false;
             break;
 
         }
 
           if(dt.imgUrl == "" || !dt.imgUrl){
-             this.person.portrait = P;
+             this.person.portrait = defaultIcon;
           }else{
             this.person.portrait = dt.imgUrl;
 
@@ -221,20 +228,20 @@
           this.person.useType = dt.userTypeKey;
           this.person.real = dt.userRealAuth =="UNREALAUTH"?false:true;
           if(dt.userOrgClientVO){
-            this.person.cold =dt.userOrgClientVO.orgName ;
-            this.person.kr =dt.userOrgClientVO.orgStockCap ;
-            this.person.hzs =dt.userOrgClientVO.orgName ;
-            this.person.address =dt.userOrgClientVO.address ;
-            this.person.pz = dt.userOrgClientVO.mainOperating;
-            this.person.xsq = dt.userOrgClientVO.saleAddress;
-            this.person.des = dt.userOrgClientVO.remark;
+            this.person.lk =dt.userOrgClientVO.orgName ;//冷库名称
+            this.person.kr =dt.userOrgClientVO.orgStockCap ;//冷库的库容量
+            this.person.hzs =dt.userOrgClientVO.orgName ;//合作社的名称
+            this.person.address =dt.userOrgClientVO.address ;//所在区域
+            this.person.pz = dt.userOrgClientVO.mainOperating;//主营品种
+            this.person.xsq = dt.userOrgClientVO.saleAddress;//销售区域和客户市场
+            this.person.des = dt.userOrgClientVO.remark;//实力描述
           }
 
 
         let params3 = {
           api:"/_node_user_org/_view_org_info.apno",
           data:{
-            orgId:dt.userOrgClientVO.id
+            orgId:dt.userOrgClientVO.id//组织id和userOrgId和orgId
           }
         }
 
@@ -430,14 +437,15 @@
                 rank:"1"
             },
             role:{
-                agencyF:true,
-                coldF:false,
-                traderF:false,
-              cooperativeF:false,
+                agencyF:true,//代办
+                coldF:false,//冷库
+                traderF:false,//客商
+              cooperativeF:false,//合作社
             },
             itemGQ:null,//供求信息
             pageNumber:1,//供求信息的页码
-            del:{},//记录数据条数
+            del:{},//记录数据条数,
+            browserId:""//被浏览人id
           }
       },
       methods:{
@@ -532,43 +540,40 @@
           let params = {
             api:"/_node_user/_product_list.apno",
             data:{
-              orgId:that.orgId,
+              orgId:that.browserId,
               pageNumber: "1",
             }
           }
           this.post(params,fn.initgq.bind(this));
         },
+        phoneViewRet(){
+        },
       },
     activated(){
-//      var storage = window.localStorage;
-//      var id = storage.userId;
-      var id = this.$route.query.userId;
-      var usertype = this.$route.query.type;
-      var params;
-      if(usertype == "冷库"){
-        params = {
-          api:"/yg-user-service/user/findUserInfo.apec",
-          data:{
-            userOrgId:id
-          }
-        };
-      }else{
-        params = {
-          api:"/yg-user-service/user/findUserInfo.apec",
-          data:{
-            id:id
-          }
-        };
+
+      var browserId = this.$route.query.userId;
+      var borgId = this.$route.query.orgId;
+      this.browser = browserId;
+
+      let params = {
+        api:"/yg-user-service/user/findUserInfo.apec",
+        data:{
+            id:browserId
+        }
       }
-//      let params = {
-////        api:"/yg-user-service/user/findUserInfo.apec",
-//        api:"/yg-user-service/user/findSelfInfo.apec",
-//        data:{
-//            id:id
-//        }
-//      }
       this.post(params, fn.init.bind(this));
       this.gqlist(1);
+
+      let paramsT = {
+        api:"/_node_user_org/_view_org.apno",
+        data:{
+          orgId:borgId,
+          vieType:"VIEWNUM"
+        }
+      }
+
+      this.post(paramsT,this.phoneViewRet);
+
 
     }
   }

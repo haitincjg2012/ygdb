@@ -3,21 +3,21 @@
 * header
 * <!--<cartControl :food="food"></cartControl>-->
 */
-.header {
+.myHeader .header {
   padding: 0 0.75rem;
   background-color: #f4f4f4;
   text-align: center;
   border-bottom: 0.025rem solid #d7d7d7;
   position: relative;
 }
-.header h1 {
+.myHeader .header h1 {
   font-size: 0.825rem;
   height: 2.175rem;
   line-height: 2.175rem;
   letter-spacing: 0.075rem;
   color: #222222;
 }
-.header i {
+.myHeader .header i {
   font-style: normal;
   position: absolute;
   left: 0.75rem;
@@ -25,7 +25,7 @@
   width: 0.4rem;
   height: 0.7rem;
 }
-.header i img {
+.myHeader .header i img {
   width: 0.4rem;
   height: 0.7rem;
   display: block;

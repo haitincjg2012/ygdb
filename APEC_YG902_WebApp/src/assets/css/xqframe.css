@@ -357,6 +357,7 @@
   height: 2.2rem;
   margin: 0 1rem 0 1.5rem;
   vertical-align: middle;
+  border-radius: 100%;
 }
 .z-cold-mobile .c-m-icon-com {
   width: 0.85rem;

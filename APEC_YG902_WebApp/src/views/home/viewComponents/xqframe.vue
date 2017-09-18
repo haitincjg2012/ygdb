@@ -62,7 +62,7 @@
           <input type="text" readonly v-model="person.userOrgClientVO.mainOperating">
           <!--<span>{{person.pz}}</span>-->
         </div>
-        <div class="z-p-des-pz z-p-des-w" v-if="agenyFlag">
+        <div class="z-p-des-pz z-p-des-w" v-if="agenyFlag || coldFlag">
           <img class="z-p-des-icon" src="../../../assets/img/kh.png">
           <span class="z-x-sp-com">客户市场</span>
           <input type="text" readonly v-model="person.userOrgClientVO.saleAddress">
@@ -76,7 +76,7 @@
         <!--</div>-->
         <div class="z-p-des-market z-p-des-w" v-if="traderFlag">
           <img class="z-p-des-icon" src="../../../assets/img/xsqy.png">
-          <span class="z-x-sp-com">销售区域:</span>
+          <span class="z-x-sp-com">销售区域</span>
           <input type="text" readonly v-model="person.userOrgClientVO.saleAddress">
           <!--<span>{{person.market}}</span>-->
         </div>
@@ -139,14 +139,14 @@
           <p class="c-text">请选择联系人</p>
         <div class="z-space-com c-space-t"></div>
           <a :href="`tel:${mobileO}`" class="c-com">
-             <img src="../../../assets/img/p.png" class="c-img-com"/>
+             <img :src="LBIcon" class="c-img-com"/>
              <span class="c-sp-text">老板</span>
-             <img src="../../../assets/img/mobile.png" class="c-m-icon-com c-icon-t">
+             <img  src="../../../assets/img/mobile.png" class="c-m-icon-com c-icon-t">
           </a>
         <div class="z-space-com c-space-t"></div>
           <a v-for="item in itemPhone"
             :href="`tel:${item.mobile}`"  class="c-com">
-          <img src="../../../assets/img/p.png" class="c-img-com"/>
+          <img :src="item.img" class="c-img-com"/>
           <span class="c-sp-text">{{item.name}}</span>
             <img src="../../../assets/img/mobile.png" class="c-m-icon-com">
           </a>
@@ -165,6 +165,7 @@
   import P from "../../../assets/img/icon.png"
   import {Swipe, SwipeItem, Indicator,MessageBox, Toast} from 'mint-ui'
   import DBanner from "../../../assets/img/defaultBg.png"
+  import defaultIcon from "../../../assets/img/defaultForm.png"
 
   import T from "../../../assets/img/t.png"
   var ec = require("../../../assets/js/echarts.min");
@@ -272,7 +273,6 @@
 
       if(dt.userType == "LK"){
          var arrT = dt.userOrgClientVO.userTagsVOS;
-        console.log(this.person.real,9999);
 
          arrT.forEach(function (current) {
              var className = current.className;
@@ -291,6 +291,7 @@
       this.person.mobile = dt.mobile;
     },
     initgq(data){
+
       if(!data.succeed){
         return;
       }
@@ -298,12 +299,13 @@
       var arr = [];
       var that = this;
       rows.forEach(function (current, index) {
+          console.log(current, 8989898);
         var obj = {};
         var len = 0;
         obj.ss = MYGQList;
         obj.skuName = current.skuName;
         obj.showCredateTime = current.showCredateTime;
-        var id = current.userId;
+        var id = current.id;
         obj.id = id;
         obj.levelImg =IMG.methods.userLevel(current.userLevelName);
         obj.img = current.firstImageUrl;
@@ -373,8 +375,9 @@
         that.del[id] = 0;
         arr.push(obj);
       });
+      console.log(arr);
       that.itemGQ = arr;
-      console.log(that.itemGQ);
+      console.log(that.itemGQ, 898989898);
     }
   }
   export default{
@@ -418,7 +421,10 @@
           itemGQ:null,//供求信息
           pageNumber:1,//供求信息的页码
           del:{},//记录数据条数
-          name:""
+          name:"",
+          browseId:"",//被浏览者Id
+          browseOrgId:"",//被浏览者组织Id
+          LBIcon:"",//老板图像
         }
       },
     methods:{
@@ -456,15 +462,19 @@
         }
       },
       coldPhone(data){
+          console.log(data);
           var dt = data.data;
           var arr = [];
           var self = this;
           dt.forEach(function (current) {
              var obj = {};
              var type = current.userDetailType;
+
              if(type == "LK_LB"){
                 self.mobileO = current.mobile;
+                self.LBIcon = current.imgUrl || defaultIcon;
              }else{
+                 obj.img = current.imgUrl || defaultIcon;
                obj.name = current.name;
                obj.mobile = current.mobile;
                arr.push(obj);
@@ -472,6 +482,7 @@
           })
 
         this.itemPhone = arr;
+          console.log(this.itemPhone, 123455);
       },
       cancel(){
           this.coldShow = true;
@@ -493,6 +504,7 @@
         init(name, id, orgId){
           var self = this;
           var id = arguments[1]?arguments[1]:self.id;
+          var browseId = arguments[1]?arguments[1]:self.id;//被浏览者Id
           var orgId = arguments[2]?arguments[2]:self.orgId;
 
 
@@ -510,14 +522,14 @@
             let params = {
               api:"/yg-user-service/user/findUserInfo.apec",
               data:{
-                id:id
+                id:browseId
               }
             };
             this.post(params, fn.xqContent.bind(this));
             var params2 = {
-              api:"/yg-voucher-service/voucher/getNumberRankViewVO.apec",
+              api:"/yg-voucher-service/voucher/getSelfNumberRankViewVO.apec",
               data:{
-                userId:id
+                userId:browseId
               }
             }
             this.post(params2, this.DBRet);
@@ -535,9 +547,9 @@
             };
             this.post(params, fn.xqContent.bind(this));
             var pT = {
-              api:"/yg-voucher-service/voucher/getNumberRankViewVO.apec",
+              api:"/yg-voucher-service/voucher/getSelfNumberRankViewVO.apec",
               data:{
-                userId:id
+                userId:browseId
               }
             }
             this.post(pT, this.DBRet);
@@ -633,6 +645,7 @@
             pageNumber: "1",
           }
         }
+        console.log(params, 8888);
         this.post(params,fn.initgq.bind(this));
       },
       initD(id){
@@ -643,9 +656,12 @@
         var name = this.$route.query.flag;
         this.orgId = this.$route.query.orgId;
         this.userId = this.$route.query.userId;
+        this.browseId = this.$route.query.userId;
+
         var id = this.$route.query.id;
         this.name = name;
         this.id = id;
+        this.del = {};
         this.init(name);
       let params = {
         api:"/_node_user_org/_view_org.apno",

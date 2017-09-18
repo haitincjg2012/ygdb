@@ -55,17 +55,17 @@
         <img class="arrow" src="../../assets/img/back.png">
       </div>
       <div class="dash-line"></div>
-      <div @click.stop="routerInfo('ranking')" class="p-form-cli">
-        <img class="label" src="../../assets/img/rankG.png">
-        <span>调果排行榜</span>
-        <img class="arrow" src="../../assets/img/back.png">
-      </div>
-      <div class="dash-line"></div>
-      <div @click.stop="routerInfo('myAttention')" class="p-form-cli">
-        <img class="label" src="../../assets/img/Bill.png">
-        <span>我的关注</span>
-        <img class="arrow" src="../../assets/img/back.png">
-      </div>
+      <!--<div @click.stop="routerInfo('ranking')" class="p-form-cli">-->
+        <!--<img class="label" src="../../assets/img/rankG.png">-->
+        <!--<span>调果排行榜</span>-->
+        <!--<img class="arrow" src="../../assets/img/back.png">-->
+      <!--</div>-->
+      <!--<div class="dash-line"></div>-->
+      <!--<div @click.stop="routerInfo('myAttention')" class="p-form-cli">-->
+        <!--<img class="label" src="../../assets/img/Bill.png">-->
+        <!--<span>我的关注</span>-->
+        <!--<img class="arrow" src="../../assets/img/back.png">-->
+      <!--</div>-->
       <split></split>
       <div @click.stop="routerInfo('myCo')" class="p-form-cli">
         <img class="label" src="../../assets/img/Group0.png">

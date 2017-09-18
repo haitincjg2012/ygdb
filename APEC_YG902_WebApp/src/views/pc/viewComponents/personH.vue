@@ -44,32 +44,32 @@
         <div class="z-p-cold" v-if="role.coldF">
           <img src="../../../assets/img/lk.png" class="img-com">
           <span>冷库名称</span>
-          <input type="text" readonly v-model="person.lk">
+          <input type="text" disabled v-model="person.lk">
         </div>
         <div class="z-p-c-storage" v-if="role.coldF">
           <img src="../../../assets/img/kr.png"  class="img-com">
           <span>库容量 &nbsp;&nbsp;</span>
-          <input type="text" readonly v-model="person.kr">
+          <input type="text" disabled v-model="person.kr">
         </div>
         <div class="z-p-c-cooperative" v-if="role.cooperativeF">
           <img src="../../../assets/img/lk.png"  class="img-com">
           <span>合作社 &nbsp;&nbsp;</span>
-          <input type="text" readonly v-model="person.hzs">
+          <input type="text" disabled v-model="person.hzs">
         </div>
         <div class="z-p-area">
             <img src="../../../assets/img/qy.png"  class="img-com">
             <span>所在区域</span>
-            <input type="text" readonly v-model="person.address">
+            <input type="text" disabled v-model="person.address">
         </div>
         <div class="z-p-pz" >
           <img src="../../../assets/img/zypz.png"  class="img-com">
           <span>主营品种</span>
-          <input type="text" readonly v-model="person.pz">
+          <input type="text" disabled v-model="person.pz">
         </div>
         <div class="z-p-cmarket" v-if="role.agencyF">
           <img src="../../../assets/img/kh.png"  class="img-com">
           <span>客户市场</span>
-          <input type="text" readonly v-model="person.xsq">
+          <input type="text" disabled v-model="person.xsq">
         </div>
         <!--<div class="z-p-transship" v-if="role.traderF">-->
           <!--<img src="../../../assets/img/dhqy.png" class="img-com">-->
@@ -79,7 +79,7 @@
         <div class="z-p-sale"  v-if="role.traderF">
           <img src="../../../assets/img/xsqy.png" class="img-com">
           <span>销售区域</span>
-          <input type="text" readonly v-model="person.xsq">
+          <input type="text" disabled v-model="person.xsq">
         </div>
       </div>
       <div class="z-description">
@@ -162,7 +162,7 @@
           case "DB":
 //              var userId = window.localStorage.userId;
               var params = {
-                  api:"/yg-voucher-service/voucher/getNumberRankViewVO.apec",
+                  api:"/yg-voucher-service/voucher/getSelfNumberRankViewVO.apec",
                   data:{
 //                      userId:userId
                   }
@@ -174,7 +174,7 @@
             this.role.traderF = true;
 //            var userId = window.localStorage.userId;
             var params = {
-              api:"/yg-voucher-service/voucher/getNumberRankViewVO.apec",
+              api:"/yg-voucher-service/voucher/getSelfNumberRankViewVO.apec",
               data:{
 //                userId:userId
               }
@@ -211,6 +211,7 @@
           this.person.name = dt.name;
           this.person.levelSrc =IMG.methods.userLevel(dt.userPoint.userLevel);
           this.person.useType = dt.userTypeKey;
+           console.log(dt.userTypeKey);
           this.person.real = dt.userRealAuth =="UNREALAUTH"?false:true;
           if(dt.userOrgClientVO){
             this.person.cold =dt.userOrgClientVO.orgName ;
@@ -220,6 +221,7 @@
             this.person.pz = dt.userOrgClientVO.mainOperating;
             this.person.xsq = dt.userOrgClientVO.saleAddress;
             this.person.des = dt.userOrgClientVO.remark;
+
           }
 
           if(dt.userDetailType == "LK_BG"){
@@ -450,14 +452,9 @@
         },
       },
     activated(){
-//      var storage = window.localStorage;
-//      var id = storage.userId;
+
       let params = {
-//        api:"/yg-user-service/user/findUserInfo.apec",
         api:"/yg-user-service/user/findSelfInfo.apec",
-//        data:{
-//            id:""
-//        }
       }
       this.post(params, fn.init.bind(this));
 

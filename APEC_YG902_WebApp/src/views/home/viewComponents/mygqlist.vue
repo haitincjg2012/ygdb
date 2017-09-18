@@ -95,8 +95,8 @@
           var flag = this.item.Flag;
           var orgId = this.item.orgId;
         var userId = this.item.userId;
-        var id = userId;
-        this.$emit("xq",userId)
+        var id = this.item.id;
+        this.$router.push({path: '/detail/' + id});
 //        this.$router.push({name:"xqframe",query:{flag:flag,id:id,orgId:orgId,userId:userId}})
 //        var evt = event || window.event;
 //        var target = evt.toElement || evt.srcElement;

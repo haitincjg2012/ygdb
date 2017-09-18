@@ -31,7 +31,7 @@
   line-height: 2.25rem;
   margin-left: 0.75rem;
   font-size: 0.7rem;
-  color: #7e7e7e;
+  color: #969696;
 }
 .person-info-page .p-v-bg .p-v-bg-upload {
   position: absolute;
@@ -65,7 +65,7 @@
   margin-left: 0.75rem;
   font-size: 0.8rem;
   line-height: 2.25rem;
-  color: #7e7e7e;
+  color: #969696;
 }
 .person-info-page .z-p-description textarea {
   -webkit-box-sizing: border-box;
@@ -80,7 +80,7 @@
   padding-left: 0.5rem;
 }
 .person-info-page .z-des-img {
-  color: #7e7e7e;
+  color: #969696;
   padding-bottom: 2.5rem;
 }
 .person-info-page .z-des-img .z-des-img-text {
@@ -126,7 +126,7 @@
 .person-info-page .z-p-identity .z-ul .z-p-id-li-com .z-p-id-li-ct {
   padding: 0.2rem;
   font-size: 0.7rem;
-  color: #7e7e7e;
+  color: #969696;
   border: 0.05rem solid #7e7e7e;
   border-radius: 0.25rem;
 }
@@ -139,7 +139,7 @@
   margin-left: 0.75rem;
   line-height: 2.25rem;
   font-size: 0.75rem;
-  color: #7e7e7e;
+  color: #969696;
 }
 .person-info-page .z-p-warehouse input {
   font-size: 0.75rem;
@@ -152,7 +152,7 @@
   margin-left: 0.75rem;
   line-height: 2.25rem;
   font-size: 0.75rem;
-  color: #7e7e7e;
+  color: #969696;
 }
 .person-info-page .z-p-storageCapacity input {
   font-size: 0.75rem;
@@ -184,18 +184,36 @@
   text-align: right;
 }
 .person-info-page .c-com-w {
-  width: 13rem !important;
+  width: 14.25rem;
+  display: inline-block;
   text-align: right;
 }
 .person-info-page .c-p-sale {
   margin-left: 0.75rem;
   line-height: 2.25rem;
   font-size: 0.75rem;
-  color: #7e7e7e;
+  color: #969696;
 }
 .person-info-page .c-p-sale input {
   font-size: 0.75rem;
   height: 1rem;
   width: 12.5rem;
   margin-left: 0.5rem;
+}
+.person-info-page .c-p-manage {
+  margin-left: 0.75rem;
+  line-height: 2.25rem;
+  font-size: 0.75rem;
+  color: #969696;
+}
+.person-info-page .c-p-manage input {
+  font-size: 0.75rem;
+  height: 1rem;
+  width: 12.5rem;
+  margin-left: 0.5rem;
+}
+.person-info-page .c-sp-area {
+  width: 12.75rem;
+  display: inline-block;
+  text-align: right;
 }

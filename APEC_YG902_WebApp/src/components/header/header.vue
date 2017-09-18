@@ -4,12 +4,15 @@
 <!-- <header :headTitle="title"></header>-->
 */
 <template>
-  <div class="header">
-    <i class="return" @click="goBack" v-if="iconFlag">
-      <img src="../../assets/img/arrowLeft.png">
-    </i>
-    <h1>{{headTitle}}</h1>
+  <div class="myHeader">
+    <div class="header">
+      <i class="return" @click="goBack" v-if="iconFlag">
+        <img src="../../assets/img/arrowLeft.png">
+      </i>
+      <h1>{{headTitle}}</h1>
+    </div>
   </div>
+
 </template>
 
 <script>
@@ -39,6 +42,6 @@
     }
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
+<style scoped>
   @import "header.css";
 </style>
