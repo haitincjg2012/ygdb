@@ -31,4 +31,10 @@ public interface VoucherBSDAO {
 	 * @return double
 	 * */
 	Double findDBTotalNumber(VoucherDTO voucherDTO);
+
+	/**
+	 * 查询用户上传单据总数
+	 * @return
+	 */
+	List<Object[]> countVoucherOfUser();
 }

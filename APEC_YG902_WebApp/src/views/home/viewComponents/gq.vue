@@ -116,6 +116,20 @@
       "供求":"GYTYPE",
       "求购":"QGTYPE"
     },
+    initialization(){
+      //fn对象的初始化
+      fn.buyD = null;
+      fn.EMPTY = null;
+      fn.gD = null;
+      fn.bD = null;
+      fn.sD = null;
+      fn.aD = null;
+      fn.GY = null;
+      fn.QG = null;
+      fn.GG = null;
+      fn.BREED = null;
+      fn.AREA = null;
+    },
     clearN:function (type) {
       if(type == ""){
         return
@@ -251,7 +265,7 @@
         obj.showCredateTime = current.showCredateTime;
         var id = current.id;
         obj.id = id;
-        obj.levelImg =that.userLevelKeySwitch(current.userLevelName);
+        obj.levelImg =QG.methods.userLevel(current.userLevelName);
         obj.img = current.firstImageUrl;
         obj.local = current.address;
         obj.name = current.showUserName;
@@ -361,11 +375,13 @@
           fn.AREA = tArr;
             break;
         case "EMPTY":
+            console.log(arr, 1111);
           if(fn.EMPTY){
             tArr = fn.EMPTY.concat(arr);
           }else{
             tArr = arr;
           }
+          console.log(fn.EMPTY);
           fn.EMPTY = tArr;
       }
       this.itemG = tArr;
@@ -388,21 +404,6 @@
             break;
         }
       }
-//      dt.forEach(function (current,idx) {
-//        for(var key in current){
-//          switch (key){
-//            case "1001":
-//              fn.bD = format(current[key], key, 0);
-//              break;
-//            case "1002":
-//              fn.sD = format(current[key], key, 0);
-//              break;
-//            case "1003":
-//              fn.aD = format(current[key], key, 1);
-//              break;
-//          }
-//        }
-//      });
 
       if(index == 0){
         this.items = fn.bD;
@@ -533,11 +534,12 @@
       back(){
         this.content = "";
         this.$store.state.xqF = false;
-//        this.$store.state.xqInfoF = 0;
         this.$store.state.recordPZ = null;
         this.$store.state.recordArea = null;
         this.$store.state.urban = null;
+        this.reset();
         this.searchType = "";
+        fn.initialization();
         if (this.smain == 0) {
           this.$router.go(-1);
         } else {
@@ -545,6 +547,7 @@
           this.smain = 0;
         }
         this.items = null;
+        this.itemChild = null;
         this.showShadow = false;
 
         var elArr = document.querySelector(".smallClass").children;
@@ -557,6 +560,11 @@
             current.children[1].classList.remove("activeTri")
           }
         });
+      },
+      reset(){
+          this.pageNumber = 1;
+          this.firstSearch = "";
+        this.searchType = "";
       },
       search(event){
         var evt = event || window.event;
@@ -742,13 +750,6 @@
         this.post(params, fn.specificationsD.bind(that));
       },
       twoDirector(index){
-//        var that = this;
-//        let params = {
-//          api: '/yg-systemConfig-service/wordBook/getNeedWordBook.apec',
-//          data: {
-//          }
-//        }
-//        this.post(params, fn.secondC.bind(this, index));
         fn.secondC.bind(this,index)();
       },
       area(){
@@ -818,7 +819,7 @@
         this.ky = this.content;
         this.pageNumber = 1;
         this.searchType = 0;
-//        this.clearChild();
+
         this.$store.state.recordPZ = null;
         var elArr = document.querySelector(".smallClass").children;
         [].forEach.call(elArr, function (current, index) {
@@ -959,10 +960,6 @@
       this.$store.state.recordArea = null;
       this.$store.state.urban = null;
 
-//      var container = document.querySelector(".z-ul-itemS");
-//      container.addEventListener('touchstart', this.down, false);
-//      container.addEventListener('touchend', this.up, false);
-//      this.$refs.my_scrollerT.finishInfinite(true);
     },
     activated(){
       this.isActivated = true;
@@ -976,7 +973,6 @@
         window.scrollTo(0,sH);
       }else{
         this.ky = "";
-//        this.pageNumber = 1;
         if(type == "GYTYPE"){
           //   供应
           this.firstSearch = type;
@@ -986,10 +982,12 @@
           this.firstSearch = type;
           this.TYPEPATH = "QG";
         }
-        if(this.pageNumber == 1){
-          fn.clearN(this.TYPEPATH);
-          this.list();
-        }
+        this.itemG = null;
+        fn.clearN(this.TYPEPATH);
+        this.list(1);
+//        if(this.pageNumber == 1){
+//
+//        }
       }
 
     },

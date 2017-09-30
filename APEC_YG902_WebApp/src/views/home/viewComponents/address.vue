@@ -63,7 +63,7 @@
       }
     },
     mounted(){
-      this.gettopAddressList();
+//      this.gettopAddressList();
     },
 
     methods: {
@@ -71,9 +71,14 @@
         const self = this;
         self.$nextTick(function () {
           var winHeight = window.innerHeight;
-          var mainHeight = winHeight-50;
+          var mainHeight = winHeight;
           self.styleCal='top:42px;height:'+mainHeight+'px';
         })
+      },
+      reset(){
+        this.addressTopList = [];
+        this.addressSecList = [];
+        this.addressThirList = [];
       },
       gettopAddressList(){//获取一级市
         const self = this;
@@ -388,7 +393,12 @@
       }
     },
     activated(){
-     this.historyAdd();
+        var self = this;
+        self.reset();
+      this.historyAdd();
+      setTimeout(function () {
+        self.gettopAddressList();
+      }, 0)
    },
     created() {
     },
@@ -415,7 +425,7 @@
       .addLabel
         height (25/_rem)
         line-height (25/_rem)
-        text-align center
+        /*text-align center*/
         margin-bottom (10/_rem)
         span
           font-size (18/_rem)
@@ -424,7 +434,7 @@
         margin-bottom (10/_rem)
       .m-v-tz
         min-width (70 /_rem)
-        background-color #929292
+        background-color #f4f4f4
         border-radius 4px
         text-align center
         display inline-block
@@ -432,11 +442,12 @@
         height (25 /_rem)
         line-height (25 /_rem)
         font-size 0
-        color #fff
+        color #323232
         span
           font-size (14 /_rem)
       .active
         background-color #28cba7!important
+        color #fff !important
       span
         font-size (14 /_rem)
     .login-btn
@@ -447,12 +458,11 @@
         height (40 /_rem)
         font-size (15 /_rem)
 
-        border-radius: 0;
+        border-radius: (5/_rem);
         display: inline-block;
         width: 100%;
 
       .login-confirm
         background-color: #28CBA7;
         color #FFFFFF;
-        border: 1px solid #0bbe06;
 </style>

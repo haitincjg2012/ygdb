@@ -4,7 +4,7 @@
 */
 <template>
     <div class="certificate">
-        <my-header :fatherTitle="fatitle" :headTitle="title" :viewFlag="viewFlag" :editFlag="editFlag" :addFlag="addFlag"></my-header>
+        <my-header :firstTitle="firsTit" :secondTitle="secondTit"></my-header>
         <!--搜索-->
         <div class="mysearch">
             <el-form :inline="true" class="search">
@@ -16,8 +16,8 @@
             </el-form>
         </div>
         <!--表格列表-->
-        <div class="tableList">
-            <el-table :data="dataList" border stripe v-loading.body="loadFlag" style="width:100%;">
+        <div class="tableList" style="margin-top: 20px;">
+            <el-table :data="dataList" border stripe v-loading.body="loadCircle" style="width:100%;">
                 <el-table-column type="selection"></el-table-column>
                 <el-table-column prop="realName" label="客户姓名" >
                     <template scope="scope">
@@ -70,14 +70,12 @@
     export default{
         data(){
             return {
-                fatitle:'客户',
-                title:'会员实名认证审核',
-                /*header参数*/
-                viewFlag:false,
-                editFlag:false,
-                addFlag:false,
+                //breadcrumb
+                firsTit:"客户",
+                secondTit:"实名认证审核",
+
                 name:"",
-                loadFlag:false,//加载显示
+                loadCircle:false,//加载显示
                 dataList:[],
                 imgUrl:"",
                 dialogFormVisible:false,//显示大图对话框
@@ -91,13 +89,13 @@
 
             }
         },
-        created(){
+        activated(){
             var vm=this;
             vm.getTableList();
         },
         deactivated(){
             var vm=this;
-            vm.loadFlag=false;//避免超时闪现加载图标
+            vm.loadCircle=false;//避免超时闪现加载图标
         },
 
         methods: {
@@ -202,7 +200,7 @@
             //获取列表数据
             getTableList(){
                 var vm=this;
-                vm.loadFlag=true;
+                vm.loadCircle=true;
                 let params={
                     url:vm.apiUrl.certificate.tableUrl,
                     data:{
@@ -211,11 +209,10 @@
                         pageSize:vm.pSize
                     }
                 }
-                vm.ax.post(params,vm.tableListCb);
+                vm.ax.post(params,vm.tableListCb,vm);
             },
             tableListCb(data){
                 var vm=this;
-                vm.loadFlag=false;
                 vm.pageData=data.data;
                 console.log("页码:"+vm.pageData.totalElements);
                 vm.dataList=data.data.rows;

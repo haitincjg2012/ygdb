@@ -23,7 +23,7 @@ module.exports = {
       index:"merchant",
       type:"orginfo"
   },
-  "productSearchFields": ["skuName^3","userTypeName^2", "productTypeName^2","showUserName^2","goodsName","marketPreFix","productAttrs.attrValue","address","addressDetail","remark"],
+  "productSearchFields": ["skuName^3","userTypeName^2", "productTypeName^2","showUserName^2","goodsName","marketPreFix","productAttrs.attrValue","address"],
   "orgDepotSearchFields": ["orgName^3","orgTags.tagName^2","address^2","mainOperating","orgStockCap"],
   "orgAgencySearchFields": ["orgName^3","orgTags.tagName^2","address^2","mainOperating","saleAddress"],
   "orgMerchantSearchFields": ["orgName^3","orgTags.tagName^2","address^2","mainOperating"],

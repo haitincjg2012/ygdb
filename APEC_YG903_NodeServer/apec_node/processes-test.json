@@ -1,0 +1,25 @@
+{
+  "apps": [
+    {
+      "name": "node-backend",
+      "cwd": "/home/wms-server/APEC_YG903_NodeServer/apec_node",
+      "script": "index.js",
+      "env_production": {
+        NODE_ENV: "production"
+      },
+      "log_date_format": "YYYY-MM-DD HH:mm Z",
+      "error_file": "/home/wms-server/APEC_YG903_NodeServer/apec_node/node-log/node-backend.stderr.log",
+      "out_file": "/home/wms-server/APEC_YG903_NodeServer/apec_node/node-log/node-backend.stdout.log",
+      "pid_file": "/home/wms-server/APEC_YG903_NodeServer/apec_node/node-log/node-geo-api.pid",
+      "min_uptime": "200s",
+      "max_restarts": 50,
+      "max_memory_restart": "512M",
+      "watch": false,
+      "merge_logs": true,
+      "exec_interpreter": "node",
+      "exec_mode": "fork",
+      "autorestart": true,
+      "vizion": false
+    }
+  ]
+}

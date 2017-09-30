@@ -29,7 +29,7 @@
           switch (key) {
             case '代办':
               return daiban;
-            case '种植户':
+            case '果农':
               return zzHu;
             case '冷库':
               return lengku;

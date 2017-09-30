@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.formula.constant.ErrorConstant;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -32,25 +33,34 @@ public class MailServiceImpl implements MailService{
     @Autowired
     private MailConfig config;
 
+    @Value("${spring.profiles.active}")
+    private String profile;
+
     @InjectLogger
     private Logger logger;
 
     /**
      * 发送邮件服务 根据type选择不同模板发送
      * @param mail
+     * @param genEnv 标题是否生成环境信息
      * @throws Exception
      */
     @Override
     @Async
-    public void sendMail(Mail mail){
+    public void sendMail(Mail mail, boolean genEnv){
+        validate(mail);
+        handlerEnv(mail, genEnv);
+        send(mail);
+    }
+
+    @Override
+    public void sendMail(Mail mail) {
+        validate(mail);
+        send(mail);
+    }
+
+    private void send(Mail mail) {
         try {
-            //判断参数是否满足要求 如果为空则使用默认值
-            if (StringUtils.isBlank(mail.getMailFrom())) {
-                mail.setMailFrom(config.getMailFrom());
-            }
-            if (null == mail.getMailTo()) {
-                mail.setMailTo(config.getMailTo());
-            }
             logger.info("=================get mail engin===================");
             MailEngin engin = facotry.createEngin(mail.getType());
             logger.info("============send mail start=================");
@@ -59,6 +69,24 @@ public class MailServiceImpl implements MailService{
         }catch (Exception e) {
             logger.error("send mail error   mailSubject:{} # sendFrom:{} # sendTo:{}", mail.getSubject(), mail.getMailFrom(), mail.getMailTo());
             throw new ServerException("mail send failed", e);
+        }
+    }
+
+    private void handlerEnv(Mail mail, boolean genEven) {
+        if(genEven) {
+            String subject = "environment [%s] %s";
+            subject = String.format(subject, profile, mail.getSubject());
+            mail.setSubject(subject);
+        }
+    }
+
+    private void validate(Mail mail) {
+        //判断参数是否满足要求 如果为空则使用默认值
+        if (StringUtils.isBlank(mail.getMailFrom())) {
+            mail.setMailFrom(config.getMailFrom());
+        }
+        if (null == mail.getMailTo()) {
+            mail.setMailTo(config.getMailTo());
         }
     }
 }

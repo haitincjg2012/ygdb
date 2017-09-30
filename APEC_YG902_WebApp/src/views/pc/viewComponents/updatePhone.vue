@@ -224,6 +224,7 @@
         #input-phonenum
           margin-left (10/_rem)
           height (17/_rem)
+          padding (4/_rem)
           font-size (16/_rem)
           color #999999
       .dash-line-f-v

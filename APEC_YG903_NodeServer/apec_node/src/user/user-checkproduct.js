@@ -39,7 +39,7 @@ router.post('/_node_user/_check_pronum' + config.urlSuffix , bodyParser, functio
              return ef(done, bind$(redis, 'hget'), config.userInfoPrefix + json, config.userViewKey , function(userObj){
                  try{
                     userObj = JSON.parse(userObj);
-                    if(userObj.userRealAuthName && userObj.userRealAuthName == 'NORMAL'){
+                    if(userObj && userObj.userRealAuthName && userObj.userRealAuthName == 'NORMAL'){
                         returnObj.realAuth = true;
                         returnObj.checkStatus = true;
                         return done(true,returnObj);

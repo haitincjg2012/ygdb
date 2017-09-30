@@ -1,0 +1,11 @@
+.login-btn-t {
+  position: fixed;
+  bottom: 0;
+  width: 18.75rem;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  background-color: #2FCAA7;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #F8F8FA;
+}

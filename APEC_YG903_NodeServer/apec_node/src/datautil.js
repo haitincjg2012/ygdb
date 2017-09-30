@@ -1,5 +1,7 @@
 'use strict';
 
+var moment = require('moment');
+
 //API  日期格式化
 exports.toDateString = function(dateStr,splitChar, timeFlag) {
 	splitChar = splitChar == undefined ? "-" : splitChar;
@@ -31,9 +33,9 @@ exports.getDateDiff = function(dateTimeStamp,timeOut){
 	var day = hour * 24;
 	var halfamonth = day * 15;
 	var month = day * 30;
-	var now = new Date().getTime();
+	var now = moment().format('x');
 	var diffValue = now - dateTimeStamp;
-	if(diffValue < 0){return this.toDateString(dateTimeStamp,"-");}
+	if(diffValue < 0 ){return this.toDateString(dateTimeStamp,"-");}
 	var monthC =diffValue/month;
 	var weekC =diffValue/(7*day);
 	var dayC =diffValue/day;

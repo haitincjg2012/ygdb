@@ -1,7 +1,5 @@
 package com.apec.voucher.viewvo;
 
-import java.util.Map;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -45,7 +43,12 @@ public class DBNumberRankViewVO {
 	
 	/**
 	 * 规格数量
-	 * key：规格；value：数量
+	 * json字符串    key：规格；value：数量
 	 * */
-	private Map<String, String> attrNumberMap;
+	private String attrNumberMap;
+	
+	/**
+	 * 头像图片
+	 * */
+	private String imgUrl;
 }

@@ -1,5 +1,6 @@
 package com.apec.product.web;
 
+import com.alibaba.fastjson.JSONObject;
 import com.apec.framework.common.Constants;
 import com.apec.framework.common.ErrorCodeConst;
 import com.apec.framework.common.PageJSON;
@@ -62,8 +63,14 @@ public class ProductController extends MyBaseController {
         try {
             PageJSON<String> pageJSON = super.getPageJSON(jsonStr, String.class);
             ProductSkuInfoVO productInfoVO = JsonUtil.parseObject(pageJSON.getFormJSON(), ProductSkuInfoVO.class);
+
             List<Map<String,String>> resultMap = new ArrayList<>();
-            String returnCode = productService.addProductAttr(getUserInfo(pageJSON), productInfoVO,resultMap);
+            String returnCode;
+            if( productInfoVO.getUserId() != null){
+                returnCode = productService.addProductAttrByInstead(productInfoVO.getUserId(), productInfoVO, resultMap);
+            }else {
+                returnCode = productService.addProductAttr(getUserInfo(pageJSON), productInfoVO, resultMap);
+            }
             if (StringUtils.equals(returnCode, Constants.RETURN_SUCESS)) {
                 resultData.setData(resultMap);
                 resultData.setSucceed(true);
@@ -91,7 +98,12 @@ public class ProductController extends MyBaseController {
         try {
             PageJSON<String> pageJSON = super.getPageJSON(jsonStr, String.class);
             ProductInfoVO productInfoVO = JsonUtil.parseObject(pageJSON.getFormJSON(), ProductInfoVO.class);
-            String returnCode = productService.addNewProduct(getUserInfo(pageJSON), productInfoVO);
+            String returnCode;
+            if( productInfoVO.getUserId() != null){
+                returnCode = productService.addNewProductByInstead(productInfoVO.getUserId(), productInfoVO);
+            }else {
+                returnCode = productService.addNewProduct(getUserInfo(pageJSON), productInfoVO);
+            }
             if (StringUtils.equals(returnCode, Constants.RETURN_SUCESS)) {
                 resultData.setSucceed(true);
             } else {
@@ -173,6 +185,34 @@ public class ProductController extends MyBaseController {
         return resultData;
     }
 
+    @RequestMapping(value = "/offSellProductByManager", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResultData<String> offSellProductByManager(@RequestBody String jsonStr) {
+        ResultData<String> resultData = new ResultData<>();
+        try {
+            PageJSON<String> pageJSON = super.getPageJSON(jsonStr, String.class);
+            ProductInfoVO productInfoVO = JsonUtil.parseObject(pageJSON.getFormJSON(), ProductInfoVO.class);
+            if (StringUtils.isBlank(productInfoVO.getElasticId())) {
+                log.warn("[ProductController][offSellProductByManager] Can't Update Product , Parameter verification failed!");
+                setErrorResultDate(resultData, Constants.COMMON_MISSING_PARAMS);
+                return resultData;
+            }
+            String returnCode = productService.offSellProductByManager(productInfoVO);
+            if(StringUtils.equals(returnCode, Constants.RETURN_SUCESS)){
+                resultData.setSucceed(true);
+            }else{
+                setErrorResultDate(resultData,returnCode);
+            }
+        }catch (BusinessException e){
+            log.error("OffSell Product By Manager BusinessException", e);
+            setErrorResultDate(resultData,e.getErrorCode());
+        } catch (Exception e) {
+            log.error("OffSell Product By Manager  Exception", e);
+            setErrorResultDate(resultData,Constants.SYS_ERROR);
+        }
+        return resultData;
+    }
+
+
     @RequestMapping(value = "/updateProductByES", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultData<String> updateProductByES(@RequestBody String jsonStr) {
         ResultData<String> resultData = new ResultData<>();
@@ -253,6 +293,49 @@ public class ProductController extends MyBaseController {
             setErrorResultDate(resultData,e.getErrorCode());
         } catch (Exception e) {
             log.error("update Product Exception", e);
+            setErrorResultDate(resultData,Constants.SYS_ERROR);
+        }
+        return resultData;
+    }
+
+    @RequestMapping(value = "/pushProductToEs", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResultData<String> pushProductToEs(@RequestBody String jsonStr){
+        ResultData<String> resultData = getResultData(true, null, Constants.RETURN_SUCESS);
+        try{
+
+            PageJSON<String> pageJSON = super.getPageJSON(jsonStr, String.class);
+            JSONObject formObj = JsonUtil.parseObject(pageJSON.getFormJSON(), JSONObject.class);
+            String indexUrl = (String)JsonUtil.getValueBykey(jsonStr,"indexUrl");
+            if(formObj!= null) {
+                indexUrl = (String)formObj.get("indexUrl");
+            }
+            String returnCode = productService.pushProductToEs(indexUrl);
+            if(!Constants.RETURN_SUCESS.equals(returnCode)) {
+                setErrorResultDate(resultData, returnCode);
+            }
+        }catch (Exception e){
+            log.error("[PrductController] [pushProductToEs] Exception", e);
+            setErrorResultDate(resultData,Constants.SYS_ERROR);
+        }
+        return resultData;
+    }
+
+    @RequestMapping(value = "/pushOffSellProductToEs", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResultData<String> pushOffSellProductToEs(@RequestBody String jsonStr){
+        ResultData<String> resultData = getResultData(true, null, Constants.RETURN_SUCESS);
+        try{
+            PageJSON<String> pageJSON = super.getPageJSON(jsonStr, String.class);
+            JSONObject formObj = JsonUtil.parseObject(pageJSON.getFormJSON(), JSONObject.class);
+            String indexUrl = (String)JsonUtil.getValueBykey(jsonStr,"indexUrl");
+            if(formObj!= null) {
+                indexUrl = (String)formObj.get("indexUrl");
+            }
+            String returnCode = productService.pushOffSellProductToEs(indexUrl);
+            if(!Constants.RETURN_SUCESS.equals(returnCode)) {
+                setErrorResultDate(resultData, returnCode);
+            }
+        }catch (Exception e){
+            log.error("[PrductController] [pushOffSellProductToEs] Exception", e);
             setErrorResultDate(resultData,Constants.SYS_ERROR);
         }
         return resultData;

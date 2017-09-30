@@ -57,13 +57,5 @@ public class AttributeName extends BaseModel<Long> {
     @Enumerated(EnumType.STRING)
     private AttributeType attributeType = AttributeType.RADIO;
 
-    /**
-     * 属性值
-     */
-    @OneToMany(mappedBy = "attributeName",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
-    private List<AttributeValue> attributeValues;
 
 }

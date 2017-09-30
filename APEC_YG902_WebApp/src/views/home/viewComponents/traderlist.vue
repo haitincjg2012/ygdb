@@ -11,10 +11,16 @@
         </div>
         <div class="z-t-info clearfix" :data-id = "item.id">
           <div class="z-t-real-info" :data-id = "item.id">
-             <span class="z-t-r-name">{{item.orgName}}</span>
-             <!--<img src="../../../assets/img/rateOne.png" class="z-t-level">-->
-            <img :src="item.userLevelName" class="z-t-level">
-             <span class="z-t-r" v-if="item.userRealAuthKey">实名认证</span>
+            <div class="z-t-r-orgName" :class="{ztrActive:!item.userRealAuthKey}">
+              <span class="z-t-r-name">{{item.orgName}}</span>
+            </div>
+             <div class="z-t-r-icon">
+               <img :src="item.userLevelName" class="z-t-level">
+             </div>
+             <div class="z-t-r-real" v-if="item.userRealAuthKey">
+               <span class="z-t-r">实名认证</span>
+             </div>
+
           </div>
           <div class="z-t-main clearfix" :data-id = "item.id">
             <span class="z-t-main-com-t">主营：</span>

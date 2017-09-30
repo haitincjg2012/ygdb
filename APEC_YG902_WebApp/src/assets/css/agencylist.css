@@ -51,6 +51,35 @@
 }
 .z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-real-info .z-ag-r-f-partO {
   width: 8.75rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-real-info .z-ag-r-f-partO .z-ag-r-f-level {
+  width: 1.125rem;
+  text-align: center;
+}
+.z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-real-info .z-ag-r-f-partO .z-ag-r-f-name {
+  max-width: 4.875rem;
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-real-info .z-ag-r-f-partO .zAgActive {
+  max-width: 7.375rem;
+}
+.z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-real-info .z-ag-r-f-partO .z-ag-r-f-real {
+  width: 2.75rem;
+  text-align: center;
 }
 .z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-real-info .z-ag-r-f-partO .z-ag-r-name {
   font-size: 0.8rem;
@@ -108,6 +137,27 @@
   position: relative;
   line-height: 1rem;
   height: 1rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-main .z-ag-main-t {
+  width: 1.75rem;
+}
+.z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-main .z-ag-main-m {
+  width: 11.25rem;
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 .z-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-main .z-ag-main-com-t {
   font-size: 0.65rem;

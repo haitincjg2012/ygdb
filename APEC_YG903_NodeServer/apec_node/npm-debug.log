@@ -1,0 +1,40 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'D:\\Program Files (x86)\\node\\node.exe',
+1 verbose cli   'C:\\Users\\haiti\\AppData\\Roaming\\npm\\node_modules\\cnpm\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   '--userconfig=C:\\Users\\haiti\\.cnpmrc',
+1 verbose cli   '--disturl=https://npm.taobao.org/mirrors/node',
+1 verbose cli   '--registry=https://registry.npm.taobao.org',
+1 verbose cli   'run',
+1 verbose cli   'dev' ]
+2 info using npm@3.10.10
+3 info using node@v7.8.0
+4 verbose run-script [ 'predev', 'dev', 'postdev' ]
+5 info lifecycle apec_node@1.0.0~predev: apec_node@1.0.0
+6 silly lifecycle apec_node@1.0.0~predev: no script for predev, continuing
+7 info lifecycle apec_node@1.0.0~dev: apec_node@1.0.0
+8 verbose lifecycle apec_node@1.0.0~dev: unsafe-perm in lifecycle true
+9 verbose lifecycle apec_node@1.0.0~dev: PATH: C:\Users\haiti\AppData\Roaming\npm\node_modules\cnpm\node_modules\npm\bin\node-gyp-bin;D:\dev\apec_ygdb\APEC_YG903_NodeServer\apec_node\node_modules\.bin;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Java\jdk1.8.0_121\bin;C:\Program Files\Java\jdk1.8.0_121\jre\bin;D:\Program Files (x86)\apache-maven-3.3.9\bin;D:\Program Files (x86)\MySQL Server\mysql-5.7.17-winx64\bin;D:\Program Files (x86)\apache-tomcat-7.0.75\lib;D:\Program Files (x86)\apache-tomcat-7.0.75\bin;D:\Program Files (x86)\TortoiseSVN\bin;D:\Program Files (x86)\spring-1.4.0.BUILD-SNAPSHOT\bin;D:\Program Files (x86)\TortoiseGit\bin;D:\Program Files (x86)\Git\cmd;D:\Program Files (x86)\node\;D:\Program Files (x86)\WinRAR;C:\Users\haiti\AppData\Roaming\npm\node_modules\fis3\;C:\Users\haiti\AppData\Local\Microsoft\WindowsApps;C:\Users\haiti\AppData\Roaming\npm;C:\Users\haiti\AppData\Local\atom\bin;D:\Program Files (x86)\WinRAR;C:\Users\haiti\AppData\Local\Microsoft\WindowsApps;C:\Users\haiti\AppData\Roaming\npm\node_modules\fis3\;C:\ProgramData\haiti\atom\bin
+10 verbose lifecycle apec_node@1.0.0~dev: CWD: D:\dev\apec_ygdb\APEC_YG903_NodeServer\apec_node
+11 silly lifecycle apec_node@1.0.0~dev: Args: [ '/d /s /c',
+11 silly lifecycle   'cross-env  NODE_ENV=production PORT=4100 node index.js' ]
+12 verbose stack Error: kill ENOSYS
+12 verbose stack     at exports._errnoException (util.js:1034:11)
+12 verbose stack     at process.kill (internal/process.js:188:13)
+12 verbose stack     at process.listener (C:\Users\haiti\AppData\Roaming\npm\node_modules\cnpm\node_modules\npm\node_modules\npmlog\node_modules\gauge\node_modules\signal-exit\index.js:86:15)
+12 verbose stack     at emitNone (events.js:91:20)
+12 verbose stack     at process.emit (events.js:188:7)
+12 verbose stack     at processEmit (C:\Users\haiti\AppData\Roaming\npm\node_modules\cnpm\node_modules\npm\node_modules\npmlog\node_modules\gauge\node_modules\signal-exit\index.js:146:32)
+12 verbose stack     at processEmit (C:\Users\haiti\AppData\Roaming\npm\node_modules\cnpm\node_modules\npm\node_modules\npm-registry-client\node_modules\npmlog\node_modules\gauge\node_modules\signal-exit\index.js:146:32)
+12 verbose stack     at Signal.wrap.onsignal (internal/process.js:215:44)
+13 verbose cwd D:\dev\apec_ygdb\APEC_YG903_NodeServer\apec_node
+14 error Windows_NT 10.0.15063
+15 error argv "D:\\Program Files (x86)\\node\\node.exe" "C:\\Users\\haiti\\AppData\\Roaming\\npm\\node_modules\\cnpm\\node_modules\\npm\\bin\\npm-cli.js" "--userconfig=C:\\Users\\haiti\\.cnpmrc" "--disturl=https://npm.taobao.org/mirrors/node" "--registry=https://registry.npm.taobao.org" "run" "dev"
+16 error node v7.8.0
+17 error npm  v3.10.10
+18 error code ENOSYS
+19 error errno ENOSYS
+20 error syscall kill
+21 error kill ENOSYS
+22 error If you need help, you may report this error at:
+22 error     <https://github.com/npm/npm/issues>
+23 verbose exit [ 1, true ]

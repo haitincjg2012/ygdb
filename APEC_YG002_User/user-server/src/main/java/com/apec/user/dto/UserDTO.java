@@ -164,4 +164,10 @@ public class UserDTO extends BaseDTO {
      */
     private UserAccountType userAccountType;
 
+    /**
+     * 开关，筛选条件，开为Y
+     */
+    private String pushFlag;
+
+
 }

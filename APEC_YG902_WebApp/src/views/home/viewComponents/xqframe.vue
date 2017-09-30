@@ -1,151 +1,160 @@
 <template>
   <div style="background-color: #fff">
-    <div class="z-person">
-      <div class="z-p-head-t">
-        <!--<h1 class="z-p-h-text">{{person.title}}</h1>-->
-        <div class="return-t" @click="back">
-          <img src="../../../assets/img/ret.png">
-        </div>
-      </div>
-      <div class="z-bannerImg">
-        <img :src="person.bannerImgUrl">
-        <img :src="person.portrait" class="z-head-portrait" v-if="agenyFlag || traderFlag">
-      </div>
-      <div class="z-p-info">
-        <div class="c-t-info">
-          <span class="z-p-name" v-if="agenyFlag || traderFlag">{{person.name}}</span>
-          <span class="z-cold-name" v-if="coldFlag">{{person.name}}</span>
-          <img :src="person.level" class="z-p-level" v-if="agenyFlag || traderFlag">
-          <span class="z-p-represent" v-if="agenyFlag || traderFlag">{{person.representative}}</span>
-          <span class="z-p-real" v-if="(agenyFlag && person.real)">实名认证</span>
-          <span class="z-p-real" v-if="(traderFlag&& person.real)">实名认证</span>
-          <span class="z-p-real c-p-c-real" v-if="coldFlag&& person.real">企业认证</span>
-          <span class="c-p-tx" v-if="coldFlag&&person.coldS">供应链金融合作库</span>
-        </div>
-        <p class="z-p-x-agency" v-if="agenyFlag">{{person.ageny}}</p>
-        <div class="z-p-path">
-          <div class="z-p-part">
-            <p class="z-p-number">{{person.notice}}</p>
-            <p><span>关注</span></p>
-          </div>
-          <div class="z-p-part">
-            <p class="z-p-number">{{person.bs}}</p>
-            <p><span>浏览</span></p>
-          </div>
-          <div class="z-p-part">
-            <p class="z-p-number">{{person.concat}}</p>
-            <p><span>联系</span></p>
-          </div>
-          <!--<div class="z-p-follow">-->
-            <!--<div class="z-p-f" :class="{active:person.sh}" @click="notice">-->
-              <!--{{person.sh?"取消关注":"关注"}}-->
-            <!--</div>-->
-          <!--</div>-->
-        </div>
-      </div>
-
-      <div class="z-space-h"></div>
-      <div class="z-p-des">
-        <div class="z-p-des-area z-p-des-w" v-if="coldFlag">
-          <img class="z-p-des-icon" src="../../../assets/img/kr.png">
-          <span class="z-x-sp-com">库 容 量&nbsp;</span>
-          <input type="text" readonly v-model="person.userOrgClientVO.orgStockCap">
-        </div>
-        <div class="z-p-des-area z-p-des-w" >
-          <img class="z-p-des-icon" src="../../../assets/img/qy.png">
-          <span class="z-x-sp-com">所在区域</span>
-          <input type="text" readonly v-model="person.userOrgClientVO.address">
-        </div>
-        <div class="z-p-des-pz z-p-des-w" v-if="agenyFlag || coldFlag || traderFlag">
-          <img class="z-p-des-icon" src="../../../assets/img/zypz.png">
-          <span class="z-x-sp-com">主营品种</span>
-          <input type="text" readonly v-model="person.userOrgClientVO.mainOperating">
-          <!--<span>{{person.pz}}</span>-->
-        </div>
-        <div class="z-p-des-pz z-p-des-w" v-if="agenyFlag || coldFlag">
-          <img class="z-p-des-icon" src="../../../assets/img/kh.png">
-          <span class="z-x-sp-com">客户市场</span>
-          <input type="text" readonly v-model="person.userOrgClientVO.saleAddress">
-          <!--<span>{{person.pz}}</span>-->
-        </div>
-        <!--<div class="z-p-des-market z-p-des-w" v-if="traderFlag">-->
-          <!--<img class="z-p-des-icon" src="../../../assets/img/dhqy.png">-->
-          <!--<span class="z-x-sp-com">调货区域</span>-->
-          <!--<input type="text" readonly v-model="person.saleArea">-->
-          <!--&lt;!&ndash;<span>{{person.market}}</span>&ndash;&gt;-->
-        <!--</div>-->
-        <div class="z-p-des-market z-p-des-w" v-if="traderFlag">
-          <img class="z-p-des-icon" src="../../../assets/img/xsqy.png">
-          <span class="z-x-sp-com">销售区域</span>
-          <input type="text" readonly v-model="person.userOrgClientVO.saleAddress">
-          <!--<span>{{person.market}}</span>-->
-        </div>
-        <div class="z-p-des-text">
-           <div class="z-p-des-w c-border-none">
-             <img class="z-p-des-icon" src="../../../assets/img/sl.png">
-             <span class="z-x-sp-com">实力描述:</span>
-           </div>
-
-          <p class="z-p-des-content">{{person.userOrgClientVO.remark}}</p>
-        </div>
-      </div>
-      <!--<div class="z-space"></div>-->
-
-    </div>
-    <div class="z-space-h"></div>
-    <div class="z-transaction" v-if="status.ag || status.trader">
-      <h4 class="z-h4-title">平台战绩</h4>
-      <div class="z-space"></div>
-      <div class="z-transaction-results">
-        <div class="z-r-totalW">
-          <p class="z-r-s-com">{{person.weight}}</p>
-          <p>累计调货</p>
-        </div>
-        <div class="z-vertical-line">
-          <div class="z-v-line">
-          </div>
-        </div>
-        <div class="z-r-rank">
-          <p class="z-r-s-com">{{person.rank}}</p>
-          <p>平台排名</p>
-        </div>
-      </div>
-    </div>
-    <div class="z-space-h"></div>
-    <div class="z-num-main" v-if="status.ag">
-      <h4 class="z-num-main-t">调果数据</h4>
-      <div class="z-space"></div>
-      <div id="main" :class="{Zmain:status.ag}" v-if="status.ag"></div>
-    </div>
-    <div class="z-space-h"></div>
-    <div class="z-p-gy">
-      <h4 class="c-p-gy-x">供求</h4>
-      <div class="c-gy-v"></div>
+    <my-scroll class="scrollWrapperT" :data="itemGQ" :pullup="pullup" @scrollToEnd="loadMore" >
       <div>
-          <ul class="c-gq-list">
-             <li
+        <div class="z-person">
+          <div class="z-p-head-t">
+            <div class="return-t" @click="back">
+              <img src="../../../assets/img/ret.png">
+            </div>
+          </div>
+          <div class="z-bannerImg">
+            <img :src="person.bannerImgUrl">
+            <img :src="person.portrait" class="z-head-portrait" v-if="agenyFlag || traderFlag">
+          </div>
+          <div class="z-p-info">
+            <div class="c-t-info">
+              <div class="z-p-name-dot">
+                <span class="z-p-name">{{person.name}}</span>
+              </div>
+              <div  v-if="agenyFlag || traderFlag" class="c-t-level">
+                <img :src="person.level" class="z-p-level">
+              </div>
+              <div v-if="agenyFlag || traderFlag" class="c-t-represent">
+                <span class="z-p-represent" >{{person.representative}}</span>
+              </div>
+              <div v-if="agenyFlag && person.real || traderFlag&& person.real" class="c-t-real-t">
+                <span class="z-p-real" >实名认证</span>
+              </div>
+              <div v-if="coldFlag" class="c-cold-real">
+                <span class="z-p-real c-p-c-real" v-if="person.coldF1">企业认证</span>
+                <span class="c-p-tx" v-if="person.coldS">供应链金融合作库</span>
+              </div>
+
+            </div>
+            <p class="z-p-x-agency" v-if="agenyFlag">{{person.ageny}}</p>
+            <div class="z-p-path">
+              <div class="z-p-part">
+                <p class="z-p-number">{{person.notice}}</p>
+                <p><span>关注</span></p>
+              </div>
+              <div class="z-p-part">
+                <p class="z-p-number">{{person.bs}}</p>
+                <p><span>浏览</span></p>
+              </div>
+              <div class="z-p-part">
+                <p class="z-p-number">{{person.concat}}</p>
+                <p><span>联系</span></p>
+              </div>
+              <div class="z-p-follow">
+                <div class="z-p-f" :class="{active:person.sh}" @click="notice">
+                  {{person.sh?"已关注":"关注"}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="z-space-h"></div>
+          <div class="z-p-des">
+            <div class="z-p-des-area z-p-des-w" v-if="coldFlag">
+              <img class="z-p-des-icon" src="../../../assets/img/kr.png">
+              <span class="z-x-sp-com">库 容 量&nbsp;</span>
+              <input type="text" disabled v-model="person.userOrgClientVO.orgStockCap">
+            </div>
+            <div class="z-p-des-area z-p-des-w" >
+              <img class="z-p-des-icon" src="../../../assets/img/qy.png">
+              <span class="z-x-sp-com">所在区域</span>
+              <input type="text" disabled v-model="person.userOrgClientVO.address">
+            </div>
+            <div class="z-p-des-pz z-p-des-w" v-if="agenyFlag || coldFlag || traderFlag">
+              <img class="z-p-des-icon" src="../../../assets/img/zypz.png">
+              <span class="z-x-sp-com">主营品种</span>
+              <input type="text" disabled v-model="person.userOrgClientVO.mainOperating">
+              <!--<span>{{person.pz}}</span>-->
+            </div>
+            <div class="z-p-des-pz z-p-des-w" v-if="agenyFlag || coldFlag">
+              <img class="z-p-des-icon" src="../../../assets/img/kh.png">
+              <span class="z-x-sp-com">客户市场</span>
+              <input type="text" disabled v-model="person.userOrgClientVO.saleAddress">
+              <!--<span>{{person.pz}}</span>-->
+            </div>
+            <div class="z-p-des-market z-p-des-w" v-if="traderFlag">
+              <img class="z-p-des-icon" src="../../../assets/img/xsqy.png">
+              <span class="z-x-sp-com">销售区域</span>
+              <input type="text" disabled v-model="person.userOrgClientVO.saleAddress">
+              <!--<span>{{person.market}}</span>-->
+            </div>
+            <div class="z-p-des-text">
+              <div class="z-p-des-w c-border-none">
+                <img class="z-p-des-icon" src="../../../assets/img/sl.png">
+                <span class="z-x-sp-com">实力描述:</span>
+              </div>
+
+              <p class="z-p-des-content">{{person.userOrgClientVO.remark}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="z-space-h" v-if="status.ag || status.trader"></div>
+        <div class="z-transaction" v-if="status.ag || status.trader">
+          <h4 class="z-h4-title">平台战绩</h4>
+          <div class="z-space"></div>
+          <div class="z-transaction-results">
+            <div class="z-r-totalW">
+              <p class="z-r-s-com">{{person.weight}}</p>
+              <p>累计调货</p>
+            </div>
+            <div class="z-vertical-line">
+              <div class="z-v-line">
+              </div>
+            </div>
+            <div class="z-r-rank">
+              <p class="z-r-s-com">{{person.rank}}</p>
+              <p>平台排名</p>
+            </div>
+          </div>
+        </div>
+        <div class="z-space-h"></div>
+        <div class="z-num-main" v-if="status.ag">
+          <h4 class="z-num-main-t">调果数据</h4>
+          <div class="z-space"></div>
+          <div id="main" class="Zmain" :class="{Zshow:AgChart}"  ></div>
+          <div class="c-z-ondata" v-if="AgChart">
+             <img src="../../../assets/img/noData.png" class="c-z-nodata-img">
+             <p class="c-z-nodata-text">暂无数据</p>
+          </div>
+        </div>
+        <div class="z-space-h" v-if="status.ag"></div>
+        <div class="z-p-gy">
+          <h4 class="c-p-gy-x">供求</h4>
+          <div class="c-gy-v"></div>
+          <div>
+            <ul class="c-gq-list">
+              <li
                 :is="item.ss"
                 :item="item"
                 v-for="item in itemGQ" v-on:xq="initD">
-
-             </li>
-          </ul>
+              </li>
+              <li class="li-space">没有更多数据</li>
+            </ul>
+          </div>
+        </div>
       </div>
-    </div>
+
+    </my-scroll>
     <div class="z-phone">
       <a @click.stop="phoneClick" :href="`tel:${mobile}`" class="c-phone" v-if="agenyFlag || traderFlag">打电话</a>
       <a @click.stop="phoneShow" v-if="coldFlag">打电话</a>
       <div class="z-cold-mobile" :class="{Cshow:coldShow}" v-if="coldFlag">
           <p class="c-text">请选择联系人</p>
         <div class="z-space-com c-space-t"></div>
-          <a :href="`tel:${mobileO}`" class="c-com">
+          <a :href="`tel:${mobileO}`" @click.stop="phoneClick" class="c-com" v-if="LB">
              <img :src="LBIcon" class="c-img-com"/>
              <span class="c-sp-text">老板</span>
              <img  src="../../../assets/img/mobile.png" class="c-m-icon-com c-icon-t">
           </a>
         <div class="z-space-com c-space-t"></div>
           <a v-for="item in itemPhone"
-            :href="`tel:${item.mobile}`"  class="c-com">
+            :href="`tel:${item.mobile}`"  class="c-com" @click.stop="phoneClick">
           <img :src="item.img" class="c-img-com"/>
           <span class="c-sp-text">{{item.name}}</span>
             <img src="../../../assets/img/mobile.png" class="c-m-icon-com">
@@ -154,7 +163,6 @@
           <div @click="cancel" class="c-cancel">取消</div>
       </div>
     </div>
-
   </div>
 </template>
 <style scoped>
@@ -166,6 +174,7 @@
   import {Swipe, SwipeItem, Indicator,MessageBox, Toast} from 'mint-ui'
   import DBanner from "../../../assets/img/defaultBg.png"
   import defaultIcon from "../../../assets/img/defaultForm.png"
+  import scroll from '../../../components/scroll/scroll'
 
   import T from "../../../assets/img/t.png"
   var ec = require("../../../assets/js/echarts.min");
@@ -176,13 +185,19 @@
   var fn = {
       gq:[],
     init:function (data, weight){
+
+
       var el = document.getElementById("main");
       var myChart = ec.echarts.init(el);
       var xData = [];
       var yData = [];
-      for(var key in data){
+
+      if(data){
+          var dt = JSON.parse(data);
+      }
+      for(var key in dt){
           xData.push(key);
-          yData.push(data[key]);
+          yData.push(dt[key]);
       }
       var tw;
       if(tw){
@@ -273,14 +288,14 @@
 
       if(dt.userType == "LK"){
          var arrT = dt.userOrgClientVO.userTagsVOS;
-
+        var self = this;
          arrT.forEach(function (current) {
              var className = current.className;
-             if(className == "GYRZ"){
-               this.person.coldF1 = true;
+             if(className == "QYRZ"){
+               self.person.coldF1 = true;
              }
            if(className == "GYLJRHZK"){
-             this.person.coldS = true;
+             self.person.coldS = true;
            }
          })
 
@@ -288,7 +303,7 @@
       }else{
         this.person.real = (dt.userStatus == "UNREALAUTH")? false:true;
       }
-      this.person.mobile = dt.mobile;
+      this.mobile = dt.mobile;
     },
     initgq(data){
 
@@ -298,8 +313,11 @@
        var rows = data.data.rows;
       var arr = [];
       var that = this;
+      if(this.pageNumber >= data.data.pageCount){
+        this.loadFlag = false;
+      }
       rows.forEach(function (current, index) {
-          console.log(current, 8989898);
+
         var obj = {};
         var len = 0;
         obj.ss = MYGQList;
@@ -375,9 +393,15 @@
         that.del[id] = 0;
         arr.push(obj);
       });
-      console.log(arr);
+
       that.itemGQ = arr;
-      console.log(that.itemGQ, 898989898);
+
+    },
+    GZ(data){
+      if(!data.succeed){
+        return;
+      }
+        this.person.sh = data.data.attenFlag;
     }
   }
   export default{
@@ -415,20 +439,37 @@
           coldFlag:false,
           mobile:"18986008673",
           mobileO:"",
-//          mobileT:18986008673,
           coldShow:true,
           itemPhone:null,
           itemGQ:null,//供求信息
-          pageNumber:1,//供求信息的页码
+
           del:{},//记录数据条数
           name:"",
           browseId:"",//被浏览者Id
           browseOrgId:"",//被浏览者组织Id
           LBIcon:"",//老板图像
+          LB:false,//默认是无老板
+
+          //上拉加载更多
+          pullup:true,
+          loadFlag:true,//"没有更多信息了"文字
+          loadMopen:false,//上拉加载标识
+//          供求的容量
+          pageNumber:1,//供求信息的页码
+          pageCount:10000,//供求的总数
+          mPgSize:10,//页容量
+          gqData:[],//供求容器
+          AgChart:false,//默认是有数据的
         }
       },
     methods:{
-          phone(){},
+      phone(){},
+      phoneReset(){
+              this.itemPhone = null;
+            this.mobileO = "";
+            this.LBIcon = "";
+            this.LB = false;
+          },
       phoneShow(){
               var self = this;
          let params = {
@@ -455,26 +496,27 @@
             var offsetH = el.offsetHeight;
             el.style.top = -offsetH + "px";
           }, 500)
-//
-//          console.dir(window.getComputedStyle(el, null).height);
-//          console.log(offsetH, 99999);
+
 
         }
       },
       coldPhone(data){
-          console.log(data);
+          this.phoneReset();
           var dt = data.data;
           var arr = [];
           var self = this;
+
           dt.forEach(function (current) {
              var obj = {};
              var type = current.userDetailType;
 
              if(type == "LK_LB"){
+                self.LB = true;
                 self.mobileO = current.mobile;
                 self.LBIcon = current.imgUrl || defaultIcon;
              }else{
-                 obj.img = current.imgUrl || defaultIcon;
+
+               obj.img = current.imgUrl || defaultIcon;
                obj.name = current.name;
                obj.mobile = current.mobile;
                arr.push(obj);
@@ -482,16 +524,18 @@
           })
 
         this.itemPhone = arr;
-          console.log(this.itemPhone, 123455);
+
       },
       cancel(){
           this.coldShow = true;
       },
       back(param){
               this.reset();
-              this.$router.go(-1);
+           this.$nextTick(()=>{
+          this.$router.go(-1);
+        });
           },
-          reset(){
+      reset(){
             this.status.ag = true;
             this.status.trader = true;
             this.traderFlag = false;
@@ -500,8 +544,12 @@
             this.coldShow = true;
             this.person.coldS = false;
             this.person.coldF1 = false;
+            this.person.name ="";
+            this.loadFlag = true;
+            this.AgChart = false;
+
           },
-        init(name, id, orgId){
+      init(name, id, orgId){
           var self = this;
           var id = arguments[1]?arguments[1]:self.id;
           var browseId = arguments[1]?arguments[1]:self.id;//被浏览者Id
@@ -527,7 +575,7 @@
             };
             this.post(params, fn.xqContent.bind(this));
             var params2 = {
-              api:"/yg-voucher-service/voucher/getSelfNumberRankViewVO.apec",
+              api:"/yg-voucher-service/voucher/getNumberRankViewVO.apec",
               data:{
                 userId:browseId
               }
@@ -547,7 +595,7 @@
             };
             this.post(params, fn.xqContent.bind(this));
             var pT = {
-              api:"/yg-voucher-service/voucher/getSelfNumberRankViewVO.apec",
+              api:"/yg-voucher-service/voucher/getNumberRankViewVO.apec",
               data:{
                 userId:browseId
               }
@@ -611,9 +659,15 @@
         this.person.weight = dt.totalNumber + weight;
         this.person.rank = dt.rankNo;
         if(dt.attrNumberMap){
-          fn.init(dt.attrNumberMap, weight);
+            this.$nextTick(function () {
+              fn.init(dt.attrNumberMap, weight);
+            })
+
         }else{
-            fn.init(dt.attrNumberMap, weight);
+            this.AgChart = true;
+//          this.$nextTick(function () {
+//            fn.init(dt.attrNumberMap, weight);
+//          })
         }
       },
       bs(data){
@@ -623,11 +677,12 @@
         this.person.concat = dt.phoneNum;
       },
       phoneClick(){
+          var self = this;
           let params = {
               api:"/_node_user_org/_view_org.apno",
               data:{
                   orgId:self.orgId,
-                  type:"PHONENUM"
+                vieType:"PHONENUM"
               }
           }
 
@@ -642,19 +697,43 @@
           api:"/_node_user/_product_list.apno",
           data:{
             orgId:that.orgId,
-            pageNumber: "1",
+            pageNumber: pg,
           }
         }
-        console.log(params, 8888);
         this.post(params,fn.initgq.bind(this));
       },
       initD(id){
         this.init(this.name, id, id);
-      }
+      },
+      GZ(){
+     // 是否关注的方法
+        var self = this;
+        var params = {
+            api:"/_node_user/_org_atten_flag.apno",
+            data:{
+              "orgId":self.orgId
+            }
+        }
+
+        self.post(params,fn.GZ.bind(this));
+      },
+      //上拉加载更多
+      loadMore(){
+        var vm=this;
+        vm.loadMopen=true;
+//            console.log("上拉加载："+" vm.mloadFlag:"+vm.mloadFlag+" vm.loadFlag:"+vm.loadFlag+" vm.tabid:"+vm.tabid);
+        if(vm.loadFlag){
+            this.pageNumber ++;
+            this.gqlist();
+        }
+      },
+    },
+    deactivated(){
+
     },
     activated(){
         var name = this.$route.query.flag;
-        this.orgId = this.$route.query.orgId;
+        this.orgId = this.$route.query.orgId+"";
         this.userId = this.$route.query.userId;
         this.browseId = this.$route.query.userId;
 
@@ -662,11 +741,14 @@
         this.name = name;
         this.id = id;
         this.del = {};
+        this.AgChart = false;
+        var self = this;
         this.init(name);
+        this.GZ();//关注的方法
       let params = {
         api:"/_node_user_org/_view_org.apno",
         data:{
-          orgId:this.orgId,
+          orgId:self.orgId,
           vieType:"VIEWNUM"
         }
       }
@@ -674,6 +756,9 @@
       this.post(params,this.phoneViewRet);
 
       this.gqlist(1);
+    },
+    components: {
+      'my-scroll':scroll
     }
   }
 </script>

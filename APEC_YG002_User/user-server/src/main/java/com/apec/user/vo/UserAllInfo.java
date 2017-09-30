@@ -4,6 +4,7 @@ import com.apec.framework.common.enumtype.*;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by hmy on 2017/9/15.
@@ -227,6 +228,9 @@ public class UserAllInfo {
      * 最近一个消费积分的时间
      */
     private Date lastConsumeTime;
+
+    //组织标签
+    private List<UserTagsVO> userTagsVOS;
 
 
 }

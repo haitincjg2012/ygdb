@@ -2,14 +2,15 @@ package com.apec.user.dao;
 
 import com.apec.framework.common.enumtype.EnableFlag;
 import com.apec.framework.common.enumtype.UserAccountType;
-import com.apec.framework.common.enumtype.UserRealAuth;
 import com.apec.user.model.User;
 import com.apec.framework.jpa.dao.BaseDAO;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigInteger;
 import java.util.List;
 
 
@@ -26,6 +27,14 @@ public interface UserDAO extends BaseDAO<User, Long> {
      * @return User对象
      */
     User findByMobileAndEnableFlag(String mobile,EnableFlag enableFlag);
+
+    /**
+     * 通过用户查找用户
+     * @param id 手机号
+     * @param enableFlag 状态码
+     * @return User对象
+     */
+    User findByIdAndEnableFlag(Long id,EnableFlag enableFlag);
 
     /**
      * 统计该手机号用户对象在数据表中的个数
@@ -86,5 +95,22 @@ public interface UserDAO extends BaseDAO<User, Long> {
     @Query(value = "update user set user_status = 'FREEZE',last_update_date = now(),last_update_by = :userId where id in :ids and enable_flag = 'Y'",nativeQuery = true)
     int deleteUserList(@Param("ids") List<Long> ids,@Param("userId") String userId);
 
+    /**
+     * 通过用户身份和组织ids查询组织id
+     * @param userType
+     * @param userOrgId
+     * @return
+     */
+    @Query(value = "select distinct(user_org_id) from user where User_org_id in (:userOrgId) and enable_flag = 'Y' and user_type = :userType and user_account_type != 'ORG_CHILD_ACCOUNT'",nativeQuery = true)
+    List<BigInteger> findUserOrgIdsByUserTypeAndUserOrgId(@Param("userType") String userType, @Param("userOrgId")List<Long> userOrgId);
+
+    /**
+     * 通过组织ids查询用户信息，分页
+     * @param userOrgId
+     * @return
+     */
+    Page<User> findByEnableFlagAndUserOrgIdIn(EnableFlag enableFlag , List<Long> userOrgId, Pageable pageable);
+//    @Query(value = "select * from user where User_org_id in (:userOrgId) and enable_flag = 'Y'  /**#pageable**/\n  ",
+//    countQuery = "select count(*) from user where User_org_id in (:userOrgId) and enable_flag = 'Y' ",nativeQuery = true)
 
 }

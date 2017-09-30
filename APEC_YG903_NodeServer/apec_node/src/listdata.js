@@ -40,6 +40,8 @@ exports = module.exports = function (elastic,total,err,done,saveProductArr) {
          "weight": elasticSource.weight,
          "userTypeName": elasticSource.userTypeName,
          "userId": elasticSource.userId,
+         "timeout":elasticSource.timeout,
+         "createDate":elasticSource.createDate,
          "showCredateTime": datautil.getDateDiff(elasticSource.createDate,elasticSource.timeout)
      };
      showSecondInfo = [];
@@ -88,7 +90,7 @@ exports = module.exports = function (elastic,total,err,done,saveProductArr) {
               }
               i = i + 2;
           }
- 
+
           var flagUserName;
           elasticUserId.forEach(function(obj,ind){
               flagUserName =  userId.filter((p) => {

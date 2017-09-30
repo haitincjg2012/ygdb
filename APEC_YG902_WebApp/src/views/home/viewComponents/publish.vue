@@ -1,7 +1,7 @@
 <template>
    <div class="z-frame" style="background: #fff;">
         <div class="com">
-          <div class="header">
+          <div class="header-T">
             <h1>发布供应信息</h1>
             <div class="return" @click="back">
               <img src="../../../assets/img/ret.png">
@@ -80,7 +80,7 @@
         <div class="pic-show">
             <p class="z-up-text">上传图片(* 建议横屏拍照)</p>
             <ul class="clearfix z-list-pic" >
-                <li :is="item.SS" v-for="item in items" :item="item" v-on:selecttype="delItems"></li>
+                <li :is="item.SS" v-for="item in items" :item="item" v-on:selecttype="delItems" class="c-z-m"></li>
                 <li>
                     <div class="z-add-one">
                         <img src="../../../assets/img/add-9.png"/>
@@ -100,7 +100,7 @@
 <script>
   import API from '../../../api/api'
   import DEL from '../../../components/del.vue'
-  import { Toast } from 'mint-ui';
+  import { Toast,Indicator} from 'mint-ui';
 
   const api = new API();
   var observer = {
@@ -125,23 +125,23 @@
         if(!data.succeed){
           return;
         }
-        var d = new Date()
+        var d = new Date();
         var timeTamp = d.getTime();
         var dt = data.data[0];
        var that = this;
        var file = that.img;
-        this.uploadImg = 2;
+//        this.uploadImg = 2;
         var fr = new FileReader();
         fr.onload = function (e) {
 
           var value = e.target.result;
-
+          var t = e.timeStamp;
           var obj = {
             SS:DEL,
             srcM:dt[1].imagePath,
             src:value,
             srcT:dt[2].imagePath,
-            index:timeTamp
+            index:t
           };
           that.items.push(obj);
         }
@@ -151,6 +151,7 @@
         if(!data.succeed){
           return;
         }
+        Indicator.close();
         this.number = "";
         this.price = "";
         this.$store.state.skuName = "";
@@ -185,12 +186,15 @@
               recordImg:{},
                items:[],
                 unit:'万斤',
-               uploadImg:0 //0代表没有上传图片点击图片 1代表上传了图片 2代表上传完图片后点击提交
+               uploadImg:0, //0代表没有上传图片点击图片 1代表上传了图片 2代表上传完图片后点击提交
+               submitRecord:0,//0代表未提交，1代表提交，2...代表未提交
         }
       },
     components: {"aaa": DEL},
     methods:{
       back(){
+          this.reset();
+//        Indicator.open();
         this.$store.state.skuName = "";
         this.$store.state.skuId = "";
         this.$store.state.addrData = null;
@@ -211,6 +215,10 @@
       zone(){
         this.$store.state.address = 1;
         this.$router.push({name:'address'});
+      },
+      reset(){
+        this.submitFlag = 0;
+        this.items=[];
       },
       goodinfo(){
           this.$router.push("/goodinfo");
@@ -236,7 +244,9 @@
         }
 
         if(!flag){
-          this.number= value.slice(0, -1);
+//          this.number= value.slice(0, -1);
+          this.number = "";
+          return;
         }
 
         var t = value.toString();
@@ -244,6 +254,7 @@
         if(ta[1]){
             t = ta[1].slice(0,1);
             this.number = ta[0]+"."+t;
+//          this.number = t
         }
       },
       handlep(event){
@@ -266,7 +277,8 @@
         }
 
         if(!flag){
-          this.price= value.slice(0, -1);
+//          this.price= value.slice(0, -1);
+          this.price = "";
         }
       },
       handleimg(evt){
@@ -367,7 +379,8 @@
       },
       delItems(timeTamp){
           var items = this.items;
-          var index = timeTamp.index;
+          var index = timeTamp;
+
           for(var key in items){
               if(items[key].index == index){
                   items.splice(key,1);
@@ -377,25 +390,27 @@
 
       },
       submit(){
-          var upload = this.uploadImg;
-          var that = this;
-          this.process();
-//          if(upload == 1){
-//            observer.addObserver("upload", this.process.bind(that));
-//          }else{
-//              this.process();
-//          }
-
-      },
-      process(){
+//        this.tSubmit();
+          this.submitFlag ++;
         if(this.skuName == '' || this.skuId == "" || this.number == "" || this.price == "" || this.time == "" || this.address == ""){
 
           Toast({
             message:"请您填写所有必填参数...",
             duration:1000
           })
+          this.submitFlag --;
+
           return;
         }
+//           优化
+          if(this.submitFlag == 1){
+
+            var upload = this.uploadImg;
+            var that = this;
+            this.process();
+          }
+      },
+      process(){
         this.uploadImg = 0;
         var imgArr = [];
         this.items.forEach(function (current, index) {
@@ -476,6 +491,7 @@
       }
     },
     activated(){
+       this.reset();
       this.skuName = this.$store.state.skuName;
       this.skuId = this.$store.state.skuId;
       var addreObj = this.$store.state.addrData;

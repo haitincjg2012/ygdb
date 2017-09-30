@@ -16,5 +16,6 @@ public interface UserPointRuleDAO extends BaseDAO<UserPointRule,Long> {
     //查询积分规则扣分规则
     List<UserPointRule> findByPointRuleTypeAndEnableFlagOrderByCreateDateDesc(PointRuleType pointRuleType, EnableFlag enableFlag);
 
+    UserPointRule findByIdAndEnableFlag(Long id, EnableFlag enableFlag);
 
 }

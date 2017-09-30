@@ -5,21 +5,21 @@
       <div class="pure-g-l login-content">
         <div class="loggin-panel">
           <form onsubmit="return false">
-            <div class="phone-input">
+            <div class="phone-input-tt">
               <span>手机号</span>
               <input id="input-phonenum" oninvalid="setCustomValidity(' ')" type="tel" v-model="phoneNum" placeholder="请输入手机号码"
                      oninput="setCustomValidity('')" required maxlength="11" pattern="^1(3|4|5|7|8)\d{9}$"/>
             </div>
-            <div class="dash-line">
-            </div>
+            <!--<div class="dash-line">-->
+            <!--</div>-->
             <div class="code-input">
               <span>验证码</span>
               <input oninvalid="setCustomValidity(' ')" id="input-code" type="tel" class="pure-input-1" v-model="code" oninput="setCustomValidity('')"
                      placeholder="请输入验证码" required maxlength="4" pattern="^\d{4}$">
               <input @click.stop="sendMessage" type="button" id="btn-message" value="获取验证码">
             </div>
-            <div class="dash-line-f-v">
-            </div>
+            <!--<div class="dash-line-f-v">-->
+            <!--</div>-->
             <div class="login-btn">
               <input :class="loginBtnCls" type="submit" id="btn-login-code" value="下一步" @click="login"></input>
             </div>
@@ -217,8 +217,11 @@
       height (24/_rem)!important
     .mainform
       margin-top (18/_rem)
-      .phone-input
-        padding 0 (15/_rem)
+      .phone-input-tt
+        margin  0 (15/_rem)
+        height: (41/_rem);
+        line-height: (41/_rem);
+        border-bottom 1px solid #f4f4f4
         span
           font-size (16/_rem)
           color #3C424F

@@ -39,7 +39,8 @@
            <!--<span class="z-p-economy-text">供应链金融合作库</span>-->
         <!--</div>-->
       </div>
-      <div class="z-space"></div>
+      <!--<div class="z-space"></div>-->
+      <div class="c-z-kg"></div>
       <div class="z-p-manage-info">
         <div class="z-p-cold" v-if="role.coldF">
           <img src="../../../assets/img/lk.png" class="img-com">
@@ -92,8 +93,15 @@
          <p class="z-edit-p">{{person.des == ""?"赶快填写吧，让更多用户关注你":person.des}}</p>
          <!--<div class="z-icon" @click="edit">-->
          <!--</div>-->
+         <ul>
+             <li v-for="item in person.itemRImg"
+                >
+                 <img :src="item">
+             </li>
+         </ul>
       </div>
       <div class="z-transship-ret" v-if="role.agencyF || role.traderF">
+          <div class="c-z-kg"></div>
           <h4 class="z-transship-title">平台战绩</h4>
           <div class="z-space"></div>
           <div class="z-transship-num">
@@ -112,6 +120,7 @@
           </div>
       </div>
       <div class="z-num-main"  v-if="role.agencyF">
+          <div class="c-z-kg"></div>
          <h4 class="z-num-main-t">调果数据</h4>
         <div class="z-space"></div>
         <div id="mainST" class="z-p-main"></div>
@@ -135,18 +144,23 @@
   import T from "../../../assets/img/t.png"
   import DBanner from "../../../assets/img/defaultBg.png"
   import P from "../../../assets/img/icon.png"
+  import {MessageBox, Indicator, Toast} from 'mint-ui';
   const api = new API();
   var ec = require("../../../assets/js/echarts.min");
 
   var fn = {
       img:[],
       bannerImg:function (data) {
+          if(!data.succeed){
+          Toast(data.errorMsg);
+          return;
+          }
         this.person.bannerImgUrl = data.data.orgBannerURL;
       },
       init:function (data) {
+
         var isobj = data.data;
         var dt;
-
         if(typeof isobj == "string"){
             dt = JSON.parse(isobj);
         }else{
@@ -215,13 +229,14 @@
           this.person.real = dt.userRealAuth =="UNREALAUTH"?false:true;
           if(dt.userOrgClientVO){
             this.person.cold =dt.userOrgClientVO.orgName ;
+            this.person.lk = dt.userOrgClientVO.orgName;
             this.person.kr =dt.userOrgClientVO.orgStockCap ;
             this.person.hzs =dt.userOrgClientVO.orgName ;
             this.person.address =dt.userOrgClientVO.address ;
             this.person.pz = dt.userOrgClientVO.mainOperating;
             this.person.xsq = dt.userOrgClientVO.saleAddress;
             this.person.des = dt.userOrgClientVO.remark;
-
+//            this.person.itemRImg = dt.userOrgClientVO
           }
 
           if(dt.userDetailType == "LK_BG"){
@@ -230,28 +245,24 @@
               this.person.poritable = true;
           }
 
-        let params3 = {
-          api:"/_node_user_org/_view_org_info.apno",
-          data:{
-            orgId:dt.userOrgClientVO.id
-          }
-        }
 
-        this.post(params3,this.bs);
       },
       addImage:function (data){
         var dt = data.data;
 
       },
     initChat:function (data, weight) {
-
       var el = document.getElementById("mainST");
       var myChart = ec.echarts.init(el);
       var xData = [];
       var yData = [];
-      for(var key in data){
+      var dt;
+      if(data){
+          dt = JSON.parse(data)
+      }
+      for(var key in dt){
         xData.push(key);
-        yData.push(data[key]);
+        yData.push(dt[key]);
       }
       var tw;
       if(weight){
@@ -343,7 +354,8 @@
               notice:0,
               bs:0,
               concat:0,
-              portrait:null
+              portrait:null,
+              itemRImg:[],//实力描述图片
             },
             battlefield:{
                 number:"0",
@@ -354,7 +366,8 @@
                 coldF:false,
                 traderF:false,
               cooperativeF:false,
-            }
+            },
+
           }
       },
       methods:{
@@ -437,7 +450,6 @@
           var weight = dt.weight;
           this.battlefield.number = dt.totalNumber + weight;
           this.battlefield.rank = dt.rankNo;
-
           if(dt.attrNumberMap){
             fn.initChat(dt.attrNumberMap, weight);
           }else{
@@ -446,13 +458,22 @@
         },
         bs(data){
           var dt = data.data;
+
           this.person.notice = dt.attenNum;
           this.person.bs = dt.viewNum;
           this.person.concat = dt.phoneNum;
         },
       },
     activated(){
+      var useId = window.localStorage.useId;
+      let params3 = {
+        api:"/_node_user_org/_view_org_info.apno",
+        data:{
+          orgId:useId
+        }
+      }
 
+      this.post(params3,this.bs);
       let params = {
         api:"/yg-user-service/user/findSelfInfo.apec",
       }

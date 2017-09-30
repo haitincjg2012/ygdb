@@ -70,6 +70,7 @@
       width 100%
       font-size 0
       text-align center
+      background-color #f4f4f4
       .text-title
         line-height 42px
         font-size 16px
@@ -79,8 +80,8 @@
       top 0
       left 0
       width 42px
-      height 45px
-      line-height 45px
+      height 42px
+      line-height 42px
       text-align center
       z-index 99
       span
@@ -89,8 +90,9 @@
         font-size 20px
         color #28CBA7
       img
-        width (12.5 / _rem)
-        height (20 / _rem)
+        width (11 / _rem)
+        height (19.5 / _rem)
+        vertical-align: middle;
     .btn-menu
       position absolute
       top 0

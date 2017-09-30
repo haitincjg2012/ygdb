@@ -85,6 +85,7 @@ p {
   height: 9.75rem;
   padding: 0 0.5rem;
   margin-bottom: 2rem;
+  background-color: #fff;
 }
 .z-add ul {
   height: 100%;
@@ -115,39 +116,39 @@ p {
   height: 0;
   *zoom: 1;
 }
-.z-header {
+.z-header-h {
   position: relative;
   width: 18.75rem;
 }
-.z-header .z-carousel {
+.z-header-h .z-carousel {
   width: 18.75rem;
 }
-.z-header .z-carousel img {
+.z-header-h .z-carousel img {
   width: 100%;
   height: 6.575rem;
 }
-.z-header .z-search {
+.z-header-h .z-search {
   position: absolute;
   top: 0;
   left: 0;
-  width: 17.5rem;
+  width: 17.95rem;
   height: 1.75rem;
-  padding: 0.25rem 0.5rem 0;
+  padding: 0.25rem 0.4rem 0;
 }
-.z-header .z-search .z-part-one {
-  width: 14.75rem;
+.z-header-h .z-search .z-part-one {
+  width: 16rem;
   height: 1.5rem;
   border: 0.025rem solid #eae2ea;
   border-radius: 0.75rem;
   background-color: #fff;
 }
-.z-header .z-search .z-part-one img {
+.z-header-h .z-search .z-part-one img {
   width: 0.875rem;
   height: 0.8rem;
   vertical-align: middle;
   margin-left: 1rem;
 }
-.z-header .z-search .z-part-one input {
+.z-header-h .z-search .z-part-one input {
   border: none;
   outline: none;
   font-size: 0.75rem;
@@ -156,15 +157,15 @@ p {
   width: 6.25rem;
   color: #DFDFDF;
 }
-.z-header .z-search .z-part-two {
+.z-header-h .z-search .z-part-two {
   float: right;
   margin-top: -1.6rem;
   height: 1.6rem;
   width: 1.6rem;
   background: url("../img/xx.png") no-repeat center;
-  background-size: 1.6rem 1.6rem;
+  background-size: 1.4rem 1.4rem;
 }
-.z-header .z-search .z-part-two .circle {
+.z-header-h .z-search .z-part-two .circle {
   width: 0.5rem;
   height: 0.5rem;
   background-color: red;
@@ -175,7 +176,7 @@ p {
   background-color: #fff;
 }
 .z-h-ul li {
-  border-bottom: 1px solid #dad4d4;
+  border-bottom: 1px solid #f4f4f4;
 }
 .bread-com {
   padding: 0 !important;
@@ -341,6 +342,10 @@ p {
   line-height: 1.5rem;
   font-size: 0.6rem;
   color: #aab6c6;
+  white-space: nowrap;
+  max-width: 6rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 .bread-com .primaryMain .z-info .c-level .g-text {
   height: 1.5rem;
@@ -415,7 +420,7 @@ p {
   margin: 0 0.75rem;
   height: 2.3rem;
   line-height: 2.3rem;
-  border-top: 1px solid #d7d7d7;
+  border-top: 1px solid #f4f4f4;
 }
 .c-sign .c-sign-title {
   width: 13.95rem;
@@ -435,7 +440,7 @@ p {
 .c-sign .c-sign-v .v-line {
   width: 100%;
   height: 1.25rem;
-  background-color: #d7d7d7;
+  background-color: #f4f4f4;
   display: inline-block;
   vertical-align: middle;
 }
@@ -504,8 +509,72 @@ p {
   vertical-align: -0.1rem;
 }
 .button-tip {
-  height: 1.75rem;
-  line-height: 1.75rem;
-  text-align: center;
+  height: 2rem;
+  line-height: 2rem;
+  padding-bottom: 2.5rem;
   font-size: 0.75rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-z-pullup {
+  height: 2rem;
+  width: 7rem;
+  background: url("../img/pull-icon.png") 50% 0 no-repeat;
+  background-size: 2rem 4rem;
+  -webkit-transition-property: -webkit-transform;
+  -webkit-transition-duration: 250ms;
+}
+.flip .c-z-pullup {
+  -webkit-transform: rotate(-180deg) translateZ(0);
+}
+.loading .c-z-pullup {
+  background-position: 50% 100%;
+  -webkit-transform: rotate(0deg) translateZ(0);
+  -webkit-transition-duration: 0ms;
+  animation: loading;
+  -webkit-animation: loading;
+  /* Safari 和 Chrome */
+  -webkit-animation-duration: 2s;
+  animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+  /* Safari 和 Chrome */
+  -webkit-animation-timing-function: linear;
+}
+@keyframes loading {
+  from {
+    transform: rotate(0deg) translateZ(0);
+  }
+  to {
+    transform: rotate(360deg) translateZ(0);
+  }
+}
+@-moz-keyframes loading {
+  /* Firefox */
+  from {
+    -moz-transform: rotate(0deg) translateZ(0);
+  }
+  to {
+    -moz-transform: rotate(360deg) translateZ(0);
+  }
+}
+@-webkit-keyframes loading {
+  /* Safari and Chrome */
+  from {
+    -webkit-transform: rotate(0deg) translateZ(0);
+  }
+  to {
+    -webkit-transform: rotate(360deg) translateZ(0);
+  }
+}
+.showVisable {
+  visibility: hidden;
 }

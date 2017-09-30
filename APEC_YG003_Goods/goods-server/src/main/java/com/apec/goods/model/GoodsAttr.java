@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Title: 商品大类属性
@@ -85,6 +86,9 @@ public class GoodsAttr extends BaseModel<Long> {
      * 该属性是否追加到SKU简称中
      */
     private boolean showSimpleName;
+
+    @Transient
+    private List<AttributeValue> attributeValues;
 
 
 }

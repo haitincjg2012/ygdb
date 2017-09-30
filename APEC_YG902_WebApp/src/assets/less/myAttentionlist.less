@@ -1,0 +1,135 @@
+/*
+* 我的关注list
+* created by gsy on 2017/9/20
+*/
+@import "./function.less";
+@unitsize:40rem;
+
+.gsy-agencylist{
+  border-bottom:1/@unitsize solid #D7D7D7;
+  letter-spacing: 1/@unitsize;
+  .z-com-f{
+    width: 750/@unitsize;
+    padding: 0 !important;
+
+    .primaryMain{
+      padding: 0 20/@unitsize;
+      .flex();
+      .flexRow();
+      .pic-com{
+        margin: 20/@unitsize 0;
+        width: 184/@unitsize;
+        position: relative;
+        img{
+          display: block;
+          width: 180/@unitsize;
+          height: 180/@unitsize;
+          border: 1/@unitsize solid #D7D7D7;
+        }
+      }
+      .z-ag-info{
+        width: 480/@unitsize;
+        height: 180/@unitsize;
+        margin: 20/@unitsize 0  20/@unitsize 26/@unitsize;
+        .z-ag-real-info{
+          height:30/@unitsize;
+          margin-bottom: 30/@unitsize;
+          position: relative;
+          .flex();
+          .z-ag-r-f-partO{
+            //width:350/@unitsize;
+            font-size: 0;
+            .z-ag-r-name{
+              font-size: 30/@unitsize;
+              font-weight: bold;
+              vertical-align:top;
+              letter-spacing: 3/@unitsize;
+              line-height: 30/@unitsize;
+              margin-right: 10/@unitsize;
+            }
+            .z-ag-r{
+              font-size: 20/@unitsize;
+              border-radius: 5/@unitsize;
+              border: 1/@unitsize solid #1960DF;
+              color:#1960DF;
+              padding:3/@unitsize 7/@unitsize;
+              height: 28/@unitsize;
+              vertical-align: top;
+              line-height: 28/@unitsize;
+
+            }
+
+            .z-ag-level{
+              width: 30/@unitsize;
+              height: 30/@unitsize;
+              vertical-align: top;
+              margin:0  16/@unitsize;
+            }
+          }
+          .z-ag-r-f-partT{
+            position: absolute;
+            right:0;
+            top:0;
+            width: 150/@unitsize;
+            line-height:30/@unitsize;
+            text-align: right;
+            .z-ag-r-text{
+              font-size: 20/@unitsize;
+              color:#74746B;
+            }
+            .z-ag-r-img{
+              vertical-align:middle;
+              width: 24/@unitsize;
+              height:28/@unitsize ;
+            }
+          }
+        }
+        .z-ag-address{
+          height:25/@unitsize;
+          line-height:25/@unitsize;
+          margin-top:26/@unitsize;
+          vertical-align: top;
+          .pos-pic{
+            width: 17/@unitsize;
+            height: 22/@unitsize;
+            vertical-align: middle;
+          }
+          .z-ag-addr{
+            font-size: 26/@unitsize;
+            color:#969696;
+          }
+        }
+
+        .z-ag-result{
+          height:26/@unitsize;
+          line-height:26/@unitsize;
+          margin-bottom:16/@unitsize;
+          color:#646464;
+          font-size: 0;
+          vertical-align: top;
+          .z-ag-res{
+            font-size: 26/@unitsize;
+          }
+
+          .z-ag-r-num{
+            font-size: 25/@unitsize;
+            font-weight: bold;
+            margin-right: 8/@unitsize;
+            color: #F54A41;
+          }
+        }
+        .z-ag-main{
+          position: relative;
+          line-height:24/@unitsize;
+          height:24/@unitsize;
+          font-size: 0;
+          vertical-align: top;
+          .z-ag-main-com-t{
+            font-size: 26/@unitsize;
+            color:#646464;
+          }
+        }
+      }
+    }
+  }
+}

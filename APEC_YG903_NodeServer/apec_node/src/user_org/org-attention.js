@@ -1,5 +1,5 @@
 'use strict';
- 
+
 var router,bodyParser;
 router = require('express').Router();
 module.exports = router;
@@ -42,7 +42,11 @@ router.post('/_node_user/_save_user_org' + config.urlSuffix , bodyParser, functi
              redis.hincrby(config.userOrgInfoPrefix + orgId ,config.userOrgAttentionKey,1);
           }else{
              datautil.arrRemove(arr,orgId);
-             redis.hincrby(config.userOrgInfoPrefix + orgId ,config.userOrgAttentionKey,-1);
+             if(arr.length == 0){
+                 redis.hset(config.userOrgInfoPrefix + orgId ,config.userOrgAttentionKey,0);
+             }else{
+                 redis.hincrby(config.userOrgInfoPrefix + orgId ,config.userOrgAttentionKey,-1);
+             }
           }
           redis.hset(config.userInfoPrefix + json, config.userOrgSaveKey, arr.join(","));
 

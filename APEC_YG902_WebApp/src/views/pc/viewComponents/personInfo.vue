@@ -1,7 +1,7 @@
 <template>
   <div class="person-info-page" style="background-color: #fff">
     <div class="z-p-info-header">
-      <div class="z-title">编辑资料</div>
+      <div class="z-title-T">编辑资料</div>
       <div class="return" @click="back">
         <img src="../../../assets/img/ret.png">
       </div>
@@ -16,11 +16,13 @@
         </div>
       </div>
       <!--<split></split>-->
-      <div class="p-v-form-cli" @click.stop.prevent="updateName">
-        <span class="label">昵称</span>
-        <span class="c-com-w">{{name}}</span>
+      <!--<div class="p-v-form-cli" @click.stop.prevent="updateName">-->
+        <div class="p-v-form-cli">
+          <span class="label">昵称</span>
+          <input type="text" placeholder="请您输入姓名" v-model="name" @input="updtName" class="c-z-t-name"/>
+        <!--<span class="c-com-w">{{name}}</span>-->
         <!--<a class="updateBtn" @click.stop.prevent="updateName">修改昵称</a>-->
-        <img class="arrow-com" src="../../../assets/img/back.png">
+        <!--<img class="arrow-com" src="../../../assets/img/back.png">-->
       </div>
       <div class="p-v-form-cli" @click.stop.prevent="updatePhone">
         <span class="label">电话</span>
@@ -36,18 +38,7 @@
           </div>
           <img class="arrow-com" src="../../../assets/img/back.png">
         </div>
-        <div class="z-p-identity" v-if="Identity.pIDF">
-          <p class="z-p-identity-text">请选择身份</p>
-          <ul class="clear z-ul">
-            <li v-for="item in itemId"
-                class="z-p-id-li-com"
-            >
-              <span class="z-p-id-li-ct" :class="{activeL:item.sh}" @click="selectID" :data-id="item.id" :data-path="item.path">{{item.keyword}}</span>
-            </li>
-          </ul>
-        </div>
       </div>
-
       <div class="z-edit-disable" v-if="disableM">
         <!--pushFlag显示出来-->
         <div class="p-v-form-cli">
@@ -56,86 +47,160 @@
           </div>
           <img class="arrow-com" src="../../../assets/img/back.png">
         </div>
-        <div class="z-p-identity">
-          <p class="z-p-identity-text">请选择身份</p>
-          <ul class="clear z-ul">
-            <li v-for="item in itemId"
-                class="z-p-id-li-com"
-            >
-              <span class="z-p-id-li-ct" :class="{activeL:item.sh}" :data-id="item.id" :data-path="item.path">{{item.keyword}}</span>
-            </li>
-          </ul>
-        </div>
+        <!--<div class="z-p-identity">-->
+          <!--<p class="z-p-identity-text">请选择身份</p>-->
+          <!--<ul class="clear z-ul">-->
+            <!--<li v-for="item in itemId"-->
+                <!--class="z-p-id-li-com"-->
+            <!--&gt;-->
+              <!--<span class="z-p-id-li-ct" :class="{activeL:item.sh}" :data-id="item.id" :data-path="item.path">{{item.keyword}}</span>-->
+            <!--</li>-->
+          <!--</ul>-->
+        <!--</div>-->
       </div>
-      <div class="z-p-warehouse" v-if="Identity.warehouse">
-         <label for="warehouse">仓库名称</label>
-         <input type="text" placeholder="填写仓库的名称" id="warehouse" readonly v-model="organiza.name" class="c-pos-r">
-      </div>
-      <div class="z-p-storageCapacity" v-if="Identity.storage">
-        <label for="storage">仓库库容</label>
-        <input type="text" placeholder="填写仓库的库容" id="storage" readonly v-model="organiza.storage" class="c-pos-r">
-      </div>
-
-      <div class="z-p-warehouse" v-if="coopF">
-        <label for="coop">合 作 社</label>
-        <input type="text" placeholder="填写仓库的名称" id="coop" v-model="organiza.name" class="c-pos-r">
-      </div>
-      <div class="p-v-form-cli" v-if="coldBG">
-        <span class="label">所在地区</span>
-        <span class="c-sp-area">{{organiza.addr}}</span>
-        <img class="arrow-com" src="../../../assets/img/back.png">
-      </div>
-      <div @click.stop="addSelect" class="p-v-form-cli" v-if="!coldBG">
-        <span class="label">所在地区</span>
-        <span class="c-sp-area">{{organiza.addr}}</span>
-        <img class="arrow-com" src="../../../assets/img/back.png">
-      </div>
-
-      <div class="p-v-form-cli c-p-sale" v-if="coldBG">
-        <span class="label">销售区域</span>
-        <input type="text" placeholder="销售区域"  v-model="organiza.saleAddr" readonly class="c-pos-r">
-      </div>
-      <!--<div @click.stop="saleArea" class="p-v-form-cli" v-if="!coldBG">-->
-      <div class="p-v-form-cli c-p-sale" v-if="!coldBG">
-        <span class="label">销售区域</span>
-        <input type="text" placeholder="销售区域"  v-model="organiza.saleAddr" class="c-pos-r">
-      </div>
-
-      <div class="p-v-form-cli c-p-sale" v-if="coldBG">
-        <span class="label">详细地址</span>
-        <input type="text" placeholder="详细地址" readonly v-model="organiza.addrDetail" class="c-pos-r">
-      </div>
-      <div class="p-v-form-cli c-p-sale" v-if="!coldBG">
-        <span class="label">详细地址</span>
-        <input type="text" placeholder="详细地址"  v-model="organiza.addrDetail" class="c-pos-r">
-      </div>
-      <!--<div class="p-v-form-cli" @click.stop.prevent="updateAddrDetail" v-if="!coldBG">-->
-        <!--<span class="label">详细地址</span>-->
-        <!--<span class="value c-pos-r">{{organiza.addrDetail}}</span>-->
-        <!--<img class="arrow-com" src="../../../assets/img/back.png">-->
-      <!--</div>-->
-      <div class="p-v-form-cli c-p-manage" v-if="coldBG">
-        <span class="label">主营品种</span>
-        <input type="text" placeholder="主营品种"  v-model="organiza.pz" readonly class="c-pos-r">
-      </div>
-      <!--<div class="p-v-form-cli" @click.stop.prevent="updatezySort" v-if="!coldBG">-->
-      <div class="p-v-form-cli c-p-manage" v-if="!coldBG">
-        <span class="label">主营品种</span>
-        <input type="text" placeholder="主营品种"  v-model="organiza.pz" class="c-pos-r">
-      </div>
-      <div class="z-p-description">
-         <p class="z-p-text">实力描述:</p>
-         <textarea placeholder="还没有实力描述，赶快填写吧，让更多用户关注你" ref="edit" v-model="organiza.remark" ></textarea>
-      </div>
-      <div class="z-des-img">
-        <p class="z-des-img-text">最多能上传5张</p>
-        <ul class="clear">
-          <li :is="item.SS" v-for="item in items" :item="item" v-on:selecttype="delImage"></li>
-          <li class="z-add-upload">
-            <input type="file" accept="image/*" multiple @change="addImage">
+      <div class="z-p-identity" v-if="Identity.pIDF">
+        <p class="z-p-identity-text">请选择身份</p>
+        <ul class="clear z-ul">
+          <li v-for="item in itemId"
+              class="z-p-id-li-com"
+          >
+            <span class="z-p-id-li-ct" :class="{activeL:item.sh}" @click="selectID" :data-id="item.id" :data-path="item.path">{{item.keyword}}</span>
+            <!--<span class="z-p-id-li-ct" :class="{activeL:item.sh}" :data-id="item.id" :data-path="item.path">{{item.keyword}}</span>-->
           </li>
         </ul>
       </div>
+      <div class="z-p-warehouse" v-if="Identity.warehouse">
+         <div v-if="ckFlag">
+           <label for="warehouse" class="label">仓库名称</label>
+           <input type="text" placeholder="填写仓库的名称" id="warehouse" v-model="organiza.name" class="c-pos-r">
+         </div>
+        <div v-if="!ckFlag">
+          <label for="warehouse" class="label">仓库名称</label>
+          <input type="text" placeholder="填写仓库的名称" id="warehouse1" disabled v-model="organiza.name" class="c-pos-r">
+        </div>
+
+      </div>
+      <div class="z-p-storageCapacity" v-if="Identity.storage">
+        <div v-if="!ckFlag">
+          <label for="storage" class="label">仓库库容</label>
+          <input type="text" placeholder="填写仓库的库容" id="storage" disabled v-model="organiza.storage" class="c-pos-r">
+        </div>
+        <div v-if="ckFlag">
+          <label for="storage" class="label">仓库库容</label>
+          <input type="text" placeholder="填写仓库的库容" id="storage1"  v-model="organiza.storage" class="c-pos-r">
+        </div>
+      </div>
+      <div class="z-p-warehouse" v-if="coopF">
+        <div v-if="!coopFlag">
+          <label for="coop" class="label">合 作 社</label>
+          <input type="text" placeholder="填写仓库的名称" id="coop" v-model="organiza.name" class="c-pos-r">
+        </div>
+        <div v-if="coopFlag">
+          <label for="coop" class="label">合 作 社</label>
+          <input type="text" placeholder="填写仓库的名称" id="coop1" v-model="organiza.name" disabled class="c-pos-r">
+        </div>
+      </div>
+
+
+
+      <div class="p-v-form-cli c-p-sale" v-if="coldBG">
+        <div v-if="!comRoleFlag">
+          <span class="label">销售区域</span>
+          <input type="text" placeholder="销售区域"  v-model="organiza.saleAddr" disabled class="c-pos-r">
+        </div>
+        <div v-if="comRoleFlag">
+          <span class="label">销售区域</span>
+          <input type="text" placeholder="销售区域"  v-model="organiza.saleAddr" class="c-pos-r">
+        </div>
+      </div>
+      <!--<div @click.stop="saleArea" class="p-v-form-cli" v-if="!coldBG">-->
+      <div class="p-v-form-cli c-p-sale" v-if="!coldBG && GNFlag">
+        <div v-if="!comRoleFlag">
+          <span class="label">销售区域</span>
+          <input type="text" placeholder="销售区域"  v-model="organiza.saleAddr" disabled class="c-pos-r">
+        </div>
+        <div v-if="comRoleFlag">
+          <span class="label">销售区域</span>
+          <input type="text" placeholder="销售区域"  v-model="organiza.saleAddr" class="c-pos-r">
+        </div>
+      </div>
+      <div v-if="!comRoleFlag" class="p-v-form-cli">
+        <!--<div  v-if="coldBG">-->
+        <span class="label">所在地区</span>
+        <span class="c-sp-area">{{organiza.addr}}</span>
+        <img class="arrow-com" src="../../../assets/img/back.png">
+        <!--</div>-->
+      </div>
+
+      <div v-if="comRoleFlag" @click.stop="addSelect" class="p-v-form-cli">
+        <!--<div  v-if="!coldBG">-->
+        <span class="label">所在地区</span>
+        <span class="c-sp-area">{{organiza.addr}}</span>
+        <img class="arrow-com" src="../../../assets/img/back.png">
+        <!--</div>-->
+      </div>
+      <div class="p-v-form-cli c-p-sale" v-if="coldBG">
+        <div v-if="!comRoleFlag">
+          <span class="label">详细地址</span>
+          <input type="text" placeholder="详细地址" disabled v-model="organiza.addrDetail" class="c-pos-r">
+        </div>
+        <div v-if="comRoleFlag">
+          <span class="label">详细地址</span>
+          <input type="text" placeholder="详细地址" v-model="organiza.addrDetail" class="c-pos-r">
+        </div>
+      </div>
+      <div class="p-v-form-cli c-p-sale" v-if="!coldBG ">
+        <div v-if="!comRoleFlag">
+          <span class="label">详细地址</span>
+          <input type="text" placeholder="详细地址"  v-model="organiza.addrDetail" disabled class="c-pos-r">
+        </div>
+        <div v-if="comRoleFlag">
+          <span class="label">详细地址</span>
+          <input type="text" placeholder="详细地址"  v-model="organiza.addrDetail" class="c-pos-r">
+        </div>
+      </div>
+      <div class="p-v-form-cli c-p-manage" v-if="coldBG">
+        <div v-if="!comRoleFlag">
+          <span class="label">主营品种</span>
+          <input type="text" placeholder="主营品种"  v-model="organiza.pz" disabled class="c-pos-r">
+        </div>
+        <div v-if="comRoleFlag">
+          <span class="label">主营品种</span>
+          <input type="text" placeholder="主营品种"  v-model="organiza.pz" class="c-pos-r">
+        </div>
+      </div>
+      <div class="p-v-form-cli c-p-manage" v-if="!coldBG">
+        <div v-if="!comRoleFlag">
+          <span class="label">主营品种</span>
+          <input type="text" placeholder="主营品种"  v-model="organiza.pz" disabled class="c-pos-r">
+        </div>
+        <div v-if="comRoleFlag">
+          <span class="label">主营品种</span>
+          <input type="text" placeholder="主营品种"  v-model="organiza.pz" class="c-pos-r">
+        </div>
+      </div>
+      <div v-if="comRoleFlag">
+        <div class="z-p-description">
+          <p class="z-p-text">实力描述:</p>
+          <textarea placeholder="还没有实力描述，赶快填写吧，让更多用户关注你" ref="edit" v-model="organiza.remark" ></textarea>
+        </div>
+      </div>
+      <div v-if="!comRoleFlag">
+        <div class="z-p-description">
+          <p class="z-p-text">实力描述:</p>
+          <textarea placeholder="还没有实力描述，赶快填写吧，让更多用户关注你" ref="edit" v-model="organiza.remark" disabled ></textarea>
+        </div>
+      </div>
+      <div class="c-z-space-RT"></div>
+      <!--<div class="z-des-img">-->
+        <!--<p class="z-des-img-text">最多能上传5张</p>-->
+        <!--<ul class="clear">-->
+          <!--<li :is="item.SS" v-for="item in items" :item="item" v-on:selecttype="delImage"></li>-->
+          <!--<li class="z-add-upload">-->
+            <!--<input type="file" accept="image/*" multiple @change="addImage">-->
+          <!--</li>-->
+        <!--</ul>-->
+      <!--</div>-->
     </div>
     <div class="c-commit" @click="submit">
         提交
@@ -155,12 +220,12 @@
   import {MessageBox, Toast} from 'mint-ui';
   import DEL from '../../../components/del.vue'
 
-  import userImgUrl from '../../../assets/img/Headportrait.png'
+  import userImgUrl from '../../../assets/img/icon.png'
 
   const api = new API();
   var fn = {
     img:[],
-    DB:[{id:"10000",path:0,keyword:"调果代办",sh:false},{id:"1000",path:1,keyword:"收果代办",sh:false}],
+    DB:[{id:"10000",path:0,keyword:"调果代办",sh:false},{id:"10000",path:1,keyword:"收果代办",sh:false}],
     LK:[{id:"80000",path:0,keyword:"老板",sh:false},{id:"80000",path:1,keyword:"保管",sh:false}],
     bannerImg:function () {
     },
@@ -197,9 +262,13 @@
     submit:function(data){
         if(data.succeed){
           sessionStorage.clear();
-          window.sessionStorage.setItem("newName","1111");
-          console.log(window.localStorage.getItem("newName"), 9999);
-            this.$router.push({name:"pc"});
+          var name = data.data.name;
+          var level = data.data.userType;
+
+          window.sessionStorage.setItem("newName",name);
+          window.sessionStorage.setItem("level", level);
+
+          this.$router.push({name:"pc"});
         }
     }
   }
@@ -238,6 +307,11 @@
         coopF:false,
         recordImg:{},
         disableM:false,//默认为false,
+        ckFlag:false,//默认冷库不可以修改
+        coopFlag:false,//默认合作社不可以修改
+        GNFlag:true,//默认果农不可以修改
+        comRoleFlag:false,//默认共同角色不可以修改
+        isFlag:true,//省份是否可以修改
       }
     },
     activated(){
@@ -245,6 +319,9 @@
         if(!this.$store.state.addr && !this.$store.state.saleAddr){
           this.getUserInfo();
         }else{
+            if(this.$store.state.nameN){
+                this.name = this.$store.state.nameN;
+            }
             if(this.$store.state.addr){
               this.organiza.addr = this.$store.state.addr;
             }
@@ -257,7 +334,7 @@
     methods: {
         back(){
            this.reset();
-           this.$router.go(-1);
+          this.$router.push({name: 'pc'})
         },
         reset(){
             var self = this;
@@ -266,7 +343,19 @@
           self.Identity.storage = false;
           self.coldBG = false;
           self.coopF = false;
+          self.userDetailType = "";
+          self.ckFlag = false;
+          self.coopFlag = false;
+          self.comRoleFlag = false;
+          self.GNFlag = true;
         },
+      updtName(){
+            var name = this.name + "";
+            var num = name.length;
+            if(num > 15){
+                this.name = name.substring(0, 15);
+            }
+      },
       selectID(e){
             var e = e || window.event;
             var target = e.toElement || e.srcElement;
@@ -283,36 +372,35 @@
         })
 
         if(id == "80000"){
-          var el = document.getElementById("warehouse");
-          var e2 = document.getElementById("storage");
+
            if(value == "保管"){
                this.userDetailType = "LK_BG";
-               this.coldBG = true;
-               el.readOnly = true;
-               e2.readOnly = true;
+               this.coldBG = false;
            }else{
              this.userDetailType = "LK_LB";
              this.coldBG = false;
-             el.readOnly = false;
-             e2.readOnly = false;
            }
         }else if(id == "10000"){
+
           if(value == "调果代办"){
             this.userDetailType = "DB_DG";
           }else{
             this.userDetailType = "DB_SG";
           }
         }
+
       },
       initCold(){
           this.coldBG = false;
       },
       updateName(){
+
         MessageBox.prompt('请输入新的姓名').then(({value, action}) => {
           var self = this;
           var dl = {
             name: value
           };
+          this.$store.state.nameN = value;
           self.name = value;
 //          self.setUserInfo(dl, value, function () {
 //            self.name = value;
@@ -407,10 +495,20 @@
         this.$root.eventHub.$emit('aurUpdate.open', this.userType)
       },
       updateAurCall(db){
+
         var self = this;
         var type = db.aurKey;
         this.userType = db.aurKey;
         this.userTypeKey = db.aurName;
+
+        if( self.isFlag  == "ORG_CHILD_ACCOUNT"){
+          this.comRoleFlag = false;
+          this.ckFlag = false;
+        }else{
+          this.comRoleFlag = true;
+          this.ckFlag = true;
+        }
+
         if(type == "LK"){
           self.itemId = fn.LK;
             self.Identity.pIDF = true;
@@ -418,6 +516,7 @@
             self.Identity.storage = true;
             this.coldBG = true;
           this.coopF = false;
+//          this.ckFlag = false;
         }else if(type == "DB"){
           self.itemId = fn.DB;
 
@@ -427,10 +526,29 @@
           this.coopF = false;
           this.initCold();
         }else{
+            var flag = false;
+            if(this.comRoleFlag){
+              flag = true;
+            }else{
+                flag = false;
+            }
           self.reset();
           this.initCold();
+
           if(type == "HZS"){
               this.coopF = true;
+              if(flag){
+                self.comRoleFlag = true;
+              }
+          }else if(type == "ZZH"){
+            self.GNFlag = false ;
+            if(flag){
+              self.comRoleFlag = true;
+            }
+          }else if(type == "KS"){
+            if(flag){
+              self.comRoleFlag = true;
+            }
           }
         }
 
@@ -457,7 +575,7 @@
               self.addrDetail = data.addressDetail || '请修改详细地址';
               self.zySort = data.mainOperating || '请修改主营品种';
               self.workYear = data.workOfYear || '请修改工作年限';
-              self.name = data.name || '请修改昵称';
+              self.name = data.name;
               self.imgUrl = data.imgUrl || userImgUrl;
 
               self.userTypeKey = data.userTypeKey || this.$store.state.userTypeKey || c_js.getLocalValue('userTypeKey');
@@ -494,7 +612,16 @@
               }
 
               var userDetailType = data.userDetailType;
-
+              self.isFlag =  data.userDetailType;
+              if(data.userAccountType == "ORG_CHILD_ACCOUNT"){
+                   this.comRoleFlag = false;
+                   this.ckFlag = false;
+              }else{
+                this.comRoleFlag = true;
+                this.ckFlag = true;
+              }
+                self.coopFlag = false;
+                self.GNFlag = true;
               if(self.userTypeKey == "代办"){
                 fn.DB.forEach(function (current,index) {
                   current.sh = false;
@@ -531,7 +658,14 @@
                 }
                 self.itemId =fn.LK ;
                 return;
-              }else{
+              }else if(self.userTypeKey == "合作社"){
+                  self.coopFlag == true;
+                this.initCold();
+              }else if(self.userTypeKey == "果农"){
+                self.GNFlag = false ;
+                this.initCold();
+              }
+              else{
                   this.initCold();
               }
 
@@ -577,7 +711,6 @@
            }
          });
 
-         console.log(this.items);
       },
       addImage(e){
         var e = e || window.event;
@@ -632,6 +765,7 @@
             Toast("对不起，请您填写用户名称");
             return;
           }
+
           if(self.userDetailType == ""){
             Toast("对不起，请您选择身份");
             return;
@@ -711,6 +845,7 @@
       height (90/_rem)
       line-height (90 / _rem)
       margin-left (15 /_rem)
+      border-bottom (1/_rem) solid #f4f4f4
       position relative
       .p-v-info-main-F
         position relative
@@ -718,7 +853,7 @@
         .p-v-info-person
           height (20 / _rem)
           font-size (16/_rem)
-          color #7e7e7e
+          color #323232
         .p-v-info-user
           height (60 /_rem)
           width (60 /_rem)
@@ -760,7 +895,7 @@
       line-height (45 /_rem)
       margin-left (15 /_rem)
       position relative
-      border-bottom (1/_rem) solid #d7d7d7;
+      border-bottom (1/_rem) solid #f4f4f4;
       .arrow
         width (10 /_rem)
         height (10 /_rem)
@@ -770,7 +905,7 @@
         transform translateY(-50%)
       .s-a-box-db
         width (60 /_rem)
-        border 1px solid #28cba7
+        border 1px solid #2fcaa7
         border-radius 4px
         text-align center
         display inline-block
@@ -778,7 +913,7 @@
         height (20 /_rem)
         line-height (20 /_rem)
         font-size 0
-        color #28cba7
+        color #2fcaa7
         margin-left (30 /_rem)
       .updateBtn
         position absolute
@@ -786,9 +921,9 @@
         transform translateY(-50%)
         right (24 /_rem)
         font-size (15 /_rem)
-        color #28cba7
+        color #2fcaa7
       .label
-        color #7e7e7e
+        color #323232
       .value
         color #111111
         margin-left (10 /_rem)

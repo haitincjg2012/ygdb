@@ -227,6 +227,33 @@ public interface UserService {
      * @param userId
      * @return
      */
-    List<UserViewVO> findUserFocusOrg(Long userId,PageRequest pageRequest);
+    PageDTO<UserAllInfo> findUserFocusOrg(Long userId,PageRequest pageRequest,UserDTO userDTO);
+
+    /**
+     * 用户解除绑定组织
+     * @param userVO
+     * @param userId
+     * @return
+     */
+    String unBoundOrg(UserVO userVO,String userId);
+
+    /**
+     * 用户解除绑定组织
+     * @return
+     */
+    UserOrgClientVO findUserOrgInfo(UserOrgClientVO userOrgClientVO);
+
+    /**
+     * 根据index推送Es数据
+     * @param indexUrl
+     * @return
+     */
+    String pushEsInfoByIndex(String indexUrl);
+
+    /**
+     * 关闭认证
+     * @return
+     */
+    String closeOrgPushFlag(UserVO userVO, String userId);
 
 }

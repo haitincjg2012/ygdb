@@ -2,13 +2,18 @@
   padding: 0 0.625rem;
   position: relative;
   width: 17.5rem;
-  height: 2.375rem;
+  height: 2.2rem;
   text-align: center;
-  color: #333;
-  line-height: 2.375rem;
+  color: #323232;
+  line-height: 2.2rem;
+  background-color: #f4f4f4;
 }
 .z-p-info-header h1 {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
+}
+.z-p-info-header .z-title-T {
+  font-size: 0.8rem;
+  color: #323232;
 }
 .z-p-info-header .return {
   position: absolute;
@@ -16,8 +21,8 @@
   top: 0;
 }
 .z-p-info-header .return img {
-  width: 0.625rem;
-  height: 1rem;
+  width: 0.55rem;
+  height: 0.975rem;
   vertical-align: middle;
 }
 .person-info-page {
@@ -65,7 +70,7 @@
   margin-left: 0.75rem;
   font-size: 0.8rem;
   line-height: 2.25rem;
-  color: #969696;
+  color: #323232;
 }
 .person-info-page .z-p-description textarea {
   -webkit-box-sizing: border-box;
@@ -77,7 +82,9 @@
   font-size: 0.75rem;
   outline: none;
   resize: none;
-  padding-left: 0.5rem;
+  padding-left: 0.75rem;
+  color: #646464;
+  background-color: #fff;
 }
 .person-info-page .z-des-img {
   color: #969696;
@@ -106,7 +113,7 @@
   height: 5rem;
 }
 .person-info-page .z-p-identity {
-  border-bottom: 0.05rem solid #d7d7d7;
+  border-bottom: 0.05rem solid #f4f4f4;
   margin-left: 0.75rem;
 }
 .person-info-page .z-p-identity .z-p-identity-text {
@@ -131,11 +138,11 @@
   border-radius: 0.25rem;
 }
 .person-info-page .z-p-identity .z-ul .z-p-id-li-com .activeL {
-  color: #0ecb5d;
-  border-color: #0ecb5d;
+  color: #2fcaa7;
+  border-color: #2fcaa7;
 }
 .person-info-page .z-p-warehouse {
-  border-bottom: 0.05rem solid #d7d7d7;
+  border-bottom: 0.05rem solid #f4f4f4;
   margin-left: 0.75rem;
   line-height: 2.25rem;
   font-size: 0.75rem;
@@ -146,9 +153,11 @@
   height: 1rem;
   width: 12.5rem;
   margin-left: 0.5rem;
+  color: #646464;
+  background-color: transparent;
 }
 .person-info-page .z-p-storageCapacity {
-  border-bottom: 0.05rem solid #d7d7d7;
+  border-bottom: 0.05rem solid #f4f4f4;
   margin-left: 0.75rem;
   line-height: 2.25rem;
   font-size: 0.75rem;
@@ -159,6 +168,8 @@
   width: 12.5rem;
   margin-left: 0.5rem;
   height: 1rem;
+  color: #646464;
+  background-color: transparent;
 }
 .person-info-page .c-commit {
   position: fixed;
@@ -187,6 +198,7 @@
   width: 14.25rem;
   display: inline-block;
   text-align: right;
+  color: #646464;
 }
 .person-info-page .c-p-sale {
   margin-left: 0.75rem;
@@ -199,6 +211,8 @@
   height: 1rem;
   width: 12.5rem;
   margin-left: 0.5rem;
+  color: #646464;
+  background-color: transparent;
 }
 .person-info-page .c-p-manage {
   margin-left: 0.75rem;
@@ -211,9 +225,30 @@
   height: 1rem;
   width: 12.5rem;
   margin-left: 0.5rem;
+  color: #646464;
+  background-color: transparent;
 }
 .person-info-page .c-sp-area {
   width: 12.75rem;
   display: inline-block;
+  text-align: right;
+  color: #646464;
+}
+.person-info-page .c-z-space-RT {
+  height: 2.5rem;
+  width: 18.75rem;
+  background-color: #fff;
+}
+.person-info-page .label {
+  color: #323232;
+  font-size: 0.8rem;
+}
+.person-info-page .c-z-t-name {
+  font-size: 0.75rem;
+  height: 1rem;
+  width: 13.8rem;
+  margin-left: 0.5rem;
+  color: #646464;
+  background-color: transparent;
   text-align: right;
 }

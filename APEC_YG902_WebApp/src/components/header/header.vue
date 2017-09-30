@@ -35,7 +35,9 @@
           },
           //返回
           goBack(){
-              this.$router.go(-1);
+              var vm=this;
+              vm.$router.go(-1);
+              vm.$emit("initPage");
           }
         },
         components: {}

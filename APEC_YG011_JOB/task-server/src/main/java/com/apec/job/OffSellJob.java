@@ -45,7 +45,7 @@ public class OffSellJob implements SimpleJob {
             mail.setSubject("定时任务调度失败[JobName:"+ shardingContext.getJobName() +"]");
             mail.setContent(resultData.getErrorMsg());
             try {
-                mailService.sendMail(mail);
+                mailService.sendMail(mail, true);
             } catch (Exception e) {
                 logger.error("发送邮件失败:", e);
             }

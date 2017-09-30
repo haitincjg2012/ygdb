@@ -138,7 +138,18 @@ public class ProductServiceImpl implements ProductService {
         });
         return listImageVO;
     }
-
+    @Override
+    public String addProductAttrByInstead(Long userNo, ProductSkuInfoVO productSkuInfoVO,  List<Map<String,String>> resultMap){
+        String userInfoJson = cacheHashService.hget(RedisHashConstants.HASH_USER_PREFIX + userNo,RedisHashConstants.HASH_OBJCONTENT_CACHE);
+        UserInfoVO userInfo ;
+        if(StringUtils.isBlank(userInfoJson)){
+            //获取不到数据,记录日志
+            logger.warn("[ProductServiceImpl][addProductAttrByInstead]Can't find user hash cache. userNo:{}",userNo);
+            return Constants.CUSTOMER_NOT_EXIST_BYUSERNO;
+        }
+        userInfo = JsonUtil.parseObject(userInfoJson,UserInfoVO.class);
+        return addProductAttr(userInfo,productSkuInfoVO,resultMap);
+    }
     @Override
     public String addProductAttr(UserInfoVO userInfoVO, ProductSkuInfoVO productSkuInfoVO, List<Map<String,String>> resultMap) {
         //未完善个人资料不能发布供求
@@ -215,6 +226,19 @@ public class ProductServiceImpl implements ProductService {
         cacheHashService.hset(RedisHashConstants.HASH_USER_PREFIX + userInfoVO.getUserId(),RedisHashConstants.HASH_USER_CREATEPRODUCT_HIS, productHis);
         productSkuInfoDAO.save(productSkuInfo);
         return Constants.RETURN_SUCESS;
+    }
+
+    @Override
+    public String addNewProductByInstead(Long userNo,ProductInfoVO productInfoVO){
+        String userInfoJson = cacheHashService.hget(RedisHashConstants.HASH_USER_PREFIX + userNo,RedisHashConstants.HASH_OBJCONTENT_CACHE);
+        UserInfoVO userInfo ;
+        if(StringUtils.isBlank(userInfoJson)){
+            //获取不到数据,记录日志
+            logger.warn("[ProductServiceImpl][addNewProductByInstead]Can't find user hash cache. userNo:{}",userNo);
+            return Constants.CUSTOMER_NOT_EXIST_BYUSERNO;
+        }
+        userInfo = JsonUtil.parseObject(userInfoJson,UserInfoVO.class);
+        return addNewProduct(userInfo,productInfoVO);
     }
 
     @Override
@@ -421,6 +445,29 @@ public class ProductServiceImpl implements ProductService {
         return Constants.RETURN_SUCESS;
     }
 
+    /**
+     * 立即下架
+     * @param productInfoVO
+     * @return
+     */
+    @Override
+    @Transactional
+    public String offSellProductByManager(ProductInfoVO productInfoVO){
+        ProductInfo productInfo = productInfoDAO.findFirstByElasticId(productInfoVO.getElasticId(), EnableFlag.Y);
+        if(productInfo == null) {
+            logger.warn("ES ID not   [esId:{}]",   productInfoVO.getElasticId());
+            return ErrorCodeConst.ERROR_PRODUCT_NOT_FOUND;
+        }
+        ESHisProductInfoVO esProductInfoVO = genEsProductInfoVO(productInfo);
+        //删除ES产品库 添加到下架库
+        offSellProduct(esProductInfoVO);
+
+        //更新数据库状态
+        productInfo.setTimeout(0);
+        productInfoDAO.saveAndFlush(productInfo);
+        return Constants.RETURN_SUCESS;
+    }
+
     @Override
     @Transactional
     public String updateProductByES(UserInfoVO userInfoVO, ProductInfoVO productInfoVO) {
@@ -481,6 +528,51 @@ public class ProductServiceImpl implements ProductService {
         productInfoDAO.saveAndFlush(productInfo);
         return Constants.RETURN_SUCESS;
     }
+
+    @Override
+    public String pushProductToEs(String indexUrl) {
+        List<ProductInfo> productInfos = productInfoDAO.findByEnableFlagAndTimeoutGreaterThan(EnableFlag.Y, 0);
+        return pushEsInfo(indexUrl, productInfos, ESProducerConstants.INDEX_URL_PRODUCT);
+    }
+
+    @Override
+    public String pushOffSellProductToEs(String indexUrl) {
+        int page = 0;
+        int size = 10;
+        PageRequest pageRequest = new PageRequest(page, size);
+        Page<ProductInfo> productInfoPages = productInfoDAO.findByEnableFlagAndTimeoutLessThanEqualOrderByCreateDate(EnableFlag.Y, 0, pageRequest);
+        return pushEsInfo(indexUrl, productInfoPages.getContent(), ESProducerConstants.INDEX_URL_OFF_SELL);
+    }
+
+    private String pushEsInfo(String indexUrl, List<ProductInfo> productInfoPages, String index) {
+        //index 开头加斜杠
+        if(!indexUrl.startsWith(Constants.SINGLE_SLASH)) {
+            indexUrl = Constants.SINGLE_SLASH + indexUrl;
+        }
+        //index 末尾加斜杠
+        if(!indexUrl.endsWith(Constants.SINGLE_SLASH)) {
+            indexUrl += Constants.SINGLE_SLASH;
+        }
+        //TODO 测试时去掉
+//        if(!indexUrl.equalsIgnoreCase(index)) {
+//            return Constants.COMMON_ERROR_PARAMS; //index 跟执行的不一致
+//        }
+
+        String newIndex;
+        ESProductInfoVO esProductInfo;
+        ESHisProductInfoVO esHisProductInfoVO;
+        for (ProductInfo productInfoPage : productInfoPages) {
+            esHisProductInfoVO = genEsProductInfoVO(productInfoPage);
+            //落地ES
+            esProductInfo = new ESProductInfoVO();
+            BeanUtil.copyPropertiesIgnoreNullFilds(esHisProductInfoVO, esProductInfo);
+            //es id还是用原来的 所以index需要加上es id
+            newIndex = indexUrl + productInfoPage.getElasticId();
+            ESPostResponseVO esPostResponseVO = apecESProducer.postESInfo(newIndex, JsonUtil.toJSONString(esProductInfo));
+        }
+        return Constants.RETURN_SUCESS;
+    }
+
 
     @Override
     @Async

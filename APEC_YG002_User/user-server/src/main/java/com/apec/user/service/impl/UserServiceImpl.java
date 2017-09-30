@@ -45,6 +45,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -98,6 +99,9 @@ public class UserServiceImpl implements UserService {
     @Value("${region_requestAddress_url}")
     private String requestAddress;  //查询地址url
 
+    @Autowired
+    private FocusUserOrgClientDAO focusUserOrgClientDAO;
+
     /**
      * 更新用户缓存
      * @param userId 用户ID
@@ -115,11 +119,15 @@ public class UserServiceImpl implements UserService {
         }else{
             userViewVO = JsonUtil.parseObject(json,com.apec.framework.dto.UserViewVO.class);
         }
-        userViewVO.setPoint(userPoint.getAvailablePoints());
-        userViewVO.setUserLevelKey(userPoint.getUserLevel().getKey());
-        userViewVO.setUserLevelName(userPoint.getUserLevel().name());
-        userViewVO.setUserRealAuthKey(user.getUserRealAuth().getKey());
-        userViewVO.setUserRealAuthName(user.getUserRealAuth().name());
+        if(userPoint != null) {
+            userViewVO.setPoint(userPoint.getAvailablePoints());
+            userViewVO.setUserLevelKey(userPoint.getUserLevel().getKey());
+            userViewVO.setUserLevelName(userPoint.getUserLevel().name());
+        }
+        if(user != null && user.getUserRealAuth() != null){
+            userViewVO.setUserRealAuthKey(user.getUserRealAuth().getKey());
+            userViewVO.setUserRealAuthName(user.getUserRealAuth().name());
+        }
         cacheHashService.hset(RedisHashConstants.HASH_USER_PREFIX + userId,RedisHashConstants.HASH_USER_CREATEUSERVIEW_INFO, JsonUtil.toJSONString(userViewVO));
     }
 
@@ -154,7 +162,7 @@ public class UserServiceImpl implements UserService {
      * @param userOrgClient 用户组织对象
      */
     private void updateUserOrgInfoCache(UserOrgClient userOrgClient){
-        if(userOrgClient.getUserAccountType() == null || (!userOrgClient.isPushFlag())){
+        if(userOrgClient.getUserAccountType() == null){
             logger.info("[UserServiceImpl][updateUserOrgInfoCache] There is no need to update the cache. ");
             return;
         }
@@ -193,7 +201,7 @@ public class UserServiceImpl implements UserService {
         ESOrgInfoVO esOrgInfoVO = new ESOrgInfoVO();
         BeanUtil.copyPropertiesIgnoreNullFilds(userOrgClient,esOrgInfoVO,"orgTags","orgId");
         esOrgInfoVO.setOrgId(userOrgClient.getId());
-
+        esOrgInfoVO.setCreateDate(new Date());
         //根据UerOrgClient查找对应的组织标签
         List<UserTags> listUserTags = userTagsDAO.findByUserOrgIdAndEnableFlagOrderBySort(userOrgClient.getId(),EnableFlag.Y);
         List<ESTagsInfoVO> listEsTagsInfo = new ArrayList<>();
@@ -227,6 +235,37 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(Constants.SYS_ERROR);
         }
         userOrgClient.setElasticId(esPostResponseVO.getId());
+        return Constants.RETURN_SUCESS;
+    }
+
+    @Override
+    public String pushEsInfoByIndex(String indexUrl) {
+        //获取所有已推送的组织信息
+        List<UserOrgClient> orgList = userOrgClientDAO.findByPushFlagAndEnableFlag(Integer.valueOf(UserPushStatus.PUSH.getKey()), EnableFlag.Y);
+        for (UserOrgClient userOrgClient : orgList) {
+            List<User> userList = userDao.findByUserOrgIdAndEnableFlag(userOrgClient.getId(), EnableFlag.Y);
+            //遍历用户信息 并且推送到ES
+            for (User user : userList) {
+                if (user.getUserAccountType().compareTo(UserAccountType.ORG_CHILD_ACCOUNT) != 0) { //不为子账号时推送
+                    //index 开头加斜杠
+                    if (!indexUrl.startsWith(Constants.SINGLE_SLASH)) {
+                        indexUrl = Constants.SINGLE_SLASH + indexUrl;
+                    }
+                    //index 末尾加斜杠
+                    if (!indexUrl.endsWith(Constants.SINGLE_SLASH)) {
+                        indexUrl += Constants.SINGLE_SLASH;
+                    }
+                    //判断index url 是否在推送范围内
+                    if (!indexUrl.equals(ESProducerConstants.INDEX_URL_DAIBAN_ORG)
+                            && !indexUrl.equals(ESProducerConstants.INDEX_URL_DEPORT_ORG)
+                            && !indexUrl.equals(ESProducerConstants.INDEX_URL_KESHAN_ORG)) {
+                        return Constants.COMMON_ERROR_PARAMS; //index 跟执行的不一致
+                    }
+                    return pushESInfo(user, userOrgClient);
+                }
+            }
+        }
+
         return Constants.RETURN_SUCESS;
     }
 
@@ -317,6 +356,52 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * 修改ES信息
+     * @param user 用户 （个体账号。组织账户主账号
+     * @param userOrgClient 组织账户
+     * @return String 返回码
+     */
+    private String deleteESInfo(User user, UserOrgClient userOrgClient){
+        //非空判断
+        if(user == null) return ErrorCodeConst.USER_NOTNULL;
+        if(userOrgClient == null)  return  ErrorCodeConst.ERRPR_ORG_ISNULL;
+        if(user.getUserType() == null || (!userOrgClient.isPushFlag())
+                || userOrgClient.getUserAccountType() == null || StringUtils.isBlank(userOrgClient.getElasticId()))
+            return  Constants.COMMON_MISSING_PARAMS;
+        boolean result = false;
+        switch (user.getUserType()){
+            case LK:
+                ESGetSingleResponseVO<ESDepotOrgInfoVO> esGetSingleResponseVO = apecESProducer.getSingleESInfoById(ESProducerConstants.INDEX_URL_DEPORT_ORG,
+                        userOrgClient.getElasticId(), ESDepotOrgInfoVO.class);
+                if(null != esGetSingleResponseVO && esGetSingleResponseVO.getFound()) {
+                    result = apecESProducer.deleteESInfo(ESProducerConstants.INDEX_URL_DEPORT_ORG, userOrgClient.getElasticId());
+                }
+                break;
+            case DB:
+                ESGetSingleResponseVO<ESAgencyInfoVO> esGetDBResponseVO = apecESProducer.getSingleESInfoById(ESProducerConstants.INDEX_URL_DAIBAN_ORG,
+                        userOrgClient.getElasticId(), ESAgencyInfoVO.class);
+                if(null != esGetDBResponseVO && esGetDBResponseVO.getFound()) {
+                    result = apecESProducer.deleteESInfo(ESProducerConstants.INDEX_URL_DAIBAN_ORG, userOrgClient.getElasticId());
+                }
+                break;
+            case KS:
+                ESGetSingleResponseVO<ESAgencyInfoVO> esGetKSResponseVO = apecESProducer.getSingleESInfoById(ESProducerConstants.INDEX_URL_KESHAN_ORG,
+                        userOrgClient.getElasticId(), ESAgencyInfoVO.class);
+                if(null != esGetKSResponseVO && esGetKSResponseVO.getFound()) {
+                    result = apecESProducer.deleteESInfo(ESProducerConstants.INDEX_URL_KESHAN_ORG, userOrgClient.getElasticId());
+                }
+                break;
+        }
+        if(result){
+            logger.info("[UserServiceImpl]#[deleteESInfo] UserId:{}， Update ES Info Success : esId:{}", user.getId(), userOrgClient.getElasticId());
+            return Constants.RETURN_SUCESS;
+        }else {
+            logger.warn("[UserServiceImpl]#[deleteESInfo] UserId:{}， Update ES Info failed  : esId:{}", user.getId(), userOrgClient.getElasticId());
+            return Constants.SYS_ERROR;
+        }
+    }
+
     @Override
     @Transactional
     public String addNewUser(UserVO userVO) {
@@ -350,11 +435,15 @@ public class UserServiceImpl implements UserService {
         userOrgClient.setEnableFlag(EnableFlag.Y);
         userOrgClient.setCreateDate(date);
         userOrgClient.setUserAccountType(UserAccountType.IND_ACCOUNT);
-        userOrgClientDAO.save(userOrgClient);
+        userOrgClientDAO.saveAndFlush(userOrgClient);
         user.setUserOrgId(userOrgClient.getId());
         user.setUserAccountType(UserAccountType.IND_MAIN_ACCOUNT); //默认账号
-        userDao.save(user);
-
+        userDao.saveAndFlush(user);
+        updateUserOrgInfoCache(userOrgClient);
+        User user1 = userDao.findOne(user.getId());
+        if(user1 == null){
+            logger.error(" test findOne , the user id null , the userId id :{}" ,user.getId());
+        }
         //初次登陆积分设置
         UserPointRecordVO userPointRecordVO = new UserPointRecordVO();
         userPointRecordVO.setId(idGen.nextId());
@@ -402,7 +491,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public String updateImage(UserVO userVO,String userId, Map<String,String> resultMap){
         //查詢用戶信息
-        User user = userDao.findOne(userVO.getId());
+        User user = userDao.findByIdAndEnableFlag(userVO.getId(),EnableFlag.Y);
         if(user == null){
             logger.info("[updateImage] user is not exist id{}:",userVO.getId());
             return ErrorCodeConst.USER_NOTNULL;
@@ -415,7 +504,7 @@ public class UserServiceImpl implements UserService {
                 UserOrgClient userOrgClient = null;
                 //不为组织账号时，Banner的缩略图地址为个人头像地址
                 if(user.getUserOrgId() != null){
-                    userOrgClient = userOrgClientDAO.findOne(user.getUserOrgId());
+                    userOrgClient = userOrgClientDAO.findByIdAndEnableFlag(user.getUserOrgId(),EnableFlag.Y);
                 }
                 //组织不存在则新建组织
                 if(userOrgClient == null){
@@ -456,7 +545,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public String updateBanner(UserVO userVO,String userId, Map<String,String> resultMap){
         //查詢用戶信息
-        User user = userDao.findOne(userVO.getId());
+        User user = userDao.findByIdAndEnableFlag(userVO.getId(),EnableFlag.Y);
         if(user == null){
             logger.info("[updateBanner] user is not exist id{}:",userVO.getId());
             return ErrorCodeConst.USER_NOTNULL;
@@ -467,7 +556,7 @@ public class UserServiceImpl implements UserService {
         }
         if(userVO.getUserOrgClientVO() != null && StringUtils.isNotBlank(userVO.getUserOrgClientVO().getOrgBannerUrl())){
             UserOrgClient userOrgClient = null;
-            if(user.getUserOrgId() != null) userOrgClient = userOrgClientDAO.findOne(user.getUserOrgId());
+            if(user.getUserOrgId() != null) userOrgClient = userOrgClientDAO.findByIdAndEnableFlag(user.getUserOrgId(),EnableFlag.Y);
             if(userOrgClient == null){
                 userOrgClient = initUserOrgClient(user);
                 user.setUserOrgId(userOrgClient.getId());
@@ -503,7 +592,7 @@ public class UserServiceImpl implements UserService {
     public String updateUserInfo(UserVO userVO,String userId, Map<String,String> resultMap) {
         Map<String,Object> updateEsOrgInfo = new HashedMap();
         //查詢用戶信息
-        User user = userDao.findOne(userVO.getId());
+        User user = userDao.findByIdAndEnableFlag(userVO.getId(),EnableFlag.Y);
         if(user == null){
             logger.info("[updateUserInfo] user is not exist id{}:",userVO.getId());
             return ErrorCodeConst.USER_NOTNULL;
@@ -514,16 +603,29 @@ public class UserServiceImpl implements UserService {
             user.setName(userVO.getName());
             resultMap.put("name",user.getName());
         }
+        //获取用户组织
+        UserOrgClient userOrgClient = null;
+        if(user.getUserOrgId() != null) userOrgClient = userOrgClientDAO.findByIdAndEnableFlag(user.getUserOrgId(),EnableFlag.Y);
 
+        if(userOrgClient != null && !userOrgClient.isPushFlag()){//未推送时身份可以修改，已经推送后身份无法进行修改
+            if(userVO.getUserType() != null){
+                user.setUserType(userVO.getUserType());
+                resultMap.put("userType",user.getUserType().name());
+                resultMap.put("userTypeKey",user.getUserType().getKey());
+            }
+            if(userVO.getUserDetailType() != null && (user.getUserType() == UserType.LK || user.getUserType() == UserType.DB)){
+                user.setUserDetailType(userVO.getUserDetailType());
+                resultMap.put("userDetailType",user.getUserDetailType().name());
+                resultMap.put("userDetailTypeKey",user.getUserDetailType().getKey());
+            }else{
+                user.setUserDetailType(null);
+            }
+        }
         if(StringUtils.isNotBlank(userVO.getAddressDetail())) user.setAddressDetail(userVO.getAddressDetail());
         if(StringUtils.isNotBlank(userVO.getMainOperating())) user.setMainOperating(userVO.getMainOperating());
         if(StringUtils.isNotBlank(userVO.getWorkOfYear())) user.setWorkOfYear(userVO.getWorkOfYear());
         //子账号不能编辑组织信息
         if(user.getUserAccountType() != UserAccountType.ORG_CHILD_ACCOUNT){
-
-            //获取用户组织
-            UserOrgClient userOrgClient = null;
-            if(user.getUserOrgId() != null) userOrgClient = userOrgClientDAO.findOne(user.getUserOrgId());
             if(userOrgClient == null){
                 userOrgClient = initUserOrgClient(user);
                 user.setUserOrgId(userOrgClient.getId());
@@ -531,32 +633,16 @@ public class UserServiceImpl implements UserService {
                     user.setUserAccountType(UserAccountType.IND_MAIN_ACCOUNT);  //默认账号
                 }
             }
-
-            if(!userOrgClient.isPushFlag()){//未推送时身份可以修改，已经推送后身份无法进行修改
-                if(userVO.getUserType() != null){
-                    user.setUserType(userVO.getUserType());
-                    resultMap.put("userType",user.getUserType().name());
-                    resultMap.put("userTypeKey",user.getUserType().getKey());
-                }
-                if(userVO.getUserDetailType() != null){
-                    user.setUserDetailType(userVO.getUserDetailType());
-                    resultMap.put("userDetailType",user.getUserDetailType().name());
-                    resultMap.put("userDetailTypeKey",user.getUserDetailType().getKey());
-                }
-            }
             UserOrgClientVO userOrgClientVO = userVO.getUserOrgClientVO();
             //用户昵称不为空且与组织名称不相等
-            if(StringUtils.isNotBlank(userVO.getName()) && !StringUtils.equals(userVO.getName(),userOrgClient.getOrgName())){
-                //如果为个体账号
-                if(user.getUserAccountType() == UserAccountType.IND_MAIN_ACCOUNT){
-                    userOrgClient.setOrgName(userVO.getName());//组织名称为个人昵称
-                    updateEsOrgInfo.put("orgName",userOrgClient.getOrgName());
-                }
+            if(StringUtils.isNotBlank(userVO.getName()) && (StringUtils.isBlank(userOrgClient.getOrgName()) || user.getUserType() != UserType.LK)){
+                //组织账号为空时
+                userOrgClient.setOrgName(userVO.getName());//组织名称为个人昵称
+                updateEsOrgInfo.put("orgName",userOrgClient.getOrgName());
             }
             //用户组织VO
-
             if(userOrgClientVO != null){
-                if(StringUtils.isNotBlank(userOrgClientVO.getOrgName()) && !StringUtils.equals(userOrgClientVO.getOrgName(),userOrgClient.getOrgName()) && user.getUserAccountType() != UserAccountType.IND_MAIN_ACCOUNT){
+                if(StringUtils.isNotBlank(userOrgClientVO.getOrgName()) && !StringUtils.equals(userOrgClientVO.getOrgName(),userOrgClient.getOrgName()) && user.getUserAccountType() != UserAccountType.ORG_CHILD_ACCOUNT && user.getUserType() == UserType.LK){
                     userOrgClient.setOrgName(userOrgClientVO.getOrgName());
                     updateEsOrgInfo.put("orgName",userOrgClient.getOrgName());
                 }
@@ -634,7 +720,6 @@ public class UserServiceImpl implements UserService {
 //            userOrgClient.setViewNum(0);
 //            userOrgClient.setProductNum(0);
             //非组织账户的组织名称为用户昵称
-            if(userOrgClient.getUserAccountType() != UserAccountType.ORG_ACCOUNT) userOrgClient.setOrgName(user.getName());
             userOrgClient.setLastUpdateBy(userId);
             userOrgClient.setLastUpdateDate(new Date());
             userOrgClientDAO.saveAndFlush(userOrgClient);
@@ -685,7 +770,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public String updateUserMobile(UserVO userVO, String userId,Map<String,String> resultMap) {
-        User user = userDao.findOne(userVO.getId());
+        User user = userDao.findByIdAndEnableFlag(userVO.getId(),EnableFlag.Y);
         if(user == null){
             logger.info("[updateUserMobile] user is not exist id{}:",userVO.getId());
             return ErrorCodeConst.USER_NOTNULL;
@@ -802,28 +887,29 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public String userRealNameApply(UserAuthRecordVO authRecordVO, String userId,Map<String,String> resultMap) {
-        UserVO userVO = authRecordVO.getUserVO();
         //查詢用戶信息
-        User user = userDao.findOne(userVO.getId());
+        User user = userDao.findByIdAndEnableFlag(authRecordVO.getUserId(),EnableFlag.Y);
         if(user == null || user.getId() == null || user.getId() == 0L){
-            logger.info("[userRealNameApply] user is not exist id{}:",userVO.getId());
+            logger.info("[userRealNameApply] user is not exist id{}:",authRecordVO.getUserId());
             return ErrorCodeConst.USER_NOTNULL;
         }
         if(StringUtils.equals(user.getUserRealAuth().name(),UserRealAuth.AUDITING.name()) || StringUtils.equals(user.getUserRealAuth().name(),UserRealAuth.NORMAL.name())){
             //用户已经在实名认证通过或正在实名认证审批中，不予再次提交实名认证信息
-            logger.info("[userRealNameApply] user had realName query ,the userId : {}",userVO.getId());
+            logger.info("[userRealNameApply] user had realName query ,the userId : {}",authRecordVO.getUserId());
             return ErrorCodeConst.HAD_REALNAME;
         }
         //验证身份证的唯一性
-        if(isExistIdNumber(userVO)){
+        if(isExistIdNumber(authRecordVO.getIdNumber())){
             //如果该身份证已经实名认证通过
-            logger.info("[userRealNameApply] the idNumber had use for realName ,the idNumber is : {}",userVO.getId());
+            logger.info("[userRealNameApply] the idNumber had use for realName ,the idNumber is : {}",user.getId());
             return ErrorCodeConst.IDNUMBER_ISEXIST;
         }
         //添加到用户实名认证申请记录中
         UserAuthRecord authRecord = new UserAuthRecord();
         authRecord.setImgOneURL(authRecordVO.getImgOneURL());
         authRecord.setImgTwoURL(authRecordVO.getImgTwoURL());
+        authRecord.setIdNumber(authRecordVO.getIdNumber());
+        authRecord.setRealName(authRecordVO.getRealName());
         authRecord.setUser(user);
         authRecord.setId(idGen.nextId());
         authRecord.setCreateBy(userId);
@@ -831,34 +917,13 @@ public class UserServiceImpl implements UserService {
         authRecord.setEnableFlag(EnableFlag.Y);
         userAuthRecordDAO.save(authRecord);
         //修改用户信息
-        user.setRealName(userVO.getRealName());
-        resultMap.put("realName",user.getRealName());
-        user.setIdNumber(userVO.getIdNumber());
-        resultMap.put("idNumber",user.getIdNumber());
         user.setLastUpdateBy(userId);
         user.setLastUpdateDate(new Date());
-        //用户信息是否已经修改了性别
-        if(user.getSex() == null){
-            //没有修改过性别则按照输入的身份证信息最后一位来判定
-            String idNumber = userVO.getIdNumber();
-            String sex = idNumber.charAt(userVO.getIdNumber().length() - 1)+"";//15位身份证号最后一位为性别位
-            if(idNumber.length() == 18){
-                sex = idNumber.charAt(userVO.getIdNumber().length() - 2)+"";//18位身份证性别为倒数第二位
-            }
-            int s = Integer.valueOf(sex);
-            if(s%2 == 0){
-                //偶数，该用户为女性
-                user.setSex(Sex.FEMALE);
-            }else{
-                user.setSex(Sex.MALE);
-            }
-            resultMap.put("sexName",user.getSex().name());
-            resultMap.put("sexValue",user.getSex().getValue());
-        }
+
         user.setUserRealAuth(UserRealAuth.AUDITING);//状态为实名认证中
         //用户缓存变更
-        UserPoint userPoint = userPointDAO.findByUserIdAndEnableFlag(user.getId(),EnableFlag.Y);
-        updateUserCache(String.valueOf(user.getId()),userPoint,user);
+//        UserPoint userPoint = userPointDAO.findByUserIdAndEnableFlag(user.getId(),EnableFlag.Y);
+        updateUserCache(String.valueOf(user.getId()),null,user);
         //更新用户基本信息缓存
         updateUserInfoCache(String.valueOf(user.getId()),user);
         //Save
@@ -871,7 +936,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public String userRealNameEntrue(UserAuthRecordVO authRecordVO, String userId,Map<String,String> resultMap) {
-        UserAuthRecord authRecord = userAuthRecordDAO.findOne(authRecordVO.getId());
+        UserAuthRecord authRecord = userAuthRecordDAO.findByIdAndEnableFlag(authRecordVO.getId(),EnableFlag.Y);
         if(authRecord == null || authRecord.getId() == null || authRecord.getId() == 0L){
             logger.info("[userRealNameEntrue] userAuthRecord is not exist，id:{}",authRecordVO.getId());
             return Constants.COMMON_ERROR_PARAMS;
@@ -885,7 +950,11 @@ public class UserServiceImpl implements UserService {
             logger.info("[userRealNameEntrue] user id  is not exist，id:{}",authRecordVO.getId());
             return Constants.COMMON_ERROR_PARAMS;
         }
-        User user = userDao.findOne(authRecord.getUser().getId());
+        User user = userDao.findByIdAndEnableFlag(authRecord.getUser().getId(),EnableFlag.Y);
+        if(user == null){
+            logger.info("[userRealNameEntrue] user id  is not exist，id:{}",authRecord.getId());
+            return Constants.COMMON_ERROR_PARAMS;
+        }
         //审批用户实名认证信息
         authRecord.setRemark(authRecordVO.getRemark());
         authRecord.setSuccess(authRecordVO.getSuccess());
@@ -900,18 +969,29 @@ public class UserServiceImpl implements UserService {
 
         user.setUserRealAuth(UserRealAuth.REJECTED);
         if(StringUtils.equals(Constants.ISSUCCESS,authRecordVO.getSuccess())){
+            user.setRealName(authRecord.getRealName());
+            user.setIdNumber(authRecord.getIdNumber());
+            //用户信息是否已经修改了性别
+            if(user.getSex() == null){
+                //没有修改过性别则按照输入的身份证信息最后一位来判定
+                String idNumber = authRecord.getIdNumber();
+                String sex = idNumber.charAt(authRecord.getIdNumber().length() - 1)+"";//15位身份证号最后一位为性别位
+                if(idNumber.length() == 18){
+                    sex = idNumber.charAt(authRecord.getIdNumber().length() - 2)+"";//18位身份证性别为倒数第二位
+                }
+                int s = Integer.valueOf(sex);
+                if(s%2 == 0){
+                    //偶数，该用户为女性
+                    user.setSex(Sex.FEMALE);
+                }else{
+                    user.setSex(Sex.MALE);
+                }
+                resultMap.put("sexName",user.getSex().name());
+                resultMap.put("sexValue",user.getSex().getValue());
+            }
             //认证通过
             user.setUserRealAuth(UserRealAuth.NORMAL);
             user.setUserStatus(UserStatus.NORMAL);
-            //给用户增加积分
-            UserPointRecordVO userPointRecordVO = new UserPointRecordVO();
-            userPointRecordVO.setPointRuleType(PointRuleType.VERIFIED_INFO);//加积分的类型，实名认证成功
-            userPointRecordVO.setId(idGen.nextId());
-            List<Long> userIds = new ArrayList<>();
-            userIds.add(user.getId());
-            userPointRecordVO.setUserIds(userIds);
-            //实名认证加积分
-            mqProducerClient.sendConcurrently(MqTag.USER_POINT_TAG_SUBSCRI_POINT.getKey(),String.valueOf(userPointRecordVO.getId()),userPointRecordVO);
             //设置实名成功的消息模板以及相应的内容值
             messageBodyVO.setTemplateKey(MessageTemplate.USER_REALNAME_SUCCESS);
             contentMap.put("userName",user.getName());
@@ -921,13 +1001,10 @@ public class UserServiceImpl implements UserService {
             cacheHashService.hdelField(userInfoRedisKey, SysBusinessConstants.PREFIX_CREATEPRODUCT_NUM);
 
         }else{
-            //认证不通过，清空上次申请的信息
-            user.setIdNumber(null);
-            user.setRealName("");
-
+            //认证不通过
             //设置实名失败的消息模板以及相应的内容值
             messageBodyVO.setTemplateKey(MessageTemplate.USER_REALNAME_FAIL);
-            contentMap.put("userName",user.getName());
+            contentMap.put("userName",StringUtils.isBlank(user.getName())?"":user.getName());
             contentMap.put("failCaused",StringUtils.isBlank(authRecord.getRemark())?"":authRecord.getRemark());
 
         }
@@ -937,8 +1014,7 @@ public class UserServiceImpl implements UserService {
         userAuthRecordDAO.save(authRecord);//修改实名认证记录中状态
         userDao.save(user);//修改用户信息中实名认证状态
         //用户缓存变更
-        UserPoint userPoint = userPointDAO.findByUserIdAndEnableFlag(user.getId(),EnableFlag.Y);
-        updateUserCache(String.valueOf(user.getId()),userPoint,user);
+        updateUserCache(String.valueOf(user.getId()),null,user);
         //更新缓存中的用户基本信息
         updateUserInfoCache(String.valueOf(user.getId()),user);
         resultMap.put("userRealAuthName",user.getUserRealAuth().name());
@@ -953,6 +1029,17 @@ public class UserServiceImpl implements UserService {
         messageVO.setReceivers(receivers);//接收者
         messageVO.setMessageStatus(MessageStatus.NEW);//用户状态
         mqProducerClient.sendConcurrently(MqTag.MESSAGE_TAG.getKey(),String.valueOf(messageVO.getId()),messageVO);
+        if(StringUtils.equals(Constants.ISSUCCESS,authRecordVO.getSuccess())){
+            //给用户增加积分
+            UserPointRecordVO userPointRecordVO = new UserPointRecordVO();
+            userPointRecordVO.setPointRuleType(PointRuleType.VERIFIED_INFO);//加积分的类型，实名认证成功
+            userPointRecordVO.setId(idGen.nextId());
+            List<Long> userIds = new ArrayList<>();
+            userIds.add(user.getId());
+            userPointRecordVO.setUserIds(userIds);
+            //实名认证加积分
+            mqProducerClient.sendConcurrently(MqTag.USER_POINT_TAG_SUBSCRI_POINT.getKey(),String.valueOf(userPointRecordVO.getId()),userPointRecordVO);
+        }
         return Constants.RETURN_SUCESS;
     }
 
@@ -1010,7 +1097,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public String updatePassword(UserVO userVO, String userId) {
         //查询用户信息
-        User user = userDao.findOne(userVO.getId());
+        User user = userDao.findByIdAndEnableFlag(userVO.getId(),EnableFlag.Y);
         if(user == null || user.getId() == null || user.getId() == 0L){
             logger.info("user is not exist id{}:",userVO.getId());
             return ErrorCodeConst.USER_NOTNULL;
@@ -1031,11 +1118,11 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 判断身份证是否已经被用于实名认证
-     * @param userVO
+     * @param idNumber
      * @return
      */
-    private boolean isExistIdNumber(UserVO userVO){
-        Long c = userDao.countByIdNumberAndEnableFlag(userVO.getIdNumber(),EnableFlag.Y);
+    private boolean isExistIdNumber(String idNumber){
+        Long c = userDao.countByIdNumberAndEnableFlag(idNumber,EnableFlag.Y);
         return c > 0;//如果该身份证号下的有效用户大于0，则代表该身份证已经被用户使用认证
     }
 
@@ -1156,8 +1243,8 @@ public class UserServiceImpl implements UserService {
             UserAuthRecordViewVO authRecordVO = new UserAuthRecordViewVO();
             user = authRecord.getUser();
             if(user != null){
-                //将用户的额身份证号和名称等信息放入申请记录中
-                BeanUtil.copyPropertiesIgnoreNullFilds(user,authRecordVO);
+                //将用户的手机号等信息放入申请记录中
+                authRecordVO.setMobile(user.getMobile());
             }
             BeanUtil.copyPropertiesIgnoreNullFilds(authRecord,authRecordVO);
             list.add(authRecordVO);
@@ -1178,51 +1265,71 @@ public class UserServiceImpl implements UserService {
     public PageDTO<UserAllInfo> pageUserInfo(UserDTO dto, PageRequest pageRequest){
         PageDTO<UserAllInfo> result = new PageDTO<>();
         List<UserAllInfo> list = new ArrayList<>();
+        Page<User> page = null;
         UserVO vo = new UserVO();
-        BeanUtil.copyPropertiesIgnoreNullFilds(dto,vo);
-        Page<User> page = userDao.findAll(getInputCondition(vo),pageRequest);
-        for(User user:page){
-            UserAllInfo userAllInfo = new com.apec.user.vo.UserAllInfo();
-            BeanUtil.copyPropertiesIgnoreNullFilds(user,userAllInfo);
-            if(user.getUserRealAuth() != null){
-                userAllInfo.setUserRealAuthKey(user.getUserRealAuth().getKey());
+        BeanUtil.copyPropertiesIgnoreNullFilds(dto,vo,"pushFlag");
+        if(StringUtils.isNotBlank(dto.getPushFlag())){
+            List<UserOrgClient> userOrgClients = null;
+            if(StringUtils.equals(Constants.ISSUCCESS,dto.getPushFlag())){
+                userOrgClients = userOrgClientDAO.findByPushFlagAndEnableFlag(true,EnableFlag.Y);
+            }else{
+                userOrgClients = userOrgClientDAO.findByPushFlagAndEnableFlag(false,EnableFlag.Y);
             }
-            if(user.getSex() != null){
-                userAllInfo.setSexValue(user.getSex().getValue());
+            if(userOrgClients != null){
+                List<Long> userOrgIds = new ArrayList<>();
+                userOrgClients.forEach(userOrgClient -> {
+                    userOrgIds.add(userOrgClient.getId());
+                });
+                page = userDao.findByEnableFlagAndUserOrgIdIn(EnableFlag.Y,userOrgIds,pageRequest);
             }
-            if(user.getUserStatus() != null){
-                userAllInfo.setUserStatusKey(user.getUserStatus().getKey());
-            }
-            if(user.getUserType() != null){
-                userAllInfo.setUserTypeKey(user.getUserType().getKey());
-            }
-            if(user.getUserAccountType() != null){
-                userAllInfo.setUserAccountTypeKey(user.getUserAccountType().getKey());
-            }
-            if(user.getUserDetailType() != null){
-                userAllInfo.setUserDetailTypeKey(user.getUserDetailType().getKey());
-            }
-            if(user.getUserOrgId() != null && user.getUserOrgId() != 0L){
-                UserOrgClient userOrgClient = userOrgClientDAO.findOne(user.getUserOrgId());
-                if(userOrgClient != null){
-                    BeanUtil.copyPropertiesIgnoreNullFilds(userOrgClient,userAllInfo,"userAccountType","createDate","id");
-                    userAllInfo.setOrgAccountType(userOrgClient.getUserAccountType());
-                    userAllInfo.setOrgAccountTypeKey(userOrgClient.getUserAccountType().getKey());
-                }
-            }
-            UserPoint userPoint = userPointDAO.findByUserIdAndEnableFlag(user.getId(),EnableFlag.Y);
-            if(userPoint != null){
-                BeanUtil.copyPropertiesIgnoreNullFilds(userPoint,userAllInfo,"createDate","id");
-            }
-            if(userAllInfo.getUserLevel() != null){
-                userAllInfo.setUserLevelKey(userAllInfo.getUserLevel().getKey());
-            }
-            list.add(userAllInfo);
+        }else{
+            page = userDao.findAll(getInputCondition(vo),pageRequest);
         }
-        result.setRows(list);
-        result.setNumber(page.getNumber()+1);
-        result.setTotalPages(page.getTotalPages());
-        result.setTotalElements(page.getTotalElements());
+        if(page != null){
+            for(User user:page){
+                UserAllInfo userAllInfo = new com.apec.user.vo.UserAllInfo();
+                BeanUtil.copyPropertiesIgnoreNullFilds(user,userAllInfo);
+                if(user.getUserRealAuth() != null){
+                    userAllInfo.setUserRealAuthKey(user.getUserRealAuth().getKey());
+                }
+                if(user.getSex() != null){
+                    userAllInfo.setSexValue(user.getSex().getValue());
+                }
+                if(user.getUserStatus() != null){
+                    userAllInfo.setUserStatusKey(user.getUserStatus() == UserStatus.FREEZE?UserStatus.FREEZE.getKey():UserStatus.NORMAL.getKey());
+                }
+                if(user.getUserType() != null){
+                    userAllInfo.setUserTypeKey(user.getUserType().getKey());
+                }
+                if(user.getUserAccountType() != null){
+                    userAllInfo.setUserAccountTypeKey(user.getUserAccountType().getKey());
+                }
+                if(user.getUserDetailType() != null){
+                    userAllInfo.setUserDetailTypeKey(user.getUserDetailType().getKey());
+                }
+                if(user.getUserOrgId() != null && user.getUserOrgId() != 0L){
+                    UserOrgClient userOrgClient = userOrgClientDAO.findByIdAndEnableFlag(user.getUserOrgId(),EnableFlag.Y);
+                    if(userOrgClient != null){
+                        BeanUtil.copyPropertiesIgnoreNullFilds(userOrgClient,userAllInfo,"userAccountType","createDate","id");
+                        userAllInfo.setOrgAccountType(userOrgClient.getUserAccountType());
+                        userAllInfo.setOrgAccountTypeKey(userOrgClient.getUserAccountType().getKey());
+                    }
+                }
+                UserPoint userPoint = userPointDAO.findByUserIdAndEnableFlag(user.getId(),EnableFlag.Y);
+                if(userPoint != null){
+                    BeanUtil.copyPropertiesIgnoreNullFilds(userPoint,userAllInfo,"createDate","id");
+                }
+                if(userAllInfo.getUserLevel() != null){
+                    userAllInfo.setUserLevelKey(userAllInfo.getUserLevel().getKey());
+                }
+                list.add(userAllInfo);
+            }
+            result.setRows(list);
+            result.setNumber(page.getNumber()+1);
+            result.setTotalPages(page.getTotalPages());
+            result.setTotalElements(page.getTotalElements());
+        }
+
         return result;
     }
 
@@ -1250,7 +1357,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     public String deleteUserInfo(UserVO userVO,String userId){
-        User user = userDao.findOne(userVO.getId());
+        User user = userDao.findByIdAndEnableFlag(userVO.getId(),EnableFlag.Y);
         if(user == null){
             return ErrorCodeConst.USER_NOTNULL;
         }
@@ -1279,7 +1386,7 @@ public class UserServiceImpl implements UserService {
         UserOrgClient userOrgClient = null;
         User user = null;
         if(userVO.getUserOrgId() != null && userVO.getUserOrgId() != 0L ){
-            userOrgClient = userOrgClientDAO.findOne(userVO.getUserOrgId());
+            userOrgClient = userOrgClientDAO.findByIdAndEnableFlag(userVO.getUserOrgId(),EnableFlag.Y);
             if(userOrgClient != null){
                 List<User> users = userDao.findByUserOrgIdAndEnableFlagAndUserAccountTypeNot(userOrgClient.getId(),EnableFlag.Y,UserAccountType.ORG_CHILD_ACCOUNT);
                 if(!CollectionUtils.isEmpty(users)){
@@ -1287,12 +1394,12 @@ public class UserServiceImpl implements UserService {
                 }
             }
         }else{
-            user = userDao.findOne(userVO.getId());
+            user = userDao.findByIdAndEnableFlag(userVO.getId(),EnableFlag.Y);
             if(user == null){
                 return null;
             }
             if(user.getUserOrgId() != null && user.getUserOrgId() != 0L){
-                userOrgClient = userOrgClientDAO.findOne(user.getUserOrgId());
+                userOrgClient = userOrgClientDAO.findByIdAndEnableFlag(user.getUserOrgId(),EnableFlag.Y);
             }
         }
         BeanUtil.copyPropertiesIgnoreNullFilds(user,viewVO);
@@ -1370,9 +1477,12 @@ public class UserServiceImpl implements UserService {
             if(StringUtils.isNotBlank(vo.getName()))
             {
                 predicates.add(QUserAuthRecord.userAuthRecord.user.name.like("%" + vo.getName() + "%"));
-            }if(StringUtils.isNotBlank(vo.getRealName()))
+            }if(StringUtils.isNotBlank(vo.getMobile()))
         {
-            predicates.add(QUserAuthRecord.userAuthRecord.user.realName.like("%" + vo.getRealName() + "%"));
+            predicates.add(QUserAuthRecord.userAuthRecord.user.mobile.like("%" + vo.getMobile() + "%"));
+        }if(StringUtils.isNotBlank(vo.getRealName()))
+        {
+            predicates.add(QUserAuthRecord.userAuthRecord.realName.like("%" + vo.getRealName() + "%"));
         }
         }
         predicates.add(QUserAuthRecord.userAuthRecord.enableFlag.eq(EnableFlag.Y));
@@ -1434,13 +1544,34 @@ public class UserServiceImpl implements UserService {
         for(UserOrgClient userOrgClient:page){
             UserOrgClientVO userOrgClientVO = new UserOrgClientVO();
             BeanUtil.copyPropertiesIgnoreNullFilds(userOrgClient,userOrgClientVO);
+            if(userOrgClientVO.getUserAccountType() != null){
+                userOrgClientVO.setUserAccountTypeKey(userOrgClientVO.getUserAccountType().getKey());
+            }
+            List<User> users = userDao.findByUserOrgIdAndEnableFlag(userOrgClientVO.getId(),EnableFlag.Y);
+            if(!CollectionUtils.isEmpty(users)){
+                StringBuffer stringBuffer = new StringBuffer();
+                users.forEach(user -> {
+                    if(StringUtils.isNotBlank(user.getName())){
+                        stringBuffer.append(user.getName());
+                    }else{
+                        stringBuffer.append(user.getMobile());
+                    }
+                    if(user.getUserDetailType() != null){
+                        stringBuffer.append("(" + user.getUserDetailType().getKey() + ")" );
+                    }
+                    stringBuffer.append(",");
+                });
+                userOrgClientVO.setOrgClientUsers(stringBuffer.substring(0,stringBuffer.length() - 1));
+            }
             List<UserTags> userTagss = userTagsDAO.findByUserOrgIdAndEnableFlagOrderBySort(userOrgClient.getId(),EnableFlag.Y);
             List<UserTagsVO> userTagsVOS = new ArrayList<>();
-            userTagss.forEach(userTags -> {
-                UserTagsVO userTagsVO = new UserTagsVO();
-                BeanUtil.copyPropertiesIgnoreNullFilds(userTags,userTagsVO);
-                userTagsVOS.add(userTagsVO);
-            });
+            if(userTagss != null){
+                userTagss.forEach(userTags -> {
+                    UserTagsVO userTagsVO = new UserTagsVO();
+                    BeanUtil.copyPropertiesIgnoreNullFilds(userTags,userTagsVO);
+                    userTagsVOS.add(userTagsVO);
+                });
+            }
             userOrgClientVO.setUserTagsVOS(userTagsVOS);
             userOrgClientVOS.add(userOrgClientVO);
         }
@@ -1449,6 +1580,55 @@ public class UserServiceImpl implements UserService {
         result.setTotalPages(page.getTotalPages());
         result.setRows(userOrgClientVOS);
         return result;
+    }
+
+    @Override
+    public UserOrgClientVO findUserOrgInfo(UserOrgClientVO userOrgClientVO){
+        UserOrgClient userOrgClient = userOrgClientDAO.findByIdAndEnableFlag(userOrgClientVO.getId(),EnableFlag.Y);
+        if(userOrgClient == null){
+            return userOrgClientVO;
+        }
+        BeanUtil.copyPropertiesIgnoreNullFilds(userOrgClient,userOrgClientVO);
+        if(userOrgClientVO.getUserAccountType() != null){
+            userOrgClientVO.setUserAccountTypeKey(userOrgClientVO.getUserAccountType().getKey());
+        }
+        List<User> users = userDao.findByUserOrgIdAndEnableFlag(userOrgClientVO.getId(),EnableFlag.Y);
+        if(!CollectionUtils.isEmpty(users)){
+            StringBuffer stringBuffer = new StringBuffer();
+            users.forEach(user -> {
+                if(StringUtils.isNotBlank(user.getName())){
+                    stringBuffer.append(user.getName());
+                }else{
+                    stringBuffer.append(user.getMobile());
+                }
+                if(user.getUserDetailType() != null){
+                    stringBuffer.append("(" + user.getUserDetailType().getKey() + ")" );
+                }
+                stringBuffer.append(",");
+            });
+            userOrgClientVO.setOrgClientUsers(stringBuffer.substring(0,stringBuffer.length()-1));
+        }
+        List<UserTags> userTagss = userTagsDAO.findByUserOrgIdAndEnableFlagOrderBySort(userOrgClient.getId(),EnableFlag.Y);
+        List<UserTagsVO> userTagsVOS = new ArrayList<>();
+        if(userTagss != null){
+            userTagss.forEach(userTags -> {
+                UserTagsVO userTagsVO = new UserTagsVO();
+                BeanUtil.copyPropertiesIgnoreNullFilds(userTags,userTagsVO);
+                userTagsVOS.add(userTagsVO);
+            });
+        }
+        List<UserOrgImageVO> userOrgImageVOS = new ArrayList<>();
+        List<UserOrgImage> userOrgImages = userOrgImageDAO.findByUserOrgIdAndEnableFlagOrderBySort(userOrgClient.getId(),EnableFlag.Y);
+        if(userOrgImages != null && userOrgImages.size() > 0){
+            userOrgImages.forEach(userOrgImage -> {
+                UserOrgImageVO userOrgImageVO = new UserOrgImageVO();
+                BeanUtil.copyPropertiesIgnoreNullFilds(userOrgImage,userOrgImageVO);
+                userOrgImageVOS.add(userOrgImageVO);
+            });
+        }
+        userOrgClientVO.setUserOrgImageVOS(userOrgImageVOS);
+        userOrgClientVO.setUserTagsVOS(userTagsVOS);
+        return userOrgClientVO;
     }
 
     /**
@@ -1496,42 +1676,25 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public String pushUserAndOrg(UserVO userVO , String userId){
         //查询用户信息
-        User user = userDao.findOne(userVO.getId());
+        User user = userDao.findByIdAndEnableFlag(userVO.getId(),EnableFlag.Y);
         if(user == null){
             return ErrorCodeConst.USER_NOTNULL;
         }
         UserOrgClient userOrgClient = null;
-        //用户数据库中组织号为空且未传入相应的组织号时
-        if((user.getUserOrgId() == null || user.getUserOrgId() == 0L) && (userVO.getUserOrgId() == null || userVO.getUserOrgId() == 0L) ){
-            //原先没有配置组织,新建组织（老用户）
-            userOrgClient = initUserOrgClient(user);
-            userOrgClientDAO.save(userOrgClient);
-        }else if((userVO.getUserOrgId() != null && userVO.getUserOrgId() != 0L)){
-            //绑定组织
-            userOrgClient = userOrgClientDAO.findOne(userVO.getUserOrgId());
-            List<User> users = userDao.findByUserOrgIdAndEnableFlagAndUserAccountType(userOrgClient.getId(),EnableFlag.Y,UserAccountType.ORG_MAIN_ACCOUNT);
-            if(!CollectionUtils.isEmpty(users)){
-                //存在即绑定为子账号
-                user.setUserAccountType(UserAccountType.ORG_CHILD_ACCOUNT);
-            }else{
-                user.setUserAccountType(UserAccountType.ORG_MAIN_ACCOUNT);
-            }
-        }else{
-            userOrgClient = userOrgClientDAO.findOne(user.getUserOrgId());
-        }
-        if(userOrgClient == null){
-            return ErrorCodeConst.ERRPR_ORG_ISNULL;//组织号为空
-        }
-        user.setUserOrgId(userOrgClient.getId());
-        ///如果身份有改变，修改用户身份
-        if(userVO.getUserType() != null && !userOrgClient.isPushFlag()) user.setUserType(userVO.getUserType());
-        if(userVO.getUserDetailType() != null && !userOrgClient.isPushFlag()) user.setUserDetailType(userVO.getUserDetailType());
 
-        if(userVO.getUserAccountType() !=  null && userVO.getUserAccountType() != UserAccountType.IND_MAIN_ACCOUNT){
+        if(userVO.getUserAccountType() !=  null && userVO.getUserAccountType() != UserAccountType.IND_MAIN_ACCOUNT && userVO.getUserAccountType() !=  user.getUserAccountType() ){
+            if(user.getUserAccountType() == UserAccountType.IND_MAIN_ACCOUNT){
+                if(userVO.getUserAccountType() != UserAccountType.ORG_MAIN_ACCOUNT){
+                    //如果是个体账号，则只能设置为组织主账号
+                    logger.info("now the user's userAccountType is {}, the next userAccountType is {}",user.getUserAccountType(),userVO.getUserAccountType());
+                    return ErrorCodeConst.IDY_ONLY_MAIN;
+                }
+            }
             if(userVO.getUserAccountType() == UserAccountType.ORG_MAIN_ACCOUNT){
                 //如果修改为主账号的话，需查询它所在的组织是否已经有主账号了
                 List<User> users = userDao.findByUserOrgIdAndEnableFlagAndUserAccountType(userOrgClient.getId(),EnableFlag.Y,UserAccountType.ORG_MAIN_ACCOUNT);
                 if(!CollectionUtils.isEmpty(users)){
+                    logger.info("now the main user id is{}",users.get(0).getId());
                     //存在即不修改
                     return ErrorCodeConst.ORG_OWN_MAIN;
                 }
@@ -1539,25 +1702,59 @@ public class UserServiceImpl implements UserService {
             //用户输入的用户账号身份不为空时且为组织账号时
             user.setUserAccountType(userVO.getUserAccountType());
             userOrgClient.setUserAccountType(UserAccountType.ORG_ACCOUNT);
-        }else if(userVO.getUserAccountType() !=  null){
-            if(user.getUserAccountType() == UserAccountType.ORG_CHILD_ACCOUNT){
-                //原本为子账号，则不能随意修改企业和自己的账号类型
-                return ErrorCodeConst.ERROR_ORG_CHILDACCOUNT_EDITERR;
-            }
-            List<User> users = userDao.findByUserOrgIdAndEnableFlag(userOrgClient.getId(),EnableFlag.Y);
-            if(!CollectionUtils.isEmpty(users)){
-                users.forEach(user1 -> {
-                    user1.setUserAccountType(UserAccountType.IND_MAIN_ACCOUNT);
-                    user1.setLastUpdateBy(userId);
-                    user1.setLastUpdateDate(new Date());
-                    userDao.save(user1);
-                });
+        }else if(userVO.getUserAccountType() !=  null && userVO.getUserAccountType() !=  user.getUserAccountType() ){//设置为个人账号类型
+            if(user.getUserAccountType() != UserAccountType.IND_MAIN_ACCOUNT){
+                //组织账号类型不能变为个体账号类型
+                return ErrorCodeConst.ORG_CANNOT_IDY;
             }
             user.setUserAccountType(UserAccountType.IND_MAIN_ACCOUNT);
             userOrgClient.setUserAccountType(UserAccountType.IND_ACCOUNT);
         }
+        //用户数据库中组织号为空且未传入相应的组织号时
+        if((user.getUserOrgId() == null || user.getUserOrgId() == 0L) && (userVO.getUserOrgId() == null || userVO.getUserOrgId() == 0L) ){
+            //原先没有配置组织,新建组织（老用户）
+            userOrgClient = initUserOrgClient(user);
+            userOrgClientDAO.save(userOrgClient);
+        }else if((userVO.getUserOrgId() != null && userVO.getUserOrgId() != 0L && (user.getUserOrgId() == null || user.getUserOrgId() == 0L || userVO.getUserOrgId().compareTo(user.getUserOrgId()) != 0))){
+            if(user.getUserAccountType() == UserAccountType.ORG_MAIN_ACCOUNT){
+                logger.info(" now the org id is {}, the bound orgid is {}",user.getUserOrgId(),userVO.getUserOrgId());
+                return ErrorCodeConst.MAIN_CANNOT_BOUND;
+            }
+            if(user.getUserAccountType() == UserAccountType.IND_MAIN_ACCOUNT){
+                //绑定的组织原本为个体账号
+                //删除原有的组织以及推送的es中
+                if(user.getUserOrgId() != null){
+                    UserOrgClient userOrgClient1 = userOrgClientDAO.findByIdAndEnableFlag(user.getUserOrgId(),EnableFlag.Y);
+                    //删除es中已经推送的组织
+                    if(userOrgClient1.isPushFlag()){
+                        //已经推送的情况下删除es中的数据
+                        deleteESInfo(user,userOrgClient1);
+                        userOrgClient1.setPushFlag(false);
+                        userOrgClient1.setElasticId(null);
+                    }
+                    userOrgClient1.setEnableFlag(EnableFlag.N);
+                    userOrgClient1.setLastUpdateDate(new Date());
+                    userOrgClient1.setLastUpdateBy(userId);
+                    userOrgClientDAO.save(userOrgClient1);
+                }
+            }
+            //绑定组织
+            userOrgClient = userOrgClientDAO.findByIdAndEnableFlag(userVO.getUserOrgId(),EnableFlag.Y);
+            user.setUserAccountType(UserAccountType.ORG_CHILD_ACCOUNT);
+        }else{
+            userOrgClient = userOrgClientDAO.findByIdAndEnableFlag(user.getUserOrgId(),EnableFlag.Y);
+        }
+
+        if(userOrgClient == null){
+            return ErrorCodeConst.ERRPR_ORG_ISNULL;//组织号为空
+        }
+        user.setUserOrgId(userOrgClient.getId());
         if(!userVO.isPushFlag()){//不推送，只设置用户账号类型和选择组织
             //修改用户和组织在数据库中的相关状态
+            user.setLastUpdateBy(userId);
+            user.setLastUpdateDate(new Date());
+            userOrgClient.setLastUpdateDate(new Date());
+            userOrgClient.setLastUpdateBy(userId);
             userDao.saveAndFlush(user);
             userOrgClientDAO.saveAndFlush(userOrgClient);
             //修改用户缓存
@@ -1569,13 +1766,18 @@ public class UserServiceImpl implements UserService {
         if(user.getUserType() != UserType.DB && user.getUserType() != UserType.KS && user.getUserType() != UserType.LK){
             return ErrorCodeConst.ORG_PUSH_USERTYPE;
         }
+        if(user.getUserType() == UserType.DB || user.getUserType() == UserType.LK){
+            if(user.getUserDetailType() == null){
+                return ErrorCodeConst.USERINFO_IMPERFECT;
+            }
+        }
         //推送
         if(user.getUserAccountType() != UserAccountType.ORG_CHILD_ACCOUNT){//不为组织子账号
             //查询用户的组织信息，并推送相关组织信息
             if(user.getUserOrgId() == null || user.getUserOrgId() == 0L){
                 return ErrorCodeConst.ERRPR_ORG_ISNULL;
             }
-            userOrgClient = userOrgClientDAO.findOne(user.getUserOrgId());
+            userOrgClient = userOrgClientDAO.findByIdAndEnableFlag(user.getUserOrgId(),EnableFlag.Y);
             //开关打开
             if(!userOrgClient.isPushFlag()){//原来开关为关的情况，现在才开起来
                 userOrgClient.setPushFlag(true);
@@ -1608,6 +1810,7 @@ public class UserServiceImpl implements UserService {
                     userTagsDAO.saveAndFlush(userTags);
                 }
             }
+
             String result = pushESInfo(user,userOrgClient);
             if(!StringUtils.equals(result,Constants.RETURN_SUCESS)){
                 return result;//推送失败
@@ -1636,7 +1839,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public String setOrgTags(UserOrgClientVO userOrgClientVO, String userId){
         //更新es中的数据
-        UserOrgClient userOrgClient = userOrgClientDAO.findOne(userOrgClientVO.getId());
+        UserOrgClient userOrgClient = userOrgClientDAO.findByIdAndEnableFlag(userOrgClientVO.getId(),EnableFlag.Y);
         if(userOrgClient == null){
             return ErrorCodeConst.ERRPR_ORG_ISNULL;
         }
@@ -1732,7 +1935,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     public String deleteOrg(UserOrgClientVO userOrgClientVO, String userId){
-        UserOrgClient userOrgClient = userOrgClientDAO.findOne(userOrgClientVO.getId());
+        UserOrgClient userOrgClient = userOrgClientDAO.findByIdAndEnableFlag(userOrgClientVO.getId(),EnableFlag.Y);
         if(userOrgClient == null){
             return ErrorCodeConst.ERRPR_TAGS;
         }
@@ -1750,7 +1953,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     public String updateOrg(UserOrgClientVO userOrgClientVO, String userId){
-        UserOrgClient userOrgClient = userOrgClientDAO.findOne(userOrgClientVO.getId());
+        UserOrgClient userOrgClient = userOrgClientDAO.findByIdAndEnableFlag(userOrgClientVO.getId(),EnableFlag.Y);
         if(userOrgClient == null){
             return ErrorCodeConst.ERRPR_TAGS;
         }
@@ -1802,10 +2005,11 @@ public class UserServiceImpl implements UserService {
      * @param userVO
      * @return
      */
+    @Override
     public List<UserViewVO> findUserByOrgId(UserVO userVO){
         List<UserViewVO> userVOS = new ArrayList<>();
         if(userVO.getUserOrgId() == null || userVO.getUserOrgId() == 0L){
-            User user = userDao.findOne(userVO.getId());
+            User user = userDao.findByIdAndEnableFlag(userVO.getId(),EnableFlag.Y);
             userVO.setUserOrgId(user.getUserOrgId());
         }
         if(userVO.getUserOrgId() != null && userVO.getUserOrgId() != 0L){
@@ -1822,44 +2026,208 @@ public class UserServiceImpl implements UserService {
         return userVOS;
     }
 
+//    /**
+//     * 我的关注(组织账号信息)
+//     * @param userId
+//     * @return
+//     */
+//    @Override
+//    public PageDTO<UserAllInfo> findUserFocusOrg(Long userId,PageRequest pageRequest,UserDTO userDTO){
+//        PageDTO<UserAllInfo> result = new PageDTO<>();
+//        List<UserAllInfo> userVOS = new ArrayList<>();
+//        String userOrgIds = cacheHashService.hget(RedisHashConstants.HASH_USER_PREFIX + userId,RedisHashConstants.ORG_SAVE);
+//        if(StringUtils.isNotBlank(userOrgIds)){
+//            String[] orgIds = userOrgIds.split(",");
+//            if(orgIds != null  && orgIds.length > 0){
+//                PageDTO<Object[]> objs = focusUserOrgClientDAO.findMyFocusF(CollectionUtils.arrayToList(orgIds),pageRequest,userDTO);
+//                if(objs != null && !CollectionUtils.isEmpty(objs.getRows())){
+//                    objs.getRows().forEach(objects -> {
+//                        UserAllInfo userAllInfo = new UserAllInfo();
+//                        userAllInfo.setUserOrgId(((BigInteger)objects[0]).longValue());
+//                        userAllInfo.setOrgName((String)objects[1]);
+//                        userAllInfo.setAddress((String)objects[2]);
+//                        userAllInfo.setOrgFirstBannerUrl((String)objects[3]);
+//                        if(objects.length > 4 && objects[4] != null) userAllInfo.setId(((BigInteger)objects[4]).longValue());
+//                        if(objects.length > 5 && objects[5] != null) userAllInfo.setUserType(UserType.valueOf(UserType.class,String.valueOf(objects[5])));
+//                        if(objects.length > 6 && objects[6] != null) userAllInfo.setUserRealAuth(UserRealAuth.valueOf(UserRealAuth.class,String.valueOf(objects[6])));
+//                        if(userAllInfo.getUserRealAuth() != null){
+//                            userAllInfo.setUserRealAuthKey(userAllInfo.getUserRealAuth().getKey());
+//                        }if(userAllInfo.getUserType() != null){
+//                            userAllInfo.setUserTypeKey(userAllInfo.getUserType().getKey());
+//                        }
+////                        List<UserTagsVO> userTagsVOS = new ArrayList<>();
+////                        List<UserTags> userTagss = userTagsDAO.findByUserOrgIdAndEnableFlagOrderBySort(userAllInfo.getUserOrgId(),EnableFlag.Y);
+////                        if(!CollectionUtils.isEmpty(userTagss)){
+////                            userTagss.forEach(userTags -> {
+////                                UserTagsVO userTagsVO = new UserTagsVO();
+////                                BeanUtil.copyPropertiesIgnoreNullFilds(userTags,userTagsVO);
+////                                userTagsVOS.add(userTagsVO);
+////                            });
+////                        }
+////                        userAllInfo.setUserTagsVOS(userTagsVOS);
+//                        userVOS.add(userAllInfo);
+//                    });
+//                }
+//                result.setRows(userVOS);
+//                result.setNumber(objs.getNumber());
+//                result.setTotalPages(objs.getTotalPages());
+//                result.setTotalElements(objs.getTotalElements());
+//            }
+//        }
+//        return result;
+//    }
+
     /**
      * 我的关注(组织账号信息)
      * @param userId
      * @return
      */
     @Override
-    public List<UserViewVO> findUserFocusOrg(Long userId,PageRequest pageRequest){
-        List<UserViewVO> userVOS = new ArrayList<>();
+    public PageDTO<UserAllInfo> findUserFocusOrg(Long userId,PageRequest pageRequest,UserDTO userDTO){
+        PageDTO<UserAllInfo> result = new PageDTO<>();
+        List<UserAllInfo> userAllInfos = new ArrayList<>();
+        Page<UserOrgClient> userOrgClients = null;
         String userOrgIds = cacheHashService.hget(RedisHashConstants.HASH_USER_PREFIX + userId,RedisHashConstants.ORG_SAVE);
         if(StringUtils.isNotBlank(userOrgIds)){
             String[] orgIds = userOrgIds.split(",");
-            if(orgIds != null  && orgIds.length > 0){
-                int pageNumber = pageRequest.getPageNumber();
-                int pageSize = pageRequest.getPageSize();
-                if(pageNumber <= 0){
-                    pageNumber = 1;
-                }
-                if(pageSize <= 0){
-                    pageSize = 10;
-                }
-                int star = (pageNumber - 1) * pageSize;
-                int end = pageNumber * pageSize;
-                for(int i = star;i < end;i++){
-                    if(i < orgIds.length){
-                        String userOrdId = orgIds[i];
-                        UserVO userVO = new UserVO();
-                        userVO.setUserOrgId(NumberUtils.createLong(userOrdId));
-                        UserViewVO userViewVO = findUserInfo(userVO);
-                        if(userViewVO != null){
-                            userVOS.add(userViewVO);
-                        }
-                    }else{
-                        break;
+            List<Long> ids = new ArrayList<>();
+            for(int i = 0; i < orgIds.length; i++){
+                ids.add(NumberUtils.createLong(orgIds[i]));
+            }
+            List<Long> id = new ArrayList<>();
+            if(orgIds != null && orgIds.length > 0){
+                if(userDTO.getUserType() != null){
+                    Iterable<BigInteger> objects = userDao.findUserOrgIdsByUserTypeAndUserOrgId(userDTO.getUserType().name(),ids);
+                    Iterator<BigInteger> it = objects.iterator();
+                    while(it.hasNext()){
+                        Long orgId = it.next().longValue();
+                        id.add(orgId);
+                    }
+                }else{
+                    for(int i = 0; i < orgIds.length; i++){
+                        id.add(NumberUtils.createLong(orgIds[i]));
                     }
                 }
             }
+            if(!CollectionUtils.isEmpty(id)){
+                if(StringUtils.isBlank(userDTO.getAddress())){
+                    userOrgClients = userOrgClientDAO.findByIdInAndEnableFlag(id,EnableFlag.Y,pageRequest);
+                }else{
+                    userOrgClients = userOrgClientDAO.findByIdInAndEnableFlagAndAddressLike(id,EnableFlag.Y, "%" + userDTO.getAddress() + "%",pageRequest);
+                }
+                Iterator<UserOrgClient> it = userOrgClients.iterator();
+                while(it.hasNext()){
+                    UserOrgClient userOrgClient = it.next();
+                    UserAllInfo userAllInfo = new UserAllInfo();
+                    List<User> users = userDao.findByUserOrgIdAndEnableFlagAndUserAccountTypeNot(userOrgClient.getId(),EnableFlag.Y,UserAccountType.ORG_CHILD_ACCOUNT);
+                    if(users != null && users.size() > 0 ){
+                        BeanUtil.copyPropertiesIgnoreNullFilds(users.get(0),userAllInfo);
+                    }
+                    if(userAllInfo.getUserType() != null){
+                        userAllInfo.setUserTypeKey(userAllInfo.getUserType().getKey());
+                    }
+                    if(userAllInfo.getUserRealAuth() != null){
+                        userAllInfo.setUserRealAuthKey(userAllInfo.getUserRealAuth().getKey());
+                    }
+                    BeanUtil.copyPropertiesIgnoreNullFilds(userOrgClient,userAllInfo,"id");
+                    userAllInfo.setUserOrgId(userOrgClient.getId());
+                    userAllInfo.setOrgAccountType(userOrgClient.getUserAccountType());
+                    userAllInfos.add(userAllInfo);
+                }
+            }
         }
-        return userVOS;
+        result.setRows(userAllInfos);
+        if(userOrgClients != null){
+            result.setNumber(userOrgClients.getNumber() + 1);
+            result.setTotalElements(userOrgClients.getTotalElements());
+            result.setTotalPages(userOrgClients.getTotalPages());
+        }
+        return result;
+    }
+
+    /**
+     * 用户解除绑定组织
+     * @param userVO
+     * @param userId
+     * @return
+     */
+    @Override
+    public String unBoundOrg(UserVO userVO,String userId){
+        User user = userDao.findByIdAndEnableFlag(userVO.getId(),EnableFlag.Y);
+        if(user == null){
+            return ErrorCodeConst.USER_NOTNULL;
+        }
+        if(user.getUserAccountType() != UserAccountType.ORG_CHILD_ACCOUNT){
+            return ErrorCodeConst.ONLY_CHILD_UNBOUND;
+        }
+        UserOrgClient userOrgClient = null;
+        if(user.getUserOrgId() != null && user.getUserOrgId() != 0L){
+            userOrgClient = userOrgClientDAO.findByIdAndEnableFlag(user.getUserOrgId(),EnableFlag.Y);
+        }
+        if(userOrgClient != null){
+            List<User> users = userDao.findByUserOrgIdAndEnableFlag(userOrgClient.getId(),EnableFlag.Y);
+            if(users != null && users.size() == 1 && userOrgClient.isPushFlag()){
+                return ErrorCodeConst.ONLY_ONE;
+            }
+        }
+        user.setUserAccountType(UserAccountType.IND_MAIN_ACCOUNT);
+        user.setUserOrgId(null);
+        user.setLastUpdateDate(new Date());
+        user.setLastUpdateBy(userId);
+        userDao.saveAndFlush(user);
+        if(userOrgClient != null){
+            //组织不为空时修改组织内部人员在redis中存储的关系
+            updateUserOrgInfoCache(userOrgClient);
+        }
+        return Constants.RETURN_SUCESS;
+    }
+
+    /**
+     * 关闭认证
+     * @return
+     */
+    public String closeOrgPushFlag(UserVO userVO, String userId){
+        User user = userDao.findByIdAndEnableFlag(userVO.getId(),EnableFlag.Y);
+        if(user == null){
+            //用户信息不能为空
+            return ErrorCodeConst.USER_NOTNULL;
+        }
+        if(user.getUserAccountType() == UserAccountType.ORG_CHILD_ACCOUNT){
+            //组织子账号不能取消账户信息的推送
+            return ErrorCodeConst.ERROR_ORG_CHILDACCOUNT_EDITERR;
+        }
+        if(user.getUserOrgId() == null || user.getUserOrgId() == 0L){
+            //用户所在的组织不能为空
+            return ErrorCodeConst.ERRPR_ORG_ISNULL;
+        }
+        UserOrgClient userOrgClient = userOrgClientDAO.findByIdAndEnableFlag(user.getUserOrgId(),EnableFlag.Y);
+        if(userOrgClient == null){
+            //用户所在的组织不能为空
+            return ErrorCodeConst.ERRPR_ORG_ISNULL;
+        }
+        if(!userOrgClient.isPushFlag() || StringUtils.isBlank(userOrgClient.getElasticId())){
+            //组织并未推送，不需要取消
+            return ErrorCodeConst.ORG_NOT_PUSHED;
+        }
+        //删除es中信息
+        deleteESInfo(user,userOrgClient);
+        //修改组织表中推送状态信息
+        userOrgClient.setPushFlag(false);//设置为不推送
+        userOrgClient.setElasticId(null);
+        userOrgClient.setLastUpdateBy(userId);
+        userOrgClient.setLastUpdateDate(new Date());
+        userOrgClientDAO.save(userOrgClient);
+        //删除该组织下的标签
+        List<UserTags> userTagss = userTagsDAO.findByUserOrgIdAndEnableFlagOrderBySort(userOrgClient.getId(),EnableFlag.Y);
+        if(!CollectionUtils.isEmpty(userTagss)){
+            userTagss.forEach(userTags -> {
+                userTags.setLastUpdateBy(userId);
+                userTags.setLastUpdateDate(new Date());
+                userTags.setEnableFlag(EnableFlag.N);
+                userTagsDAO.save(userTags);
+            });
+        }
+        return Constants.RETURN_SUCESS;
     }
 
 

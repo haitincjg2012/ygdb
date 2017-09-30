@@ -62,7 +62,7 @@
   import c_js from '../../../assets/js/common'
   import {MessageBox, Toast} from 'mint-ui';
 
-  import userImgUrl from '../../../assets/img/p.png'
+//  import userImgUrl from '../../../assets/img/p.png'
 
   const api = new API();
 
@@ -88,7 +88,7 @@
   export default {
     data() {
       return {
-        imgUrl:userImgUrl,
+        imgUrl:"",
         supplyInfo:{
         },
         UserId: this.$route.params.id

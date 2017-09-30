@@ -50,11 +50,11 @@
   import {MessageBox, Indicator} from 'mint-ui';
 
 
-  import QT from '../../../assets/img/copper@3x.png'//铜牌
-  import BY from '../../../assets/img/silver@3x.png'//银牌
-  import HJ from '../../../assets/img/gold@3x.png'//金牌
-  import BJ from '../../../assets/img/Pt@3x.png'//铂金
-  import ZS from '../../../assets/img/Diamonds.png'//砖石
+  import QT from '../../../assets/img/t.png'//铜牌
+  import BY from '../../../assets/img/y.png'//银牌
+  import HJ from '../../../assets/img/j.png'//金牌
+  import BJ from '../../../assets/img/bj-1.png'//铂金
+  import ZS from '../../../assets/img/zs.png'//砖石
   import DS from '../../../assets/img/Ancrown@3x.png'//大师
 
   import BScroll from 'better-scroll';
@@ -117,6 +117,7 @@
 //      this.GetPointList();
       this.getPoint();
       this.userLevelName = this.userLevelKeySwitch(this.$store.state.userLevelName || c_js.getLocalValue('userLevelName') || '');
+      console.log(this.$store.state.userLevelName, c_js.getLocalValue('userLevelName'), 888888);
       this.point = this.$store.state.point || c_js.getLocalValue('point') || 0;
     },
     deactivated () {

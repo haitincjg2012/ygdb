@@ -81,7 +81,7 @@ module.exports = {
           changeOrigin: true
       },
       '/images':{
-        target: 'http://192.168.7.21',
+        target: 'http://192.168.7.111',
         changeOrigin: true
       },
       '/product':{

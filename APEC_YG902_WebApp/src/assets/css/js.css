@@ -1,0 +1,17 @@
+.p-form-content h3 {
+  color: #323232;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+.p-form-content p {
+  color: #646464;
+  font-size: 0.7rem;
+}
+.p-form-content .Zadd {
+  font-weight: 600;
+  color: #28cba7;
+}
+.p-form-content .Zsub {
+  font-weight: 600;
+  color: red;
+}

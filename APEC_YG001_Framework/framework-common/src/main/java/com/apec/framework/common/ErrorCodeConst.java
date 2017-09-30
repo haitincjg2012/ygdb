@@ -29,6 +29,13 @@ public interface ErrorCodeConst
     String ERRPR_TAGS = "800018"; //标签不存在
     String ORG_OWN_MAIN = "800019"; //该组织已经绑定主账号
     String ORG_PUSH_USERTYPE = "800020"; //只有客商，冷库，代办可以进行认证操作
+    String ONLY_CHILD_UNBOUND = "800021"; //只有子账号能进行解绑操作
+    String MAIN_CANNOT_BOUND = "800022"; //主账号不能绑定组织
+    String ORG_CANNOT_IDY = "800023"; //组织账号类型不能变为个体账号类型
+    String IDY_ONLY_MAIN = "800024"; //个体账号只能设置为组织主账号
+    String ONLY_ONE = "800025"; //该企业已经通过认证，且只剩下这一个账号，你可以通过绑定其他组织或是删除该组织的形式与其解绑，不能解绑
+    String USERINFO_IMPERFECT = "800026";//用户信息不完整，请先完善信息
+    String ORG_NOT_PUSHED = "800027";//组织并未推送，不需要取消
 
     //=========== DISPATCH错误码start===================
     String ERROR_600001 = "600001";//session超时
@@ -83,6 +90,7 @@ public interface ErrorCodeConst
     //===========  voucher相关错误码start===================
     String VOUCHER_EXCEED_NUMBER = "900001";
     String VOUCHER_EXCEED_TIMES = "900002";
+    String VOUCHER_DELIVERY_TIME_PASS = "900003";
     
     //===========  voucher相关错误码End===================
 }

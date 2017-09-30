@@ -71,7 +71,7 @@ public class AttributeNameServiceImpl implements AttributeNameService {
                 if(attributeValueVO != null && StringUtils.isNotBlank(attributeValueVO.getAttrValue())){
                     AttributeValue attributeValue = new AttributeValue();
                     BeanUtil.copyPropertiesIgnoreNullFilds(attributeValueVO,attributeValue);
-                    attributeValue.setAttributeName(attributeName);
+                    attributeValue.setAttributeNameId(attributeName.getId());
                     attributeValue.setId(idGen.nextId());
                     attributeValue.setCreateBy(userID);
                     attributeValue.setCreateDate(new Date());
@@ -98,7 +98,7 @@ public class AttributeNameServiceImpl implements AttributeNameService {
         attributeNameDAO.save(attributeName);
         List<AttributeValueVO> attributeValueVOList = attributeNameVO.getAttributeValueVOS();
         //查询所有的属性对象
-        List<AttributeValue> list = attributeValueDAO.findByAttributeId(attributeNameVO.getId());
+        List<AttributeValue> list = attributeValueDAO.findByAttributeNameIdAndEnableFlagOrderBySort(attributeNameVO.getId(),EnableFlag.Y);
         if(list != null && list.size() > 0){
             for(AttributeValue attributeValue:list){
                 AttributeValue value = new AttributeValue();
@@ -140,7 +140,7 @@ public class AttributeNameServiceImpl implements AttributeNameService {
                     //该对象为新增对象
                     AttributeValue attributeValue = new AttributeValue();
                     BeanUtil.copyPropertiesIgnoreNullFilds(attributeValueVO,attributeValue);
-                    attributeValue.setAttributeName(attributeName);
+                    attributeValue.setAttributeNameId(attributeName.getId());
                     attributeValue.setId(idGen.nextId());
                     attributeValue.setCreateDate(new Date());
                     attributeValue.setCreateBy(userId);
@@ -172,13 +172,12 @@ public class AttributeNameServiceImpl implements AttributeNameService {
         AttributeName attributeName = attributeNameDAO.findOne(attributeNameVO.getId());
         BeanUtil.copyPropertiesIgnoreNullFilds(attributeName,attributeNameVO1);
         List<AttributeValueVO> list = new ArrayList<>();
-        if(attributeName.getAttributeValues() != null && attributeName.getAttributeValues().size() > 0){
-            for(AttributeValue attributeValue:attributeName.getAttributeValues()){
-                if(attributeValue.getEnableFlag() == EnableFlag.Y){
+        List<AttributeValue> attributeValues = attributeValueDAO.findByAttributeNameIdAndEnableFlagOrderBySort(attributeName.getId(),EnableFlag.Y);
+        if(attributeValues != null && attributeValues.size() > 0){
+            for(AttributeValue attributeValue:attributeValues){
                     AttributeValueVO attributeValueVO = new AttributeValueVO();
                     BeanUtil.copyPropertiesIgnoreNullFilds(attributeValue,attributeValueVO);
                     list.add(attributeValueVO);
-                }
             }
         }
         attributeNameVO1.setAttributeValueVOS(list);
@@ -195,14 +194,12 @@ public class AttributeNameServiceImpl implements AttributeNameService {
                 AttributeNameVO attributeNameVO1 = new AttributeNameVO();
                 BeanUtil.copyPropertiesIgnoreNullFilds(attributeName,attributeNameVO1);
                 List<AttributeValueVO> list1 = new ArrayList<>();
-                if(attributeName != null && attributeName.getAttributeValues() != null && attributeName.getAttributeValues().size() > 0){
-                    List<AttributeValue> attributeValues = attributeName.getAttributeValues();
+                if(attributeName != null){
+                    List<AttributeValue> attributeValues = attributeValueDAO.findByAttributeNameIdAndEnableFlagOrderBySort(attributeName.getId(),EnableFlag.Y);
                     for(AttributeValue attributeValue:attributeValues){
-                        if(attributeValue.getEnableFlag() == EnableFlag.Y){
                             AttributeValueVO attributeValueVO = new AttributeValueVO();
                             BeanUtil.copyPropertiesIgnoreNullFilds(attributeValue,attributeValueVO);
                             list1.add(attributeValueVO);
-                        }
                     }
                 }
                 attributeNameVO1.setAttributeValueVOS(list1);

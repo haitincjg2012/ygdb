@@ -44,7 +44,7 @@ public class AttributeValueServiceImpl implements AttributeValueService {
         BeanUtil.copyPropertiesIgnoreNullFilds(attributeValueVO,attributeValue);
         AttributeName attributeName = new AttributeName();
         attributeName.setId(attributeValueVO.getAttributeNameId());
-        attributeValue.setAttributeName(attributeName);
+        attributeValue.setAttributeNameId(attributeName.getId());
         attributeValue.setEnableFlag(EnableFlag.Y);
         attributeValue.setId(idGen.nextId());
         attributeValue.setCreateDate(new Date());
@@ -88,9 +88,6 @@ public class AttributeValueServiceImpl implements AttributeValueService {
         AttributeValueVO attributeValueVO1 = new AttributeValueVO();
         AttributeValue attributeValue = attributeValueDAO.findOne(attributeValueVO.getId());
         BeanUtil.copyPropertiesIgnoreNullFilds(attributeValue,attributeValueVO1);
-        if(attributeValue.getAttributeName() != null){
-            attributeValueVO1.setAttributeNameId(attributeValue.getAttributeName().getId());
-        }
         return attributeValueVO1;
     }
 

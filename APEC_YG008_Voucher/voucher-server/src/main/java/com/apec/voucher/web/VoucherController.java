@@ -2,6 +2,7 @@ package com.apec.voucher.web;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONArray;
 import com.apec.framework.common.Constants;
+import com.apec.framework.common.ErrorCodeConst;
 import com.apec.framework.common.PageDTO;
 import com.apec.framework.common.PageJSON;
 import com.apec.framework.common.ResultData;
@@ -75,6 +77,9 @@ public class VoucherController extends MyBaseController{
 			log.warn("param is null,[cityId:{},countyId:{},townId:{},userType:{},name:{},deliveryTime:{}]",voucherVO.getCityId()
 					,voucherVO.getCountyId(),voucherVO.getTownId(),voucherVO.getType(),voucherVO.getName(),voucherVO.getDeliveryTime());
 			return getResultData(false, null, Constants.COMMON_MISSING_PARAMS);
+		}
+		if (voucherVO.getDeliveryTime().getTime()>new Date().getTime()){
+			return getResultData(false, "", ErrorCodeConst.VOUCHER_DELIVERY_TIME_PASS);
 		}
 		if (CollectionUtils.isEmpty(voucherVO.getVoucherGoodsVO())){
 			log.warn("voucherGoodsVO is null");
@@ -205,6 +210,31 @@ public class VoucherController extends MyBaseController{
 	}
 	
 	/**
+	 * 后台删除交收单数据
+	 * @param json
+	 * @return ResultData<String>
+	 * */
+	@RequestMapping(value = "/deleteBSVoucherInfo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	public ResultData<Integer> deleteBSVoucherInfo(@RequestBody String json){
+		
+		VoucherDTO voucherDTO = getFormJSON(json, VoucherDTO.class);
+		if (voucherDTO.getVoucherId() == null || voucherDTO.getUserId() == null){
+			log.warn("param is null,[voucherid:{},userid:{}]" ,voucherDTO.getVoucherId(),voucherDTO.getUserId());
+			return getResultData(false, null, Constants.ERROR_100003);
+		}
+		try {
+			int resultCode = voucherService.deleteVoucherInfo(voucherDTO);
+			return getResultData(true, resultCode, "");
+		} catch(BusinessException e){
+			log.error("Add BusinessException :{}",e);
+			return getResultData(false, null, Constants.SERVER_RESEST_EXCEPTION);
+		} catch (Exception e) {
+			log.error("Add Excetion :{}",e);
+			return getResultData(false, null, Constants.SYS_ERROR);
+		}
+	}
+	
+	/**
 	 * 删除交收单数据
 	 * @param json
 	 * @return ResultData<String>
@@ -212,7 +242,9 @@ public class VoucherController extends MyBaseController{
 	@RequestMapping(value = "/deleteVoucherInfo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	public ResultData<Integer> deleteVoucherInfo(@RequestBody String json){
 		
+		Long userId = getUserId(json);
 		VoucherDTO voucherDTO = getFormJSON(json, VoucherDTO.class);
+		voucherDTO.setUserId(userId);
 		if (voucherDTO.getVoucherId() == null || voucherDTO.getUserId() == null){
 			log.warn("param is null,[voucherid:{},userid:{}]" ,voucherDTO.getVoucherId(),voucherDTO.getUserId());
 			return getResultData(false, null, Constants.ERROR_100003);
@@ -391,4 +423,27 @@ public class VoucherController extends MyBaseController{
 			return getResultData(false, null, Constants.SYS_ERROR);
 	    }
 	}
+
+	/**
+	 * 更新用户缓存量(定时任务)
+	 * */
+	@RequestMapping(value = "/countVoucherOfUser")
+	public String countVoucherOfUser(){
+		try {
+			String result = voucherService.countVoucherOfUser();
+			if(StringUtils.equals(result,Constants.RETURN_SUCESS)){
+				return getResultJSONStr(true, null, null);
+			}else{
+				return getResultJSONStr(false, null, result);
+			}
+		} catch(BusinessException e){
+			log.error("【voucher】[countVoucherOfUser]Add BusinessException :{}",e);
+			return getResultJSONStr(false, null, Constants.SERVER_RESEST_EXCEPTION);
+		} catch (Exception e) {
+			log.error("【voucher】[countVoucherOfUser]Add Excetion :{}",e);
+			return getResultJSONStr(false, null, Constants.SYS_ERROR);
+		}
+	}
+
+
 }

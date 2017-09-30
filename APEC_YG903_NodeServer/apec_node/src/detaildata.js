@@ -39,6 +39,8 @@ exports = module.exports = function (elastic,total,err,done,saveProductFlag) {
        "weight": elasticSource.weight,
        "userTypeName": elasticSource.userTypeName,
        "userId": elasticSource.userId,
+       "timeout":elasticSource.timeout,
+       "createDate":elasticSource.createDate,
        "showCredateTime": datautil.getDateDiff(elasticSource.createDate,elasticSource.timeout)
    };
    var showSecondInfo = [];

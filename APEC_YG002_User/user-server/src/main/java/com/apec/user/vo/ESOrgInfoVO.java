@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,5 +46,7 @@ public class ESOrgInfoVO {
      * 标签集合
      */
     private List<ESTagsInfoVO> orgTags ;
+
+    private Date createDate;
 
 }

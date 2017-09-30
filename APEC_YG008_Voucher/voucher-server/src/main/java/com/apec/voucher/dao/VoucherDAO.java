@@ -47,12 +47,12 @@ public interface VoucherDAO extends BaseDAO<Voucher, Long>{
 	 *@param userId Long
 	 *@return Object[][]
 	 * */
-	@Query(value = "select t.rankNo,t.name,t.user_type,t.sumNuber from "
-			+ "(SELECT (@rank_no\\:=@rank_no+1) as rankNo,v.user_id,u.name,u.user_type,sum(g.number) as sumNuber FROM (select @rank_no\\:=0) r"
-			+ " inner join voucher_goods g inner join voucher v inner join user u "
-			+ "on v.id = g.voucher_id and v.user_id = u.id and u.user_type in ('DB','KS') and "
-			+ "g.enable_flag='Y' and v.enable_flag= 'Y' and u.enable_flag='Y' group by v.user_id ORDER BY sumNuber DESC) t "
-			+ "where t.user_id=:userId",nativeQuery = true)
+	@Query(value = "SELECT * FROM (SELECT obj.user_id,obj.name,obj.user_type,obj.sumNuber, CASE WHEN @rowtotal = obj.sumNuber THEN "
+			+ "@rownum WHEN @rowtotal\\:= obj.sumNuber THEN @rownum\\:=@rownum + 1 WHEN @rowtotal = 0 THEN @rownum\\:=@rownum + 1 END "
+			+ "AS rownum FROM(SELECT v.user_id,u.name ,u.user_type, SUM(g.number) AS sumNuber FROM voucher_goods g INNER JOIN voucher v "
+			+ "INNER JOIN user u ON v.id = g.voucher_id AND v.user_id = u.id AND u.user_type IN ('DB','KS') AND g.enable_flag='Y' AND "
+			+ "v.enable_flag= 'Y' AND u.enable_flag='Y' GROUP BY v.user_id ORDER BY sumNuber DESC) AS obj,(SELECT @rownum \\:= 0,"
+			+ "@rowtotal \\:= NULL) r) T WHERE T.user_id =:userId",nativeQuery = true)
 	List<Object[]> findDBNumberRankInfo(@Param("userId")Long userId);
 	
 	/**

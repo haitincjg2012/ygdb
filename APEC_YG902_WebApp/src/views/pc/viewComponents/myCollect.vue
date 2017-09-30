@@ -30,10 +30,16 @@
           </li>
         </ul>
       </div>
+      <div class="c-empty-collect-show" v-if="collectFlag" >
+        <img src="../../../assets/img/noCollect.png"/>
+        <!--<p class="c-z-collect">暂无收藏</p>-->
+      </div>
     </scroller>
   </div>
 </template>
-
+<style>
+@import "../../../assets/css/collect.css";
+</style>
 <script>
   import split from '../../../components/split/split'
   import topBar from '../../../components/topBar/topBar'
@@ -54,6 +60,7 @@
           myCollectList:[],
         isActivated:true,
         currentPageNo:1,
+        collectFlag:false,//是否有收藏
       }
     },
 
@@ -62,6 +69,7 @@
     },
 
     activated () {
+        this.collectFlag = false;
       this.GetMyCollect();
       this.isActivated = true
     },
@@ -98,6 +106,9 @@
                   'imgLabel':item.productTypeName =='求购'?buy:sell
                 })
               });
+              if(self.myCollectList.length == 0){
+                  self.collectFlag = true;
+              }
             } else {
             }
             console.log(self.myCollectList);

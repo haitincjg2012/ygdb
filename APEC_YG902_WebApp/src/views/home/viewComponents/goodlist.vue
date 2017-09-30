@@ -1,7 +1,7 @@
 <template>
   <!--<div>test</div>-->
-  <li class="com">
-    <div class="bread-com-f"
+  <li class="comT c-gq">
+    <div class="bread-com-f-T"
          :data-path = "item.path"
          :data-id = "item.id"
          @click="xq">

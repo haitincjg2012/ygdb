@@ -10,7 +10,10 @@ import common from '~/views/common/common.vue'
 import home from '~/views/home/home.vue'
 import member from '~/views/member/member.vue'
 import certificate from '~/views/member/certificate.vue'
+import company from '~/views/member/company.vue'
 import newsIssue from '~/views/transaction/newsIssue.vue'
+import supplyDemand from '~/views/transaction/supplyDemand.vue'
+import settlement from '~/views/transaction/settlement.vue'
 
 Vue.use(Router);
 
@@ -48,11 +51,26 @@ const router=new Router({
                     path:'/certificate',
                     component:certificate
                 },
+                {//企业管理
+                    name:'company',
+                    path:'/company',
+                    component:company
+                },
                 /*交易模块*/
                 {//行情发布
                     name:'newsIssue',
                     path:'/newsIssue',
                     component:newsIssue
+                },
+                {//供求管理
+                    name:'supplyDemand',
+                    path:'/supplyDemand',
+                    component:supplyDemand
+                },
+                {//交收单管理
+                    name:'settlement',
+                    path:'/settlement',
+                    component:settlement
                 }
             ]
         }

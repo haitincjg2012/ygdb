@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,6 +21,8 @@ import java.util.List;
 public class UserOrgClientVO{
 
     private Long id;
+
+    private Date createDate;
 
     /**
      * 仓库组名称
@@ -116,6 +119,11 @@ public class UserOrgClientVO{
      * 开关，
      */
     private boolean pushFlag;
+
+    /**
+     * 组织账户下的用户账号信息
+     */
+    private String orgClientUsers;
 
 
 }

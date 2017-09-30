@@ -16,15 +16,16 @@
             <el-menu-item-group>
                 <el-menu-item index="member">客户列表</el-menu-item>
                 <el-menu-item index="certificate">实名认证审核</el-menu-item>
+                <el-menu-item index="company">企业管理</el-menu-item>
                 <!--<el-menu-item index="th">客户举报</el-menu-item>-->
             </el-menu-item-group>
         </el-submenu>
         <el-submenu index="3">
             <template slot="title" class="subTitle"><i class="el-icon-menu"></i>交易</template>
             <el-menu-item-group>
-                <!--<el-menu-item index="gq">供求管理</el-menu-item>
-                <el-menu-item index="qg">求购管理</el-menu-item>
-                <el-menu-item index="jsd">交收单管理</el-menu-item>-->
+                <el-menu-item index="supplyDemand">供求管理</el-menu-item>
+                <!--<el-menu-item index="qg">求购管理</el-menu-item>-->
+                <el-menu-item index="settlement">交收单管理</el-menu-item>
                 <el-menu-item index="newsIssue">行情发布</el-menu-item>
             </el-menu-item-group>
         </el-submenu>

@@ -194,4 +194,24 @@ public class UserPointController extends MyBaseController {
         }
     }
 
+    /**
+     * 查询用户积分是否准确落地，补偿和更新缓存(定时任务)
+     */
+    @RequestMapping(value = "/perfectUserPoint")
+    public String perfectUserPoint(){
+        try{
+
+            String result = userPointRecordService.perfectUserPoint();
+            if(StringUtils.equals(result,Constants.RETURN_SUCESS)){
+                return super.getResultJSONStr(true, null, null);
+            }else{
+                return super.getResultJSONStr(false, null, result);
+            }
+
+        }catch(Exception e){
+            log.error("[userpoint][perfectUserPoint] exception {}:" ,e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
 }

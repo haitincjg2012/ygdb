@@ -1,0 +1,14 @@
+.message-info-page .c-empty-show {
+  margin: 7.5rem 0;
+  text-align: center;
+}
+.message-info-page .c-empty-show img {
+  width: 8.45rem;
+  height: 6.675rem;
+}
+.message-info-page .c-empty-show .c-z-message {
+  font-size: 0.8rem;
+  color: #646464;
+  line-height: 5rem;
+  letter-spacing: 0.1rem;
+}

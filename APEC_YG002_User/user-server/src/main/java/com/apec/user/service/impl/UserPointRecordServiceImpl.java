@@ -22,15 +22,25 @@ import com.apec.user.service.UserPointRecordService;
 import com.apec.user.util.SnowFlakeKeyGen;
 import com.apec.user.vo.*;
 import com.mysema.query.types.Predicate;
+import com.mysema.query.types.Visitor;
 import com.mysema.query.types.expr.BooleanExpression;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Nullable;
+import javax.persistence.Transient;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -83,7 +93,7 @@ public class UserPointRecordServiceImpl implements UserPointRecordService {
      * @param userId 用户ID
      * @return 返回码
      */
-    private void updateUserCache(String userId,UserPoint userPoint,User user){
+    private void updateUserCache(Long userId,UserPoint userPoint){
         //缓存更新异常,返回异常,数据回滚,Mq消息补偿机制重跑.
         String json = cacheHashService.hget(RedisHashConstants.HASH_USER_PREFIX + userId,RedisHashConstants.HASH_USER_CREATEUSERVIEW_INFO);
         UserViewVO userViewVO ;
@@ -94,11 +104,11 @@ public class UserPointRecordServiceImpl implements UserPointRecordService {
         }else{
             userViewVO = JsonUtil.parseObject(json,UserViewVO.class);
         }
-        userViewVO.setPoint(userPoint.getAvailablePoints());
-        userViewVO.setUserLevelKey(userPoint.getUserLevel().getKey());
-        userViewVO.setUserLevelName(userPoint.getUserLevel().name());
-        userViewVO.setUserRealAuthKey(user.getUserRealAuth().getKey());
-        userViewVO.setUserRealAuthName(user.getUserRealAuth().name());
+        if(userPoint != null) {
+            userViewVO.setPoint(userPoint.getAvailablePoints());
+            userViewVO.setUserLevelKey(userPoint.getUserLevel().getKey());
+            userViewVO.setUserLevelName(userPoint.getUserLevel().name());
+        }
         cacheHashService.hset(RedisHashConstants.HASH_USER_PREFIX + userId,RedisHashConstants.HASH_USER_CREATEUSERVIEW_INFO, JsonUtil.toJSONString(userViewVO));
     }
 
@@ -150,6 +160,29 @@ public class UserPointRecordServiceImpl implements UserPointRecordService {
         return point;
     }
 
+    /**
+     * 初始化积分记录
+     * @param user
+     * @return
+     */
+    public UserPointRecord initUserPointRecord(User user,UserPointRule rule,String userId){
+        UserPointRecord userPointRecord = new UserPointRecord();
+        userPointRecord.setId(idGen.nextId());
+        userPointRecord.setUserId(user.getId());
+        Integer pointsChanged = rule.getPointsChanged();
+        if(PointsChangedType.REDUCTION == rule.getPointsChangedType()){
+            pointsChanged = 0 - pointsChanged;
+        }
+        userPointRecord.setPointsChanged(pointsChanged);
+        userPointRecord.setPointRuleType(rule.getPointRuleType());
+        userPointRecord.setRemark(rule.getRemark());
+        userPointRecord.setRuleId(String.valueOf(rule.getId()));
+        userPointRecord.setCreateDate(new Date());
+        userPointRecord.setCreateBy(userId);
+        userPointRecord.setEnableFlag(EnableFlag.Y);
+        return userPointRecord;
+    }
+
     @Override
     @Transactional
     public String addUserPoint(UserPointRecordVO userPointRecordVO) {
@@ -177,10 +210,12 @@ public class UserPointRecordServiceImpl implements UserPointRecordService {
                 logger.info("[UserPoint][addUserPoint] Can't add user point, userIds is null!");
                 continue;
             }
-            User user = userDAO.findOne(userId);
+            userDAO.flush();
+            User user = userDAO.findByIdAndEnableFlag(userId,EnableFlag.Y);
             if(user == null){
                 logger.info("[UserPoint][addUserPoint] Can't add user point, user is null! the userId is {}", userId);
-                continue;
+                user = new User();
+                user.setId(userId);
             }
             //查询当前用户积分信息
             UserPoint point = userPointDAO.findByUserIdAndEnableFlag(userId,EnableFlag.Y);
@@ -190,28 +225,23 @@ public class UserPointRecordServiceImpl implements UserPointRecordService {
                 point = initUserPint(user);
             }
             //增加积分记录
-            UserPointRecord userPointRecord = new UserPointRecord();
-            userPointRecord.setId(idGen.nextId());
-//            BeanUtil.copyPropertiesIgnoreNullFilds(userPointRecordVO,userPointRecord);
-            userPointRecord.setUserId(user.getId());
-            userPointRecord.setPointsChanged(pointsChanged);
-            userPointRecord.setPointRuleType(rule.getPointRuleType());
-            userPointRecord.setRemark(rule.getRemark());
+            UserPointRecord userPointRecord = initUserPointRecord(user,rule,String.valueOf(userId));
             if(pointsChanged < 0){
                 //本次为扣除积分，则记录为消费
                 point.setLastConsumeTime(new Date());
-                userPointRecord.setPointsChanged(pointsChanged);
             }
             //修改用户积分
             userPointDAO.updateUserPoints(pointsChanged,userId);
-            //更新Cache
             //保存积分记录
             userPointRecordDAO.saveAndFlush(userPointRecord);
+
+            //修改用户等级
             UserPoint userPoint = userPointDAO.findByUserIdAndEnableFlag(userId,EnableFlag.Y);
             userPoint.setLastConsumeTime(point.getLastConsumeTime());
-            updateUserLevel(userPoint);//修改用户积分等级
+            updateUserLevel(userPoint);
             userPointDAO.save(userPoint);
-            updateUserCache(String.valueOf(userId), userPoint, user);
+            //更新用户View缓存
+            updateUserCache(userId, userPoint);
             //发送积分变动的站内信
             sendMessageMqInfo(rule,user);
         }
@@ -222,7 +252,7 @@ public class UserPointRecordServiceImpl implements UserPointRecordService {
     @Transactional
     public String updateUserPointRule(UserPointRuleVO ruleVO, String userId) {
         //查询相应的积分规则信息
-        UserPointRule rule = ruleDAO.findOne(ruleVO.getId());
+        UserPointRule rule = ruleDAO.findByIdAndEnableFlag(ruleVO.getId(),EnableFlag.Y);
         if(rule == null){
             logger.warn("rule is not exist ruleId{}:" + ruleVO.getId());
             return Constants.COMMON_ERROR_PARAMS;
@@ -321,25 +351,141 @@ public class UserPointRecordServiceImpl implements UserPointRecordService {
         return result;
     }
 
-
-    /**
-     * 根据多种情况查询用户积分信息
-     * 包括like：name
-     * @param vo 用户对象（以积分表中用户对象的信息去进行条件查询）
+     /**
+     * 查询用户积分是否准确落地，补偿和更新缓存(定时任务)
      * @return
      */
-//    private Predicate getInputCondition(UserVO vo)
-//    {
-//        List<BooleanExpression> predicates = new ArrayList<>();
-//        if(null != vo)
-//        {
-//            if(StringUtils.isNotBlank(vo.getName()))
-//            {
-//                predicates.add(QUserPoint.userPoint.user.name.like("%" + vo.getName() + "%"));
-//            }
-//        }
-//        predicates.add(QUserPoint.userPoint.enableFlag.eq(EnableFlag.Y));
-//        return BooleanExpression.allOf(predicates.toArray(new BooleanExpression[predicates.size()]));
-//    }
+     @Transient
+     public String perfectUserPoint(){
+         logger.info("#################user###########time job begin ##########################");
+         Iterable<User> iterable = userDAO.findAll();
+         Iterator<User> it = iterable.iterator();
+         while(it.hasNext()){
+             User user = it.next();
+             Long userId = user.getId();
+             /*********************积分统计开始***************/
+
+             /**
+              * 用户是否注册时积分未落地
+              */
+             //查询通过注册所加的积分记录
+             List<UserPointRecord> registPoints = userPointRecordDAO.findByUserIdAndEnableFlagAndPointRuleType(userId,EnableFlag.Y,PointRuleType.REGISTER_LOGIN);
+             if(CollectionUtils.isEmpty(registPoints)){
+                 //积分记录为空，说明注册时未给该用户加入积分，补偿
+                 //查询注册需加的分数和备注信息
+                 List<UserPointRule> rules = ruleDAO.findByPointRuleTypeAndEnableFlagOrderByCreateDateDesc(PointRuleType.REGISTER_LOGIN,EnableFlag.Y);
+                 if(!CollectionUtils.isEmpty(rules)){
+                     UserPointRule rule = rules.get(0);
+                     //初始化积分记录
+                     UserPointRecord userPointRecord = initUserPointRecord(user,rule,String.valueOf(userId));
+                     //补偿积分
+                     userPointRecordDAO.saveAndFlush(userPointRecord);
+                     //发送消息提醒
+                     sendMessageMqInfo(rule,user);
+                 }
+             }
+
+             /**
+              * 用户上传的单据是否有未加积分的情况
+              */
+             //获取用户上传单据的总数
+             String sumWeight = cacheHashService.hget(RedisHashConstants.HASH_USER_PREFIX + userId,RedisHashConstants.HASH_VOUCHER_NUM);
+             double sumWeights = 0;
+             if(StringUtils.isNotBlank(sumWeight)){
+                 sumWeights = Double.valueOf(sumWeight);
+             }
+             int points = (int)sumWeights/200000;//计算通过上传的单据应该加的积分次数
+             if(points > 0){//用户有通过上传单据需要添加的积分
+                 int size = points;//需要补偿的积分次数
+                 //查询用户通过上传单据所加的用户积分记录
+                 List<UserPointRecord> weightPoints = userPointRecordDAO.findByUserIdAndEnableFlagAndPointRuleType(userId,EnableFlag.Y,PointRuleType.MEACH_SEND_ORDER);
+                 if(!CollectionUtils.isEmpty(weightPoints)){
+                     int weightSize = weightPoints.size();//已经添加的积分次数
+                     size = points - weightSize;
+                 }
+                 if(size > 0){
+                     //查询注册需加的分数和备注信息
+                     List<UserPointRule> rules = ruleDAO.findByPointRuleTypeAndEnableFlagOrderByCreateDateDesc(PointRuleType.MEACH_SEND_ORDER,EnableFlag.Y);
+                     if(!CollectionUtils.isEmpty(rules)){
+                         UserPointRule rule = rules.get(0);
+                         for(int i = 0; i < size; i++) {
+                             //初始化积分记录
+                             UserPointRecord userPointRecord = initUserPointRecord(user,rule,String.valueOf(userId));
+                             //补偿积分
+                             userPointRecordDAO.saveAndFlush(userPointRecord);
+                             //发送消息提醒
+                             sendMessageMqInfo(rule, user);
+                         }
+                     }
+                 }
+             }
+
+             /**
+              * 用户上传供求是否有积分未落地的情况
+              */
+             //查询用户上传的供求
+             String gqOnline = cacheHashService.hget(RedisHashConstants.HASH_USER_PREFIX + userId,RedisHashConstants.HASH_USER_CREATEPRODUCT_INFO);
+             String gqOffsell = cacheHashService.hget(RedisHashConstants.HASH_USER_PREFIX + userId,RedisHashConstants.HASH_PRODUCT_OFF_SELL_PREFIX);
+             String[] gqOnlines = null;
+             if(StringUtils.isNotBlank(gqOnline)){
+                 gqOnlines = gqOnline.split(",");
+             }
+             String[] gqOffsells = null;
+             if(StringUtils.isNotBlank(gqOffsell)){
+                 gqOffsells = gqOffsell.split(",");
+             }
+             int size = 0;//用户发布的供求数
+             if(gqOnlines != null && gqOnlines.length > 0){
+                 size += gqOnlines.length;//用户发布的在线的供求数
+             }if(gqOffsells != null && gqOffsells.length > 0){
+                 size += gqOffsells.length;//用户发布的已下架的供求数
+             }
+             if(size > 0){//用户有通过上传单据需要添加的积分
+                 int gqSize = size;//需要补偿的积分次数
+                 //查询用户通过发布供求所加的用户积分记录
+                 List<UserPointRecord> gqPoints = userPointRecordDAO.findByUserIdAndEnableFlagAndPointRuleType(userId,EnableFlag.Y,PointRuleType.SINGLE_ONCE_SEND_REQUEST);
+                 if(!CollectionUtils.isEmpty(gqPoints)){
+                     int weightSize = gqPoints.size();//已经添加的积分次数
+                     gqSize = size - weightSize;
+                 }
+                 if(gqSize > 0){
+                     //查询注册需加的分数和备注信息
+                     List<UserPointRule> rules = ruleDAO.findByPointRuleTypeAndEnableFlagOrderByCreateDateDesc(PointRuleType.SINGLE_ONCE_SEND_REQUEST,EnableFlag.Y);
+                     if(!CollectionUtils.isEmpty(rules)){
+                         UserPointRule rule = rules.get(0);
+                         for(int i = 0; i < gqSize; i++) {
+                             //初始化积分记录
+                             UserPointRecord userPointRecord = initUserPointRecord(user,rule,String.valueOf(userId));
+                             //补偿积分
+                             userPointRecordDAO.saveAndFlush(userPointRecord);
+                             //发送消息提醒
+                             sendMessageMqInfo(rule, user);
+                         }
+                     }
+                 }
+             }
+
+             Object[] objects = userPointRecordDAO.findSumPointsByUserId(userId,EnableFlag.Y.name());
+             int avaliPoints = 0;
+             if(objects != null && objects.length > 0){
+                 if(objects[0] != null){
+                     avaliPoints = ((BigDecimal)objects[0]).intValue();
+                 }
+             }
+             UserPoint userPoint = userPointDAO.findByUserIdAndEnableFlag(userId,EnableFlag.Y);
+             if(userPoint == null){
+                 userPoint = initUserPint(user);
+             }
+             userPoint.setAvailablePoints(avaliPoints);
+             userPoint.setLastUpdateDate(new Date());
+             userPoint.setLastUpdateBy(String.valueOf(userId));
+             updateUserLevel(userPoint);
+             userPointDAO.save(userPoint);//更新用户总积分
+             updateUserCache(userId,userPoint);//更新用户积分缓存
+             /*********************积分统计结束***************/
+         }
+         logger.info("#################user###########time job end ##########################");
+         return Constants.RETURN_SUCESS;
+     }
 
 }

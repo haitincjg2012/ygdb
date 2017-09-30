@@ -4,7 +4,7 @@
 */
 <template>
     <div class="memberList">
-        <my-header v-on:initialPage="initialPage" :fatherTitle="fatitle" :headTitle="title" :viewFlag="viewFlag" :editFlag="editFlag" :addFlag="addFlag"></my-header>
+        <my-header v-on:initialPage="initialPage" :firstTitle="firsTit" :secondTitle="secondTit" :thirdTitle="thirdTit" :breadFlag="breadflag"></my-header>
         <!--table Page-->
         <div id="tablePage" v-if="showFlag">
             <!--搜索-->
@@ -24,13 +24,13 @@
             </div>
             <!--批量删除-->
             <div class="batchGroup">
-                <el-button type="default" @click="goDetail('add')">发布行情</el-button>
+                <el-button type="primary" @click="goDetail('add')">发布行情</el-button>
                 <!--暂不需要-->
                 <!--<el-button type="primary" @click="batchDel">批量删除</el-button>-->
             </div>
             <!--表格列表-->
             <div class="tableList">
-                <el-table :data="dataList" ref="memberTable" border stripe v-loading.body="loadFlag" style="width:100%;" @selection-change="selsChange">
+                <el-table :data="dataList" ref="memberTable" border stripe v-loading.body="loadCircle" style="width:100%;" @selection-change="selsChange">
                     <el-table-column type="selection"></el-table-column>
                     <el-table-column prop="ordinal" label="序号"></el-table-column>
                     <el-table-column prop="title" label="标题"></el-table-column>
@@ -92,8 +92,12 @@
     export default {
         data () {
             return {
-                fatitle:'交易',
-                title:'行情发布',
+                //breadcrumb
+                firsTit:'交易',
+                secondTit:'行情发布',
+                thirdTit:'',
+                breadflag:false,
+
                 showFlag:true, //true 显示table页; false 显示form页
                 viewFlag:false,//表单只读标识
                 editFlag:false,//表单编辑标识
@@ -113,7 +117,7 @@
                 pNum:1,//页码
                 pSize:10,//页容量
                 //‘转圈’加载
-                loadFlag:false,
+                loadCircle:false,
                 //详情页
                 dataDetailList:[],//详情页数据集
                 operateType:"", //view：详情 edit:编辑
@@ -148,29 +152,13 @@
         activated(){
             var vm=this;
             vm.getTableList();//获取列表信息
-            //test texterea分段
-//            vm.testTextarea();
-
-        },
-        created() {
 
         },
         mounted(){
             var vm=this;
             vm.initialPage();//初始化页面
         },
-        deactivated(){
-            var vm=this;
-            vm.loadFlag=false;//避免超时跳到首页出现加载图标
-        },
         methods: {
-            //test
-            testTextarea(){
-                var str="      1、按规定抽取检验样茧，必须坚持隔包抽样，必要时逐包抽样。三分之一抽样茧包抽取上部，三分之一抽样茧包抽取中部，三分之一机样茧包抽取底部，抽样时须做到每包抽出样茧量均匀，每包抽取样茧200±20克。↵      1、按规定抽取检验样茧，必须坚持隔包抽样，必要时逐包抽样。三分之一抽样茧包抽取上部，三分之一抽样茧包抽取中部，三分之一机样茧包抽取底部，抽样时须做到每包抽出样茧量均匀，每包抽取样茧200±20克。↵      1、按规定抽取检验样茧，必须坚持隔包抽样，必要时逐包抽样。三分之一抽样茧包抽取上部，三分之一抽样茧包抽取中部，三分之一机样茧包抽取底部，抽样时须做到每包抽出样茧量均匀，每包抽取样茧200±20克。";
-                str=str.split("\n");
-                console.log("str:"+str);
-
-            },
             //上传图片
             upLoadImg(res,file){
                 var vm=this;
@@ -271,10 +259,9 @@
             //初始化页面
             initialPage(){
                 var vm=this;
-                vm.viewFlag=false;//表单只读标识
-                vm.editFlag=false;//表单编辑标识
+                vm.breadflag=false;//隐藏最后一级
                 vm.showFlag=true;//显示列表，隐藏表单
-                vm.title='行情发布';
+
             },
             //批量删除table数据
             delMoretable(){
@@ -400,21 +387,24 @@
                     vm.viewFlag=true;
                     vm.editFlag=false;
                     vm.addFlag=false;
-                    vm.title='行情详情';
+                    vm.thirdTit='详情';
+                    vm.breadflag=true;
                     vm.getTableDetail(id);
                 }
                 else if(type=='edit'){
                     vm.editFlag=true;
                     vm.viewFlag=false;
                     vm.addFlag=false;
-                    vm.title='行情编辑';
+                    vm.thirdTit='编辑';
+                    vm.breadflag=true;
                     vm.getTableDetail(id);
                 }
                 else{//新增
                     vm.addFlag=true;
                     vm.editFlag=false;
                     vm.viewFlag=false;
-                    vm.title='发布行情';
+                    vm.thirdTit='新增';
+                    vm.breadflag=true;
                     //重置表单
                     for(var i in vm.newsForm){
                         vm.newsForm[i]="";
@@ -479,7 +469,7 @@
             //获取表格数据
             getTableList(){
                 var vm=this;
-                vm.loadFlag=true;
+                vm.loadCircle=true;
                 vm.sear_beginDate=vm.sear_beginDate?vm.commonJs.timePattern(new Date(vm.sear_beginDate),'yyyy-MM-dd'):"";
                 vm.sear_endDate=vm.sear_endDate?vm.commonJs.timePattern(new Date(vm.sear_endDate),'yyyy-MM-dd'):"";
                 let params={
@@ -501,7 +491,7 @@
             },
             tableListCb(data){
                 var vm=this;
-                vm.loadFlag=false;
+                vm.loadCircle=false;
                 vm.pageData=data.data;
                 vm.dataList=data.data.rows;
             },

@@ -27,8 +27,7 @@ router.post('/_node_user/_save_sign' + config.urlSuffix , bodyParser, function(r
         var newDate = new Date();
         var newDateStr = dateutil.toDateFormat(newDate,"yyyy-MM-dd hh:mm:ss");
         var afterDateStr = dateutil.toDateFormat(dateutil.addDay(newDate,1),"yyyy-MM-dd 00:00:00");
-        var diffDate = dateutil.countDateDiff(newDateStr,afterDateStr,"second");
-        console.log(diffDate);
+        var diffDate = dateutil.countDateDiff(newDateStr,afterDateStr,"second"); 
         redis.set(config.userSignPrefix + json,1,'EX',diffDate);
         return done(true,"");
     });

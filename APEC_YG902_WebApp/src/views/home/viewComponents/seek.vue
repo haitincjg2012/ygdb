@@ -144,7 +144,7 @@
         this.priceT = "";
         this.$store.state.skuName = "";
         this.$store.state.skuId = "";
-        this.$store.state.addrData = null;
+        this.$store.state.addrSeekData = null;
         this.address = '';
         document.getElementById("z-des").value = "";
         var father = document.querySelector(".z-valid").children[0];
@@ -162,7 +162,8 @@
       },
       zone(){
         this.$store.state.address = 2;
-        this.$router.push({name:'address'});
+//        this.$router.push({name:'address'});
+        this.$router.push({name:'addrSeek'});
       },
       pickup(event){
         var evt = event || window.event;
@@ -213,7 +214,8 @@
         }
 
         if(!flag){
-          this.number= value.slice(0, -1);
+//          this.number= value.slice(0, -1);
+          this.number = "";
         }
 
         var t = value.toString();
@@ -245,9 +247,11 @@
         }
         if(!flag){
             if(idx == 0){
-              this.priceO= value.slice(0, -1);
+//              this.priceO= value.slice(0, -1);
+              this.priceO = "";
             }else{
-              this.priceT= value.slice(0, -1);
+//              this.priceT= value.slice(0, -1);
+              this.priceT = "";
             }
         }
       },
@@ -258,7 +262,7 @@
           return;
         }
         var cityId ='',areaId ='',townId = '';
-        var addrData = this.$store.state.addrData;
+        var addrData = this.$store.state.addrSeekData;
         if(addrData){
           cityId = addrData.cityId;
           areaId = addrData.countyId;
@@ -329,25 +333,11 @@
 
     },
     activated(){
-//          var Flag = this.$route.query.Info;
-//          var backFlag = this.$route.query.back;
-//          if(Flag && Flag == "BUY"){
-//            this.skuName = "";
-//            this.skuId = "";
-//            this.number = "";
-//            this.priceO = "";
-//            this.priceT = "";
-//            this.address = "";
-//          }
 
-//          if(backFlag && backFlag == "GQ"){
-//              console.log(backFlag);
-//          }
       this.skuName = this.$store.state.skuName;
       this.skuId = this.$store.state.skuId;
-      var addreObj = this.$store.state.addrData;
+      var addreObj = this.$store.state.addrSeekData;
       if(addreObj){
-//        this.address = addreObj.cityName + addreObj.countyName + addreObj.townName;
         this.address = addreObj.detailAddress;
       }
 

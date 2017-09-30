@@ -24,10 +24,9 @@ public interface AttributeValueDAO extends BaseDAO<AttributeValue,Long> {
 
     /**
      * 查询相关attributeId下的所有属性对象
-     * @param attributeId
+     * @param attributeNameId
      */
-    @Query(value = " select * from attribute_value where attribute_id = :attributeId and  enable_flag = 'Y'",nativeQuery = true)
-    List<AttributeValue> findByAttributeId(@Param("attributeId") Long attributeId);
+    List<AttributeValue> findByAttributeNameIdAndEnableFlagOrderBySort(Long attributeNameId,EnableFlag enableFlag);
 
     /**
      * 批量删除所有goodsIds下的goodsAttr

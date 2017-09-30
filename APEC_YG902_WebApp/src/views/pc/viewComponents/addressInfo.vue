@@ -11,9 +11,9 @@
         <div @click.stop="selSecAddr($event,item)" v-for="item in addressSecList" :class="item.activeCls"><span>{{item.name}}</span></div>
       </div>
       <div class="p-ad-form-cli">
-        <div class="addLabel"><span>请选择镇/街道</span></div>
-        <div @click.stop="selThirAddr($event,item)" v-for="item in addressThirList" :class="item.activeCls"><span>{{item.name}}</span></div>
-      </div>
+      <div class="addLabel"><span>请选择镇/街道</span></div>
+      <div @click.stop="selThirAddr($event,item)" v-for="item in addressThirList" :class="item.activeCls"><span>{{item.name}}</span></div>
+    </div>
       <div class="login-btn">
         <input class="btn-login-c login-confirm" type="submit" id="btn-login-code" value="保存地址" @click="saveBtn"></input>
       </div>
@@ -233,7 +233,7 @@
         });
         self.county = item.code;
         self.countyS = item.name;
-        console.log(self.countyS, 9999)
+
         self.getthirAddrList(item.code, item.name);
       },
       selThirAddr(e,item){
@@ -252,7 +252,8 @@
       },
       saveBtn(){
         const self = this;
-        var address = self.cityS + self.countyS + self.countryS;
+//        var address = self.cityS + self.countyS + self.countryS;
+          var address = self.cityS + self.countyS + self.countryS;
 //        let params = {
 //          api: "/yg-user-service/user/updateUserInfo.apec",
 //          data: data
@@ -261,7 +262,6 @@
          if(flag == "addr"){
            this.$store.state.addr = address;
          }else if(flag == "saleAddr"){
-             console.log(flag);
            this.$store.state.saleAddr = address;
          }
 
@@ -304,21 +304,20 @@
     height 100%;
     width 100%;
     .p-ad-form-cli
-      padding (15 /_rem)
+      padding (15 /_rem) (15 /_rem) 0
       position relative
       .addLabel
         height (25/_rem)
         line-height (25/_rem)
-        text-align center
         margin-bottom (10/_rem)
         span
-          font-size (18/_rem)
+          font-size (16/_rem)
       .m-v-tz:not(:first-child)
         margin-left (15/_rem)
         margin-bottom (10/_rem)
       .m-v-tz
         width (70 /_rem)
-        background-color #929292
+        background-color #f1f2f6
         border-radius 4px
         text-align center
         display inline-block
@@ -326,11 +325,12 @@
         height (25 /_rem)
         line-height (25 /_rem)
         font-size 0
-        color #fff
+
         span
           font-size (14 /_rem)
       .active
         background-color #28cba7!important
+        color #fff
       span
         font-size (14 /_rem)
     .login-btn
@@ -348,5 +348,5 @@
       .login-confirm
         background-color: #28CBA7;
         color #FFFFFF;
-        border: 1px solid #0bbe06;
+        border-radius (5/_rem)
 </style>

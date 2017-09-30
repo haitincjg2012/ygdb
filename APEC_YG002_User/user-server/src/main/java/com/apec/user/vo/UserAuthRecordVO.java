@@ -16,9 +16,14 @@ import java.util.Date;
 public class UserAuthRecordVO extends BaseVO<Long> {
 
     /**
-     * 用户
+     * 用户真实姓名
      */
-    private UserVO userVO;
+    private String realName;
+
+    /**
+     * 身份证
+     */
+    private String idNumber;
 
     /**
      * 用户Id

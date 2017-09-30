@@ -13,8 +13,19 @@ public interface ESProducerConstants {
     // Post
     String OPREATION_POST = "POST";
 
+    // Put
+    String OPREATION_PUT = "PUT";
+
     //Post update
     String OPREATION_POST_UPDATE = "/_update";
+
+    //mapping
+    String OPREATION_MAPPING = "/_mapping";
+
+    //alias
+    String OPREATION_ALIAS = "/_alias";
+
+    String OPREATION_ALIASES = "/_aliases";
 
     //Delete
     String OPREATION_DELETE = "DELETE";

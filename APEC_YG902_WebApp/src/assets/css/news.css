@@ -110,13 +110,16 @@
 .newsList li .newsItem .newslistL p span {
   margin-left: 0.65rem;
 }
+.newsList li:last-child {
+  border-bottom: 0 none;
+}
 .newsList .liLast {
   border-bottom: 0 none;
   text-align: center;
   font-size: 0.7rem;
   color: #646464;
   letter-spacing: 0.05rem;
-  padding-bottom: 0.25rem;
+  padding: 1rem 0;
 }
 .newsDetail {
   width: 100%;

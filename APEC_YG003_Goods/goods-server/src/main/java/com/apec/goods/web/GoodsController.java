@@ -131,7 +131,6 @@ public class GoodsController extends MyBaseController {
             //获取商品信息
             GoodsVO goodsVO = new GoodsVO();
             BeanUtil.copyPropertiesIgnoreNullFilds(dto,goodsVO);
-            BeanUtil.copyPropertiesIgnoreNullFilds(dto,goodsVO);
             page = goodsService.searchGoodsPage(goodsVO,pageRequest);
             return super.getResultJSONStr(true, page, "");
         }catch(Exception e){
@@ -154,6 +153,20 @@ public class GoodsController extends MyBaseController {
             return super.getResultJSONStr(true, null, "");
         }catch(Exception e){
             log.error("[goods][deleteGoodsList] Exception:{}" , e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
+    /**
+     * 批量删除商品信息
+     */
+    @RequestMapping(value = "/test",method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
+    public String test(@RequestBody String json){
+        try{
+            goodsService.searchGoodsPage(new GoodsVO(),null);
+            return super.getResultJSONStr(true, null, "");
+        }catch(Exception e){
+            log.error("[goods][test] Exception:{}" , e);
             return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
         }
     }

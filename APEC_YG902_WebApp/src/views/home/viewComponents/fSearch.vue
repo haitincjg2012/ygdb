@@ -1,13 +1,12 @@
 <template>
     <div>
-        <div class="z-header-O clearfix">
-            <div class="ret" @click="back">
-                <img src="../../../assets/img/Arrow_left.png">
+        <div class="z-header-T1 clearfix">
+            <div class="retT" @click="back">
+                <img src="../../../assets/img/ret.png">
             </div>
             <div class="z-write">
                 <input type="text"  placeholder="" id="searchInput"/>
                 <span class="x-del" @click="empty">
-                    x
                 </span>
             </div>
             <div class="z-s" @click="searchInfo">

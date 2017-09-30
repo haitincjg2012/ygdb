@@ -55,6 +55,10 @@
         </ul>
         <div class="shadow" @click="remove"></div>
       </div>
+      <div class="c-z-cold-empty" v-if="coldemptyFlag">
+        <img src="../../../assets/img/noData.png">
+        <p>暂无数据</p>
+      </div>
     </div>
   </div>
 </template>
@@ -66,8 +70,9 @@
   import API from '../../../api/api'
   import childPZ from "./PZ.vue"
   import Region from './region.vue'
+  import coldDefault from "../../../assets/img/coldDefault.png"
   import dataConfig from "../../../assets/data/search.json"
-
+  import {Toast} from 'mint-ui'
   const api = new API();
 
   var fn = {
@@ -146,9 +151,12 @@
       if(!data.succeed){
         return;
       }
+
        var arr = [];
       var rows = data.data.rows;
+      this.pageCount = data.data.pageCount;
       rows.forEach(function (current, index) {
+
         var obj = {
           showOrgTagsInfo:{}
         };
@@ -161,7 +169,7 @@
         obj.address = current.address;
         obj.viewNum = current.viewNum;
         obj.orgStockCap = current.orgStockCap;
-        obj.orgFirstBannerUrl = current.orgFirstBannerUrl;
+        obj.orgFirstBannerUrl = current.orgFirstBannerUrl || coldDefault;
         if(current.showOrgTagsInfo){
              current.showOrgTagsInfo.forEach(function (current) {
                  if(current.className == "QYRZ"){
@@ -177,13 +185,18 @@
 
       fn.coldData = fn.coldData.concat(arr);
       this.itemC = fn.coldData;
+      if(this.itemC.length == 0){
+          this.coldemptyFlag = true;
+      }else{
+        this.coldemptyFlag = false;
+      }
 
     }
   };
   export default{
       data(){
           return{
-              itemC:null,
+            itemC:null,
             itemS:null,
             itemA:null,
             itemFilter:null,
@@ -196,6 +209,8 @@
             pageNumber:1,
             ky:"",
             pageCount:1000,//
+            coldemptyFlag:false,////默认情况是有数据的
+            bheight:0,//记录屏幕的默认高度
           }
       },
     methods:{
@@ -231,12 +246,16 @@
           this.firstF = false;
         this.firstTF = false;
         this.secondF = false;
+        this.ky = "";
+        this.searchType = "";
+        this.coldemptyFlag = false;
       },
       remove(){
         this.shadowF = false;
       },
       search(){
           this.searchType = "";
+
           this.initPagination();
          this.list(1);
       },
@@ -353,7 +372,14 @@
             current.sh = false;
           }
         });
-        this.searchType = value;
+        var index = value.indexOf("全部");
+        if(index > 0){
+//              alert(value.substring(0, index));
+          this.searchType = value.substring(0, index);
+        }else{
+          this.searchType = value;
+        }
+
         this.initPagination();
         this.list(0);
       },
@@ -414,11 +440,12 @@
       filteBtn(data){
          var str = data.keyword;
          var searchType = "";
-         if(str == "企业认证"){
-           searchType = "QYRZ";
-         }else if(str == "供应金融链合作库"){
-           searchType = "GYLJRHZK";
-         }
+         searchType = str;
+//         if(str == "企业认证"){
+//           searchType = "QYRZ";
+//         }else if(str == "供应金融链合作库"){
+//           searchType = "GYLJRHZK";
+//         }
          var path = data.path;
         this.itemFilter.forEach(function (current, index) {
             if(path == index){
@@ -449,9 +476,9 @@
       }
     },
     activated(){
+      this.bheight = document.querySelector(".page").clientHeight;
           this.initPagination();
            this.list(1);
-//          fn.init.bind(this)();
     },
     created(){
       window.addEventListener('scroll', this.menuList, false);

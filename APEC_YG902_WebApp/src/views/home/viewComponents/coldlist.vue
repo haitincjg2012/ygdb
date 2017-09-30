@@ -22,8 +22,12 @@
             <span class="z-c-storage-text">库容 {{item.orgStockCap}}</span>
           </div>
           <div class="z-c-address clearfix" :data-id = "item.id">
-            <img class="pos-pic" src="../../../assets/img/pos.png">
-            <span class="z-c-add">{{item.address}}</span>
+            <div class="z-c-address-icon">
+              <img class="pos-pic" src="../../../assets/img/pos.png">
+            </div>
+            <div class="z-c-address-text">
+              <span class="z-c-add">{{item.address}}</span>
+            </div>
           </div>
           <div class="z-c-real">
             <span class="z-c-r" v-if="item.showOrgTagsInfo.QYRZ"> 企业认证</span>

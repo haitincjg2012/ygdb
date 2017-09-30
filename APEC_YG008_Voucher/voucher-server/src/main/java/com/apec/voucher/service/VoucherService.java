@@ -86,5 +86,11 @@ public interface VoucherService {
 	 * @return PageDTO<DBNumberRankViewVO>
 	 * */
 	PageDTO<DBNumberRankViewVO> listTotalDBNumberRankViewVO(VoucherDTO voucherDTO);
+
+	/**
+	 * 更新用户缓存中的上传总数
+	 * @return
+	 */
+	String countVoucherOfUser();
 	
 }

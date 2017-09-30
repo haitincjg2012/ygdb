@@ -195,7 +195,7 @@ public class UserVO extends BaseVO<Long>{
     private UserOrgClientVO userOrgClientVO;
 
     /**
-     * 开关，
+     * 开关，开为Y，关为N
      */
     private boolean pushFlag;
 

@@ -105,12 +105,13 @@
                 //获取用户名
                 vm.commonJs.setValue('userName',data.data.name);
                 vm.$store.commit('changeUserName',vm.userInfo);
+
                 console.log("name："+vm.$store.state.userName+" token："+vm.$store.state.authToken+" phone："+data.data.phone);
                 //跳转到“历史记录路径”或者“客户认证页”（默认）
                 var redirect=decodeURIComponent(this.$route.query.redirect||'/certificate');
-                this.$router.push({path:redirect});
-                //加载菜单
-                this.$root.eventHub.$emit('initMenu',"");
+                vm.$router.push({path:redirect});
+                //加载菜单(暂无)
+//              vm.$root.eventHub.$emit('initMenu',"");
             }
         },
         created() {

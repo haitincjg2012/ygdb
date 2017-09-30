@@ -1,26 +1,27 @@
 .z-frame {
   width: 18.75rem;
 }
-.z-frame .header {
+.z-frame .header-T {
   padding: 0 0.625rem;
   position: relative;
   width: 17.5rem;
-  height: 2.375rem;
+  height: 2.2rem;
   text-align: center;
-  color: #333;
-  line-height: 2.375rem;
+  color: #323232;
+  background-color: #f4f4f4;
+  line-height: 2.2rem;
 }
-.z-frame .header h1 {
+.z-frame .header-T h1 {
   font-size: 1rem;
 }
-.z-frame .header .return {
+.z-frame .header-T .return {
   position: absolute;
   left: 0.625rem;
   top: 0;
 }
-.z-frame .header .return img {
-  width: 0.85rem;
-  height: 1.125rem;
+.z-frame .header-T .return img {
+  width: 0.55rem;
+  height: 0.975rem;
   vertical-align: middle;
 }
 .z-frame .good-com {
@@ -161,7 +162,7 @@
   float: left;
   height: 4.025rem;
   position: relative;
-  margin-left: 0.5rem;
+  padding: 0.25rem;
 }
 .z-frame .pic-show ul .z-add-one {
   position: relative;

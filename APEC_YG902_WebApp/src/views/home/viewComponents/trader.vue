@@ -55,6 +55,10 @@
         </ul>
         <div class="shadow" @click="remove"></div>
       </div>
+      <div class="c-z-tr-empty" v-if="tremptyFlag">
+        <img src="../../../assets/img/noData.png">
+        <p>暂无数据</p>
+      </div>
     </div>
   </div>
 </template>
@@ -62,12 +66,14 @@
   @import "../../../assets/css/trader.css";
 </style>
 <script>
+  import agksD from "../../../assets/img/DBKS.png"
   import IMG from "../../../components/gqimg.vue"
   import childT from "./traderlist"
   import API from '../../../api/api'
   import childPZ from "./PZ.vue"
   import Region from './region.vue'
   import dataConfig from "../../../assets/data/search.json"
+  import {Toast} from 'mint-ui'
   const api = new API();
   var fn = {
     aD:null,//地区的数据
@@ -160,7 +166,7 @@
       }
       var arr = [];
       var rows = data.data.rows;
-
+      this.pageCount = data.data.pageCount;
       rows.forEach(function (current, index) {
         var obj = {
           showOrgTagsInfo:{}
@@ -171,7 +177,7 @@
         obj.orgId = current.orgId ? current.orgId:"-999";
         obj.userId = current.userId ? current.userId:"-1000";
         obj.orgName = current.orgName;//用户姓名
-        obj.orgFirstBannerUrl = current.orgFirstBannerUrl;//左侧图片
+        obj.orgFirstBannerUrl = current.orgFirstBannerUrl || agksD;//左侧图片
         obj.userLevelName = IMG.methods.userLevel(current.userLevelName);//用户等级
         obj.userRealAuthKey = current.userRealAuthKey == ""?false:true;//用户是否实名认证
         obj.mainOperating = current.mainOperating;//用户主营品种
@@ -182,6 +188,12 @@
 
       fn.traderData = fn.traderData.concat(arr);
       this.itemC = fn.traderData;
+
+      if(this.itemC.length == 0){
+          this.tremptyFlag = true;
+      }else{
+        this.tremptyFlag = false;
+      }
     }
   };
 export default{
@@ -198,6 +210,8 @@ export default{
           firstF:false,
           firstTF:false,
           secondF:false,
+          tremptyFlag:false,////默认情况是有数据的
+          bheight:0,//记录屏幕的默认高度
         }
     },
     methods:{
@@ -207,6 +221,7 @@ export default{
          fn.aD = null;
          this.itemA = null;
          fn.reset();
+         this.reset();
          this.initPagination();
          var p = document.querySelector(".z-t-select"),
            child = p.children;
@@ -233,6 +248,9 @@ export default{
         this.firstF = false;
         this.firstTF = false;
         this.secondF = false;
+        this.ky = "";
+        this.searchType = "";
+        this.tremptyFlag = false;
       },
       remove(){
         this.shadowF = false;
@@ -420,39 +438,45 @@ export default{
 
         this.searchType = searchType;
       },
+      menuList(e){
+
+        var e = e || window.event;
+        var el = document.querySelector(".z-trader")
+        if(el){
+
+          var target = e.target || e.srcElement;
+          var offsetH = target.body.scrollTop;
+          var sHeight = target.body.scrollHeight;
+          var that = this;
+
+          if(sHeight - offsetH - this.bheight == 0){
+
+            if(this.pageCount > this.pageNumber){
+              this.pageNumber ++;
+              this.pageNum(this.pageNumber);
+            }else{
+              Toast('数据加载完...')
+            }
+
+          }
+        }
+      },
+      pageNum(aa){
+        var argument = [].slice.call(arguments);
+        var number = argument[0];
+        var that = this;
+        function l() {
+          that.list(aa);
+        }
+        setTimeout(l, 1000)
+      },
     },
     activated(){
+      this.bheight = document.querySelector(".page").clientHeight;
         this.initPagination();
         this.list(1);
     },
-     menuList(evt){
-    var e = evt || window.event;
-    var el = document.querySelector(".z-trader")
-    if(el){
-      var target = e.target || e.srcElement;
-      var offsetH = target.body.scrollTop;
-      var sHeight = target.body.scrollHeight;
-      var that = this;
-      if(sHeight - offsetH - this.bheight == 0){
-        if(this.pageCount > this.pageNumber){
-          this.pageNumber ++;
-          this.pageNum(this.pageNumber);
-        }else{
-          Toast('数据加载完...')
-        }
 
-      }
-    }
-  },
-      pageNum(aa){
-    var argument = [].slice.call(arguments);
-    var number = argument[0];
-    var that = this;
-    function l() {
-      that.list(aa);
-    }
-    setTimeout(l, 1000)
-  },
    created(){
     window.addEventListener('scroll', this.menuList, false);
   }

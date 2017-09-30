@@ -7,7 +7,7 @@
         </div>
         <div class="z-agency-search">
           <img src="../../../assets/img/search.png">
-          <input type="text" placeholder="请输入查询内容" @change="search"/>
+          <input type="text" placeholder="请输入查询内容" @change="search" v-model="ky"/>
         </div>
       </div>
 
@@ -29,7 +29,7 @@
                 :item = "item"
             ></li>
           </ul>
-        <div class="z-ag-shadow" v-if="shadowF">
+          <div class="z-ag-shadow" v-if="shadowF">
             <ul class="z-ag-listS clearfix">
             <li :is = "item.ss"
                 v-for="item in itemS"
@@ -46,6 +46,10 @@
             </ul>
            <div class="shadow" @click="remove"></div>
         </div>
+          <div class="c-z-ag-empty" v-if="agemptyFlag">
+              <img src="../../../assets/img/noData.png">
+              <p>暂无数据</p>
+          </div>
       </div>
     </div>
 </template>
@@ -53,12 +57,14 @@
   @import "../../../assets/css/agency.css";
 </style>
 <script>
+  import agksD from "../../../assets/img/DBKS.png"
   import childT from "./agencylist.vue"
   import childPZ from "./PZ.vue"
   import IMG from "../../../components/gqimg.vue"
   import Region from './region.vue'
   import API from '../../../api/api'
   import dataConfig from "../../../assets/data/search.json"
+  import {Toast} from 'mint-ui'
 
   const api = new API();
   var fn = {
@@ -150,7 +156,7 @@
       }
       var arr = [];
       var rows = data.data.rows;
-
+      this.pageCount = data.data.pageCount;
       rows.forEach(function (current, index) {
         var obj = {
           showOrgTagsInfo:{}
@@ -163,7 +169,7 @@
         obj.orgName = current.orgName;//用户名称
         obj.address = current.address;//用户地址
         obj.viewNum = current.viewNum;//浏览数量
-        obj.orgFirstBannerUrl = current.orgFirstBannerUrl;//左侧图片
+        obj.orgFirstBannerUrl = current.orgFirstBannerUrl || agksD;//左侧图片
         obj.showOrgTagsInfo.tagName = current.showOrgTagsInfo.tagName;//企业认证
         obj.userLevelName = IMG.methods.userLevel(current.userLevelName);//用户等级
         obj.userRealAuthKey = current.userRealAuthKey == ""?false:true;//用户是否实名认证
@@ -173,6 +179,12 @@
       });
        fn.agData = fn.agData.concat(arr);
       this.itemC = fn.agData
+
+      if(this.itemC.length == 0){
+          this.agemptyFlag = true;
+      }else{
+        this.agemptyFlag = false;
+      }
     }
   };
   export default{
@@ -186,7 +198,9 @@
           searchType:"",
           pageNumber:0,
           pageCount:1000,
-          ky:""
+          ky:"",
+          agemptyFlag:false,//默认情况是有数据的
+          bheight:0,//记录屏幕高度
         }
       },
     methods:{
@@ -195,7 +209,10 @@
         fn.pzD = null;
         fn.aD = null;
         this.itemA = null;
+        this.ky = "";
+        this.searchType = "";
         fn.reset();
+        this.reset();
         var p = document.querySelector(".z-ag-select"),
           child = p.children;
         [].forEach.call(child,function (current, index) {
@@ -213,6 +230,9 @@
 
 
         this.$router.go(-1);
+      },
+      reset(){
+          this.emptyFlag = false;
       },
       search(){
         this.searchType = "";
@@ -288,8 +308,14 @@
                 current.sh = false;
             }
           });
+          var index = value.indexOf("全部");
+          if(index > 0){
+//              alert(value.substring(0, index));
+            this.searchType = value.substring(0, index);
+          }else{
+            this.searchType = value;
+          }
 
-        this.searchType = value;
         this.initPagination();
         this.list(1);
       },
@@ -366,9 +392,11 @@
         }
         this.post(params, fn.list.bind(this));
       },
-      menuList(evt){
-        var e = evt || window.event;
+      menuList(e){
+
+        var e = e || window.event;
         var el = document.querySelector(".z-ag")
+
         if(el){
           var target = e.target || e.srcElement;
           var offsetH = target.body.scrollTop;
@@ -396,11 +424,13 @@
       }
     },
     activated(){
+      this.bheight = document.querySelector(".page").clientHeight;
       this.initPagination();
-          this.list(1);
-//          fn.init.bind(this)();
+      this.list(1);
+
     },
     created(){
+//      window.addEventListener('scroll', this.menuList, false);
       window.addEventListener('scroll', this.menuList, false);
     }
   }

@@ -1,6 +1,7 @@
 package com.apec.voucher.viewvo;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
@@ -60,5 +61,10 @@ public class VoucherBSViewVO {
 	/**
 	 * id
 	 * */
-	private Long voucherId;
+	private BigInteger voucherId;
+	
+	/**
+	 * 用户id
+	 * */
+	private BigInteger userId;
 }

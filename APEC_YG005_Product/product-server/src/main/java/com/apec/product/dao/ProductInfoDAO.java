@@ -1,7 +1,10 @@
 package com.apec.product.dao;
 
+import com.apec.framework.common.enumtype.EnableFlag;
 import com.apec.framework.jpa.dao.BaseDAO;
 import com.apec.product.model.ProductInfo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -47,4 +50,29 @@ public interface ProductInfoDAO extends BaseDAO<ProductInfo, Long> {
      * @return
      */
     ProductInfo findFirstByElasticIdAndUserId(String elasticId, Long userId);
+
+    /**
+     * 根据ES ID 和 enableFlag 查找供求
+     * @param elasticId
+     * @param enableFlag
+     * @return
+     */
+    ProductInfo findFirstByElasticId(String elasticId, EnableFlag enableFlag);
+
+    /**
+     * 查询下架的供求 取最新的10条
+     * @param enableFlag
+     * @param timeout
+     * @param pageable
+     * @return
+     */
+    Page<ProductInfo> findByEnableFlagAndTimeoutLessThanEqualOrderByCreateDate(EnableFlag enableFlag, Integer timeout, Pageable pageable);
+
+    /**
+     * 查询未下架的供求信息
+     * @param enableFlag
+     * @param timeout
+     * @return
+     */
+    List<ProductInfo> findByEnableFlagAndTimeoutGreaterThan(EnableFlag enableFlag, Integer timeout);
 }

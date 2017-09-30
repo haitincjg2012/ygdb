@@ -43,7 +43,7 @@ const ax={
    this.provinceData = data.data;
    },
  */
-  post:function(params,sucCb){
+  post:function(params,sucCb,vm){
     //添加token头部
     var token = store.state.authToken || commonjs.getValue("authToken");
     if (token) {
@@ -55,12 +55,13 @@ const ax={
     //返回请求数据
     axios.post(url,{},config).then((res)=>{
       if(res.data){
-      var data=typeof(res.data)!="object"?JSON.parse(res.data):res.data;
-    }else{
-      var data=[];
-    }
+        var data=typeof(res.data)!="object"?JSON.parse(res.data):res.data;
+      }
+      else{
+        var data=[];
+      }
       //var data=res.data?JSON.parse(res.data):[];
-      this.successCb(data,sucCb);
+      this.successCb(data,sucCb,vm);
 
   }).catch((err)=>{
       //请求失败的回调函数
@@ -69,11 +70,20 @@ const ax={
   },
 
 //请求成功的回调函数
-  successCb:function(data,sucCb){
+  successCb:function(data,sucCb,vm){
+    //将列表loading字段“loadCircl”置为false
+    var reg=/^loadCir[a-zA-Z0-9]+/;
+      if (vm) {
+        for(var i in vm.$data){
+          if(reg.test(i))
+            vm.$data[i]=false;
+        }
+
+      }
+
     if(data.succeed){
       sucCb(data);
     }
-    //暂时备注
     else{
       if(data.errorCode=='600001'){//登录超时且不是登陆页就跳转到登陆页面
         console.log(data.errorMsg);

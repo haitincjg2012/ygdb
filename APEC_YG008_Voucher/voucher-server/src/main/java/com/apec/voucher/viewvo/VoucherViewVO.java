@@ -18,6 +18,14 @@ import com.apec.framework.common.enumtype.UserType;
 @NoArgsConstructor
 public class VoucherViewVO {
 	
+	/**
+	 * 上传时间
+	 * */
+	private Date createDate;
+	
+	/**
+	 * 单号
+	 * */
 	private Long voucherId;
 
 	/**

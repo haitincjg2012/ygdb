@@ -5,21 +5,21 @@
       <div class="pure-g-l login-content">
         <div class="loggin-panel">
           <form onsubmit="return false">
-          	<div class="phone-input">
-          		<img src="../../../src/assets/img/phoneOn.png">
+          	<div class="phone-input c-z-d-p-iconbg" :class="{ZTactiveO:show1}">
+          		<!--<img src="../../../src/assets/img/phoneOn.png">-->
           		<input id="input-phonenum" oninvalid="setCustomValidity(' ')" type="tel" v-model="phoneNum" placeholder="请输入手机号码"
-              oninput="setCustomValidity('')" required maxlength="11" pattern="^1(3|4|5|7|8)\d{9}$"/>
+              oninput="setCustomValidity('')" required maxlength="11" pattern="^1(3|4|5|7|8)\d{9}$" @focus="focus($event,'0')" @blur="blur($event,'0')" />
           		<!--<input type="button" @click="sendMessage" id="btn-message" value="获取验证码"></input>-->
           	</div>
-            <div class="dash-line">
-            </div>
+            <!--<div class="dash-line">-->
+            <!--</div>-->
             <!--<div style="display: none;" class="language-phone-input">-->
               <!--<a @click="voiceVerifyBtn" class="mc" style="font-size: 14px; text-decoration: underline;color: #0bbe06;">收不到短信验证码，尝试语音验证码</a>-->
             <!--</div>-->
-          	<div class="code-input">
-              <img src="../../../src/assets/img/Password.png">
+          	<div class="code-input c-z-password-iconbg" :class="{ZTactiveT:show2}">
+              <!--<img src="../../../src/assets/img/Password.png">-->
           		<input oninvalid="setCustomValidity(' ')" id="input-code" type="password" class="pure-input-1" v-model="code" oninput="setCustomValidity('')"
-              placeholder="请输入登录密码" required minlength="6">
+              placeholder="请输入登录密码" required minlength="6" @focus="focus($event,'1')" @blur="blur($event,'1')">
               <img @click.stop="openText()" class="i-password-hide" :src="imgSrc">
           	</div>
             <!--<div class="code-input-text" style="display: none;">-->
@@ -28,8 +28,8 @@
                      <!--placeholder="请输入登录密码" required maxlength="4" pattern="^\d{4}$">-->
               <!--<img class="i-password-hide" src="../../../src/assets/img/show.png">-->
             <!--</div>-->
-            <div class="dash-line-v">
-            </div>
+            <!--<div class="dash-line-v">-->
+            <!--</div>-->
           	<div class="login-btn">
               <input type="submit" id="btn-login-code" value="登录" @click.stop="login"></input>
             </div>
@@ -57,7 +57,9 @@
     </div>
   </div>
 </template>
-
+<style>
+@import "../../assets/css/login.css";
+</style>
 <script>
   import $ from 'zepto'
   import axios from 'axios'
@@ -78,7 +80,9 @@
       return {
         phoneNum: '',
         code: '',
-        imgSrc:hideImgSrc
+        imgSrc:hideImgSrc,
+        show1:false,//默认没有填写
+        show2:false,//默认没有填写
       }
     },
     activated(){
@@ -96,6 +100,22 @@
       fixedH(){
         $('.l-info-call').hide();
       },
+      focus(event,index){
+        var el = event.target || event.srcElement;
+        if(index == 0){
+            this.show1 = true;
+        }else if(index == 1){
+            this.show2 = true;
+        }
+
+      },//获取焦点
+      blur(event,index){
+        if(index == 0){
+          this.show1 = false;
+        }else if(index == 1){
+          this.show2 = false;
+        }
+      },//失去焦点
       openText(){
         var demoInput = document.getElementById("input-code");
         //隐藏text block，显示password block
@@ -160,6 +180,7 @@
               }
               if(data.userId){
                 self.$store.commit("incrementUserID", {'userId': data.userId});//用户ID
+                self.$store.state.userId = data.userId;
                 storage.id = data.userId;
                 c_js.setLocalValue('userId',data.userId);
               }
@@ -219,6 +240,11 @@
         return true
       }
     },
+//    watch:{
+//        "phoneNum":function () {
+//          console.log(arguments);
+//        }
+//    },
     components: {
       topBar
     }
@@ -241,13 +267,13 @@
     .mainform
       margin-top (92/_rem);
       .phone-input
-        padding 0 (15/_rem)
+        margin  0 (15/_rem)
         img
           width (17/_rem)
           height:(19/_rem)
           vertical-align middle
         #input-phonenum
-          margin-left (10/_rem)
+          margin-left (30/_rem)
           height (24/_rem)
           font-size (16/_rem)
           color #999999
@@ -270,7 +296,7 @@
           transform translateY(-50%)
           position absolute
         .pure-input-1
-          margin-left (10/_rem)
+          margin-left (30/_rem)
           height (24/_rem)
           font-size (16/_rem)
           color #999999
@@ -290,7 +316,7 @@
           border-radius: 0;
           display: inline-block;
           width: 100%;
-          border: 1px solid #0bbe06;
+          border-radius (5/_rem);
       .l-info
         margin (17/_rem) (15/_rem) 0 (15/_rem)
         display: flex
@@ -300,6 +326,7 @@
           width (150/_rem)
           text-align center
           flex 1
+          border-radius (5/_rem)
           span
             height (40/_rem)
             line-height (40/_rem)
@@ -312,6 +339,7 @@
             width (150/_rem)
             text-align center
             flex 1
+            border-radius (5/_rem)
             span
               height (40/_rem)
               line-height (40/_rem)

@@ -11,9 +11,16 @@
          <div class="z-ag-info clearfix" :data-id = "item.id">
            <div class="z-ag-real-info" :data-id = "item.id">
               <div class="z-ag-r-f-partO">
-                <span class="z-ag-r-name">{{item.orgName}}</span>
-                <img :src="item.userLevelName" class="z-ag-level">
-                <span class="z-ag-r" v-if="item.userRealAuthKey">实名认证</span>
+                <div class="z-ag-r-f-name" :class="{zAgActive:!item.userRealAuthKey}">
+                  <span class="z-ag-r-name">{{item.orgName}}</span>
+                </div>
+               <div class="z-ag-r-f-level">
+                 <img :src="item.userLevelName" class="z-ag-level">
+               </div>
+               <div v-if="item.userRealAuthKey" class="z-ag-r-f-real">
+                 <span class="z-ag-r" >实名认证</span>
+               </div>
+
 
               </div>
                <div class="z-ag-r-f-partT">
@@ -26,8 +33,13 @@
               <span class="z-ag-r-num">{{item.voucherNum}}</span>
            </div>
            <div class="z-ag-main clearfix" :data-id = "item.id">
-             <span class="z-ag-main-com-t">主营:</span>
-             <span class="z-ag-main-com-t">{{item.mainOperating}}</span>
+             <div class="z-ag-main-t">
+               <span class="z-ag-main-com-t z-ag-main-t">主营:</span>
+             </div>
+             <div class="z-ag-main-m">
+               <span class="z-ag-main-com-t">{{item.mainOperating}}</span>
+             </div>
+
            </div>
            <div class="z-ag-address">
              <img class="pos-pic" src="../../../assets/img/pos.png">

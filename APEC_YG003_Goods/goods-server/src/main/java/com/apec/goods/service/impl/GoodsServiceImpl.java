@@ -5,6 +5,7 @@ import com.apec.framework.common.PageDTO;
 import com.apec.framework.common.enumtype.EnableFlag;
 import com.apec.framework.common.util.BeanUtil;
 import com.apec.goods.dao.AttributeNameDAO;
+import com.apec.goods.dao.AttributeValueDAO;
 import com.apec.goods.dao.GoodsAttrDAO;
 import com.apec.goods.dao.GoodsDAO;
 import com.apec.goods.model.*;
@@ -25,10 +26,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class GoodsServiceImpl implements GoodsService {
@@ -41,6 +39,9 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Autowired
     private AttributeNameDAO attributeNameDAO;
+
+    @Autowired
+    private AttributeValueDAO attributeValueDAO;
 
     @Autowired
     private SnowFlakeKeyGen idGen;
@@ -215,7 +216,6 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Override
     public GoodsVO getGoods(GoodsVO goodsVO) {
-        GoodsVO goodsVO1 = new GoodsVO();
         //查询商品信息
         Goods goods =  null;
         if(goodsVO == null || goodsVO.getId() == null || goodsVO.getId() == 0L){
@@ -225,41 +225,35 @@ public class GoodsServiceImpl implements GoodsService {
             goods = goodsDAO.findOne(goodsVO.getId());
         }
         if(goods == null){
-            return goodsVO1;
+            return goodsVO;
         }
-        BeanUtil.copyPropertiesIgnoreNullFilds(goods,goodsVO1);
+        BeanUtil.copyPropertiesIgnoreNullFilds(goods,goodsVO);
         List<GoodsAttrVO> goodsAttrVOList = new ArrayList<>();
         List<GoodsAttr> list = goodsAttrDAO.findByGoodsIdAndEnableFlagOrderBySort(goods.getId(),EnableFlag.Y);
         if(list == null || list.size() <= 0){
-            goodsVO1.setGoodsAttrVOList(goodsAttrVOList);
-            return goodsVO1;
+            goodsVO.setGoodsAttrVOList(goodsAttrVOList);
+            return goodsVO;
         }
         //遍历商品属性关系
         for(GoodsAttr goodsAttr:list){
-                GoodsAttrVO goodsAttrVO = new GoodsAttrVO();
-                BeanUtil.copyPropertiesIgnoreNullFilds(goodsAttr,goodsAttrVO);
-                //将相关属性的values查询出来，并将其放在商品属性关系中
-                AttributeName attributeName1 = attributeNameDAO.findOne(goodsAttrVO.getAttrId());
-                List<AttributeValueVO> listVO = new ArrayList<>();
-                if(attributeName1 != null && attributeName1.getEnableFlag() == EnableFlag.Y && attributeName1.getAttributeValues() != null && attributeName1.getAttributeValues().size() > 0){
-                    Iterable<AttributeValue> values = attributeName1.getAttributeValues();
-                    Iterator<AttributeValue> it = values.iterator();
-                    while(it.hasNext()){
-                        AttributeValue attributeValue = it.next();
-                        if(attributeValue.getEnableFlag() == EnableFlag.Y){
-                            AttributeValueVO attributeValueVO = new AttributeValueVO();
-                            BeanUtil.copyPropertiesIgnoreNullFilds(attributeValue,attributeValueVO);
-                            listVO.add(attributeValueVO);
-                        }
-                    }
-                    goodsAttrVO.setAttributeValueVOS(listVO);
-                }
-                goodsAttrVOList.add(goodsAttrVO);
+            GoodsAttrVO goodsAttrVO = new GoodsAttrVO();
+            BeanUtil.copyPropertiesIgnoreNullFilds(goodsAttr,goodsAttrVO);
+            //将相关属性的values查询出来，并将其放在商品属性关系中
+            List<AttributeValueVO> listVO = new LinkedList<>();
+            Iterable<AttributeValue> values = attributeValueDAO.findByAttributeNameIdAndEnableFlagOrderBySort(goodsAttrVO.getAttrId(),EnableFlag.Y);
+            Iterator<AttributeValue> it = values.iterator();
+            while(it.hasNext()){
+                AttributeValue attributeValue = it.next();
+                AttributeValueVO attributeValueVO = new AttributeValueVO();
+                BeanUtil.copyPropertiesIgnoreNullFilds(attributeValue,attributeValueVO);
+                listVO.add(attributeValueVO);
+            }
+            goodsAttrVO.setAttributeValueVOS(listVO);
+            goodsAttrVOList.add(goodsAttrVO);
 
         }
-
-        goodsVO1.setGoodsAttrVOList(goodsAttrVOList);
-        return goodsVO1;
+        goodsVO.setGoodsAttrVOList(goodsAttrVOList);
+        return goodsVO;
     }
 
     /**
@@ -270,6 +264,8 @@ public class GoodsServiceImpl implements GoodsService {
      */
     @Override
     public PageDTO<GoodsVO> searchGoodsPage(GoodsVO goodsVO, PageRequest pageRequest) {
+        Goods objects = goodsDAO.findGoodsInfo(201975988715584L);
+
         Page<Goods> goodsPage = goodsDAO.findAll(getInputCondition(goodsVO),pageRequest);
         PageDTO<GoodsVO> pageDTO = new PageDTO<>();
         List<GoodsVO> list = new ArrayList<>();
@@ -318,7 +314,6 @@ public class GoodsServiceImpl implements GoodsService {
             }
 
         }
-        predicates.add(QGoods.goods.goodsAttrList.any().enableFlag.eq(EnableFlag.Y));
         predicates.add(QGoods.goods.enableFlag.eq(EnableFlag.Y));
         return BooleanExpression.allOf(predicates.toArray(new BooleanExpression[predicates.size()]));
     }

@@ -2,8 +2,9 @@
   padding: 0 0.625rem;
   position: relative;
   width: 17.5rem;
-  height: 2.375rem;
-  line-height: 2.375rem;
+  height: 2.2rem;
+  line-height: 2.2rem;
+  background-color: #f4f4f4;
 }
 .z-s-header .z-search {
   width: 15rem;
@@ -17,7 +18,7 @@
   -webkit-transform: translate(-50%, -50%);
   -o-transform: translate(-50%, -50%);
   line-height: 1.5rem;
-  border: 0.05rem solid #9d9d9d;
+  background-color: #fff;
   border-radius: 1.5rem;
 }
 .z-s-header .z-search img {
@@ -43,13 +44,14 @@
   z-index: 100;
 }
 .z-s-header .return img {
-  width: 0.625rem;
-  height: 1rem;
+  width: 0.55rem;
+  height: 0.975rem;
   vertical-align: middle;
 }
 .z-list-s {
   width: 17.5rem;
   padding: 0 0.625rem;
+  border-bottom: 1px solid #d7d7d7;
 }
 .z-list-s ul {
   display: -webkit-box;
@@ -101,7 +103,7 @@
   height: 100%;
 }
 .z-up ul {
-  padding: 0 0.625rem;
+  padding: 0.5rem 0.625rem 0;
   width: 17.5rem;
   background-color: #fff;
 }
@@ -163,7 +165,7 @@
   z-index: -1;
 }
 .z-tip-img img {
-  width: 6.75rem;
+  width: 4.75rem;
   height: 5.5rem;
   display: block;
   position: relative;

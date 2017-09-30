@@ -33,6 +33,16 @@ public class UserAuthRecord  extends BaseModel<Long> {
     private User user;
 
     /**
+     * 用户真实姓名
+     */
+    private String realName;
+
+    /**
+     * 身份证
+     */
+    private String idNumber;
+
+    /**
      * 第一张正面图片
      */
     private String imgOneURL;

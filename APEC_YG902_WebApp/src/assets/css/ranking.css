@@ -8,7 +8,7 @@
   top: 0;
   right: 0;
 }
-#rankBox .rankFix .rankBanner {
+#rankBox .rankBanner {
   height: 4.225rem;
   background: #2fcaa7 url("../../assets/img/rateBj.png") no-repeat center;
   background-size: contain;
@@ -16,29 +16,38 @@
   padding: 3rem 0 0 2.3rem;
   position: relative;
 }
-#rankBox .rankFix .rankBanner img {
+#rankBox .rankBanner span {
   position: absolute;
+  /*top:32/@rem;
+      left:20/@rem;*/
+  top: 0;
+  left: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 0;
+}
+#rankBox .rankBanner span img {
+  margin-left: 0.5rem;
+  margin-top: 0.8rem;
   width: 0.4rem;
   height: 0.7rem;
-  top: 0.8rem;
-  left: 0.75rem;
 }
-#rankBox .rankFix .rankBanner h1 {
+#rankBox .rankBanner h1 {
   font-size: 1.2rem;
   line-height: 1.2rem;
   margin-bottom: 0.625rem;
   letter-spacing: 0.1rem;
 }
-#rankBox .rankFix .rankBanner h2 {
+#rankBox .rankBanner h2 {
   font-size: 0.725rem;
   line-height: 0.725rem;
   letter-spacing: 0.1rem;
 }
-#rankBox .rankFix .rankTab {
+#rankBox .rankTab {
   width: 100%;
   background-color: #0AB58E;
 }
-#rankBox .rankFix .rankTab li {
+#rankBox .rankTab li {
   width: 50%;
   height: 2.5rem;
   line-height: 2.5rem;
@@ -47,18 +56,18 @@
   position: relative;
   font-size: 0;
 }
-#rankBox .rankFix .rankTab li > a {
+#rankBox .rankTab li > a {
   color: #fff;
   font-size: 0.75rem;
   letter-spacing: 0.025rem;
 }
-#rankBox .rankFix .rankTab li i {
+#rankBox .rankTab li i {
   position: absolute;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
 }
-#rankBox .rankFix .rankTab li .triangle {
+#rankBox .rankTab li .triangle {
   width: 0;
   height: 0;
   overflow: hidden;
@@ -66,26 +75,26 @@
   border-color: transparent transparent #0AB58E transparent;
   border-style: dashed dashed solid dashed;
 }
-#rankBox .rankFix .rankTab li .white {
+#rankBox .rankTab li .white {
   border-color: transparent transparent #fff transparent;
 }
 #rankBox .scrollWrapper {
   position: fixed;
   right: 0;
   left: 0;
-  top: 9.75rem;
+  top: 0;
   bottom: 0;
   overflow: hidden;
 }
-#rankBox .scrollWrapper .rankContent {
+#rankBox .rankContent {
   background-color: #fff;
 }
-#rankBox .scrollWrapper .rankContent dd {
+#rankBox .rankContent dd {
   display: flex;
   flex-direction: row;
   height: 3.475rem;
 }
-#rankBox .scrollWrapper .rankContent dd .orderNum {
+#rankBox .rankContent dd .orderNum {
   width: 2.325rem;
   text-align: center;
   display: flex;
@@ -93,15 +102,15 @@
   justify-content: center;
   align-items: center;
 }
-#rankBox .scrollWrapper .rankContent dd .orderNum img {
+#rankBox .rankContent dd .orderNum img {
   width: 1.3rem;
   height: 1.3rem;
 }
-#rankBox .scrollWrapper .rankContent dd .orderNum i {
+#rankBox .rankContent dd .orderNum i {
   font-style: normal;
   font-size: 0.65rem;
 }
-#rankBox .scrollWrapper .rankContent dd .rContent {
+#rankBox .rankContent dd .rContent {
   border-bottom: 1px solid #d7d7d7;
   display: flex;
   flex-direction: row;
@@ -110,20 +119,20 @@
   width: 100%;
   position: relative;
 }
-#rankBox .scrollWrapper .rankContent dd .rContent .headPhoto {
+#rankBox .rankContent dd .rContent .headPhoto {
   display: inline-block;
   margin-right: 0.5rem;
 }
-#rankBox .scrollWrapper .rankContent dd .rContent .headPhoto img {
+#rankBox .rankContent dd .rContent .headPhoto img {
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 2rem;
 }
-#rankBox .scrollWrapper .rankContent dd .rContent .name,
-#rankBox .scrollWrapper .rankContent dd .rContent .totalNum {
+#rankBox .rankContent dd .rContent .name,
+#rankBox .rankContent dd .rContent .totalNum {
   font-size: 0.75rem;
 }
-#rankBox .scrollWrapper .rankContent dd .rContent .totalNum {
+#rankBox .rankContent dd .rContent .totalNum {
   color: #2fcaa7;
   margin-right: 0.275rem;
   position: absolute;
@@ -131,6 +140,15 @@
   top: 50%;
   transform: translateY(-50%);
 }
-#rankBox .scrollWrapper .rankContent dd .rContent .totalNum i {
+#rankBox .rankContent dd .rContent .totalNum i {
   font-style: normal;
+}
+#rankBox .rankContent .ddLast {
+  border-bottom: 0 none;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: #646464;
+  letter-spacing: 0.05rem;
+  padding: 1rem 0;
+  height: 1.5rem;
 }

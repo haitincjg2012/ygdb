@@ -2,7 +2,7 @@
     <div class="buyS">
       <!--<scroller ref="my_scroller" :on-infinite="infinite">-->
           <div class="com">
-             <div class="z-s-header">
+             <div class="z-s-header-T1">
                <div class="z-search">
                  <img src="../../../assets/img/search.png">
                  <!--<input placeholder="" v-model="content" @change="searchRet">-->
@@ -358,7 +358,7 @@
         obj.showCredateTime = current.showCredateTime;
         var id = current.id;
         obj.id = current.id;
-        obj.levelImg =that.userLevelKeySwitch(current.userLevelName);
+        obj.levelImg =QG.methods.userLevel(current.userLevelName);
         obj.img = current.firstImageUrl;
         obj.local = current.address;
         obj.local = current.address;
@@ -495,13 +495,14 @@
             fn.AREA = tArr;
             break;
           case "EMPTY":
+              console.log(arr, 8989);
             if(fn.EMPTY){
               tArr = fn.EMPTY.concat(arr);
             }else{
               tArr = arr;
             }
             fn.EMPTY = tArr;
-            console.log(tArr);
+
             break;
         }
       }
@@ -1043,7 +1044,8 @@
         this.showShadow = false;
       },
       searchRet(){
-          this.showShadow = false;
+        this.del = {};
+        this.showShadow = false;
         this.GQFlag = false;
         this.SORT = true;
         this.second = false;
@@ -1051,21 +1053,11 @@
         this.itemChild = null;
         fn.clearN(this.TYPEPATH);
         this.TYPEPATH = "EMPTY";
-//        this.firstSearch = "ZHPX";
+
         this.ky = this.content;
         this.pageNumber = 1;
         var that = this;
         this.$store.state.recordPZ = null;
-//        var elArr = document.querySelector(".smallClass").children;
-//        [].forEach.call(elArr, function (current, index) {
-//
-//          var cl = current.children[0].classList;
-//          var flag = cl.contains("activeS");
-//          if (flag) {
-//            cl.remove("activeS");
-//            current.children[1].classList.remove("activeTri")
-//          }
-//        });
 
         this.list();
       },
@@ -1227,10 +1219,11 @@
         this.bheight = document.querySelector(".page").clientHeight;
 
         var sH =  this.$store.state.xqInfoF;
+
         if(this.$store.state.xqF){
-//            console.log(sH)
           window.scrollTo(0,sH);
         }else{
+          this.del = {};
           var keyword = this.$route.query.KEY;
           this.ky = keyword
           this.firstSearch = "ZHPX";

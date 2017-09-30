@@ -34,6 +34,7 @@ public class ESDepotOrgInfoVO extends  ESOrgInfoVO {
          super.setOrderWeight(esOrgInfoVO.getOrderWeight());
          super.setOrgFirstBannerUrl(esOrgInfoVO.getOrgFirstBannerUrl());
          super.setOrgId(esOrgInfoVO.getOrgId());
+         super.setCreateDate(esOrgInfoVO.getCreateDate());
     }
 
 }

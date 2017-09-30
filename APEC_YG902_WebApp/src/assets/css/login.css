@@ -1,0 +1,40 @@
+.phone-input {
+  height: 2.05rem;
+  line-height: 2.05rem;
+  border-bottom: 0.05rem solid #f4f4f4;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.phone-input:focus {
+  border-color: red;
+}
+.code-input {
+  height: 2.05rem;
+  line-height: 2.05rem;
+  border-bottom: 0.05rem solid #f4f4f4;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0 0.75rem;
+  padding: 0!important;
+  position: relative;
+}
+.c-z-d-p-iconbg {
+  background: url("../img/phone.png") 0 50% no-repeat;
+  background-size: 0.825rem 1rem;
+}
+.c-z-password-iconbg {
+  background: url("../img/Password.png") 0 50% no-repeat;
+  background-size: 0.825rem 1rem;
+}
+.ZTactiveO {
+  border-color: #28cba7;
+  background: url("../img/phoneOn.png") 0 50% no-repeat;
+  background-size: 0.825rem 1rem;
+}
+.ZTactiveT {
+  border-color: #28cba7;
+  background: url("../img/PasswordOn.png") 0 50% no-repeat;
+  background-size: 0.825rem 1rem;
+}

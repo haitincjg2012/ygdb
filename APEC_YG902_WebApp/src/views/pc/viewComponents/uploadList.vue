@@ -1,16 +1,22 @@
 <template>
   <div class="uploadList-info-page">
-      <top-bar title="上传单据" v-on:rightBtn="_goSelGoods" :menuLeft="menuLeft"></top-bar>
-      <scroller ref="my_scroller" :style="styleCal">
-      <div class="main-page">
-        <div class="u-v-form-cli">
+      <!--<top-bar title="上传单据" v-on:rightBtn="_goSelGoods" :menuLeft="menuLeft"></top-bar>-->
+    <top-bar title="上传单据"></top-bar>
+      <!--<my-scroll class="scrollWrapperT" :data="goodsList" :pullup="pullup" @scrollToEnd="loadMore">-->
+      <div class="main-page main-page-T">
+        <div class="u-v-form-cli-T">
           <div class="sell-l"><span>卖货方</span></div>
           <div class="sell-f">
+            <div class="c-z-select-identify">
+              <div v-for="item in dataAur" @click.stop="AurSelect($event,item)" :class="item.class">
+                <span>{{item.name}}</span>
+              </div>
+            </div>
             <div @click.stop="addrSel" class="sell-f-sz">
               <span class="sell-f-sz-shi">{{cityName}}</span>
               <span class="sell-f-sz-xian">{{countyName}}</span>
               <span class="sell-f-sz-zhen">{{townName}}</span>
-              <img class="arrow" src="../../../assets/img/Right_Arrow_Icon.png">
+              <img class="arrowT" src="../../../assets/img/back.png">
             </div>
             <div class="sell-f-chc">
 
@@ -20,9 +26,9 @@
                 <!--&gt;{{item.name}}</span>-->
 
 
-              <div v-for="item in dataAur" @click.stop="AurSelect($event,item)" :class="item.class">
-                <span>{{item.name}}</span>
-              </div>
+              <!--<div v-for="item in dataAur" @click.stop="AurSelect($event,item)" :class="item.class">-->
+                <!--<span>{{item.name}}</span>-->
+              <!--</div>-->
             </div>
           </div>
         </div>
@@ -52,7 +58,7 @@
           <ul class="u-v-lab-zw">
             <li>
               <div class="num">数量(斤)</div>
-              <div class="inputVal"><input v-model="item.number" placeholder="请填写数量" @input="amountQ($event,item)" maxlength="5"/></div>
+              <div class="inputVal"><input v-model="item.number" placeholder="请填写数量" @input="amountQ($event,item)" maxlength="5" @click="pos($event)"/></div>
               <!--<div class="inputVal"><input v-model="item.number" type="number" placeholder="请填写数量" @input="amountQ($event, item)" maxlength="5"></div>-->
             </li>
             <li>
@@ -66,16 +72,30 @@
             </li>
           </ul>
         </div>
-        <!--<div style="margin:10px auto;width:50%;color: #ffffff;height: 30px;line-height: 30px;text-align: center;background-color:rgba(0,0,0,.86);opacity:0.5;font-size: 0.7rem;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><span>请填写数据</span></div>-->
-        <div v-show="_btnshow" class="login-btn">
-          <input class="btn-login-c login-confirm" type="submit" id="btn-login-code" value="提交单据"
-                 @click="confirmBtn"></input>
+        <div class="c-z-good">
+             <div class="c-z-add-goods" @click="_goSelGoods">+新添加商品</div>
+        </div>
+        <div class="c-z-space-T"></div>
+        <!--<div v-show="_btnshow" class="login-btn">-->
+          <!--<input class="btn-login-c login-confirm" type="submit" id="btn-login-code" value="提交单据"-->
+                 <!--@click="confirmBtn"></input>-->
+        <!--</div>-->
+        <!--<div class="login-btn">-->
+        <!--<input class="btn-login-c login-confirm" type="submit" id="btn-login-code" value="提交单据"-->
+            <!--@click="confirmBtn"></input>-->
+        <!--</div>-->
+        <div class="c-z-login-menu" @click="confirmBtn">
+          提交
         </div>
       </div>
-      </scroller>
+
+      <!--</my-scroll>-->
+
   </div>
 </template>
-
+<style>
+@import "../../../assets/css/uploadmenu.css";
+</style>
 <script>
   import split from '../../../components/split/split'
   import topBar from '../../../components/topBar/topBar'
@@ -83,6 +103,7 @@
   import c_js from '../../../assets/js/common'
   import keyBoard from '../../../components/keyboard/keyboard'
   import {MessageBox, Toast, Indicator} from 'mint-ui';
+  import scroll from '../../../components/scroll/scroll'
 
   const api = new API();
 
@@ -120,21 +141,22 @@
         dataAur: [
           {
             aur: 'KS',
-            name: '客商',
+            name: '客商果',
             class: 's-a-box-db visited'
           },
           {
             aur: 'ZZH',
-            name: '果农',
+            name: '果农果',
             class: 's-a-box-db'
           }
         ],
         type: 'KS',//Y	KS:客商；ZZH:果农	卖货方类型
-        mm:''
+        mm:'',
+        pullup:true,
       }
     },
     mounted(){
-        this._initScroll();
+//        this._initScroll();
     },
     activated(){
     },
@@ -249,11 +271,16 @@
           console.log(error)
         }
       },
+      pos(event){
+//          var el = event.target || event.srcElement;
+          console.log(88888);
+//          el.scrollIntoView();
+      },
       _initScroll(){
         const self = this;
         self.$nextTick(function () {
           var winHeight = window.innerHeight;
-          var mainHeight = winHeight-50;
+          var mainHeight = winHeight-100;
           self.styleCal='top:42px;height:'+mainHeight+'px';
         })
       },
@@ -279,10 +306,10 @@
         }
 
         if(!flag){
-          item.number= value.slice(0, -1);
+          item.number= "";
         }
 
-        if(item.amount != ""){
+        if((item.amount != "") && (item.number != "")){
             item.totalAmount = item.number * item.amount;
         }
 
@@ -305,16 +332,16 @@
         }
 
         if(!flag){
-          item.amount= value.slice(0, -1);
+          item.amount= "";
         }
 
-        if(item.number != ""){
+        if((item.number != "") &&(item.amount != "")){
           item.totalAmount = item.number * item.amount;
         }
       }
     },
-
     created() {
+//      window.addEventListener('scroll', this.pos, false);
     },
     beforeRouteEnter(to, from, next) {
       next(vm=>
@@ -332,6 +359,7 @@
           }
         }
         if (from.name === "billList") {
+
           var data = vm.$store.state.uploadGoodList;
           if (data.attrValueId) {
             vm.goodInfo['skuName'] = data.attrValue;
@@ -368,7 +396,7 @@
 
     components: {
       split,
-      topBar
+      topBar,
     }
   }
 </script>
@@ -376,7 +404,6 @@
 <style lang="stylus" rel="stylesheet/stylus">
   _rem = 20rem;
   .uploadList-info-page
-    position: fixed;
     top: 0;
     left: 0;
     height 100%;
@@ -390,7 +417,7 @@
       top 50%
       transform translateY(-50%)
     .u-v-form-cli:first-child
-      border-bottom 1px solid #D7D7D7
+      border-bottom 1px solid #f4f4f4
     .u-v-form-cli
       height (80 /_rem)
       display: -webkit-flex
@@ -401,7 +428,7 @@
       flex-flow: row wrap;
       .sell-l
         text-align center
-        border-right 1px solid #D7D7D7
+        border-right 1px solid #f4f4f4
         line-height (80 /_rem)
         width (100 / _rem)
         span
@@ -414,7 +441,7 @@
           height 50%
           line-height (40 /_rem)
           position relative
-          border-bottom 1px solid #D7D7D7
+          border-bottom 1px solid #f4f4f4
           span
             font-size (15 /_rem)
             margin-left (15 /_rem)
@@ -445,7 +472,7 @@
           .s-a-box-db:not(:first-child)
             margin-left (5 /_rem)
         .buy-f-chc
-          border-bottom 1px solid #D7D7D7
+          border-bottom 1px solid #f4f4f4
         .buy-f-chc, .buy-f-name
           height 50%
           line-height (40 /_rem)
@@ -455,8 +482,8 @@
             width 70%
             font-size (15 /_rem)
     .u-v-form-time
-      height (30 /_rem)
-      line-height (30 /_rem)
+      height (40 /_rem)
+      line-height (40 /_rem)
       position relative
       .time-select
         margin-left (20 /_rem)
@@ -468,9 +495,9 @@
         right (10/_rem)
         font-size (15/_rem)
     .u-v-good-form
-      margin 0 (10 /_rem) (10 /_rem) (10 /_rem)
+
       .u-v-lab-form
-        border-bottom 1px solid #D7D7D7
+        border-bottom 1px solid #f4f4f4
         height (40 /_rem)
         line-height (40 /_rem)
         .u-v-c-lab
@@ -486,9 +513,9 @@
       justify-content center
       width 100%
       margin (10 /_rem) 0
-      border-bottom 1px solid #D7D7D7
+      border-bottom 1px solid #f4f4f4
       li:not(:last-child)
-        border-right 1px solid #D7D7D7
+        border-right 1px solid #f4f4f4
       li
         -moz-box-flex: 1;
         -webkit-box-flex: 1;
@@ -506,7 +533,7 @@
     .solid-line
       margin 0 0 0(50 /_rem)
       height 1px
-      background-color #D7D7D7
+      background-color #f4f4f4
     .login-btn
       margin (20 /_rem) (15 /_rem) 0 (15 /_rem)
       .btn-login-c

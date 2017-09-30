@@ -38,7 +38,7 @@ public interface UserPointDAO extends BaseDAO<UserPoint,Long> {
      * 修改用户积分
      */
     @Modifying(clearAutomatically = true)
-    @Query(value = "update user_point set available_points = if(available_points + :points < 0,0,available_points + :points ) where user_id = :userId  ",nativeQuery = true)
+    @Query(value = "update user_point set available_points = if(available_points + :points < 0,0,available_points + :points )  where user_id = :userId  ",nativeQuery = true)
     int updateUserPoints(@Param("points") int points, @Param("userId") Long userId);
 
 

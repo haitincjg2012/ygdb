@@ -1,8 +1,8 @@
 <template>
    <div class="app1">
-       <div class="header">
+       <div class="header-goods">
            <h1>选择商品信息</h1>
-           <div class="return" @click="back">
+           <div class="return-goods" @click="back">
              <img src="../../../assets/img/ret.png">
            </div>
        </div>
@@ -73,9 +73,7 @@
           return;
         }
           var dt = data.data.goodsAttrVOList;
-          console.log(data.data);
         this.goodinfos = dt;
-
         dt.forEach(function (current) {
              var obj = {path:"",
                value:{
@@ -99,6 +97,8 @@
              obj.value.sort = current.sort;
              record[current.attrId] = obj;
         });
+
+        this.RECORD = record;
       },
       r:function (data) {
         if(!data.succeed){
@@ -108,6 +108,7 @@
         this.$store.state.skuName = data.data[0].skuName;
         this.$store.state.skuId = data.data[0].skuId;
         this.$store.state.skuFlag = true;
+
         this.$router.go(-1);
       },
       hr:function (data) {
@@ -139,13 +140,15 @@
       data(){
         return{
           goodinfos:[],
-          historys:[]
+          historys:[],
+          RECORD:null,
         }
       },
        methods:{
          back(){
 //             var path = this.$route.query.path;
 //             this.$router.push({name:path,query:{back:"GQ"}});
+
                this.$router.go(-1);
            },
          historyRecord(event){
@@ -210,9 +213,10 @@
 //           var eleA = document.querySelectorAll(".ul-list");
             var eleA = document.querySelector(".z-list-d");
             var children = eleA.children;
+            var self = this;
             [].forEach.call(children, function (current) {
               var id = current.dataset.id;
-              var path = record[id].path;
+              var path = self.RECORD[id].path;
               if(path == ""){
                 return;
               }else{
@@ -228,9 +232,9 @@
 //                var pvalue = cChild.dataset.value;
 //                var psort = cChild.dataset.path;
 
-                record[id].value.attrValueId = "";
-                record[id].value.attrValue = "";
-                record[id].path = "";
+                self.RECORD[id].value.attrValueId = "";
+                self.RECORD[id].value.attrValue = "";
+                self.RECORD[id].path = "";
               }
             })
 //           eleA.forEach(function (current) {
@@ -302,7 +306,18 @@
          }
        },
      activated(){
+
+       this.goodinfos = [];
+       let params = {
+         api:"/yg-goods-service/goods/getGoods.apec",
+         data:{
+//                  "id":"192338805133376"
+         }
+       }
+       this.post(params,fn.message.bind(this));
        this.history();
+       this.reset();
+
        var el = document.querySelector(".page");
        if(el){
          var flag =  el.classList.contains("z-scroll");
@@ -315,15 +330,15 @@
        }
      },
      mounted(){
-         let params = {
-             api:"/yg-goods-service/goods/getGoods.apec",
-                data:{
-//                  "id":"192338805133376"
-                }
-            }
-
-       this.post(params,fn.message.bind(this));
-       this.history();
+//         let params = {
+//             api:"/yg-goods-service/goods/getGoods.apec",
+//                data:{
+////                  "id":"192338805133376"
+//                }
+//            }
+//
+//       this.post(params,fn.message.bind(this));
+//       this.history();
      }
    }
 </script>

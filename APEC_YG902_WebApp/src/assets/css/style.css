@@ -79,7 +79,9 @@ input{
   position: relative;
   top: .12rem;
 }
-
+.tab-item .tab-label{
+  color: #323232;
+}
 /*数量输入键盘*/
 .input-container {
 	width: 100%;

@@ -23,8 +23,15 @@
         <div class="aur-face-img">
           <!-- 放大图片 -->
           <!--<big-img v-if="showImg" @clickit="viewImg" :imgSrc="imgBigSrc"></big-img>-->
-          <file-load imgSize="10" :onChange="fileloadZM"></file-load>
-
+          <!--<file-load imgSize="10" :onChange="fileloadZM"></file-load>-->
+          <div class="img-upload">
+            <div class="upload">
+              <div class="cli-btn">
+                <i style="font-size: 25px;color: #8c939d;" class="fa fa-plus" aria-hidden="true"></i>
+              </div>
+              <input class="img-input" accept="image/*" type="file" @change="fileloadZM($event)">
+            </div>
+          </div>
           <div class="img-show">
             <!--@click="clickImg($event)"-->
             <img class="" :src="imgSrc">
@@ -32,22 +39,36 @@
           </div>
         </div>
         <div class="aur-face-img">
-         <file-load imgSize="10" :onChange="fileloadFM"></file-load>
-
+         <!--<file-load imgSize="10" :onChange="fileloadFM"></file-load>-->
+          <div class="img-upload">
+            <div class="upload">
+              <div class="cli-btn">
+                <i style="font-size: 25px;color: #8c939d;" class="fa fa-plus" aria-hidden="true"></i>
+              </div>
+              <input class="img-input" accept="image/*" type="file" id="upload" @change="fileloadFM($event)">
+            </div>
+          </div>
           <div class="img-show">
             <img :src="imgSrc_">
             <span v-show="!imgSrc_" style="font-size: 14px;">请点击左侧上传您的身份证反面照</span>
           </div>
         </div>
-        <div v-show="_btnshow" class="login-btn">
-          <input class="btn-login-c login-confirm" type="submit" id="btn-login-code" value="提交"
-                 @click="postImg"></input>
-        </div>
+        <!--<div v-show="_btnshow" class="login-btn"   @click="postImg">-->
+          <!--提交-->
+          <!--&lt;!&ndash;<input class="btn-login-c login-confirm" type="submit" id="btn-login-code" value="提交"&ndash;&gt;-->
+               <!--&lt;!&ndash;&gt;</input>&ndash;&gt;-->
+        <!--</div>-->
+
       </div>
     </scroller>
+    <div @click="upload" v-show="_btnshow" class="login-btn-t">
+      提交
+    </div>
   </div>
 </template>
-
+<style>
+@import "../../../assets/css/realP.css";
+</style>
 <script>
   import split from '../../../components/split/split'
   import topBar from '../../../components/topBar/topBar'
@@ -82,27 +103,35 @@
         imgSrc_: '',
         formData: new FormData(),
 //        formDataS: new FormData(),
-        fileloadZM:function (dtBase64,file){//身份证正面压缩回调函数
+        fileloadZM:function (e){//身份证正面压缩回调函数
 //            this.imgSrc=dtBase64;
-          if(!this.formData.has('file'))
-          {
-            this.formData.append('file', file);
-          }else{
-            this.formData.set('file', file);
-          }
+          var target = e.target || e.srcElement;
+          var file = target.files[0];
+         var fd = new FormData();
+          fd.append('file', file);
+//          if(!this.formData.has('file'))
+//          {
+//            this.formData.append('file', file);
+//          }else{
+//            this.formData.set('file', file);
+//          }
 
-          this.uploadImg(this.formData, 0);
+          this.uploadImg(fd, 0);
         }.bind(this),
-        fileloadFM:function (dtBase64,file){//身份证反面压缩回调函数
+        fileloadFM:function (e){//身份证反面压缩回调函数
+          var target = e.target || e.srcElement;
+          var file = target.files[0];
+          var fd = new FormData();
+          fd.append('file', file);
 //          this.imgSrc_=dtBase64;
-          if(!this.formData.has('file'))
-          {
-            this.formData.append('file', file);
-          }else{
-            this.formData.set('file', file);
-          }
+//          if(!this.formData.has('file'))
+//          {
+//            this.formData.append('file', file);
+//          }else{
+//            this.formData.set('file', file);
+//          }
 
-          this.uploadImg(this.formData, 1);
+          this.uploadImg(fd, 1);
         }.bind(this)
       }
     },
@@ -160,7 +189,6 @@
           }
         }
 
-        console.log(params);
         try {
           api.post(params).then((res) => {
             var item = res.data;
@@ -181,9 +209,9 @@
         }
       },
       uploadImg(fd, index){
+       console.log(fd);
           const self = this;
         let params = {
-//          api: "/yg-user-service/user/userRealName/uploadFile.apec",
           api:"/common/uploadImg.apec",
           data: fd
         }
@@ -192,6 +220,7 @@
           api.postImg(params).then((res) => {
             var item = res.data;
             if (item.succeed) {
+
                 var dt = item.data[0][0];
                 if(index == 0){
                   self.imgSrc=dt.imagePath;
@@ -211,15 +240,14 @@
             }
             Indicator.close();
           }).catch((error) => {
+              alert(123);
               console.log(error);
             Indicator.close();
             self.$router.go(-1);
-            alert(111);
           })
         } catch (error) {
           Indicator.close();
           self.$router.go(-1);
-          alert(222);
         }
       },
       compress(img,Orientation) {

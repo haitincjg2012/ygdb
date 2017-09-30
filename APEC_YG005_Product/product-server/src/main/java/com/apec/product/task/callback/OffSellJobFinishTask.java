@@ -38,7 +38,7 @@ public class OffSellJobFinishTask implements ListenableFutureCallback<ResultData
             mail.setContent("错误详情: \n" + result.getErrorMsg());
             mail.setType(MailType.TEXT);
             try {
-                mailService.sendMail(mail);
+                mailService.sendMail(mail, true);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -1,5 +1,7 @@
 <template>
     <div class="z-p-home c-p-xq">
+      <my-scroll class="scrollWrapper" :data="itemGQ" :pullup="pullup" @scrollToEnd="loadMore">
+        <div>
       <div class="z-p-banner">
         <div class="z-header-person-h">
           <img src="../../../assets/img/ret.png" @click="back">
@@ -38,38 +40,44 @@
         <!--<div class="z-p-economy">-->
            <!--<span class="z-p-economy-text">供应链金融合作库</span>-->
         <!--</div>-->
+        <!--<div class="z-p-follow">-->
+          <!--<div class="z-p-f" :class="{active:person.sh}" @click="notice">-->
+            <!--{{person.sh?"已关注":"关注"}}-->
+          <!--</div>-->
+        <!--</div>-->
       </div>
       <div class="z-space"></div>
+
       <div class="z-p-manage-info">
         <div class="z-p-cold" v-if="role.coldF">
           <img src="../../../assets/img/lk.png" class="img-com">
           <span>冷库名称</span>
-          <input type="text" readonly v-model="person.lk">
+          <input type="text" disabled v-model="person.lk">
         </div>
         <div class="z-p-c-storage" v-if="role.coldF">
           <img src="../../../assets/img/kr.png"  class="img-com">
           <span>库容量 &nbsp;&nbsp;</span>
-          <input type="text" readonly v-model="person.kr">
+          <input type="text" disabled v-model="person.kr">
         </div>
         <div class="z-p-c-cooperative" v-if="role.cooperativeF">
           <img src="../../../assets/img/lk.png"  class="img-com">
           <span>合作社 &nbsp;&nbsp;</span>
-          <input type="text" readonly v-model="person.hzs">
+          <input type="text" disabled v-model="person.hzs">
         </div>
         <div class="z-p-area">
             <img src="../../../assets/img/qy.png"  class="img-com">
             <span>所在区域</span>
-            <input type="text" readonly v-model="person.address">
+            <input type="text" disabled v-model="person.address">
         </div>
         <div class="z-p-pz" >
           <img src="../../../assets/img/zypz.png"  class="img-com">
           <span>主营品种</span>
-          <input type="text" readonly v-model="person.pz">
+          <input type="text" disabled v-model="person.pz">
         </div>
         <div class="z-p-cmarket" v-if="role.agencyF">
           <img src="../../../assets/img/kh.png"  class="img-com">
           <span>客户市场</span>
-          <input type="text" readonly v-model="person.xsq">
+          <input type="text" disabled v-model="person.xsq">
         </div>
         <!--<div class="z-p-transship" v-if="role.traderF">-->
           <!--<img src="../../../assets/img/dhqy.png" class="img-com">-->
@@ -79,7 +87,7 @@
         <div class="z-p-sale"  v-if="role.traderF">
           <img src="../../../assets/img/xsqy.png" class="img-com">
           <span>销售区域</span>
-          <input type="text" readonly v-model="person.xsq">
+          <input type="text" disabled v-model="person.xsq">
         </div>
       </div>
       <div class="z-description">
@@ -114,7 +122,12 @@
       <div class="z-num-main" :class="{show:!role.agencyF}">
          <h4 class="z-num-main-t">调果数据</h4>
         <div class="z-space"></div>
-        <div id="mainS" class="z-p-main"></div>
+        <div id="mainS" class="ZPmain" :class="{ZPShow:AgChart}" ></div>
+        <div class="c-z-ondata" v-if="AgChart">
+          <img src="../../../assets/img/noData.png" class="c-z-nodata-img">
+          <p class="c-z-nodata-text">暂无数据</p>
+        </div>
+        <!--<div class="z-p-main"></div>-->
       </div>
       <div class="z-p-gy-T">
         <h4 class="c-p-gy-x">供求</h4>
@@ -125,11 +138,13 @@
               :is="item.ss"
               :item="item"
               v-for="item in itemGQ" v-on:xq="initD">
-
             </li>
+            <li class="li-space" v-if="!loadFlag">没有更多数据</li>
           </ul>
         </div>
       </div>
+        </div>
+      </my-scroll>
     </div>
 </template>
 <style scoped>
@@ -141,7 +156,8 @@
   import IMG from '../../../components/gqimg.vue'
   import T from "../../../assets/img/t.png"
   import DBanner from "../../../assets/img/defaultBg.png"
-  import P from "../../../assets/img/p.png"
+  import scroll from '@/components/scroll/scroll'
+//  import P from "../../../assets/img/p.png"
   import defaultIcon from "../../../assets/img/defaultForm.png"
 
   import MYGQList from "../../home/viewComponents/mygqlist.vue"
@@ -173,7 +189,7 @@
             this.reset();
             var browserId = this.browserId;
               var params = {
-                  api:"/yg-voucher-service/voucher/getSelfNumberRankViewVO.apec",
+                  api:"/yg-voucher-service/voucher/getNumberRankViewVO.apec",
                   data:{
                       userId:browserId
                   }
@@ -186,7 +202,7 @@
             this.role.traderF = true;
             var browserId = this.browserId;
             var params = {
-              api:"/yg-voucher-service/voucher/getSelfNumberRankViewVO.apec",
+              api:"/yg-voucher-service/voucher/getNumberRankViewVO.apec",
               data:{
                 userId:browserId
               }
@@ -256,9 +272,12 @@
       var myChart = ec.echarts.init(el);
       var xData = [];
       var yData = [];
-      for(var key in data){
+      if(data){
+          var dt = JSON.parse(data);
+      }
+      for(var key in dt){
         xData.push(key);
-        yData.push(data[key]);
+        yData.push(dt[key]);
       }
       var nameData = ["70#一二","75#一二","80#一二","85#一二",];
       var option = {
@@ -325,13 +344,18 @@
       var rows = data.data.rows;
       var arr = [];
       var that = this;
+
+      if(this.pageNumber >= data.data.pageCount){
+        this.loadFlag = false;
+
+      }
       rows.forEach(function (current, index) {
         var obj = {};
         var len = 0;
         obj.ss = MYGQList;
         obj.skuName = current.skuName;
         obj.showCredateTime = current.showCredateTime;
-        var id = current.userId;
+        var id = current.id;
         obj.id = id;
         obj.levelImg =IMG.methods.userLevel(current.userLevelName);
         obj.img = current.firstImageUrl;
@@ -402,7 +426,6 @@
         arr.push(obj);
       });
       that.itemGQ = arr;
-      console.log(that.itemGQ);
     }
   }
   export default{
@@ -443,9 +466,17 @@
               cooperativeF:false,//合作社
             },
             itemGQ:null,//供求信息
-            pageNumber:1,//供求信息的页码
             del:{},//记录数据条数,
-            browserId:""//被浏览人id
+            browserId:"",//被浏览人id
+            borgId:"",
+
+            //上拉加载更多
+            pullup:true,
+            loadFlag:true,//"没有更多信息了"文字
+            loadMopen:false,//上拉加载标识
+            pageCount:10000,//供求的总数
+            pageNumber:1,//供求信息的页码
+            AgChart:false,//默认情况是有数据
           }
       },
       methods:{
@@ -454,7 +485,12 @@
             this.role.coldF = false;
             this.role.traderF = false;
             this.role.cooperativeF = false;
+            this.AgChart = false;
           },
+        initD(data){
+
+//              console.log(data);
+        },
         modify(e){
               var e = e || window.event;
               var target = e.toElement || e.srcElement;
@@ -471,6 +507,7 @@
           },
         back(){
             this.reset();
+            this.loadFlag = true;
               this.$router.go(-1);
           },
         postImg(params, fn){
@@ -523,10 +560,21 @@
           this.postImg(params, fn.addImage.bind(this))
         },
         DBRet(data){
-//            console.log(data);
+
           var dt = data.data;
-          this.battlefield.number = dt.totalNumber;
+          var weight = dt.weight;
+          this.battlefield.number = dt.totalNumber + weight;
           this.battlefield.rank = dt.rankNo;
+          if(dt.attrNumberMap){
+              this.$nextTick(function () {
+                fn.initChat(dt.attrNumberMap, weight);
+              })
+
+          }else{
+              console.log(dt);
+            this.AgChart = true;
+//            fn.initChat(dt.attrNumberMap, weight);
+          }
         },
         bs(data){
           var dt = data.data;
@@ -540,7 +588,7 @@
           let params = {
             api:"/_node_user/_product_list.apno",
             data:{
-              orgId:that.browserId,
+              orgId:that.borgId,
               pageNumber: "1",
             }
           }
@@ -548,13 +596,48 @@
         },
         phoneViewRet(){
         },
+        notice(){
+          var fn;
+          if(!this.person.sh){
+            Toast('关注');
+            this.person.notice =this.person.notice*1 + 1;
+            this.person.sh = true;
+            fn = true;
+          }else{
+            Toast('取消关注');
+            this.person.notice =this.person.notice - 1;
+            this.person.sh = false;
+            fn = false;
+          }
+
+          var self = this;
+          let params = {
+            api:"/_node_user/_save_user_org.apno",
+            data:{
+              "orgId":self.orgId,
+              saveFlag:fn
+            }
+          }
+
+          this.post(params,this.phoneViewRet);
+        },
+        loadMore(){
+            var self = this;
+//          console.log(self.loadFlag);
+            if(self.loadFlag){
+
+                this.pageNumber ++;
+                this.gqlist();
+            }
+        }
       },
     activated(){
-
+      this.del ={};
       var browserId = this.$route.query.userId;
       var borgId = this.$route.query.orgId;
-      this.browser = browserId;
-
+      this.browserId = browserId;
+      this.borgId = borgId;
+      this.AgChart = false;
       let params = {
         api:"/yg-user-service/user/findUserInfo.apec",
         data:{
@@ -563,6 +646,7 @@
       }
       this.post(params, fn.init.bind(this));
       this.gqlist(1);
+
 
       let paramsT = {
         api:"/_node_user_org/_view_org.apno",
@@ -575,6 +659,9 @@
       this.post(paramsT,this.phoneViewRet);
 
 
+    },
+    components: {
+      'my-scroll':scroll
     }
   }
 </script>

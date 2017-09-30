@@ -70,7 +70,7 @@ public class UserController extends MyBaseController {
 
             //参数验证
             boolean flag = StringUtils.isBlank(userVO.getMobile()) || StringUtils.isBlank(userVO.getPassword()) ||
-                                            StringUtils.isBlank(userVO.getVaildCode()) || userVO.getUserType() == null;
+                    StringUtils.isBlank(userVO.getVaildCode()) || userVO.getUserType() == null;
             if(flag) return super.getResultJSONStr(false, null, Constants.COMMON_MISSING_PARAMS);
 
             //密码长度不小于6位
@@ -232,29 +232,21 @@ public class UserController extends MyBaseController {
      */
     @RequestMapping(value = "/userRealName", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String userRealName(@RequestBody String json){
+        UserAuthRecordVO authRecordVO = getFormJSON(json, UserAuthRecordVO.class);
         String result = Constants.SYS_ERROR;
         //获取前端用户传来的实名验证相关信息
-        UserAuthRecordViewVO viewVO = getFormJSON(json, UserAuthRecordViewVO.class);
-        UserVO userVO = new UserVO();
-        if(viewVO != null){
-            userVO.setRealName(viewVO.getRealName());
-            userVO.setIdNumber(viewVO.getIdNumber());
-        }
         Long userNo = this.getUserId(json);
-        userVO.setId(userNo);
-        boolean flag = StringUtils.isBlank(userVO.getIdNumber()) || StringUtils.isBlank(userVO.getRealName());
+        authRecordVO.setUserId(userNo);
+        boolean flag = authRecordVO == null || StringUtils.isBlank(authRecordVO.getIdNumber()) || StringUtils.isBlank(authRecordVO.getRealName());
         if(flag){
             //参数不能为空（身份证号和用户真实姓名）
             return super.getResultJSONStr(false,null,Constants.ERROR_100003);
         }
-        String idNumber = userVO.getIdNumber().trim();
+        String idNumber = authRecordVO.getIdNumber().trim();
         if(!ValidateUtil.checkIdNumber(idNumber)){
             //身份证正则匹配不通过
             return super.getResultJSONStr(false,null,ErrorCodeConst.ERROR_IDNUMBER);
         }
-        UserAuthRecordVO authRecordVO = new UserAuthRecordVO();
-        BeanUtil.copyPropertiesIgnoreNullFilds(viewVO,authRecordVO);
-        authRecordVO.setUserVO(userVO);
         if(StringUtils.isBlank(authRecordVO.getImgOneURL()) || StringUtils.isBlank(authRecordVO.getImgTwoURL())){
             //参数不能为空,必须上传两张身份证证件照
             return super.getResultJSONStr(false,null,ErrorCodeConst.NOT_IMG);
@@ -780,11 +772,87 @@ public class UserController extends MyBaseController {
         try {
             UserDTO userDTO = getFormJSON(json,UserDTO.class);
             PageRequest pageRequest = genPageRequest(userDTO);
-            List<UserViewVO> userViewVOS = userService.findUserFocusOrg(getUserId(json),pageRequest);
+            PageDTO<UserAllInfo> userViewVOS = userService.findUserFocusOrg(getUserId(json),pageRequest,userDTO);
             return super.getResultJSONStr(true, userViewVOS, null);
-
         } catch (Exception e) {
             log.error("[user][findUserFocusOrg] Exception：{}", e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
+    /**
+     * 用户解除绑定组织
+     */
+    @RequestMapping(value = "/unBoundOrg", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String unBoundOrg(@RequestBody String json){
+        try {
+            UserVO userVO = getFormJSON(json,UserVO.class);
+            String result = userService.unBoundOrg(userVO,String.valueOf(getUserId(json)));
+            if(StringUtils.equals(result,Constants.RETURN_SUCESS)){
+                return super.getResultJSONStr(true, null, null);
+            }else{
+                return super.getResultJSONStr(false, null, result);
+            }
+
+        } catch (Exception e) {
+            log.error("[user][unBoundOrg] Exception：{}", e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
+    /**
+     * 查询用户组织具体信息
+     */
+    @RequestMapping(value = "/findUserOrgInfo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String findUserOrgInfo(@RequestBody String json){
+        try {
+            UserOrgClientVO userOrgClientVO = getFormJSON(json,UserOrgClientVO.class);
+            userOrgClientVO = userService.findUserOrgInfo(userOrgClientVO);
+            return super.getResultJSONStr(true,userOrgClientVO, null);
+
+        } catch (Exception e) {
+            log.error("[user][findUserOrgInfo] Exception：{}", e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
+    /**
+     * 根据index重建索引
+     */
+    @RequestMapping(value = "/pushEsInfoByIndex", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public ResultData<String> pushEsInfoByIndex(@RequestBody String json){
+        ResultData<String> resultData = getResultData(true, null, Constants.RETURN_SUCESS);
+        try{
+            PageJSON<String> pageJSON = super.getPageJSON(json, String.class);
+            JSONObject formObj = JsonUtil.parseObject(pageJSON.getFormJSON(), JSONObject.class);
+            String indexUrl = (String)formObj.get("indexUrl");
+            String returnCode = userService.pushEsInfoByIndex(indexUrl);
+            if(!Constants.RETURN_SUCESS.equals(returnCode)) {
+                setErrorResultDate(resultData, returnCode);
+            }
+        }catch (Exception e){
+            log.error("[UserController] [pushEsInfoByIndex] Exception", e);
+            setErrorResultDate(resultData,Constants.SYS_ERROR);
+        }
+        return resultData;
+    }
+    /**
+     * 关闭认证
+     */
+    @RequestMapping(value = "/closeOrgPushFlag", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String closeOrgPushFlag(@RequestBody String json){
+        try {
+            UserVO userVO = getFormJSON(json,UserVO.class);
+            String result = userService.closeOrgPushFlag(userVO,String.valueOf(getUserId(json)));
+            if(StringUtils.equals(Constants.RETURN_SUCESS,result)){
+                return super.getResultJSONStr(true,null, null, null);
+            }else{
+                return super.getResultJSONStr(false,null, result);
+            }
+
+
+        } catch (Exception e) {
+            log.error("[user][closeOrgPushFlag] Exception：{}", e);
             return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
         }
     }

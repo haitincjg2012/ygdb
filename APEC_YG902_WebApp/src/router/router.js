@@ -51,12 +51,12 @@ const router = new VueRouter({
       component: require('../views/pc/viewComponents/viewUploadList.vue'),
       meta: {requiresAuth: true}
     },
-    // {//调果排行榜
-    //   name: 'ranking',
-    //   path: '/ranking',
-    //   component: require('../views/pc/viewComponents/ranking.vue'),
-    //   meta: {requiresAuth: true}
-    // },
+     {//调果排行榜
+       name: 'ranking',
+       path: '/ranking',
+       component: require('../views/pc/viewComponents/ranking.vue'),
+       meta: {requiresAuth: true}
+     },
     {//我的关注
       name: 'myAttention',
       path: '/myAttention',
@@ -109,6 +109,12 @@ const router = new VueRouter({
       name: 'address',
       path: '/address',
       component: require('../views/home/viewComponents/address.vue'),
+      meta: {requiresAuth: true}
+    },
+    {
+      name: 'addrSeek',
+      path: '/addrSeek',
+      component: require('../views/home/viewComponents/addseek.vue'),
       meta: {requiresAuth: true}
     },
     {
@@ -177,6 +183,17 @@ const router = new VueRouter({
       name: 'xqframe',
       path: '/xqframe',
       component: require('../views/home/viewComponents/xqframe.vue'),
+      meta:{
+        keepAlive:false
+      }
+    },
+    {
+      name: 'picShow',
+      path: '/picShow',
+      component: require('../views/home/viewComponents/picShow.vue'),
+      meta:{
+        keepAlive:false
+      }
     },
     {
       name: 'trader',

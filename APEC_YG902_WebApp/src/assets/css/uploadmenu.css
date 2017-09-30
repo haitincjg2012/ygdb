@@ -1,0 +1,135 @@
+.uploadList-info-page {
+  background-color: #f4f4f4;
+}
+.uploadList-info-page .u-v-form-cli {
+  background-color: #fff;
+}
+.uploadList-info-page .u-v-form-time {
+  background-color: #fff;
+}
+.uploadList-info-page .u-v-good-form {
+  background-color: #fff;
+}
+.uploadList-info-page .u-v-lab-form {
+  margin: 0 0.5rem;
+}
+.uploadList-info-page .u-v-form-cli-T {
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  height: 6.1rem;
+  border-bottom: 0.05rem solid #f4f4f4;
+  background-color: #fff;
+}
+.uploadList-info-page .u-v-form-cli-T .sell-l {
+  width: 5rem;
+  height: 6.15rem;
+  line-height: 6rem;
+  text-align: center;
+  border-right: 0.05rem solid #f4f4f4;
+}
+.uploadList-info-page .u-v-form-cli-T .sell-f {
+  -webkit-flex: 3;
+  -ms-flex: 3;
+}
+.uploadList-info-page .u-v-form-cli-T .sell-f .c-z-select-identify {
+  width: 100%;
+  height: 2rem;
+  border-bottom: 0.05rem solid #f4f4f4;
+}
+.uploadList-info-page .u-v-form-cli-T .sell-f .c-z-select-identify .s-a-box-db {
+  margin: 0.325rem;
+  width: 3.05rem;
+  display: inline-block;
+  height: 1.25rem;
+  line-height: 1.25rem;
+  text-align: center;
+  border: 0.05rem solid transparent;
+  font-size: 0.75rem;
+  border-radius: 0.2rem;
+  color: #646464;
+}
+.uploadList-info-page .u-v-form-cli-T .sell-f .c-z-select-identify .visited {
+  border-color: #2FCAA7 ;
+  color: #2FCAA7;
+}
+.uploadList-info-page .u-v-form-cli-T .sell-f .sell-f-sz {
+  position: relative;
+  width: 100%;
+  height: 2rem;
+  line-height: 2rem;
+  font-size: 0.75rem;
+  color: #646464;
+  border-bottom: 0.05rem solid #f4f4f4;
+  text-align: center;
+}
+.uploadList-info-page .u-v-form-cli-T .sell-f .sell-f-sz .sell-f-sz-xian {
+  margin: 0 1.5rem 0 1.2rem;
+}
+.uploadList-info-page .u-v-form-cli-T .sell-f .sell-f-sz .arrowT {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translate(0, -50%);
+  -ms-transform: translate(0, -50%);
+  -moz-transform: translate(0, -50%);
+  -webkit-transform: translate(0, -50%);
+  -o-transform: translate(0, -50%);
+  height: 0.525rem;
+  width: 0.3rem;
+}
+.uploadList-info-page .u-v-form-cli-T .sell-f .sell-f-chc {
+  width: 100%;
+  height: 2rem;
+  font-size: 0.75rem;
+  line-height: 2rem;
+}
+.uploadList-info-page .u-v-form-cli-T .sell-f .sell-f-chc input {
+  height: 1.25rem;
+  padding: 0.375rem 0;
+  margin-left: 0.75rem;
+  font-size: 0.75rem;
+}
+.uploadList-info-page .c-z-good {
+  width: 18.75rem;
+  padding: 0.55rem 0 0.825rem;
+  background-color: #f4f4f4;
+}
+.uploadList-info-page .c-z-good .c-z-add-goods {
+  width: 5rem;
+  height: 1.25rem;
+  text-align: center;
+  letter-spacing: 0.05rem;
+  line-height: 1.25rem;
+  margin: auto;
+  border-radius: 0.25rem;
+  border: 0.05rem solid #969696;
+  color: #646464;
+}
+.uploadList-info-page .c-z-space-T {
+  width: 18.75rem;
+  height: 2.5rem;
+  background-color: #f4f4f4;
+}
+.uploadList-info-page .c-z-login-menu {
+  width: 18.75rem;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  background-color: #2FCAA7;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #F8F8FA;
+}
+.uploadList-info-page .main-page-T {
+  background-color: #f4f4f4;
+  position: relative;
+  height: 100%;
+}

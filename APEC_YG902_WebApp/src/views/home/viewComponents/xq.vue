@@ -7,18 +7,19 @@
         <img src="../../../assets/img/ret.png">
       </div>
     </div>
+    <scroller ref="my_scroller" :style="styleCal">
     <div class="z-calcuros">
       <mt-swipe :auto="4000" class="cssHeight">
-        <template v-for="item in detailUrl">
+        <template v-for="(item,index) in detailUrl">
           <mt-swipe-item>
-            <img :src="item.imageUrl" style="width: 100%;height: 100%;">
+            <img :src="item.imageUrl" style="width: 100%;height: 100%;" @click.stop="originalPic(index)">
           </mt-swipe-item>
         </template>
       </mt-swipe>
     </div>
     <div class="part-two">
       <div class="z-gq-name">
-          <div class="z-gq-text">
+          <div class="z-gq-text" :class="{GQC:dataDetail.name == '供应'?false:true}">
             {{dataDetail.productTypeName}}
           </div>
       </div>
@@ -109,6 +110,7 @@
           <p>{{dataDetail.remark}}</p>
       </div>
     </div>
+    </scroller>
     <div class="footer">
        <ul>
            <li class="z-phone-T">
@@ -204,6 +206,7 @@
 
         if(dt.productImages.length){
           self.detailUrl = dt.productImages;
+          this.$store.state.xqImgArr = dt.productImages;
         }
 
         var tables = dt.productAttrs;
@@ -407,7 +410,8 @@
 
             publishViewList:[],
             pageCount:1,
-            pageNumber:1
+            pageNumber:1,
+            styleCal:""
           }
       },
     computed:{
@@ -416,6 +420,18 @@
       }
     },
     methods:{
+      originalPic(index){
+
+          this.$router.push({name:"picShow", query:{index:index}});
+      },
+      _initScroll(){
+        const self = this;
+        self.$nextTick(function () {
+          var winHeight = window.innerHeight;
+          var mainHeight = winHeight-50;
+          self.styleCal='top:42px;height:'+mainHeight+'px';
+        })
+      },
       routerPerInfo(){
         if(!this.dataDetail.userId)
             return;
@@ -594,6 +610,7 @@
        this.content();
        this.bs();
 //       this.parameter();
+       this._initScroll();
 
       var el = document.querySelector(".page");
       if(el){

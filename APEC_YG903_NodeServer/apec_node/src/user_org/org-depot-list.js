@@ -39,7 +39,7 @@ router.post('/_node_user_org/_depot_list' + config.urlSuffix, bodyParser, functi
     "_score":{
        "order":"desc"
      },
-     "orderWeight": {
+     "createDate": {
         "order": "desc"
      }
   };
@@ -55,7 +55,7 @@ router.post('/_node_user_org/_depot_list' + config.urlSuffix, bodyParser, functi
       };
       break;
   }
-  if(flag){
+  if(flag || searchType){
     if(!searchType) searchType = "";
     searchParams.body.query.bool.must =  {
          multi_match: {
@@ -66,7 +66,7 @@ router.post('/_node_user_org/_depot_list' + config.urlSuffix, bodyParser, functi
            minimum_should_match: "30%"
          }
      };
-  }; 
+  };
   var done = (returnData,total,err) => {
     if(err != 200 ){
       console.log("#############API:/_node_user_org/_depot_list/ [Error]: ")

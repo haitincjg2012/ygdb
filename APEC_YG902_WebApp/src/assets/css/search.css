@@ -14,14 +14,15 @@
   width: 18.75rem;
   background: #ece7e7;
 }
-.z-s-header {
+.z-s-header-T1 {
   padding: 0 0.625rem;
   position: relative;
   width: 17.5rem;
-  height: 2.375rem;
-  line-height: 2.375rem;
+  height: 2.2rem;
+  background-color: #f4f4f4;
+  line-height: 2.2rem;
 }
-.z-s-header .z-search {
+.z-s-header-T1 .z-search {
   width: 15rem;
   height: 1.5rem;
   position: relative;
@@ -33,16 +34,16 @@
   -webkit-transform: translate(-50%, -50%);
   -o-transform: translate(-50%, -50%);
   line-height: 1.5rem;
-  border: 0.05rem solid #9d9d9d;
   border-radius: 1.5rem;
+  background-color: #fff;
 }
-.z-s-header .z-search img {
+.z-s-header-T1 .z-search img {
   margin-left: 1rem;
   width: 0.875rem;
   height: 0.8rem;
   vertical-align: middle;
 }
-.z-s-header .z-search input {
+.z-s-header-T1 .z-search input {
   width: 8.75rem;
   font-size: 0.75rem;
   color: #999;
@@ -52,14 +53,15 @@
   line-height: 0.9rem;
   vertical-align: middle;
 }
-.z-s-header .return {
+.z-s-header-T1 .return {
   position: absolute;
   left: 0.625rem;
   top: 0;
+  line-height: 2.2rem;
 }
-.z-s-header .return img {
-  width: 0.625rem;
-  height: 1rem;
+.z-s-header-T1 .return img {
+  width: 0.55rem;
+  height: 0.975rem;
   vertical-align: middle;
 }
 .z-classify-s {
@@ -234,7 +236,7 @@
   z-index: -1;
 }
 .z-tip-img img {
-  width: 6.75rem;
+  width: 4.75rem;
   height: 5.5rem;
   display: block;
   position: relative;

@@ -88,6 +88,53 @@ public class ApecESProducer {
     }
 
     /**
+     * put 操作
+     * @param indexUrl
+     */
+    public ESPostResponseVO putEsInfo(String indexUrl, String mapping) throws BusinessException{
+        InputStream is = null;
+        BufferedReader reader = null;
+        try {
+            Response indexResponse = restClient.performRequest(
+                    ESProducerConstants.OPREATION_PUT,   //put操作
+                    indexUrl,         //索引路径
+                    Collections.<String, String>emptyMap(),
+                    new NStringEntity(mapping, ContentType.APPLICATION_JSON)
+            );
+            logger.info("[ApecESProducer][putEsInfo] IndexResponse:{}", indexResponse.getStatusLine());
+            is = indexResponse.getEntity().getContent();
+            reader =  new BufferedReader(new InputStreamReader(is, Constants.SYSTEM_ENCODING),ESProducerConstants.BUFFER_SIZE);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null){
+                sb.append(line).append("\n");
+            }
+            String resString = sb.toString();
+            reader.close();
+            is.close();
+
+            return JsonUtil.parseObject(resString , ESPostResponseVO.class);
+        }catch (Exception ex){
+            if(reader != null){
+                try {
+                    reader.close();
+                }catch (Exception ioEx){
+                    logger.error("[ApecESProducer] [putEsInfo] BufferedReader Close failed! ",ioEx);
+                }
+            }
+            if(is != null){
+                try {
+                    is.close();
+                }catch (Exception ioEx){
+                    logger.error("[ApecESProducer][Put] InputStream Close failed! ",ioEx);
+                }
+            }
+            logger.error("[ApecESProducer] [putEsInfo] Failed ! indexUrl:{}",indexUrl,ex);
+            throw new BusinessException(Constants.SYS_ERROR);
+        }
+    }
+
+    /**
      * 部分更新 按DOC 模式
      * **** 文档 合并
      * @param indexUrl 索引路径

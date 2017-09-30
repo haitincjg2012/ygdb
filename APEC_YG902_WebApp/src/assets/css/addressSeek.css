@@ -1,0 +1,33 @@
+.address-info-page-Seek .z-history-address {
+  width: 17.75rem;
+  padding: 0 0.5rem;
+}
+.address-info-page-Seek .z-history-address .z-history-r {
+  font-size: 0.9rem;
+  margin: 0.2rem 0 0.5rem;
+}
+.address-info-page-Seek .z-history-address .z-history-text {
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.address-info-page-Seek .z-history-address .z-history-text .z-history-name {
+  width: 8.75rem;
+  font-size: 0.7rem;
+  height: 1rem;
+  line-height: 1rem;
+  color: #fff;
+}
+.address-info-page-Seek .z-history-address .z-history-text .z-history-name p {
+  background-color: #929292;
+  text-align: center;
+  border-radius: 0.2rem;
+}

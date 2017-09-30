@@ -119,7 +119,7 @@ public class ApecMQPushConsumer extends DefaultMQPushConsumer {
         mail.setType(MailType.TEXT);
         mail.setContent(String.format(content, msg.getMsgId(), msg.getTags(),msg.getKeys()));
         try {
-            mailService.sendMail(mail);
+            mailService.sendMail(mail, true);
         } catch (Exception e) {
             logger.info("mail send failed :", e.getMessage());
         }

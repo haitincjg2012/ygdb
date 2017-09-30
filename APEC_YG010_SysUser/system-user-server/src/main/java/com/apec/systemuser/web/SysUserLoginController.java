@@ -113,7 +113,7 @@ public class SysUserLoginController extends BaseController
             //调用用户接口
             SysUserVO dto = getFormJSON(jsonStr, SysUserVO.class);
             SysUserVO vo1 = new SysUserVO();
-            vo1.setMobile(dto.getLoginName());
+            vo1.setMobile(account);
             List<SysUserVO> list = sysUserService.selectAll(vo1);
             log.info("step4：check user exist");
             if(null==list||list.size()==0){

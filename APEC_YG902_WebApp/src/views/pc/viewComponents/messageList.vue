@@ -9,10 +9,16 @@
           <div class="m-v-time"><span>{{item.sendTime}}</span></div>
         </div>
       </div>
+      <div class="c-empty-show"  v-if="messageFlag">
+          <img src="../../../assets/img/noMessage.png"/>
+          <p class="c-z-message">暂无消息</p>
+      </div>
     </scroller>
   </div>
 </template>
-
+<style>
+@import "../../../assets/css/message.css";
+</style>
 <script>
   import split from '../../../components/split/split'
   import topBar from '../../../components/topBar/topBar'
@@ -31,7 +37,8 @@
         vuegConfig:{
           forwardAnim:'touchPoint',
           backAnim: 'touchPoint',  //options所有配置可以写在这个对象里，会覆盖全局的配置
-        }
+        },
+        messageFlag:false,//是否有消息存在
       }
     },
 
@@ -39,15 +46,40 @@
 
     },
     activated () {
-      this.GetMesList();
+      this.messageFlag = false;
+      const self = this;
+
+      var params = {
+        api:"/_node_user/_info.apno"
+      }
+      try {
+        api.post(params).then((res) => {
+          var item = res.data;
+          var dt;
+
+          if (item.succeed) {
+
+            dt = JSON.parse(item.data);
+
+            self.GetMesList( dt.useId);
+          } else {
+          }
+        }).catch((error) => {
+        })
+      } catch (error) {
+        console.log(error)
+      }
+
+
     },
 
     methods: {
-      GetMesList(){//获取信息
+      GetMesList(userId){//获取信息
         const self = this;
-        const userId = self.$store.state.userId || c_js.getLocalValue('userId');
-        if (!userId)
-          return;
+
+//        const userId = self.$store.state.userId || c_js.getLocalValue('userId') || window.localStorage.getItem("userId");
+//        if (!userId)
+//          return;
         Indicator.open({
           text: '加载中...',
           spinnerType: 'fading-circle'
@@ -72,6 +104,9 @@
                   "id":item.body.id
                 })
               });
+              if(self.messageList.length == 0){
+                  self.messageFlag = true;
+              }
             } else {
             }
             Indicator.close();
@@ -87,7 +122,7 @@
 
       if(_item.activeCls != 'm-v-tz active')
       return;
-      
+
         if(!_item.id)
             return;
         const self = this;

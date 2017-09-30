@@ -13,6 +13,8 @@ import org.springframework.data.jpa.repository.Query;
  */
 public interface UserAuthRecordDAO extends BaseDAO<UserAuthRecord,Long> {
 
+    UserAuthRecord findByIdAndEnableFlag(Long id,EnableFlag enableFlag);
+
 //    @Query(value = " select ",nativeQuery = true)
 //    Page<UserAuthRecord> findByUser_nameLikeAndEnableFlagOrderBySuccess(String userName, EnableFlag enableFlag, Pageable pageable);
 }

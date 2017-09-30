@@ -91,12 +91,12 @@ public class DispatchController extends BaseController
         {
             //发生异常 发送邮件 消息格式： 环境 + 服务名称 + 方法名称 + 错误信息
             if(sendFlag) {
-                String title = "environment [%s] call service Error  serviceName: [%s]  methodName:[%s]";
-                title = String.format(title, profile, serverName, methodName);
+                String title = "call service Error  serviceName: [%s]  methodName:[%s]";
+                title = String.format(title, serverName, methodName);
                 String content = "Request Url: [%s] \n Erorr Message : \n %s";
                 content = String.format(content, request.getRequestURI(), e.getMessage());
                 Mail mail = new Mail(title, content);
-                mailService.sendMail(mail);
+                mailService.sendMail(mail, true);
                 logger.error("调用服务异常，发送邮件通知 serviceName:{} methodName:{}", serverName, methodName);
             }
             return super.getResultJSONStr( false, "", e.getErrorCode() );

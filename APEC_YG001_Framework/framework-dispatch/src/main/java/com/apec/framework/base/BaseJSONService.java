@@ -36,7 +36,7 @@ public abstract class BaseJSONService extends AbstractRequestService implements 
     {
         String jsonStr = super.parseRequest( req );
         String serviceUrl = HttpRequestUtil.getRequestServiceUrl( serverName, methodName, StringUtils.EMPTY );
-        log.debug( "serviceUrl:" + serviceUrl + ",jsonStr:" + jsonStr );
+        log.info( "serviceUrl:" + serviceUrl + ",jsonStr:" + jsonStr );
         preHandle( req );
         String ret;
         try
@@ -53,7 +53,7 @@ public abstract class BaseJSONService extends AbstractRequestService implements 
         afterCompletion( req );
         //返回重复提交的值
         ret = setRepeatAct( req, ret );
-        log.debug( "serviceUrl:" + serviceUrl + ",ret:" + ret );
+        log.info( "serviceUrl:" + serviceUrl + ",ret:" + ret );
         return ret;
     }
 

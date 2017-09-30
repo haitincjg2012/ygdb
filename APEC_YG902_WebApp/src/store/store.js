@@ -34,14 +34,15 @@ const store = new Vuex.Store({
     xqInfoS:0,
     address:0,//1表示发布供应信息 2表示求购信息 0表示初始话
     addrData:null,//地址消息
-
+    addrSeekData:null,//求购的地址
     point:'',//用户积分
     userLevelKey:"",
     userLevelName:"",
     uploadAddr:{//上传单据用户地址
     },
     uploadGoodList:{//上传单据商品清单
-    }
+    },
+    nameN:"",//昵称的缓存
   },
   mutations: {
     incrementCheck(state,UT){

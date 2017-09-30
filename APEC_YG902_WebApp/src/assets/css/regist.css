@@ -1,0 +1,30 @@
+.phone-input-t {
+  height: 1.2rem;
+  background: url("../img/phone.png") 0 50% no-repeat;
+  background-size: 0.825rem 1rem;
+}
+.line {
+  background-color: #28cba7!important;
+}
+.rphone {
+  background: url("../img/phoneOn.png") 0 50% no-repeat;
+  background-size: 0.825rem 1rem;
+}
+.c-z-code-t {
+  height: 1.2rem;
+  background: url("../img/Verification.png") 0 50% no-repeat;
+  background-size: 0.825rem 1rem;
+}
+.rcode {
+  background: url("../img/VerificationOn.png") 0 50% no-repeat;
+  background-size: 0.825rem 1rem;
+}
+.c-z-password-t {
+  height: 1.2rem;
+  background: url("../img/Password.png") 0 50% no-repeat;
+  background-size: 0.825rem 1rem;
+}
+.rpassword {
+  background: url("../img/PasswordOn.png") 0 50% no-repeat;
+  background-size: 0.825rem 1rem;
+}

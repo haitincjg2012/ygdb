@@ -4,7 +4,8 @@
 */
 <template>
     <div class="memberList">
-        <my-header v-on:initialPage="initialPage" :fatherTitle="fatitle" :headTitle="title" :viewFlag="viewFlag" :editFlag="editFlag" :addFlag="addFlag" ></my-header>
+        <my-header v-on:initialPage="initialPage" :firstTitle="firsTit" :secondTitle="secondTit" :thirdTitle="thirdTit" :breadFlag="breadflag"></my-header>
+        <!--<my-header v-on:initialPage="initialPage" :fatherTitle="fatitle" :headTitle="title"></my-header>-->
         <!--table Page-->
         <div id="tablePage" v-if="showFlag">
             <!--搜索-->
@@ -46,14 +47,14 @@
             </div>
             <!--批量删除-->
             <div class="batchGroup">
-                <el-button type="primary" @click="bindProp('org')">绑定组织</el-button>
+                <el-button type="primary" @click="bindProp('org')" :disabled="bindDisaleFlag">绑定组织</el-button>
                 <el-button type="primary" @click="bindProp('account')">设置账户类型</el-button>
                 <!--<el-button type="primary" @click="batchDel">批量删除</el-button>-->
             </div>
             <!--表格列表-->
             <div class="tableList">
-                <el-table :data="dataList" ref="memberTable"  highlight-current-row border stripe v-loading.body="loadFlag" style="width:100%;" @row-click="selUserinfo">
-                <!--<el-table :data="dataList" ref="memberTable"  highlight-current-row border stripe v-loading.body="loadFlag" style="width:100%;" @current-change="selUserid" @selection-change="selsChange">-->
+                <el-table :data="dataList" ref="memberTable"  highlight-current-row border stripe v-loading.body="loadCircle" style="width:100%;" @row-click="selUserinfo">
+                <!--<el-table :data="dataList" ref="memberTable"  highlight-current-row border stripe v-loading.body="loadCircle" style="width:100%;" @current-change="selUserid" @selection-change="selsChange">-->
                     <!--<el-table-column type="selection"></el-table-column>-->
                     <el-table-column prop="id" label="编号"></el-table-column>
                     <el-table-column prop="name" label="昵称"></el-table-column>
@@ -81,13 +82,14 @@
                     </el-table-column>
                     <el-table-column prop="userStatusKey" label="账户状态"></el-table-column>
                     <!--<el-table-column prop="userStatus" label="账户状态码"></el-table-column>-->
-                    <el-table-column label="操作">
+                    <el-table-column label="操作" width="200">
                         <template scope="scope">
                             <el-button type="text" @click="goDetail('view',scope.row.id)">详情</el-button>
-                            <!--<el-button type="text" v-if="scope.row.pushFlag==false" @click="changeStatus('certificate',scope.row.id)">认证</el-button>-->
-                            <el-button type="text" v-if="scope.row.userType!='HZS' && scope.row.pushFlag==false" @click="changeStatus('certificate',scope.row.id)">认证</el-button>
+                            <el-button type="text" v-if="scope.row.userType!='ZZH' && scope.row.userType!='HZS' && !scope.row.pushFlag && scope.row.userAccountType!='ORG_CHILD_ACCOUNT'" @click="changeStatus('certificate',scope.row.id)">认证</el-button>
+                            <el-button type="text" v-if="scope.row.pushFlag && scope.row.userAccountType!='ORG_CHILD_ACCOUNT'" @click="changeStatus('calCertificate',scope.row.id)">取消认证</el-button>
                             <el-button type="text" v-if="scope.row.userStatus!='FREEZE'" @click="changeAccount('disable',scope.row.id)">禁用</el-button>
                             <el-button type="text" v-if="scope.row.userStatus=='FREEZE'" @click="changeAccount('enable',scope.row.id)">启用</el-button>
+                            <el-button type="text" v-if="scope.row.userAccountType=='ORG_CHILD_ACCOUNT'" @click="unbindOrg(scope.row.id)">解绑组织</el-button>
                             <!--<el-button type="text" @click="goDetail('edit',scope.row.id)">编辑</el-button>-->
                             <!--<el-button type="text" @click="delTablelist(scope.row.id)">删除</el-button>-->
                         </template>
@@ -95,12 +97,11 @@
                 </el-table>
                 <el-pagination class="pageNation" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="1"
                                :page-sizes="[10,15,20,25,30]" :page-size="pSize" layout="total,sizes,prev,pager,next,jumper"
-                               :total="pageData.totalElements" v-show="pageData.totalElements>pSize"></el-pagination>
+                               :total="pageData.totalElements" v-show="pageData.totalElements>10"></el-pagination>
             </div>
         </div>
         <!--客户form Page-->
         <div id="formPage" v-if="!showFlag">
-            <!--<el-form ref="memberForm" :model="memberForm" :rules="memberRules" class="myformDetail" :class="{formBorder:viewFlag}">-->
             <el-form ref="memberForm" :rules="memberRules" class="myformDetail" :class="{formBorder:viewFlag}">
                 <el-form-item label="编号：">
                     <el-input v-model="memberForm.id" :disabled="viewFlag"></el-input>
@@ -126,7 +127,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="区域：" v-if="viewFlag">
-                    <el-input v-model="memberForm.userOrgClientVO.address" :disabled="true"></el-input>
+                    <el-input v-model="memberForm.address" :disabled="true"></el-input>
                 </el-form-item>
                 <el-form-item label="用户主身份：">
                     <el-input v-model="memberForm.userTypeKey" :disabled="viewFlag"></el-input>
@@ -152,9 +153,9 @@
                 <el-form-item label="积分：">
                     <el-input v-model="memberForm.userPoint.availablePoints" :disabled="viewFlag"></el-input>
                 </el-form-item>
-               <!-- <el-form-item label="创建时间：">  &lt;!&ndash;暂时没有，等待补充&ndash;&gt;
+                <el-form-item label="创建时间：">
                     <el-input v-model="memberForm.createDate" :disabled="viewFlag"></el-input>
-                </el-form-item>-->
+                </el-form-item>
                 <el-form-item label="账户状态：">
                     <el-input v-model="memberForm.userStatusKey" :disabled="viewFlag"></el-input>
                 </el-form-item>
@@ -185,11 +186,11 @@
                     <el-button @click="onReset('org')">重置</el-button>
                 </el-form>
             </div>
-            <!--列表-->
-            <el-table :data="orgList" highlight-current-row border stripe style="width:100%;" @row-click="selsOrg" v-loading.body="orgloadFlag">
+            <!--组织列表-->
+            <el-table :data="orgList" highlight-current-row border stripe style="width:100%;" @row-click="selsOrg" v-loading.body="loadCirOrg">
                 <!--<el-table-column type="selection"></el-table-column>-->
                 <el-table-column prop="orgName" label="企业名称"></el-table-column>
-                <el-table-column prop="userAccountType" label="企业类型"></el-table-column>
+                <el-table-column prop="orgClientUsers" label="拥有的客户"></el-table-column>
                 <el-table-column prop="mainOperating" label="主营品种"></el-table-column>
                 <el-table-column prop="address" label="所在地区"></el-table-column>
                 <el-table-column prop="orgStockCap" label="库存量"></el-table-column>
@@ -198,8 +199,8 @@
             layout="total,prev,pager,next" :total="orgpageData.totalElements":page-size="orgpSize"
             v-show="orgpageData.totalElements > orgpSize"></el-pagination>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="closeOrgWin">取消</el-button>
-                <el-button type="primary" @click.stop="submitOrg">提交</el-button>
+                <el-button @click="closeWin('org')">取消</el-button>
+                <el-button type="primary" @click.stop="submitWin('org')">提交</el-button>
             </div>
         </el-dialog>
         <!--设置账户类型  window-->
@@ -220,19 +221,19 @@
                 <el-form-item label="客户类型：">
                     <el-radio-group v-model="accountForm.chooseType" @change="selCustomnType">
                         <el-radio label="company">企业</el-radio>
-                        <el-radio label="IND_MAIN_ACCOUNT">个体</el-radio>
+                        <el-radio label="IND_MAIN_ACCOUNT" :disabled="indDisaleFlag">个体</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="账户类型：" v-if="showFirmflag" @change="selAccType">
                     <el-radio-group v-model="accountForm.accountType">
                         <el-radio label="ORG_MAIN_ACCOUNT">主账户</el-radio>
-                        <el-radio label="ORG_CHILD_ACCOUNT">子账户</el-radio>
+                        <el-radio label="ORG_CHILD_ACCOUNT" :disabled="childDisaleFlag">子账户</el-radio>
                     </el-radio-group>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="closeAccWin">取消</el-button>
-                <el-button type="primary" @click.stop="submitAccount">提交</el-button>
+                <el-button @click="closeWin('account')">取消</el-button>
+                <el-button type="primary" @click.stop="submitWin('account')">提交</el-button>
             </div>
         </el-dialog>
 
@@ -244,8 +245,17 @@
     export default {
         data () {
             return {
-                fatitle:'客户',
-                title:'客户列表',
+                //面包屑
+                firsTit:'客户',
+                secondTit:'客户管理',
+                thirdTit:'',
+                breadflag:false,
+
+
+                /*fatitle:'客户',
+                title:'客户列表',*/
+
+
                 showFlag:true, //true 显示table页; false 显示form页
                 showOrgFlag:false,//"选择绑定的组织"window
                 showAccountFlag:false,//设置账户类型
@@ -300,22 +310,26 @@
                 orgpNum:1,//页码
                 orgpSize:4,//页容量
                 //客户列表‘转圈’加载
-                loadFlag:false,
+                loadCircle:false,
                 //组织列表‘转圈’加载
-                orgloadFlag:false,
+                loadCirOrg:false,
                 //当市改变时候清空 区和镇
                 clearRegion:false,
                 //详情页
                 dataDetailList:[],//详情页数据集
                 operateType:"", //view：详情 edit:编辑
+                bindDisaleFlag:false,//绑定组织按钮是否禁用
+                indDisaleFlag:false,//设置账户类型时个体是否禁选
+                childDisaleFlag:false,//设置账户类型时子账号是否禁选
                 memberForm:{
-                    id:null,//编号
+                    id:"",//编号
                     name:"",//客户姓名
                     mobile:"",//电话
                     cityId:"",//市
                     areaId:"",//区
                     townId:"",//街道
                     address:"",//区域
+                    createDate:"",//创建日期
                     userTypeKey:"",//用户主身份
                     userDetailTypeKey:"",//用户子身份
                     userOrgClientVO:{
@@ -347,9 +361,9 @@
         activated(){
             var vm=this;
             vm.getTableList();//获取列表信息
-            vm.getCityList();//获取市信息
-            // test
-            vm.getOrglist();//获取组织列表
+//            vm.getCityList();//获取市信息
+
+
         },
         created() {
 
@@ -360,9 +374,9 @@
         },
         deactivated(){
             var vm=this;
-            vm.loadFlag=false;//避免超时跳到首页出现加载图标
-            vm.orgloadFlag=false;
-            console.log("客户页离开了。。。不送");
+//            vm.loadCircle=false;//避免超时跳到首页出现加载图标
+//            vm.loadCirOrg=false;
+//            console.log("客户页离开了。。。不送");
         },
         filters:{
             pushflagFilter(val){
@@ -371,10 +385,10 @@
             }
         },
         methods: {
-            //选择客户类型
+            //设置账户win：选择客户类型
             selCustomnType(val){
                 var vm=this;
-                console.log("val:"+val);
+//                console.log("val:"+val);
                 if(val=='company'){
                     vm.showFirmflag=true;
                 }
@@ -383,70 +397,65 @@
                     vm.accountForm.accountType=vm.accountForm.chooseType;
                 }
             },
-            //选择账户类型
+            //设置账户win：选择账户类型
             selAccType(val){
                 var vm=this;
-                console.log("账户类型val:"+val);
+//                console.log("账户类型val:"+val);
                 vm.accountForm.accountType=val;
-                
             },
 
-            //设置账户类型
-            submitAccount(){
-                var vm=this;
-                vm.certFlag=false;
-                console.log("账户类型："+vm.accountForm.accountType);
-                vm.doUserorg();
-            },
-            //初始化 组织/账户 数据
-            initdoUserorg(){
-                var vm=this;
-                vm.accountForm.chooseType=null;
-                vm.accountForm.accountType=null;
-                vm.setType=null;
-                vm.setDetailType=null;
-            },
-            //绑定组织/账户
+            //组织/设置账户win show
             bindProp(type){
               var vm=this;
-
               if(!vm.userid){
                   vm.$message({
                       message:"请选择客户列表数据！",
                       type:'warning'
                   });
               }
-              else if(type=='org'){
-                  vm.initdoUserorg();
-                  vm.showOrgFlag=true;
+              else if(type=='org'){//绑定组织
+                  if(vm.orgList.length==0){
+                      vm.getOrglist();//获取组织列表
+                  }
+                  else{
+                      vm.showOrgFlag=true;//显示组织列表
+                  }
+
               }
-              else if(type=='account'){
+              else if(type=='account'){//设置账户
                   vm.showAccountFlag=true;
               }
             },
-            //组织window submit
-            submitOrg(){
+            //window submit
+            submitWin(type){ //推送组织(org)、设置账户类型（account）
                 var vm=this;
-                vm.certFlag=false;
-                vm.doUserorg();
+                vm.doUserorg(type);
             },
-            //账户类型
-            closeAccWin(){
+            //window close
+            closeWin(type){
                 var vm=this;
-                vm.showAccountFlag=false;
-            },
-            //组织window close
-            closeOrgWin(){
-                var vm=this;
-                vm.showOrgFlag=false;
-                if(vm.orgid){
-                    vm.orgid=null;
+                if(type=='org'){//关闭组织账户win
+                    vm.showOrgFlag=false;
+                    if(vm.orgid){
+                        vm.orgid=null;
+                    }
                 }
+                else if(type=='account'){//关闭设置账户win
+                    vm.showAccountFlag=false;
+                }
+
+//             vm.clearRowselect();//清空table row选择
+            },
+            //清空memberTable row选择（暂时不需要）
+            clearRowselect(){
+                var vm=this;
+                console.log("清空行选择了");
+                vm.$refs.memberTable.clearSelection();
             },
             //获取组织列表
             getOrglist(){
                 var vm=this;
-                vm.orgloadFlag=true;
+                vm.loadCirOrg=true;
                 let params={
                     url:vm.apiUrl.member.orgtableUrl,
                     data:{
@@ -459,39 +468,79 @@
                         pageSize:vm.orgpSize //页容量
                     }
                 };
-                vm.ax.post(params,vm.getOrglistCb);
+                vm.ax.post(params,vm.getOrglistCb,vm);
             },
             getOrglistCb(data){
                 var vm=this;
-                vm.orgloadFlag=false;
                 vm.orgpageData=data.data;
                 vm.orgList=data.data.rows;
+                vm.showOrgFlag=true;//显示组织列表
 
             },
-            //认证状态改变
-            changeStatus(type,id){
+            //'认证'
+            changeStatus(type,id){ //certificate 认证 calCertificate 取消认证
                 var vm=this;
-                vm.userid=id;
-                console.log("type:"+type+"id:"+id);
-                if(type=="certificate"){
-                    vm.certFlag=true;
+                if(type=='certificate'){
+                    vm.userid=id;
+                    vm.doUserorg(type);
                 }
-                vm.doUserorg();
+                else if(type=='calCertificate'){
+                    vm.cancelCert(id);
+                }
             },
-            //推送组织和设置用户类型,认证开关
-            doUserorg(){
+            //取消组织认证
+            cancelCert(id){
                 var vm=this;
-                let params={
-                    url:vm.apiUrl.member.UserAndOrgUrl,
+                var params={
+                    url:vm.apiUrl.member.cancelCertUrl,
                     data:{
-                        id:vm.userid,
-                        pushFlag:vm.certFlag, //推送时传送true
-                        userAccountType:vm.accountForm.accountType,
-                        userType:vm.setType,
-                        userDetailType:vm.setDetailType,
-                        userOrgId:vm.orgid
+                        id:id //用户id
                     }
                 };
+                vm.ax.post(params,vm.cancelCertCb);
+
+            },
+            cancelCertCb(data){
+                var vm=this;
+                vm.$message({
+                    message:"取消认证成功！",
+                    type:"success"
+                });
+                vm.getTableList();//获取列表信息
+            },
+            //推送组织(org)、设置账户类型（account）,认证（certificate）
+            doUserorg(type){
+                var vm=this;
+                console.log("doUserorg type:"+type);
+
+                if(type=='org'){ //绑定组织
+                    var params={
+                        url:vm.apiUrl.member.UserAndOrgUrl,
+                        data:{
+                            id:vm.userid,
+                            userOrgId:vm.orgid
+                        }
+                    };
+                }
+                else if(type=='account'){ //设置账户
+                    var params={
+                        url:vm.apiUrl.member.UserAndOrgUrl,
+                        data:{
+                            id:vm.userid,
+                            userAccountType:vm.accountForm.accountType
+                        }
+                    };
+                }
+                else if(type=='certificate'){//认证
+                    var params={
+                        url:vm.apiUrl.member.UserAndOrgUrl,
+                        data:{
+                            id:vm.userid,
+                            pushFlag:true //推送时传送true
+
+                        }
+                    };
+                }
                 vm.ax.post(params,vm.doUserorgCb);
             },
             doUserorgCb(data){
@@ -502,14 +551,9 @@
                 });
                 vm.showOrgFlag=false;//关闭 组织 window
                 vm.showAccountFlag=false;//关闭 账户 window
-                //初始化数据
-                vm.initdoUserorg();
                 vm.getTableList();//获取列表信息
-                
-
-
             },
-            //批量删除
+            //批量删除(暂不需要)
             batchDel(){
                 var vm=this;
                 if(vm.idsArray.length==0){
@@ -532,6 +576,12 @@
             //客户table行选择改变
             selUserinfo(row){
                 var vm=this;
+                vm.showFirmflag = row.orgAccountType=="ORG_ACCOUNT"?true:false;//判断是否组织账户（企业）
+                vm.bindDisaleFlag = row.userAccountType=="ORG_MAIN_ACCOUNT"?true:false;//主账号不能绑定组织
+                vm.accountForm.accountType = row.userAccountType;//初始化账户类型
+                vm.indDisaleFlag = row.orgAccountType=="ORG_ACCOUNT"?true:false;//主账号不能设置为个体
+                vm.childDisaleFlag = row.orgAccountType=="IND_ACCOUNT"?true:false;//个体账号不能设置为组织子账户
+                vm.accountForm.chooseType = row.orgAccountType=="IND_ACCOUNT"?"IND_MAIN_ACCOUNT":"company";//初始化客户类型
                 vm.userid=row.id;
                 vm.setAccountType=row.userAccountType;
                 vm.setType=row.userType;
@@ -558,7 +608,7 @@
                     +" chooseType:"+vm.accountForm.chooseType //选择企业类型*/
                 );
             },
-            //table行选择改变时触发
+            //table行选择改变时触发（批量删除代码）
             selsChange(selection){
                 var vm=this;
                 vm.idsArray=[];
@@ -570,10 +620,11 @@
                 var vm=this;
                 vm.viewFlag=false;//表单只读标识
                 vm.editFlag=false;//表单编辑标识
+                vm.breadflag=false;
                 vm.showFlag=true;//显示列表，隐藏表单
-                vm.title='客户列表';
+
             },
-            //批量删除table数据
+            //批量删除table数据（暂时不要）
             delMoretable(){
                 var vm=this;
                 vm.$confirm('确认删除选中的数据吗？','提示',{
@@ -686,20 +737,19 @@
                 var vm=this;
                 vm.operateType=type;
                 if(type=='view'){
+                    vm.breadflag=true;
                     vm.viewFlag=true;
                     vm.editFlag=false;
-                    vm.title='客户详情';
+                    vm.thirdTit='详情';
                 }
                 else if(type=='edit'){
+                    vm.breadflag=true;
                     vm.editFlag=true;
                     vm.viewFlag=false;
-                    vm.title='客户编辑';
+                    vm.secondTit='编辑';
                 }
                 console.log("操作类型："+vm.operateType+"用户id:"+id);
                 vm.getTableDetail(id);
-                //接口改造，测试，正式去掉
-//                vm.showFlag=false;//显示form 隐藏table
-
             },
             //table详情info
             getTableDetail(id){
@@ -720,17 +770,15 @@
                   vm.getAreaList(data.data.cityId);//获取区列表
                   vm.getTownList(data.data.areaId);//获取镇列表
               }
-                vm.memberForm=vm.dataDetailList;
-                vm.memberForm.userOrgClientVO.pushFlag=vm.dataDetailList.userOrgClientVO.pushFlag==true?"已认证":"未认证";
-                //如果数据为空，显示“无”
-                for(var i in vm.memberForm){
+              //表单赋值
+              vm.getDataFomat(vm.memberForm,vm.dataDetailList);
 
+             //如果数据为空，显示“无”
+             for(var i in vm.memberForm){
                     if(!vm.memberForm[i] && typeof vm.memberForm[i] !="object"){
                         vm.memberForm[i]="无";
                     }
-
                     if(typeof vm.memberForm[i] == "object"){
-
                         var temp = {}.toString.call(vm.memberForm[i]).slice(8, -1) =="Object" ? {}:[];
                         for(var key in vm.memberForm[i]){
                               if(vm.memberForm[i][key] == ""){
@@ -744,24 +792,51 @@
                         vm.memberForm[i] = temp;
                     }
                 }
-              /* 没有需要数据转换的地方，如上直接赋值
-              vm.memberForm.cityId=vm.dataDetailList.cityId;
-              vm.memberForm.areaId=vm.dataDetailList.areaId;
-              vm.memberForm.townId=vm.dataDetailList.townId;
-              vm.memberForm.address=vm.memberForm.address;
-              vm.memberForm.id=vm.dataDetailList.id;
-              vm.memberForm.name=vm.dataDetailList.name;
-              vm.memberForm.mobile=vm.dataDetailList.mobile;
-              vm.memberForm.mainOperating=vm.dataDetailList.mainOperating;
-              vm.memberForm.strengthDescription=vm.dataDetailList.strengthDescription;
-              vm.memberForm.userType=vm.dataDetailList.userType;
-              vm.memberForm.userRealAuthKey=vm.dataDetailList.userRealAuthKey;
-              */
+
               setTimeout(function(){
                  vm.clearRegion=true;
               },1000);
             },
-            //市改变
+            //数据格式转化
+            /* vm.commonJs.getDataFomat(vm.memberForm,data.data);*/
+            getDataFomat(obj1,obj2){
+                var vm=this;
+                for(var i in obj1){
+                    for(var j in obj2){
+                       if(i==j){
+                           if(typeof obj1[i] !="object"){
+                               if(i=="createDate"){
+                                   console.log("createDate:"+obj1[i]);
+                                   obj1[i]=vm.commonJs.timestampPattern(obj2[j]);
+                               }
+                               else{
+                                   obj1[i]=obj2[j];
+                               }
+                           }
+                           else if(typeof obj1[i] =="object"){
+                               for(var key1 in obj1[i]){
+                                   for(var key2 in obj2[j]){
+                                       if(key1 == key2){
+                                           if(key1=='pushFlag'){
+                                               obj1[i][key1]=obj2[i][key1]==true?"已认证":"未认证";
+                                           }
+                                           else{
+                                               obj1[i][key1]=obj2[j][key2];
+//                                               console.log("key1:"+key1+" key2:"+key2+" i:"+i+" j:"+j);
+//                                               console.log("key1:"+obj1[i][key1]+" key2:"+obj1[i][key2]);
+                                           }
+                                       }
+                                   }
+
+                               }
+
+                           }
+                       }
+                    }
+                }
+                return obj1;
+            },
+            //市改变（暂不要）
             changeCity(id,type){
                 var vm=this;
                 console.log("市改变id："+id+"改变类型："+type);
@@ -778,7 +853,7 @@
                 }
                 vm.getAreaList(id);//区
             },
-            //区改变
+            //区改变（暂不要）
             changeArea(id){
                 var vm=this;
                 if(vm.clearRegion){
@@ -830,7 +905,7 @@
                 }
 
             },
-            //获取市信息
+            //获取市信息（暂不要）
             getCityList(){
                 var vm=this;
                 let params={
@@ -847,7 +922,7 @@
                 vm.cityData=data.data;
                 console.log("市长度："+data.data.length);
             },
-            //获取区信息
+            //获取区信息（暂不要）
             getAreaList(cityid){
                 var vm=this;
                 let params={
@@ -864,7 +939,7 @@
                 console.log("区名："+vm.areaData[0].name)
 
             },
-            //获取镇信息
+            //获取镇信息（暂不要）
             getTownList(areaid){
                 var vm=this;
                 let params={
@@ -883,7 +958,8 @@
             //获取表格数据
             getTableList(){
                 var vm=this;
-                vm.loadFlag=true;
+                vm.userid = null;
+                vm.loadCircle=true;
                 let params={
                     url:vm.apiUrl.member.tableUrl,
                     data:{
@@ -896,11 +972,11 @@
                         pageSize:vm.pSize //页容量
                     }
                 };
-                vm.ax.post(params,vm.tableListCb);
+
+                vm.ax.post(params,vm.tableListCb,vm);
             },
             tableListCb(data){
                 var vm=this;
-                vm.loadFlag=false;
                 vm.pageData=data.data;
                 vm.dataList=data.data.rows;
 
@@ -914,8 +990,6 @@
             //客户页码改变
             handleCurrentChange(val){ //memeber 客户列表  org 组织
                 var vm=this;
-//                console.log("页码改变type："+type+" 页码："+val);
-//                console.log(" 页码："+val);
                 vm.pNum=val;
                 vm.getTableList();
             },
@@ -924,6 +998,27 @@
                 var vm=this;
                 vm.orgpNum=val;
                 vm.getOrglist();
+            },
+            unbindOrg(id){//子账户类型可解绑
+            		var vm = this;
+            		let params={
+                    url:vm.apiUrl.member.unbindUrl,
+                    data:{
+                    		id:id
+                    }
+                };
+                    vm.ax.post(params,vm.unbindOrgCb);
+            },
+            unbindOrgCb(data){
+                var vm=this;
+                vm.$message({
+                    message:"解绑成功！",
+                    type:'success'
+                });
+                //账户类型置为空
+                vm.accountForm.accountType="IND_MAIN_ACCOUNT";//个体账户
+
+                vm.getTableList();//获取列表信息
             }
         },
         filters:{

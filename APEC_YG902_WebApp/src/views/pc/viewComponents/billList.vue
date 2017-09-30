@@ -380,7 +380,7 @@
 <style lang="stylus" rel="stylesheet/stylus">
   _rem = 20rem;
   .billSel-info-page
-    position: fixed;
+
     top: 0;
     left: 0;
     height 100%;

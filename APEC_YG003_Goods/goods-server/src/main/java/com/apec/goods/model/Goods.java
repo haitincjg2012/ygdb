@@ -51,7 +51,7 @@ public class Goods extends BaseModel<Long> {
      */
     @OneToMany(mappedBy = "goods",
             fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL,
+            cascade = CascadeType.REMOVE,
             orphanRemoval = true)
     private List<GoodsAttr> goodsAttrList;
 

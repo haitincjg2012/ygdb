@@ -1,6 +1,7 @@
 <template>
   <div class="pc-page">
-    <div style="overflow-y: scroll;height: 600px;" ref="main_page" class="main-page">
+    <scroller ref="my_scroller" :style="styleCal">
+    <div ref="main_page" class="main-page">
       <div class="p-info">
         <div class="p-info-main">
           <img @click.stop="routerInfo('pcInfo')" class="p-info-user" :src="imgUrl">
@@ -17,7 +18,7 @@
         </div>
         <!--<img src="../../assets/img/card.png" class="p-info-logo">-->
         <a @click.stop.prevent="messagePush" class="p-info-user-message-click">
-          <img src="../../assets/img/info.png" class="p-info-user-message">
+          <img src="../../assets/img/xx.png" class="p-info-user-message">
           <span v-show="messageCount">{{messageCount}}</span>
         </a>
       </div>
@@ -55,17 +56,17 @@
         <img class="arrow" src="../../assets/img/back.png">
       </div>
       <div class="dash-line"></div>
-      <!--<div @click.stop="routerInfo('ranking')" class="p-form-cli">-->
-        <!--<img class="label" src="../../assets/img/rankG.png">-->
-        <!--<span>调果排行榜</span>-->
-        <!--<img class="arrow" src="../../assets/img/back.png">-->
-      <!--</div>-->
-      <!--<div class="dash-line"></div>-->
-      <!--<div @click.stop="routerInfo('myAttention')" class="p-form-cli">-->
-        <!--<img class="label" src="../../assets/img/Bill.png">-->
-        <!--<span>我的关注</span>-->
-        <!--<img class="arrow" src="../../assets/img/back.png">-->
-      <!--</div>-->
+      <div @click.stop="routerInfo('ranking')" class="p-form-cli">
+        <img class="label" src="../../assets/img/rankG.png">
+        <span>调果排行榜</span>
+        <img class="arrow" src="../../assets/img/back.png">
+      </div>
+      <div class="dash-line"></div>
+       <div @click.stop="routerInfo('myAttention')" class="p-form-cli">
+        <img class="label" src="../../assets/img/Bill.png">
+        <span>我的关注</span>
+        <img class="arrow" src="../../assets/img/back.png">
+      </div>
       <split></split>
       <div @click.stop="routerInfo('myCo')" class="p-form-cli">
         <img class="label" src="../../assets/img/Group0.png">
@@ -86,6 +87,13 @@
         <img class="arrow" src="../../assets/img/back.png">
       </div>
       <div class="dash-line"></div>
+      <!--<div  class="p-form-cli">-->
+        <!--<img class="label" src="../../assets/img/Visa_Card.png">-->
+        <!--<span>投诉反馈</span>-->
+        <!--<span class="aur-is-not">{{userRealAuthKey}}</span>-->
+        <!--<img class="arrow" src="../../assets/img/back.png">-->
+      <!--</div>-->
+      <!--<div class="dash-line"></div>-->
 
       <a href="tel:0535-3143298" class="p-form-cli">
         <img class="label" src="../../assets/img/kf.png">
@@ -105,6 +113,7 @@
         <!--</input>-->
       </div>
     </div>
+    </scroller>
   </div>
 </template>
 
@@ -114,7 +123,9 @@
   import c_js from '../../assets/js/common';
   import {MessageBox, Indicator, Toast} from 'mint-ui';
 
-  import userImgUrl from '../../assets/img/Headportrait.png'
+
+
+  import userImgUrl from '../../assets/img/icon.png'//用户默认图像
   import daiban from '../../assets/img/AgencyTips.png'//代办
   import zzHu from '../../assets/img/AgencyTipsG.png'//种植户
   import keshang from '../../assets/img/AgencyTipsK.png'//客商
@@ -136,7 +147,7 @@
 
   export default {
      mounted(){
-       this.$refs.main_page.style.height = window.innerHeight-50 +'px';
+//       this.$refs.main_page.style.height = window.innerHeight-50 +'px';
      },
 
     data() {
@@ -150,7 +161,8 @@
         point: "",//积分
         userLevelKey: '',//用户等级
         userLevelName: '',//
-        messageCount:''//未读消息条数,
+        messageCount:'',//未读消息条数,
+        styleCal:"0"
 
       }
     },
@@ -158,6 +170,18 @@
     methods: {
       messagePush(){
         this.$router.push({name: 'messageList'});
+      },
+      _initScroll(){
+        const self = this;
+        self.$nextTick(function () {
+//            console.dir();
+            var el =this.$refs.main_page;
+//          var winHeight = window.innerHeight;
+          var mainHeight = el.offsetHeight + 50;
+//          self.styleCal='top:42px;height:'+mainHeight+'px';
+          this.$refs.main_page.style.height = mainHeight+'px';
+//                    self.styleCal=mainHeight+'px';
+        })
       },
       routerInfo(e){
           switch(e){
@@ -191,7 +215,8 @@
               this.$router.push({name: 'mySpDe'});
               break;
             case 'pD'://如何赚钱积分
-              this.$router.push({name: 'pointDoc'});
+//              this.$router.push({name: 'pointDoc'});
+              this.$router.push({ name: 'activePage_three'});
               break;
             case 'myCo'://我的收藏
               this.$router.push({name: 'myCollect'});
@@ -345,6 +370,8 @@
       },
       confirmBtn(){
         const self = this;
+        sessionStorage.clear();
+
         let params = {
           api: "/yg-user-service/login/loginOut.apec",
           data: {}
@@ -361,19 +388,66 @@
         } catch (error) {
           console.log(error)
         }
-      }
+      },
+      identify(){
+
+        const self = this;
+
+        var params = {
+          api:"/_node_user/_info.apno"
+        }
+        try {
+          api.post(params).then((res) => {
+            var item = res.data;
+            var dt;
+
+            if (item.succeed) {
+
+                dt = JSON.parse(item.data);
+
+                this.name = dt.name;
+                window.localStorage.useId = dt.userOrgId;
+                this.userTypeName = IMG.methods.userTypeNameSwitch(dt.userTypeKey);
+              this.imgUrl = dt.imgUrl || userImgUrl;//用户头像
+              this.userRealAuthName = dt.userRealAuth;
+
+            } else {
+            }
+          }).catch((error) => {
+          })
+        } catch (error) {
+          console.log(error)
+        }
+      },
+      init(data){
+//          console.log(data);
+
+      },
+      post(params, fn){
+        try {
+          api.post(params).then((res) => {
+            var data = res.data;
+            fn(data);
+          }).catch((error) => {
+            console.log(error)
+          })
+        } catch (error) {
+          console.log(error)
+        }
+      },
     },
 
     activated(){
-
-
+      this.identify();
       this.GetUserLevel();
       this.GetMessageCount();
-      this.imgUrl = this.$store.state.imgUrl || c_js.getLocalValue('imgUrl') || userImgUrl;//用户头像
-      window.sessionStorage.setItem("newName", this.$store.state.name || c_js.getLocalValue('name') || '');
-      this.userTypeName=this.userTypeNameSwitch(this.$store.state.userTypeName || c_js.getLocalValue('userTypeName'));
-      this.name = window.sessionStorage.getItem("newName");
-      console.log(window.sessionStorage.getItem("newName"));
+      this._initScroll();
+//      var name =  window.sessionStorage.getItem("newName") || this.$store.state.name || c_js.getLocalValue('name') || '';
+//      var level = window.sessionStorage.getItem("level") || this.$store.state.userTypeName || c_js.getLocalValue('userTypeName');
+//      this.userTypeName=this.userTypeNameSwitch(this.$store.state.userTypeName || c_js.getLocalValue('userTypeName'));
+
+
+
     },
 
     created() {
@@ -499,7 +573,7 @@
       margin-left (15 /_rem)
       position relative
       display block
-      color: #000000
+      color: #323232
       img
         vertical-align: middle
       .label
@@ -524,9 +598,9 @@
     .dash-line
       margin 0 0 0 (50 /_rem)
       height 1px
-      background-color #D7D7D7
+      background-color #f4f4f4
     .login-btn
-      margin (35 /_rem) (15 /_rem) 0 (15 /_rem)
+      margin (35 /_rem) (15 /_rem) (15 /_rem) (15 /_rem)
       .btn-login-c
         color #ffffff
         line-height (15 /_rem)
@@ -538,5 +612,4 @@
       .login-confirm
         background-color: #28CBA7;
         color #FFFFFF;
-        border: 1px solid #0bbe06;
 </style>

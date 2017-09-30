@@ -1,12 +1,14 @@
 package com.apec.voucher.service.impl;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -104,10 +106,10 @@ public class VoucherServiceImpl implements VoucherService{
 	@Transactional
 	public String addVoucherInfo(VoucherVO voucherVO) {
 		
-		//校验上传次数是否超过3次
+		//校验上传次数是否超过2次
 		if (cacheService.exists(Constants.VOUCHER+voucherVO.getUserId())){
 			String times = cacheService.get(Constants.VOUCHER+voucherVO.getUserId());
-			if (Integer.parseInt(times) >= 3){
+			if (Integer.parseInt(times) >= 2){
 				return ErrorCodeConst.VOUCHER_EXCEED_TIMES;
 			}
 		}
@@ -129,8 +131,8 @@ public class VoucherServiceImpl implements VoucherService{
 			voucherNumber = voucherNumber + voucherGoods.getNumber();
 		}
 		
-		//校验上传数量是否超过10吨
-		if (voucherNumber > 20000){
+		//校验上传数量是否超过50吨
+		if (voucherNumber > 100000){
 			return ErrorCodeConst.VOUCHER_EXCEED_NUMBER;
 		}	
 		//获取城市名称
@@ -204,6 +206,7 @@ public class VoucherServiceImpl implements VoucherService{
 			VoucherViewVO voucherVVO = new VoucherViewVO();
 			Voucher voucher = iter.next();
 			BeanUtil.copyPropertiesIgnoreNullFilds(voucher, voucherVVO);
+			voucherVVO.setVoucherId(voucher.getId());
 			//商品信息VoucherGoods->VoucherGoodsViewVO
 			List<VoucherGoodsViewVO> voucherGoodsVVOList = new LinkedList<VoucherGoodsViewVO>();
 			Iterator<VoucherGoods> vgIter = voucher.getVoucherGoods().iterator();
@@ -294,7 +297,8 @@ public class VoucherServiceImpl implements VoucherService{
 			voucherBSViewVO.setShipWarehouse(String.valueOf(obj[4]));
 			voucherBSViewVO.setDeliveryTime((Date)obj[5]);
 			voucherBSViewVO.setVoucherUrl(String.valueOf(obj[6]));
-			voucherBSViewVO.setVoucherId((Long)obj[7]);
+			voucherBSViewVO.setVoucherId((BigInteger)obj[7]);
+			voucherBSViewVO.setUserId((BigInteger)obj[8]);
 			voucherBSViewVOList.add(voucherBSViewVO);
 		}
 		
@@ -478,13 +482,14 @@ public class VoucherServiceImpl implements VoucherService{
 			dbNumberRankViewVO.setRankNo(rankNo+1);
 			return dbNumberRankViewVO;
 		}
-		dbNumberRankViewVO.setRankNo((Double)objs.get(0)[0]);
+		dbNumberRankViewVO.setRankNo(Double.parseDouble(String.valueOf(objs.get(0)[4])));
 		dbNumberRankViewVO.setName(String.valueOf(objs.get(0)[1]));
 		dbNumberRankViewVO.setType(UserType.valueOf(UserType.class,String.valueOf(objs.get(0)[2])));
-		double totalNumber = (Double)objs.get(0)[3];
+		double totalNumber = (double)objs.get(0)[3];
 		NumberFormat nf = NumberFormat.getInstance();
 		nf.setMaximumFractionDigits(2);
-		double voucherTotalNumber = Double.parseDouble(nf.format(totalNumber/10000));
+		double MillionPounds = 10000.0;
+		double voucherTotalNumber = Double.parseDouble(nf.format(totalNumber/MillionPounds));
 		dbNumberRankViewVO.setTotalNumber(voucherTotalNumber);
 		dbNumberRankViewVO.setWeight("万斤");
 		
@@ -495,30 +500,31 @@ public class VoucherServiceImpl implements VoucherService{
 		
 		//代办个人规格数量
 		List<Object[]> attrNumbers = voucherDAO.listAttrNumber(userId);
-		Map<String, String> attrNumberMap = new HashMap<String, String>();
+		Map<String, String> attrNumberMap = new LinkedHashMap<String, String>();
 		double partNumber = 0;
 		for (Object[] attrNumber : attrNumbers){
-			attrNumberMap.put(String.valueOf(attrNumber[0]), String.valueOf(attrNumber[1]));
+			attrNumberMap.put(String.valueOf(attrNumber[0]), String.valueOf(nf.format((Double)attrNumber[1]/MillionPounds)));
 			partNumber = partNumber+Double.parseDouble(String.valueOf(attrNumber[1]));
 		}
 		//其他数量
-		attrNumberMap.put("其它", String.valueOf(totalNumber-partNumber));
-		dbNumberRankViewVO.setAttrNumberMap(attrNumberMap);
+		attrNumberMap.put("其它", String.valueOf(nf.format((totalNumber-partNumber)/MillionPounds)));
+		String json = JsonUtil.toJSONString(attrNumberMap);
+		dbNumberRankViewVO.setAttrNumberMap(json);
 		return dbNumberRankViewVO;
 	}
 
 	@Override
 	public PageDTO<DBNumberRankViewVO> listMonthDBNumberRankViewVO(VoucherDTO voucherDTO) {
 		
-        // 获取当月的第一天  
+		// 获取当月的第一天  
 		Calendar cale = Calendar.getInstance(); 
         cale = Calendar.getInstance();  
         cale.add(Calendar.MONTH, 0);  
         cale.set(Calendar.DAY_OF_MONTH, 1);  
         
         //获取当前日期
-        voucherDTO.setDeliveryStartDate(cale.getTime());
-        voucherDTO.setDeliveryEndDate(new Date());
+        voucherDTO.setStartDate(cale.getTime());
+        voucherDTO.setEndDate(new Date());
 		//获取数量排行信息
 		PageDTO<Object[]> pageDTO = voucherBSDAO.listDBVoucherInfo(voucherDTO);
 		PageDTO<DBNumberRankViewVO> dbNumberRankViewVOPage = new PageDTO<DBNumberRankViewVO>();
@@ -529,6 +535,7 @@ public class VoucherServiceImpl implements VoucherService{
 			dbNumberRankViewVO.setName((String)obj[0]);
 			dbNumberRankViewVO.setType(UserType.valueOf(UserType.class, String.valueOf(obj[1])));
 			dbNumberRankViewVO.setTotalNumber((double)obj[2]);
+			dbNumberRankViewVO.setImgUrl(String.valueOf(obj[3]));
 			dbNumberRankViewVOList.add(dbNumberRankViewVO);
 		}
 		dbNumberRankViewVOPage.setNumber(pageDTO.getNumber());
@@ -550,7 +557,8 @@ public class VoucherServiceImpl implements VoucherService{
 			DBNumberRankViewVO dbNumberRankViewVO = new DBNumberRankViewVO();
 			dbNumberRankViewVO.setName((String)obj[0]);
 			dbNumberRankViewVO.setType(UserType.valueOf(UserType.class, String.valueOf(obj[1])));
-			dbNumberRankViewVO.setTotalNumber((double)obj[2]);     
+			dbNumberRankViewVO.setTotalNumber((double)obj[2]);    
+			dbNumberRankViewVO.setImgUrl(String.valueOf(obj[3]));
 			dbNumberRankViewVOList.add(dbNumberRankViewVO);
 		}
 		dbNumberRankViewVOPage.setNumber(pageDTO.getNumber());
@@ -559,5 +567,27 @@ public class VoucherServiceImpl implements VoucherService{
 		dbNumberRankViewVOPage.setTotalPages(pageDTO.getTotalPages());
 		return dbNumberRankViewVOPage;
 	}
+
+	/**
+	 * 更新用户缓存中的上传总数(定时任务)
+	 * @return
+	 */
+	@Override
+	public String countVoucherOfUser(){
+		log.info("#################voucher###########time job begin ##########################");
+		List<Object[]> list = voucherBSDAO.countVoucherOfUser();
+		if(!CollectionUtils.isEmpty(list)){
+			list.forEach(objects -> {
+				Long userId = ((BigInteger)objects[0]).longValue();
+				Double sumWeight = (double)objects[1];
+				//缓存用户上传数量
+				cacheHashService.hset(RedisHashConstants.HASH_USER_PREFIX+userId, RedisHashConstants.HASH_VOUCHER_NUM, String.valueOf(sumWeight));
+			});
+		}
+		log.info("#####################voucher#######time job end ##########################");
+		return Constants.RETURN_SUCESS;
+	}
+
+
 }
 

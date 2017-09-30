@@ -2,9 +2,9 @@
   <div class="myContainer">
     <div class="content">
       <!--<scroller ref="my_scroller" :on-infinite="infinite">-->
-      <div class="z-header">
+      <div class="z-header-h">
         <div class="z-carousel">
-          <mt-swipe :auto="4000" style="height: 9.45rem" class="cssHeight">
+          <mt-swipe :auto="4000" style="height: 7.35rem" class="cssHeight">
             <template v-for="item in imgCount">
               <mt-swipe-item>
                 <a :href="item.url">
@@ -157,11 +157,15 @@
                 </div>
               </div>
             </div>
-
           </li>
         </ul>
-        <div class="button-tip">
-          <span>{{load}}</span>
+        <div class="button-tip " :class="{flip:arrive, loading:loadFlag}">
+          <div class="c-z-pullup" :class="{showVisable:showVisableF}">
+          </div>
+          <div class="c-z-pullup-text">
+            <span>{{load}}</span>
+          </div>
+
         </div>
       </div>
 
@@ -239,12 +243,21 @@
         return;
       }
       if (data.data && data.data.length) {
-          console.log(data);
-        data.data.forEach((item)=>{
+
+        data.data.forEach((item, index)=>{
+          if(index == 0){
+            var url = "http://406991.v.huaerhaokan.com/mobile/cutebabyvote/index.jsp?aid=26D27F1F2D4BD943&wuid=406991&isFromApiFilter=1";
             this.imgCount.push({
-                content:item.content,
+              content:item.content,
+              url:url
+            })
+          }else{
+            this.imgCount.push({
+              content:item.content,
               url:item.url
             })
+          }
+
         })
       }
     },
@@ -313,6 +326,10 @@
         return;
       }
       this.pageCount = data.data.pageCount;
+      if(this.pageNumber >= this.pageCount){
+          this.load = "数据加载完...."
+          this.showVisableF = true;
+      }
 
       var rows = data.data.rows;
       this.num = rows.length;
@@ -355,9 +372,9 @@
               if(Identification == "求购"){
                   obj.bg = true;
                  obj.indentification = 0;
-                 obj.endAmount = current.endAmount.toString();
+                 obj.endAmount = current.endAmount+"";
                  len += obj.endAmount.length;
-                 obj.startAmount = current.startAmount.toString();
+                 obj.startAmount = current.startAmount+"";
                 len += obj.startAmount.length;
 
                  var n = (250 - (len + 6) * 10)/20;
@@ -366,7 +383,7 @@
               }else{
                 obj.bg = false;
                 obj.indentification = 1;
-                obj.amount = current.amount.toString();
+                obj.amount = current.amount+"";
                 len += obj.amount.length;
                 var n = (230 - (len + 1) * 10)/20;
                 obj.wh = n;
@@ -387,7 +404,7 @@
             arrtttt.forEach(function (current) {
               lt += current.length;
             })
-            obj.addreeWh = (201 - (obj.name.toString().length + obj.agency.length) * 12 + lF * 6 + lt*8)/20;
+            obj.addreeWh = (201 - ((obj.name+"").length + obj.agency.length) * 12 + lF * 6 + lt*8)/20;
             if(that.del.hasOwnProperty(id)){
                 return;
             }
@@ -504,7 +521,10 @@
         Time:null,
         del:{},
         load:"数据正在加载中...",
-        switch:true
+        switch:true,
+        arrive:false,//到底底部箭头切换
+        loadFlag:false,//箭头切换以后，加载数据
+        showVisableF:false,//默认显示的
 
       }
     },
@@ -952,7 +972,7 @@
 //          }
         fn.recordF = false;
         setTimeout(function () {
-              if(self.pageCount >= self.pageNumber){
+              if(self.pageCount > self.pageNumber){
                 self.pageNumber ++;
                 self.list(self.pageNumber);
               }
@@ -971,16 +991,28 @@
                  this.switch = false;
                   var that = this;
                   that.items = that.items.concat(fn.cacheData);
-//                  Array.prototype.push.apply(that.items, fn.cacheData);
                   fn.cacheData = [];
              if(this.pageCount == this.pageNumber){
                this.switch = false;
+               this.showVisableF = true;
                this.load = "数据加载完..."
-               return
+               return;
              }else{
                this.preLoad();
              }
            }
+         }
+
+         if(sHeight - offsetH - this.bheight == 0){
+             this.arrive = true;
+             var self = this;
+             setTimeout(function () {
+               self.loadFlag = true;
+             }, 250)
+
+         }else{
+           this.arrive = false;
+           this.loadFlag = false;
          }
        }
 
@@ -990,9 +1022,6 @@
       },
       infinite (done) {
         if (!this.isActivated) return done(true);
-//        const self = this;
-//        self.currentPageNo++;
-//        self.busy = true;
         setTimeout(()=>{
           this.list();
           done(true);
@@ -1003,6 +1032,7 @@
       },
     },
     activated(){
+      this.showVisableF = false;
       this.del = {};
       this.isActivated = true;
       this.messageN();

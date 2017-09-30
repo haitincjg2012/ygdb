@@ -106,6 +106,7 @@ public interface Constants
     String CUSTOMER_NO_NOTNULL = "300004";
     //根据客户编号查询的客户为空
     String CUSTOMER_NOT_EXIST = "300005";
+    String CUSTOMER_NOT_EXIST_BYUSERNO =  "300006";
     //=========== 客户信息错误码===================
 
     //=========== 联系人信息错误码===================

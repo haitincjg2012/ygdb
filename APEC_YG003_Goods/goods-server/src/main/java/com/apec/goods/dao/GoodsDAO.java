@@ -32,4 +32,15 @@ public interface GoodsDAO extends BaseDAO<Goods, Long> {
     @Query(value = "update goods set enable_flag = 'N',last_update_date = now(),last_update_by = :userId where id in :ids and enable_flag = 'Y'",nativeQuery = true)
     int deleteGoodsList(@Param("ids") List<Long> ids,@Param("userId") String userId);
 
+    /**
+     * @param
+     * @return
+     */
+    @Query(value = " SELECT * FROM ygdb.goods g inner join ygdb.goods_attr a inner join ygdb.attribute_value v where g.id = a.goods_id \n" +
+            "and a.attr_id = v.attribute_name_id and g.id = :id and g.enable_flag = 'Y' \n" +
+            "and a.enable_flag = 'Y' and v.enable_flag = 'Y'   ",nativeQuery = true)
+    Goods findGoodsInfo(@Param("id") Long id);
+
+
+
 }

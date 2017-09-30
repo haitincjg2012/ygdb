@@ -4,7 +4,7 @@
       <div class="cli-btn">
         <i style="font-size: 25px;color: #8c939d;" class="fa fa-plus" aria-hidden="true"></i>
       </div>
-      <input class="img-input" accept="image/*" capture="camera" type="file" id="upload" @change="upload($event)">
+      <input class="img-input" accept="image/*" type="file" id="upload" @change="upload($event)">
     </div>
   </div>
 </template>
@@ -45,31 +45,31 @@
 
         if (/^image/.test(file.type)) {
           // 创建一个reader
-          let reader = new FileReader();
+//          let reader = new FileReader();
           // 将图片2将转成 base64 格式
-          let instance=Toast({message: '图片读取中，请稍等...', position: 'middle'});
-
+//          let instance=Toast({message: '图片读取中，请稍等...', position: 'middle'});
+          self.onChange("base64", file);
           // 读取成功后的回调
-          reader.onloadend = function () {
-            let result = this.result;
-            let img = new Image();
-            img.src = result;
-            //判断图片是否大于指定大小，默认为1m,是就直接上传，反之压缩图片
-            if (this.result.length <= (self.imgSize - 0) * (1000 * 1024)) {
-              self.onChange && self.onChange(result, file);
-            } else {
-              img.onload = function () {
-                let data = self.compress(img, Orientation);
-                const con_file_blob = self.convertBase64UrlToBlob(data);//base64转换成BLOb对象
-                const con_file = new File([con_file_blob],'file.png',{type:"image/png"});//再转换成file对象
-                self.onChange && self.onChange(data,con_file);
-              }
-            }
-            setTimeout(() => {
-              instance.close();
-            }, 0);
-          }
-          reader.readAsDataURL(file);
+//          reader.onloadend = function () {
+//            let result = this.result;
+//            let img = new Image();
+//            img.src = result;
+//            //判断图片是否大于指定大小，默认为1m,是就直接上传，反之压缩图片
+//            if (this.result.length <= (self.imgSize - 0) * (1000 * 1024)) {
+//              self.onChange && self.onChange(result, file);
+//            } else {
+//              img.onload = function () {
+//                let data = self.compress(img, Orientation);
+//                const con_file_blob = self.convertBase64UrlToBlob(data);//base64转换成BLOb对象
+//                const con_file = new File([con_file_blob],'file.png',{type:"image/png"});//再转换成file对象
+//                self.onChange && self.onChange(data,con_file);
+//              }
+//            }
+//            setTimeout(() => {
+//              instance.close();
+//            }, 0);
+//          }
+//          reader.readAsDataURL(file);
         }
       },
       rotateImg (img, direction, canvas) {

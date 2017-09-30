@@ -45,5 +45,11 @@ public interface UserPointRecordService {
      */
     PageDTO<UserPointRecordViewVO> pageUserPointRecords(UserDTO dto, PageRequest pageRequest);
 
+    /**
+     * 查询用户积分是否准确落地，补偿和更新缓存(定时任务)
+     * @return
+     */
+    String perfectUserPoint();
+
 
 }

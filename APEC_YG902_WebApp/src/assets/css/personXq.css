@@ -179,9 +179,10 @@
 }
 .c-p-xq .z-p-manage-info input {
   width: 12rem;
-  height: 0.95rem;
+  height: 1rem;
   font-size: 0.85rem;
   text-align: right;
+  background-color: transparent;
 }
 .c-p-xq .z-p-manage-info .img-com {
   width: 1.1rem;
@@ -336,9 +337,24 @@
   margin: 0 0.75rem 0 0.5rem;
   vertical-align: middle;
 }
-.c-p-xq .z-num-main .z-p-main {
+.c-p-xq .z-num-main .ZPmain {
   width: 18.75rem;
   height: 15rem;
+}
+.c-z-ondata {
+  width: 18.75rem;
+  height: 15rem;
+  text-align: center;
+}
+.c-z-nodata-img {
+  padding-top: 2.5rem;
+  width: 8.45rem;
+  height: 6.675rem;
+}
+.c-z-nodata-text {
+  font-size: 0.75rem;
+  color: #323232;
+  letter-spacing: 0.1rem;
 }
 .clear:after {
   visibility: hidden;
@@ -397,4 +413,31 @@
   background-color: #ff4535;
   margin-right: 0.5rem;
   vertical-align: middle;
+}
+.z-p-gy-T .li-space {
+  height: 2.5rem;
+  line-height: 2.5rem;
+  font-size: 0.75rem;
+  color: #323232;
+  text-align: center;
+  width: 18.75rem;
+  background-color: #fff;
+}
+.box-shadowIn {
+  -moz-box-shadow: 1000px 1000px 100px 100px #fff inset;
+  /*firefox*/
+  -webkit-box-shadow: 1000px 1000px 100px 100px #fff inset;
+  /*webkit*/
+  box-shadow: 1000px 1000px 100px 100px #fff inset;
+}
+.scrollWrapper {
+  position: fixed;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+.ZPShow {
+  display: none;
 }

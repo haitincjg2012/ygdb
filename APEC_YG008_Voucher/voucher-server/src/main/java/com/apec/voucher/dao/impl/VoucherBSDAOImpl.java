@@ -28,8 +28,8 @@ public class VoucherBSDAOImpl implements VoucherBSDAO{
 	
 	@Override
 	public PageDTO<Object[]> listVoucherBS(VoucherDTO voucherDTO){
-		StringBuffer sb = new StringBuffer("SELECT v.create_date,SUM(number) AS totalNumber,SUM(total_amount) AS totalAmount,sale_market,ship_warehouse,delivery_time,voucher_url,v.id "
-    			+ "FROM voucher_goods AS g INNER JOIN voucher AS v on v.id=g.voucher_id,v.enable_flag='Y'");
+		StringBuffer sb = new StringBuffer("SELECT v.create_date,SUM(number) AS totalNumber,SUM(total_amount) AS totalAmount,sale_market,ship_warehouse,delivery_time,voucher_url,v.id,v.user_id "
+    			+ "FROM voucher_goods AS g INNER JOIN voucher AS v on v.id=g.voucher_id and v.enable_flag='Y'");
         
         //条件查询
         String condition = getBSConditionQuery(voucherDTO);
@@ -46,8 +46,7 @@ public class VoucherBSDAOImpl implements VoucherBSDAO{
 	
 	/**
 	 * 后台交收单管理多条件
-	 * @param VoucherDTO
-	 * @param StringBuffer
+	 * @param voucherDTO
 	 * @return String
 	 * */
 	private String getBSConditionQuery(VoucherDTO voucherDTO){
@@ -58,12 +57,12 @@ public class VoucherBSDAOImpl implements VoucherBSDAO{
 		if (voucherDTO.getStartDate() != null){
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			String startDate = sdf.format(voucherDTO.getStartDate());
-			sb.append(" AND v.create_date>=").append("'").append(startDate).append("'");
+			sb.append(" AND date(v.create_date)>=").append("'").append(startDate).append("'");
 		}
 		if (voucherDTO.getEndDate() != null){
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			String endDate = sdf.format(voucherDTO.getEndDate());
-			sb.append(" AND v.create_date<=").append("'").append(endDate).append("'");
+			sb.append(" AND date(v.create_date)<=").append("'").append(endDate).append("'");
 		}
 		if (voucherDTO.getDeliveryStartDate() != null){
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -81,7 +80,7 @@ public class VoucherBSDAOImpl implements VoucherBSDAO{
 	@Override
 	public PageDTO<Object[]> listDBVoucherInfo(VoucherDTO voucherDTO) {
 		
-		StringBuffer sb = new StringBuffer("SELECT u.name,u.user_type,sum(g.number) as sumNuber FROM "
+		StringBuffer sb = new StringBuffer("SELECT u.name,u.user_type,sum(g.number) as sumNuber,u.img_url FROM "
 				+ "voucher_goods g "
 				+ "inner join voucher v "
 				+ "inner join user u "
@@ -102,9 +101,9 @@ public class VoucherBSDAOImpl implements VoucherBSDAO{
 	
 	/**
 	 * 分页查询Object信息
-	 * @param voucherDTO查询条件对象
+	 * @param voucherDTO 查询条件对象
 	 * @param sql 查询object信息语句
-	 * @param countSql查询条数语句
+	 * @param countSql 查询条数语句
 	 * @return PageDTO<Object[]>
 	 * */
 	@SuppressWarnings("unchecked")
@@ -212,4 +211,22 @@ public class VoucherBSDAOImpl implements VoucherBSDAO{
         }
 		return totalNumber;
 	}
+
+	@Override
+	public List<Object[]> countVoucherOfUser() {
+		StringBuffer sb = new StringBuffer("select user_id,ifnull(sum(b.number),0) from voucher a inner join voucher_goods b on a.id = b.voucher_id where a.enable_flag= 'Y' and b.enable_flag= 'Y' group by a.user_id");
+		log.info(sb.toString());
+		EntityManager em = null;
+		List<Object[]> list = null;
+		try{
+			em = emf.createEntityManager();
+			Query query = em.createNativeQuery(sb.toString());
+			list = query.getResultList();
+		}catch(Exception e){
+			log.error("【voucher】[countVoucherOfUser]exception:{}",e);
+		}
+		return list;
+	}
+
+
 }

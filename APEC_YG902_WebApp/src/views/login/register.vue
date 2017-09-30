@@ -5,32 +5,36 @@
       <div class="pure-g-l login-content">
         <div class="loggin-panel">
           <form onsubmit="return false">
-            <div class="phone-input">
-              <img src="../../assets/img/phone.png">
-              <input id="input-phonenum" oninvalid="setCustomValidity(' ')" type="tel" v-model="phoneNum"
+            <div class="phone-input-t" :class="{rphone:showPFlag}">
+              <!--<img src="../../assets/img/phone.png">-->
+              <input id="input-phonenum-T" oninvalid="setCustomValidity(' ')" type="tel" v-model="phoneNum"
                      placeholder="请输入手机号码" v-on:blur="phoneCheck()" v-on:focus="phoneClear()"
                      oninput="setCustomValidity('')" required maxlength="11" pattern="^1(3|4|5|7|8)\d{9}$"/>
             </div>
             <div :class="rClass">该用户已注册~</div>
-            <div class="dash-line">
+            <div class="dash-line" :class="{line:showPFlag}">
             </div>
-            <div class="code-input">
-              <img src="../../assets/img/Verification.png">
+            <div class="code-input-t c-z-code-t" :class="{rcode:showCodeFlag}">
+              <!--<img src="../../assets/img/Verification.png">-->
               <input oninvalid="setCustomValidity(' ')" id="input-code" type="tel" class="pure-input-1" v-model="code"
                      oninput="setCustomValidity('')"
+                     @focus="showFlag('code')"
+                     @blur="showFlag('no')"
                      placeholder="请输入验证码" required maxlength="4" pattern="^\d{4}$">
               <input type="button" @click.stop="sendMessage" id="btn-message" value="获取验证码">
             </div>
-            <div class="dash-line-v">
+            <div class="dash-line-v" :class="{line:showCodeFlag}">
             </div>
-            <div class="code-input">
-              <img src="../../assets/img/PasswordOn.png">
+            <div class="code-input-t c-z-password-t" :class="{rpassword:showPassWordFlag}">
+              <!--<img src="../../assets/img/PasswordOn.png">-->
               <input oninvalid="setCustomValidity(' ')" id="input-code-password" type="password" class="pure-input-1"
                      v-model="password" oninput="setCustomValidity('')"
+                     @focus="showFlag('password')"
+                     @blur="showFlag('no')"
                      placeholder="请输入登录密码" required minlength="6">
               <img @click.stop="openText()" class="i-password-hide" :src="imgSrc">
             </div>
-            <div class="dash-line-p">
+            <div class="dash-line-p" :class="{line:showPassWordFlag}">
             </div>
             <div class="s-a">
               <div class="s-a-label">
@@ -58,7 +62,9 @@
       <pdWin></pdWin>
   </div>
 </template>
-
+<style>
+@import "../../assets/css/regist.css";
+</style>
 <script>
   import $ from 'zepto'
   import axios from 'axios'
@@ -110,7 +116,10 @@
             name: '合作社',
             class: 's-a-box-db'
           }
-        ]
+        ],
+        showPFlag:false,//默认情况电话是没有焦点
+        showCodeFlag:false,//默认情况先验证码是没有焦点
+        showPassWordFlag:false,//默认情况密码是没有焦点
       }
     },
     created(){
@@ -147,6 +156,28 @@
       show () {
         this.$root.eventHub.$emit('windowEvent');
       },
+      showInit(){
+        this.showPFlag = false;
+        this.showCodeFlag = false;
+        this.showPassWordFlag = false;
+      },
+      showFlag(flag){
+          this.showInit();
+          if(flag == "no"){
+            return;
+          }
+          switch (flag){
+            case "phone":
+              this.showPFlag = true;
+                break;
+            case "code":
+              this.showCodeFlag = true;
+              break;
+            case "password":
+              this.showPassWordFlag = true;
+              break;
+          }
+      },
       IsRSource() {//注册来源
         var s = 'PC';
         var userAgentInfo = navigator.userAgent;
@@ -163,11 +194,12 @@
       },
       phoneCheck(){//检查用户是否注册过
         var phoneNum = this.phoneNum;
+        this.showFlag("no");
         if(!phoneNum.length)
             return;
         /*验证手机号码是否为空*/
         if (!this.check([{
-            handler: document.getElementById("input-phonenum"),
+            handler: document.getElementById("input-phonenum-T"),
             message:'手机号码格式错误(11位手机号码)'
           }])) return;
         let params = {
@@ -199,6 +231,7 @@
         }
       },
       phoneClear(){
+        this.showFlag("phone");
         this.rClass = 'r-val';
       },
       AurSelect(event, item){
@@ -228,7 +261,7 @@
         /*验证用户名和密码是否为空*/
         const vaData = [
           {
-            handler: document.getElementById("input-phonenum"),
+            handler: document.getElementById("input-phonenum-T"),
             message: '手机号码格式错误(11位手机号码)'
           },
           {
@@ -328,7 +361,7 @@
       sendMessage(){
         if (!this.check_send_message())
           return;
-        this.sendCode($("#btn-message"), $("#input-phonenum"));
+        this.sendCode($("#btn-message"), $("#input-phonenum-T"));
       },
       //发送验证码
       sendCode(obj, phonenumObj) {
@@ -366,7 +399,7 @@
         }
       },
       check_send_message(){
-        var phone_ID = document.getElementById("input-phonenum");
+        var phone_ID = document.getElementById("input-phonenum-T");
         if (!phone_ID.checkValidity()) {
           Toast("手机号码格式错误(11位手机号码)");
           return false;
@@ -423,14 +456,14 @@
       height (24/_rem)!important
     .mainform
       margin-top (16 /_rem)
-      .phone-input
-        padding 0 (15 /_rem)
+      .phone-input-t
+        margin 0 (15 /_rem)
         img
           width (17 /_rem)
           height: (19 /_rem)
           vertical-align middle
-        #input-phonenum
-          margin-left (10 /_rem)
+        #input-phonenum-T
+          margin-left (30 /_rem)
           height (17 /_rem)
           font-size (16 /_rem)
           color #999999
@@ -453,8 +486,8 @@
         height 1px
         background-color #D7D7D7
         margin-top (15 /_rem)
-      .code-input
-        padding 0 (15 /_rem)
+      .code-input-t
+        margin  0 (15 /_rem)
         margin-top: (15 /_rem)
         position relative
         img
@@ -482,7 +515,7 @@
           transform translateY(-50%)
           position absolute
         #input-code, #input-code-password
-          margin-left (10 /_rem)
+          margin-left (30 /_rem)
           height (16 /_rem)
           font-size (16 /_rem)
           color #999999
@@ -490,7 +523,7 @@
       .dash-line-p
         margin 0 (15 /_rem)
         height 2px
-        background-color #28cba7
+        background-color #d7d7d7
         margin-top (16 /_rem)
       .login-btn
         margin (25 /_rem) (15 /_rem) 0 (15 /_rem)
@@ -503,11 +536,11 @@
           border-radius: 0;
           display: inline-block;
           width: 100%;
-
+          border-radius (5/_rem)
         .login-confirm
           background-color: #28CBA7;
           color #FFFFFF;
-          border: 1px solid #0bbe06;
+          border-radius (5/_rem)
       .register-law
         height (20 /_rem)
         margin-top (22 /_rem)
@@ -598,6 +631,7 @@
           .visited
             background-color #28CBA7
             color #ffffff !important
+            border-color #28CBA7
         .s-a-box-db:not(:first-child)
           margin-left (10 /_rem)
 

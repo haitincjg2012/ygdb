@@ -11,74 +11,80 @@ p {
   height: 0;
   *zoom: 1;
 }
-.z-header-O {
-  width: 17.5rem;
-  height: 2.75rem;
-  padding: 0.625rem;
+.z-header-T1 {
+  width: 17.75rem;
+  padding: 0.35rem 0.5rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  background-color: #f4f4f4;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
 }
-.z-header-O .z-write {
-  float: left;
+.z-header-T1 .z-write {
   width: 13rem;
   height: 1.5rem;
   line-height: 1.5rem;
   margin-left: 1rem;
+  border-radius: 0.75rem;
+  background-color: #fff;
 }
-.z-header-O .z-write input {
+.z-header-T1 .z-write input {
   width: 10.5rem;
   font-size: 0.75rem;
-  color: #999;
+  color: #323232;
+  margin-left: 0.5rem;
   border: none;
   outline: none;
   -moz-appearance: none;
   -webkit-appearance: none;
   appearance: none;
 }
-.z-header-O .z-write .x-del {
-  background-color: #e2e2e2;
-  color: #989595;
+.z-header-T1 .z-write .x-del {
   display: inline-block;
-  border-radius: 100%;
-  height: 0.75rem;
-  width: 0.75rem;
-  line-height: 0.7rem;
-  text-align: center;
-  font-size: 0.85rem;
-  vertical-align: super;
-}
-.z-header-O .ret {
-  float: left;
-}
-.z-header-O .ret img {
-  width: 0.625rem;
-  height: 1rem;
+  height: 0.7rem;
+  width: 0.7rem;
+  background: url("../img/cancel.png") no-repeat center;
+  background-size: 0.7rem 0.7rem;
   vertical-align: middle;
 }
-.z-header-O .z-s {
-  float: right;
+.z-header-T1 .retT img {
+  width: 0.55rem;
+  height: 0.975rem;
+  vertical-align: middle;
+}
+.z-header-T1 .z-s {
   width: 2.5rem;
   height: 1.5rem;
   font-size: 0.75rem;
   line-height: 1.5rem;
-  color: #333;
-  background-color: #e8e7e7;
-  border-radius: 0.25rem;
+  margin-left: 0.5rem;
+  color: #fff;
+  background-color: #27cba8;
+  border-radius: 0.75rem;
   text-align: center;
 }
 .z-column-com {
   width: 17.5rem;
-  padding: 0 0.625rem 0.5rem;
+  padding: 0.5rem 0.5rem;
 }
 .z-column-com .z-text-com {
   float: left;
   font-size: 0.75rem;
-  color: #999;
+  color: #323232;
 }
 .z-column-com .del-com {
   float: right;
   height: 0.8rem;
   width: 0.85rem;
-  background-color: #e2e2e2;
-  color: #989595;
   text-align: center;
 }
 .z-column-com .del-com img {
@@ -91,11 +97,12 @@ p {
 .z-column-com .z-list-com ul .li-com-two {
   float: left;
   height: 1.25rem;
-  padding: 0 0.25rem;
-  border: 0.025rem solid #9d9d9d;
+  padding: 0 0.5rem;
   line-height: 1.25rem;
   margin-top: 0.5rem;
   margin-right: 0.75rem;
   color: #999;
   font-size: 0.75rem;
+  border-radius: 0.25rem;
+  background-color: #f4f4f4;
 }

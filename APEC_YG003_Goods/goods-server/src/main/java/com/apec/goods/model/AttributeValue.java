@@ -28,9 +28,7 @@ public class AttributeValue extends BaseModel<Long> {
     /**
      * 属性名
      */
-    @ManyToOne
-    @JoinColumn(name = "ATTRIBUTE_ID", nullable = false)
-    private AttributeName  attributeName;
+    private Long  attributeNameId;
 
     /**
      * 商品属性名称
