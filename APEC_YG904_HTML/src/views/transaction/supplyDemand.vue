@@ -1,21 +1,24 @@
-/** * Created by wq on 2017/09/28. * 供求管理 */
+/**
+* Created by wq on 2017/09/28.
+* 供求管理
+*/
 <template>
 	<div class="certificate">
 		<my-header v-on:initialPage="initialPage" :firstTitle="firsTit" :secondTitle="secondTit" :thirdTitle="thirdTit" :breadFlag="breadflag"></my-header>
 		<!--搜索-->
 		<div class="mysearch" v-if="showFlag">
 			<el-form :inline="true" class="search">
-				<el-form-item label="编号：">
-					<el-input v-model="s_id" placeholder="请输入编号"></el-input>
+				<el-form-item label="关键词：">
+					<el-input v-model="s_keyWord" placeholder="请输入关键词"></el-input>
 				</el-form-item>
-				<el-form-item label="标题：">
-					<el-input v-model="s_skuName" placeholder="请输入标题"></el-input>
-				</el-form-item>
-				<el-form-item label="发布人：">
-					<el-input v-model="s_showUserName" placeholder="请输入发布人"></el-input>
+				<el-form-item label="供求：">
+					<el-select v-model="s_orderType" placeholder="请选择供求类型" @change="getTableList">
+			      <el-option label="供应" value="GYTYPE"></el-option>
+			      <el-option label="求购" value="QGTYPE"></el-option>
+			    </el-select>
 				</el-form-item>
 				<el-button type="primary" @click="onSearch">搜索</el-button>
-				<el-button type="primary" @click="goAdd">新增</el-button>
+				<el-button type="primary" @click="goAdd">发布</el-button>
 				<el-button @click="onReset">重置</el-button>
 			</el-form>
 		</div>
@@ -29,11 +32,11 @@
 						<a>{{scope.row.skuName}}</a>
 					</template>
 				</el-table-column>
-				<el-table-column prop="showSecondInfo" label="详细规格">
+				<!--<el-table-column prop="showSecondInfo" label="详细规格">
 					<template scope="scope">
 						<span v-for="item in scope.row.showSecondInfo">{{item}} </span>
 					</template>
-				</el-table-column>
+				</el-table-column>-->
 				<el-table-column prop="weight" label="数量(斤)"></el-table-column>
 				<el-table-column prop="amount" label="单价(元/斤)"></el-table-column>
 				<el-table-column prop="address" label="区域"></el-table-column>
@@ -53,7 +56,9 @@
 				</el-table-column>
 			</el-table>
 			<!--分页-->
-			<el-pagination class="pageNation" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="1" :page-sizes="[10,15,20,25,30]" :page-size="pSize" layout="total,sizes,prev,pager,next,jumper" :total="pageData.totalElements" v-show="pageData.totalElements>10"></el-pagination>
+			 <el-pagination class="pageNation" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="1"
+                               :page-sizes="[10,15,20,25,30]" :page-size="pSize" layout="total,sizes,prev,pager,next,jumper"
+                               :total="pageData.totalElements" v-show="pageData.totalElements>10"></el-pagination>
 		</div>
 
 		<!--详情form Page-->
@@ -174,12 +179,24 @@
 					<el-input style="width:390px;" :autosize="{minRows:5}" type="textarea" v-model="addForm.remark" placeholder="请输入描述"></el-input>
 				</el-form-item>
 				<el-form-item label="图片：" v-if="isSale">
-					<el-upload :on-success="uploadPic"
+					<!--:on-success="uploadPic"-->
+					<el-upload
+						:header="{'token':token}"
+						action="noUse"
+						:on-remove = "deletPic"
+						:before-upload="beforeLoad"
+						:http-request="submitImg"
+						list-type="picture-card">
+					  <i class="el-icon-plus"></i>
+					</el-upload>
+
+					<!--wq-->
+					<!--<el-upload :on-success="uploadPic"
 						:on-remove = "deletPic"
 					  action="/common/uploadImg.apec"
 					  list-type="picture-card">
 					  <i class="el-icon-plus"></i>
-					</el-upload>
+					</el-upload>-->
 				</el-form-item>
 				<el-form-item class="btnGroup">
 					<el-button type="primary" @click="submitAdd()">提交</el-button>
@@ -209,6 +226,8 @@
 
 <script>
 	import header from '~/components/header/header.vue'
+	import encrypt from '~/assets/js/oss/encrypt'
+
 	export default {
 		data() {
 			return {
@@ -221,20 +240,25 @@
 				viewFlag: false, //详情
 				addFlag: false, //表单新增标识
 				showFlag: true, //true 显示table页; false 显示form页
-				s_id: null,
-				s_showUserName: null,
-				s_skuName: null,
+				s_keyWord: null,
+				s_orderType:null,
+				s_phone:null,
 				loadCircle: false, //加载显示
 				dataList: [],
 				detailTable: [], //详细表格数据
 				pageData: [], //分页数据
 				pSize: 10, //页容量
 				pNum: 1, //页码
-				clearRegion: false,
+				clearRegion: true,
 				supplyForm: {}, //详情
 				cityData: [], //市
 				areaData: [], //区
 				townData: [], //镇
+				//header token
+				token:this.$store.state.authToken || this.commonjs.getValue("authToken"),
+				noUse:"",//因为ele-upload,action必传参数
+				imgfile:null,//文件系统
+				recordUpLoad:[],
 				//新增
 				addForm: {
 					userId: '',
@@ -250,25 +274,26 @@
 					address: '',
 					weightUnit: '万斤',
 					priceUnit: '元/斤',
-					productImages: '',
+//					productImages: '',
 					imageUrl: '',
 					sort: '',
 					cityId: '',
 					areaId: '',
 					townId: '',
 					remark: '',
-					productImages: [],
+					productImages: []
 				},
 				attrDialogVisible: false, //选择规格弹框显示
 				userList: [], //所有客户列表，供选择用
 				attrList: [], //属性列表
 				radioForm: {}, //选中属性绑定
 				isSale:false,//是否为供应类型
-				isBuy:false,
+				isBuy:false
 			}
 		},
 		activated() {
 			var vm = this;
+			encrypt.getAuthorise();//请求授权aly上传图片信息
 			vm.getTableList();
 			vm.initUser();
 			vm.initAttr();
@@ -280,6 +305,62 @@
 		},
 
 		methods: {
+			//上传图片aly
+			submitImg(data){
+//				console.log(arguments);
+				var vm = this;
+//				console.log(data);
+				//gsy
+				return encrypt.ossUpload(data.file,function(result){
+//					console.log("img-result",result);
+					vm.$message.success('上传图片成功!');
+					var imgPath=vm.apiUrl.common.alyserverUrl+result.name;
+					vm.addForm.productImages.push({"imageUrl":imgPath});
+                    vm.recordUpLoad.push(data.file.name);//将图片名存在recordUpLoad
+					return true;
+				},function(err){
+					console.log("upload image failed by oss,"+ err);
+					vm.deletPic();//删除上传失败的图片
+					vm.$message.error('上传图片失败!');
+					return false;
+				});
+
+				//上传图片yd
+				/*return encrypt.ossUpload(vm.storeAs,data.file,vm.accessKeyId,vm.accessKeySecret,vm.securityToken,function(result){
+				 console.log(result);
+				 vm.$message.success('上传图片成功!');
+				 vm.newsForm.url=vm.apiUrl.common.alyserverUrl+result.name;
+				 vm.imageUrl=vm.apiUrl.common.alyserverUrl+result.name;
+				 return true;
+				 },function(err){
+				 console.log("upload image  failed by oss,"+ err);
+				 vm.$message.success('上传图片失败!');
+				 return false;
+				 })*/
+			},
+
+			//校验图片格式
+			beforeLoad(){
+				var vm=this;
+				if(!vm.validateImg) {//图片格式校验通过
+					return false;
+				}
+			},
+			//图片格式校验
+			validateImg(){
+				var vm=this;
+				var type=file.type;
+				var imgPattern=/image\/(png|jpeg)/g;
+				if(!type){
+					vm.$message.warning('您上传的图片格式不对，请您重新上传图片!');
+					return false;
+				}
+				if(!imgPattern.test(type)){
+					vm.$message.warning('上传图片只能是JPG/PNG格式！');
+					return false;
+				}
+				return true;
+			},
 			//查看详情
 			goDetail(id) {
 				var vm = this;
@@ -322,11 +403,11 @@
 			},
 			deleteOk() {
 				var vm = this;
-				this.$message({
-					message: '删除成功！',
+				vm.$message({
+					message: '下架成功，请稍后刷新查看！',
 					type: 'success'
 				});
-				vm.getTableList;
+//				vm.getTableList();
 			},
 			showAttrDialog(){//弹出选择规格
 				var vm = this;
@@ -388,19 +469,29 @@
 				});
 			},
 			uploadPic(res,file){//图片上传成功后
+				console.log(file, 8888888888);
+				console.log(res);
 				this.addForm.productImages.push({"imageUrl":res.data[0][0].imagePath});
 				file.url = res.data[0][0].imagePath;//赋值，移除时可判断
  			},
 			deletPic(file, fileList){//移除图片后
-				console.log(file.url);
-				console.log(this.addForm.productImages);
-				for(let i in this.addForm.productImages){
-					if(file.url==this.addForm.productImages[i].imageUrl){
-						this.addForm.productImages.splice(i,1);
-						console.log(i);
-						console.log(this.addForm.productImages);
+				var vm=this;
+				var name = file.name;
+				var i = vm.recordUpLoad.indexOf(name);
+				vm.addForm.productImages.splice(i,1);//删除表单中图片地址
+//				console.log("vm.addForm.productImages:",vm.addForm.productImages);
+				//	console.dir(new Array);
+	            //	console.log( i);
+
+				/*	wq
+				var vm=this;
+				for(let i in vm.addForm.productImages){
+					if(file.url==vm.addForm.productImages[i].imageUrl){
+						vm.addForm.productImages.splice(i,1);
+
 					}
-				}
+				}*/
+
 			},
 			//新增提交
 			submitAdd() {
@@ -409,21 +500,28 @@
 				var area = vm.commonJs.getArrayVal(vm.areaData, vm.addForm.areaId, 'code', 'name');
 				var town = vm.commonJs.getArrayVal(vm.townData, vm.addForm.townId, 'code', 'name');
 				vm.addForm.address = city + area + town;
-				vm.addForm.firstImageUrl = vm.addForm.productImages[0].imageUrl;
+				if(vm.addForm.productImages.length>0){
+					vm.addForm.firstImageUrl = vm.addForm.productImages[0].imageUrl;
+				}
 				let params = {
 					url: vm.apiUrl.supplyDemand.addUrl,
 					data: vm.addForm
 				};
 				vm.ax.post(params, function(data) {
 					if(data.succeed) {
-						vm.attrDialogVisible = false;
-						vm.addForm.skuName = data.data[0].skuName;
-						vm.addForm.skuId = data.data[0].skuId;
+						vm.$message({
+		          message: '发布成功！',
+		          type: 'success'
+		        });
+						vm.backTablePage();
 						for(var i in vm.addForm){//清空表单
-		            vm.addForm[i]="";
-		            vm.addForm.weightUnit='万斤';
-		            vm.addForm.priceUnit='元/斤';
-		        }
+							if(i!="weightUnit" || i!="priceUnit" || i!="productImages"){
+								vm.addForm[i]="";
+							}
+						}
+						vm.addForm.weightUnit='万斤';
+						vm.addForm.priceUnit='元/斤';
+						vm.addForm.productImages=[];
 					}
 				});
 			},
@@ -461,9 +559,8 @@
 				let params = {
 					url: vm.apiUrl.supplyDemand.tableUrl,
 					data: {
-						id: vm.s_id,
-						showUserName: vm.s_showUserName,
-						skuName: vm.s_skuName,
+						keyWord: vm.s_keyWord,
+						orderType: vm.s_orderType,
 						pageNumber: vm.pNum, //页码
 						pageSize: vm.pSize
 					}
@@ -512,9 +609,14 @@
 				if(vm.clearRegion) {
 					vm.addForm.townId = "";
 				}
-				vm.getTownList(id); //镇
+				if(!id){
+					vm.townData = "";//如果区没选，将镇置空
+					return
+				}else{
+					vm.getTownList(id); //镇
+				}
 			},
-			//获取市信息（暂不要）
+			//获取市信息
 			getCityList() {
 				var vm = this;
 				let params = {
@@ -529,7 +631,7 @@
 			cityListCb(data) {
 				var vm = this;
 				vm.cityData = data.data;
-				console.log("市长度：" + data.data.length);
+//				console.log("市长度：" + data.data.length);
 			},
 			//获取区信息（暂不要）
 			getAreaList(cityid) {
@@ -562,7 +664,6 @@
 			townListCb(data) {
 				var vm = this;
 				vm.townData = data.data;
-
 			},
 			//搜索
 			onSearch() {
@@ -572,9 +673,8 @@
 			//重置
 			onReset() {
 				var vm = this;
-				vm.s_id = null;
-				vm.s_showUserName = null;
-				vm.s_skuName = null;
+				vm.s_keyWord = null;
+				vm.s_orderType = null;
 				vm.getTableList();
 			}
 		},

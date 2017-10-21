@@ -92,4 +92,19 @@ public class ArticleVO extends BaseVO<Long> {
      */
     private String priv;
 
+    /**
+     * 是否为个人发布，默认为平台系统发布
+     */
+    private boolean personPub;
+
+    /**
+     * 审核状态
+     */
+    private String auditState;
+
+    /**
+     * 审核通过时间
+     */
+    private Date passDate;
+
 }

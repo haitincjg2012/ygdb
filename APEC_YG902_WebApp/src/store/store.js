@@ -43,6 +43,7 @@ const store = new Vuex.Store({
     uploadGoodList:{//上传单据商品清单
     },
     nameN:"",//昵称的缓存
+    mainPz:"",//主营品种
   },
   mutations: {
     incrementCheck(state,UT){

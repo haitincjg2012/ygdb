@@ -69,7 +69,7 @@
             <span>所在区域</span>
             <input type="text" disabled v-model="person.address">
         </div>
-        <div class="z-p-pz" >
+        <div class="z-p-pz" v-if="!role.coldF">
           <img src="../../../assets/img/zypz.png"  class="img-com">
           <span>主营品种</span>
           <input type="text" disabled v-model="person.pz">
@@ -84,7 +84,7 @@
           <!--<span>调货区域</span>-->
           <!--<input type="text" readonly v-model="person.dhq">-->
         <!--</div>-->
-        <div class="z-p-sale"  v-if="role.traderF">
+        <div class="z-p-sale"  v-if="role.traderF && !role.agencyF">
           <img src="../../../assets/img/xsqy.png" class="img-com">
           <span>销售区域</span>
           <input type="text" disabled v-model="person.xsq">
@@ -221,10 +221,10 @@
 
         }
 
-          if(dt.imgUrl == "" || !dt.imgUrl){
-             this.person.portrait = defaultIcon;
+          if(dt.imgUrl == ""){
+             this.person.portrait = defaultIcon + "?x-oss-process=style/_head";
           }else{
-            this.person.portrait = dt.imgUrl;
+            this.person.portrait = dt.imgUrl + "?x-oss-process=style/_head";
 
           }
           if(!dt.userOrgClientVO){
@@ -358,7 +358,7 @@
         var id = current.id;
         obj.id = id;
         obj.levelImg =IMG.methods.userLevel(current.userLevelName);
-        obj.img = current.firstImageUrl;
+        obj.img = current.firstImageUrl+ "?x-oss-process=style/_list";
         obj.local = current.address;
         obj.name = current.showUserName;
         obj.Flag = that.name;

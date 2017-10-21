@@ -1,0 +1,71 @@
+.c-operating-pz .c-m-head {
+  width: 18.75rem;
+  height: 2.2rem;
+  line-height: 2.2rem;
+  font-size: 0.8rem;
+  color: #323232;
+  background-color: #f4f4f4;
+  text-align: center;
+  position: relative;
+}
+.c-operating-pz .c-pz-ret {
+  height: 2.2rem;
+  width: 0.55rem;
+  margin-left: 0.625rem;
+  position: absolute;
+  top: 0;
+}
+.c-operating-pz .c-pz-ret img {
+  width: 0.55rem;
+  height: 0.975rem;
+  vertical-align: sub;
+}
+.c-operating-pz .c-p-table {
+  margin: 1rem 0.625rem;
+  padding-top: 0.025rem;
+}
+.c-operating-pz .c-z-table-cell {
+  margin-top: 0.5rem;
+  margin-right: 0.75rem;
+  float: left;
+}
+.c-operating-pz .c-z-table-cell-content {
+  width: 4.5rem;
+  height: 1.25rem;
+  color: #323232;
+  font-size: 0.75rem;
+  line-height: 1.25rem;
+  text-align: center;
+  background-color: #ecebec;
+  border: 0.05rem solid transparent;
+  border-radius: 0.25rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.c-operating-pz .c-z-table-cell-active {
+  color: #28cba7;
+  border-color: #28cba7;
+  -webkit-border-radius: 0.25rem;
+  -moz-border-radius: 0.25rem;
+}
+.c-operating-pz .c-pz-ok {
+  width: 17.25rem;
+  height: 2rem;
+  line-height: 2rem;
+  margin: 0 auto;
+  text-align: center;
+  color: #fff;
+  border-radius: 0.25rem;
+  background-color: #28cba7;
+  font-size: 0.75rem;
+}
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+  *zoom: 1;
+}

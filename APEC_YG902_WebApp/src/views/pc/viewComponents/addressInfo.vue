@@ -6,14 +6,17 @@
         <div class="addLabel"><span>请选择市</span></div>
         <div @click.stop="selTopAddr($event,item)" v-for="item in addressTopList" :class="item.activeCls"><span>{{item.name}}</span></div>
       </div>
-      <div class="p-ad-form-cli">
+      <div class="p-ad-form-cli" v-if="!otherCity">
         <div class="addLabel"><span>请选择县区</span></div>
         <div @click.stop="selSecAddr($event,item)" v-for="item in addressSecList" :class="item.activeCls"><span>{{item.name}}</span></div>
       </div>
-      <div class="p-ad-form-cli">
+      <div class="p-ad-form-cli" v-if="!otherCity">
       <div class="addLabel"><span>请选择镇/街道</span></div>
       <div @click.stop="selThirAddr($event,item)" v-for="item in addressThirList" :class="item.activeCls"><span>{{item.name}}</span></div>
-    </div>
+      </div>
+      <div v-if="otherCity" class="c-address-edit">
+        <input type="text" placeholder="请您填写所在地址" v-model="addressEdit" class="c-address-edit-input" maxlength="20">
+      </div>
       <div class="login-btn">
         <input class="btn-login-c login-confirm" type="submit" id="btn-login-code" value="保存地址" @click="saveBtn"></input>
       </div>
@@ -46,7 +49,9 @@
           country:'',//镇
         countyS:'', //县
         cityS:'',//市
-        countryS:''//镇
+        countryS:'',//镇
+        otherCity:false,//外地客商的选择
+        addressEdit:'',//外地客商填写的地址
       }
     },
     mounted(){
@@ -86,6 +91,13 @@
                 self.province = item.parentId; //缓存省code
               }
           });
+            self.addressTopList.push({
+              "code": "9999",
+              "name": "其他",
+              "parentId":"10000",
+              "activeCls": 'm-v-tz',
+              "id": "100010"
+            });
             flag = true;
           } else {
           }
@@ -138,6 +150,7 @@
                   self.countyS = item.name;
                   self.county = item.code;//缓存县code
                   self.fircountyaddrCode = item.code;
+                  console.log(self.cityS,self.countyS,22222);
                 }
 
               });
@@ -209,6 +222,7 @@
       },
       selTopAddr(e,item){
         const self = this;
+
         self.addressTopList.forEach((i) => {
           if (item.id === i.id) {
             i.activeCls = 'm-v-tz active';
@@ -217,8 +231,15 @@
           else
             i.activeCls = 'm-v-tz'
         });
+        if(item.name == "其他"){
+            self.addressSecList = null;
+            self.addressThirList = null;
+            self.otherCity = true;
+            return;
+        }
+        self.otherCity = false;
         self.city = item.code;
-        self.city = item.name;
+        self.cityS = item.name;
         self.getsecAddrList(item.code, item.name);
       },
       selSecAddr(e,item){
@@ -253,7 +274,13 @@
       saveBtn(){
         const self = this;
 //        var address = self.cityS + self.countyS + self.countryS;
+        if(self.otherCity){
+          var address = self.addressEdit;
+        }else{
           var address = self.cityS + self.countyS + self.countryS;
+          console.log(address, 8888888);
+        }
+
 //        let params = {
 //          api: "/yg-user-service/user/updateUserInfo.apec",
 //          data: data
@@ -349,4 +376,14 @@
         background-color: #28CBA7;
         color #FFFFFF;
         border-radius (5/_rem)
+    .c-address-edit
+      padding (15 /_rem) (15 /_rem) 0
+      position relative
+      .c-address-edit-input
+        width (340/_rem)
+        height (40/_rem)
+        line-height (40/_rem)
+        font-size (16/_rem)
+        color #323232
+        background-color transparent
 </style>

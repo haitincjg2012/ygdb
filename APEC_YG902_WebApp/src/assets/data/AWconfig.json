@@ -1,0 +1,13 @@
+{
+  "wxConfig":{
+    "title":"果来乐",
+    "link":"http://yg.ap88.com",
+    "desc":"快乐每一天",
+    "imgUrl":"https://ygdb-pro.oss-cn-hangzhou.aliyuncs.com/20171011183239.png"
+  },
+  "aliyunConfig":{
+    "endpoint": "https://oss-cn-qingdao.aliyuncs.com/",
+    "bucket": "yg-pro",
+    "url":"https://yg-pro.oss-cn-qingdao.aliyuncs.com/"
+  }
+}

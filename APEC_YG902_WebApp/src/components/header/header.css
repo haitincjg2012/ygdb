@@ -20,13 +20,15 @@
 .myHeader .header i {
   font-style: normal;
   position: absolute;
-  left: 0.75rem;
-  top: 0.775rem;
-  width: 0.4rem;
-  height: 0.7rem;
+  left: 0;
+  top: 0;
+  width: 0.475rem;
+  height: 0.85rem;
 }
 .myHeader .header i img {
-  width: 0.4rem;
-  height: 0.7rem;
+  margin-top: 0.725rem;
+  margin-left: 0.75rem;
+  width: 0.475rem;
+  height: 0.85rem;
   display: block;
 }

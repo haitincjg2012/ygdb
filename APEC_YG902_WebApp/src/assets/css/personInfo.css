@@ -17,13 +17,12 @@
 }
 .z-p-info-header .return {
   position: absolute;
-  left: 0.625rem;
   top: 0;
 }
 .z-p-info-header .return img {
   width: 0.55rem;
   height: 0.975rem;
-  vertical-align: middle;
+  vertical-align: sub;
 }
 .person-info-page {
   overflow: auto;

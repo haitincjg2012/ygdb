@@ -41,6 +41,11 @@ public enum MessageTemplate {
 	PRODUCT_OFF_SELL_TEMPLATE("PRODUCT_OFF_SELL_TEMPLATE"),
 
 	/**
+	 * 通知行情审核结果的模板
+	 * */
+	RESULT_OF_ARTICLE("RESULT_OF_ARTICLE"),
+
+	/**
 	 * 找回密码验证码模板key值
 	 * */
 	FIND_PASSWORD_CAPTCHA_TEMPLATE("FIND_PASSWORD_CAPTCHA_TEMPLATE");

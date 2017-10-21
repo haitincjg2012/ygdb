@@ -1,5 +1,5 @@
 <template>
-  <div class="z-gq">
+  <div class="z-gq" ref="ZGQ">
     <!--<scroller ref="my_scrollerT" :on-infinite="infinite">-->
     <div class="com">
       <div class="z-s-header">
@@ -36,6 +36,13 @@
               :item = "item">
           </li>
         </ul>
+        <div class="button-tip" :class="{flip:arrive, loading:loadFlag}" v-if="!space">
+          <div class="c-z-pullup" :class="{showVisable:showVisableF}">
+          </div>
+          <div class="c-z-pullup-text">
+            <span>{{load}}</span>
+          </div>
+        </div>
       </div>
       <div class="z-up" v-if="showShadow">
         <ul class="clearfix" v-if="first">
@@ -79,6 +86,7 @@
 </template>
 <style scoped>
   @import "../../../assets/css/gq.css";
+  @import "../../../assets/css/scrollStyle.css";
 </style>
 
 <script>
@@ -266,7 +274,7 @@
         var id = current.id;
         obj.id = id;
         obj.levelImg =QG.methods.userLevel(current.userLevelName);
-        obj.img = current.firstImageUrl;
+        obj.img = current.firstImageUrl+"?x-oss-process=style/_list";//使用阿里云的上传方式
         obj.local = current.address;
         obj.name = current.showUserName;
         obj.priceUnit = current.priceUnit;
@@ -375,7 +383,6 @@
           fn.AREA = tArr;
             break;
         case "EMPTY":
-            console.log(arr, 1111);
           if(fn.EMPTY){
             tArr = fn.EMPTY.concat(arr);
           }else{
@@ -482,7 +489,13 @@
         Time1:null,
         Time2:null,
         Time3:null,
-        del:{}
+        del:{},
+        el:null,//onscroll滚动机制
+        arrive:false,//到底底部箭头切换
+        loadFlag:false,//箭头切换以后，加载数据
+        showVisableF:false,//默认显示的
+        load:"",//数据在加载中
+        emptyFlag:false,//是否需要显示
       }
     },
     components: {
@@ -537,8 +550,10 @@
         this.$store.state.recordPZ = null;
         this.$store.state.recordArea = null;
         this.$store.state.urban = null;
+        this.showVisableF = false;
         this.reset();
         this.searchType = "";
+        this.el = null;
         fn.initialization();
         if (this.smain == 0) {
           this.$router.go(-1);
@@ -894,10 +909,11 @@
             var childH = child.clientHeight;
             var height = childH * this.num;
             if(height < this.distance){
+
                 this.distance = 0;
               this.pageY = 0;
               if( this.pageCount <= this.pageNumber){
-                Toast('数据加载完...')
+//                Toast('数据加载完...')
                 return;
               }
               this.pageNumber ++;
@@ -921,18 +937,26 @@
       },
       menuG(evt){
         var e = evt || window.event;
-        var el = document.querySelector(".z-gq")
-        if(el){
+        var el = document.querySelector(".z-gq");
+
+        if(this.el){
           var target = e.target || e.srcElement;
           var offsetH = target.body.scrollTop;
           var sHeight = target.body.scrollHeight;
           var that = this;
           if(sHeight - offsetH - this.bheight == 0){
             if(this.pageCount > this.pageNumber){
+                this.arrive = true;
+                 this.loadFlag = true;
+                 this.load = "数据正在加载中...";
                  this.pageNumber ++;
                  this.st(this.pageNumber);
             }else{
-              Toast('数据加载完...')
+              this.arrive = false;
+              this.loadFlag = false;
+              this.showVisableF = true;
+              this.load = "数据正在加载完...";
+//              Toast('数据加载完...')
             }
 
           }
@@ -962,6 +986,7 @@
 
     },
     activated(){
+      this.el = this.$refs.ZGQ;
       this.isActivated = true;
       this.del = {};
       this.bheight = document.querySelector(".page").clientHeight;

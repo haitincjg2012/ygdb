@@ -29,6 +29,7 @@
             :item = "item"
         ></li>
       </ul>
+      <scrollS ref="childScroll"></scrollS>
       <div class="z-c-shadow" v-if="shadowF">
         <ul class="z-c-listS clearfix" v-if="firstF">
           <li :is = "item.ss"
@@ -70,8 +71,10 @@
   import API from '../../../api/api'
   import childPZ from "./PZ.vue"
   import Region from './region.vue'
-  import coldDefault from "../../../assets/img/coldDefault.png"
+//  import coldDefault from "../../../assets/img/coldDefault.png"
+  import coldDefault from "../../../assets/img/DBKS.png"
   import dataConfig from "../../../assets/data/search.json"
+  import scrollS from "../../../components/scrollSecond.vue"
   import {Toast} from 'mint-ui'
   const api = new API();
 
@@ -155,6 +158,11 @@
        var arr = [];
       var rows = data.data.rows;
       this.pageCount = data.data.pageCount;
+      if(data.data.pageCount == 0){
+        this.$refs.childScroll.init(true);
+      }else{
+        this.$refs.childScroll.init(false);
+      }
       rows.forEach(function (current, index) {
 
         var obj = {
@@ -169,7 +177,7 @@
         obj.address = current.address;
         obj.viewNum = current.viewNum;
         obj.orgStockCap = current.orgStockCap;
-        obj.orgFirstBannerUrl = current.orgFirstBannerUrl || coldDefault;
+        obj.orgFirstBannerUrl = (current.orgFirstBannerUrl || coldDefault) + "?x-oss-process=style/_list";
         if(current.showOrgTagsInfo){
              current.showOrgTagsInfo.forEach(function (current) {
                  if(current.className == "QYRZ"){
@@ -419,10 +427,12 @@
           var that = this;
           if(sHeight - offsetH - this.bheight == 0){
             if(this.pageCount > this.pageNumber){
+              this.$refs.childScroll.start();
               this.pageNumber ++;
               this.pageNum(this.pageNumber);
             }else{
-              Toast('数据加载完...')
+              this.$refs.childScroll.end();
+//              Toast('数据加载完...')
             }
 
           }
@@ -468,7 +478,6 @@
           });
         }
 
-
         this.shadowF = false;
         this.firstTF = false;
         this.initPagination();
@@ -477,11 +486,15 @@
     },
     activated(){
       this.bheight = document.querySelector(".page").clientHeight;
-          this.initPagination();
-           this.list(1);
+      this.initPagination();
+      this.list(1);
+
     },
     created(){
       window.addEventListener('scroll', this.menuList, false);
+    },
+    components:{
+      scrollS
     }
   }
 </script>

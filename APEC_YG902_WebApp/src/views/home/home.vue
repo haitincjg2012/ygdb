@@ -165,7 +165,6 @@
           <div class="c-z-pullup-text">
             <span>{{load}}</span>
           </div>
-
         </div>
       </div>
 
@@ -245,18 +244,18 @@
       if (data.data && data.data.length) {
 
         data.data.forEach((item, index)=>{
-          if(index == 0){
-            var url = "http://406991.v.huaerhaokan.com/mobile/cutebabyvote/index.jsp?aid=26D27F1F2D4BD943&wuid=406991&isFromApiFilter=1";
-            this.imgCount.push({
-              content:item.content,
-              url:url
-            })
-          }else{
+//          if(index == 0){
+//            var url = "http://406991.v.huaerhaokan.com/mobile/cutebabyvote/index.jsp?aid=26D27F1F2D4BD943&wuid=406991&isFromApiFilter=1";
+//            this.imgCount.push({
+//              content:item.content,
+//              url:url
+//            })
+//          }else{
             this.imgCount.push({
               content:item.content,
               url:item.url
             })
-          }
+//          }
 
         })
       }
@@ -345,7 +344,7 @@
             obj.levelImg = that.userLevelKeySwitch(current.userLevelName);
             obj.gq = current.productTypeName;
             obj.productTypeName = QG.methods.img(current.productTypeName);
-            obj.img = current.firstImageUrl;
+            obj.img = current.firstImageUrl+"?x-oss-process=style/_list";
             obj.local = current.address;
             obj.name = current.showUserName;
             obj.priceUnit = current.priceUnit;
@@ -1030,12 +1029,33 @@
       refresh_infinite_dt(fn){
           this.list();
       },
+      wx(){
+        let params = {
+          api:"/yg-user-service/wxapi/getSignInfo.apec",
+          data:{
+//            url:"http://yg.ap88.com"
+            url:window.location.href
+          }
+        }
+
+        api.post(params).then((res) => {
+
+          var data = res.data;
+//          alert(data.data.toString());
+          window.wxinit(data.data);
+          window.share();//朋友、朋友圈、qq
+        }).catch((error) => {
+          console.log(error)
+        })
+      }
     },
     activated(){
+     this.wx();
       this.showVisableF = false;
       this.del = {};
       this.isActivated = true;
       this.messageN();
+      console.log(window, 99999);
       var sH =  this.$store.state.xqInfo;
       if(sH){
         window.scrollTo(0,sH);

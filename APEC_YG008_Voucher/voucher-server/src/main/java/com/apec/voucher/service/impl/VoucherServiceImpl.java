@@ -299,6 +299,7 @@ public class VoucherServiceImpl implements VoucherService{
 			voucherBSViewVO.setVoucherUrl(String.valueOf(obj[6]));
 			voucherBSViewVO.setVoucherId((BigInteger)obj[7]);
 			voucherBSViewVO.setUserId((BigInteger)obj[8]);
+			voucherBSViewVO.setUserName(String.valueOf(obj[9]));
 			voucherBSViewVOList.add(voucherBSViewVO);
 		}
 		

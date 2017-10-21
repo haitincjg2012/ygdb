@@ -45,7 +45,7 @@ public class UserOrgClient extends BaseModel<Long> {
      */
     private String orgStockCap;
 
-    /*
+    /**
      * 关注数
      */
     private int attentionNum;

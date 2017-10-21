@@ -10,7 +10,6 @@ import com.apec.framework.common.enums.Realm;
 import com.apec.framework.common.enumtype.*;
 import com.apec.framework.common.util.BeanUtil;
 import com.apec.framework.common.util.JsonUtil;
-import com.apec.framework.common.util.StringUtil;
 import com.apec.framework.dto.UserInfoVO;
 import com.apec.framework.elasticsearch.producer.ApecESProducer;
 import com.apec.framework.elasticsearch.producer.ESProducerConstants;
@@ -44,11 +43,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -319,6 +316,7 @@ public class ProductServiceImpl implements ProductService {
                     if(flags == 0 ) {
                         ary = productImageVO.getImageUrl().split(",");
                         esProductInfoVO.setFirstImageUrl(ary[0]);
+                        productInfoVO.setFirstImageUrl(ary[0]);
                         listESImageVO.add(new ESProductImageVO(ary[1], productImageVO.getSort()));
                     }else {
                         listESImageVO.add(new ESProductImageVO(productImageVO.getImageUrl(), productImageVO.getSort()));
@@ -435,12 +433,15 @@ public class ProductServiceImpl implements ProductService {
             logger.warn("ES ID not found [userId:{}]  [esId:{}]", userInfoVO.getUserId(), productInfoVO.getElasticId());
             return ErrorCodeConst.ERROR_PRODUCT_NOT_FOUND;
         }
+        productInfo.setOffsellDate(new Date());
         ESHisProductInfoVO esProductInfoVO = genEsProductInfoVO(productInfo);
         //删除ES产品库 添加到下架库
         offSellProduct(esProductInfoVO);
 
         //更新数据库状态
         productInfo.setTimeout(0);
+        //更新es id
+        productInfo.setElasticId(esProductInfoVO.getElasticId());
         productInfoDAO.saveAndFlush(productInfo);
         return Constants.RETURN_SUCESS;
     }
@@ -453,17 +454,20 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public String offSellProductByManager(ProductInfoVO productInfoVO){
-        ProductInfo productInfo = productInfoDAO.findFirstByElasticId(productInfoVO.getElasticId(), EnableFlag.Y);
+        ProductInfo productInfo = productInfoDAO.findFirstByElasticIdAndEnableFlag(productInfoVO.getElasticId(), EnableFlag.Y);
         if(productInfo == null) {
             logger.warn("ES ID not   [esId:{}]",   productInfoVO.getElasticId());
             return ErrorCodeConst.ERROR_PRODUCT_NOT_FOUND;
         }
+        productInfo.setOffsellDate(new Date());
         ESHisProductInfoVO esProductInfoVO = genEsProductInfoVO(productInfo);
         //删除ES产品库 添加到下架库
         offSellProduct(esProductInfoVO);
 
         //更新数据库状态
         productInfo.setTimeout(0);
+        //更新es id
+        productInfo.setElasticId(esProductInfoVO.getElasticId());
         productInfoDAO.saveAndFlush(productInfo);
         return Constants.RETURN_SUCESS;
     }
@@ -532,19 +536,22 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public String pushProductToEs(String indexUrl) {
         List<ProductInfo> productInfos = productInfoDAO.findByEnableFlagAndTimeoutGreaterThan(EnableFlag.Y, 0);
-        return pushEsInfo(indexUrl, productInfos, ESProducerConstants.INDEX_URL_PRODUCT);
+        return pushEsInfo(indexUrl, productInfos);
     }
 
     @Override
     public String pushOffSellProductToEs(String indexUrl) {
-        int page = 0;
-        int size = 10;
-        PageRequest pageRequest = new PageRequest(page, size);
-        Page<ProductInfo> productInfoPages = productInfoDAO.findByEnableFlagAndTimeoutLessThanEqualOrderByCreateDate(EnableFlag.Y, 0, pageRequest);
-        return pushEsInfo(indexUrl, productInfoPages.getContent(), ESProducerConstants.INDEX_URL_OFF_SELL);
+        List<ProductInfo> productInfoPages = productInfoDAO.findByOffsellProduct();
+        return pushEsInfo(indexUrl, productInfoPages);
     }
 
-    private String pushEsInfo(String indexUrl, List<ProductInfo> productInfoPages, String index) {
+    /**
+     * TODO 定时任务要在下架之后才能跑 或者要有下架时间
+     * @param indexUrl
+     * @param productInfoPages
+     * @return
+     */
+    private String pushEsInfo(String indexUrl, List<ProductInfo> productInfoPages) {
         //index 开头加斜杠
         if(!indexUrl.startsWith(Constants.SINGLE_SLASH)) {
             indexUrl = Constants.SINGLE_SLASH + indexUrl;
@@ -553,10 +560,6 @@ public class ProductServiceImpl implements ProductService {
         if(!indexUrl.endsWith(Constants.SINGLE_SLASH)) {
             indexUrl += Constants.SINGLE_SLASH;
         }
-        //TODO 测试时去掉
-//        if(!indexUrl.equalsIgnoreCase(index)) {
-//            return Constants.COMMON_ERROR_PARAMS; //index 跟执行的不一致
-//        }
 
         String newIndex;
         ESProductInfoVO esProductInfo;
@@ -603,8 +606,9 @@ public class ProductServiceImpl implements ProductService {
             long timeOutTotal = 1; //如果没有总量则默认为1
             if(timeoutList.size() != 0){
                 BigDecimal timeOutDecimal = (BigDecimal) timeoutList.get(0);
-                if(timeOutDecimal != null)
+                if(timeOutDecimal != null) {
                     timeOutTotal = timeOutDecimal.longValue();
+                }
             }
 
             //获取权重数据字典信息
@@ -652,7 +656,6 @@ public class ProductServiceImpl implements ProductService {
         logger.info("off sell job execute total time :{}", System.currentTimeMillis() - startTime);
     }
 
-    @Transactional
     private void batchOffSellJob(long saveNumTotal, long viewNumTotal, String productRecommend, long productRecommendCount, long timeOutTotal, Map<OrderWeightType, Integer> orderWeightMap, Page<ProductInfo> productInfoPages) {
         boolean isOffSell;
         int oldTimeOut;
@@ -661,7 +664,8 @@ public class ProductServiceImpl implements ProductService {
         for (ProductInfo productInfo: productInfoPages) {
             isOffSell = false;
             oldTimeOut = productInfo.getTimeout();
-            if(oldTimeOut == 0){//表示供求已经被下架
+            //表示供求已经被下架
+            if(oldTimeOut == 0){
                 isOffSell = true;
             }
             //把供求信息中的time out减去1 如果数量为0时 则不减
@@ -675,7 +679,13 @@ public class ProductServiceImpl implements ProductService {
             //如果是当天下架的供求 推送到ES中
             if(timeOut == 0) {
                 logger.info("=============off sell product [esId:{}] [userId:{}]  start==================", esHisProductInfoVO.getElasticId(), esHisProductInfoVO.getUserId());
+                //设置下架时间
+                productInfo.setOffsellDate(new Date());
+                //设置下架时间
+                esHisProductInfoVO.setOffsellDate(productInfo.getOffsellDate());
                 offSellProduct(esHisProductInfoVO);
+                //更新es id
+                productInfo.setElasticId(esHisProductInfoVO.getElasticId());
                 logger.info("=============off sell product [esId:{}] [userId:{}]  end==================", esHisProductInfoVO.getElasticId(), esHisProductInfoVO.getUserId());
             }else {//没有下架的供求需要修改ES的权重值
                 logger.info("=============count product order weight [esId:{}] [userId:{}]  start==================", esHisProductInfoVO.getElasticId(), esHisProductInfoVO.getUserId());
@@ -708,27 +718,31 @@ public class ProductServiceImpl implements ProductService {
         //计算ES权重值 总权重100 单个权重计算方式:  份额/总量*权重值
         //下架时间权重 20
         Integer timeOutWeight = orderWeightMap.get(OrderWeightType.TIME_OUT);
-        if(timeOutWeight == null)
+        if(timeOutWeight == null) {
             timeOutWeight = 20;
+        }
         float offSell = new BigDecimal(timeOut).divide(new BigDecimal(timeOutTotal), scale, BigDecimal.ROUND_HALF_UP).floatValue() * timeOutWeight;
         //浏览量权重 20
         Integer viewNumWeight = orderWeightMap.get(OrderWeightType.VIEW_NUM);
-        if(viewNumWeight == null)
+        if(viewNumWeight == null) {
             viewNumWeight = 20;
+        }
         String productViewNumRedis = cacheHashService.hget(productRedisKey, RedisHashConstants.HASH_PRO_VIEW_NUM);
         productViewNumRedis = StringUtils.isBlank(productViewNumRedis) ? "0" : productViewNumRedis;//如果redis取不到值则为0
         float viewNum = new BigDecimal(productViewNumRedis).divide(new BigDecimal(viewNumTotal), scale, BigDecimal.ROUND_HALF_UP).floatValue() * viewNumWeight;
         //收藏量权重 20
         Integer saveNumWeight = orderWeightMap.get(OrderWeightType.SAVE_NUM);
-        if(saveNumWeight == null)
+        if(saveNumWeight == null) {
             saveNumWeight = 20;
+        }
         String productSaveNumRedis = cacheHashService.hget(productRedisKey, RedisHashConstants.HASH_PRO_SAVE_NUM);
         productSaveNumRedis = StringUtils.isBlank(productSaveNumRedis) ? "0" : productSaveNumRedis; //如果redis取不到值则为0
         float saveNum = new BigDecimal(productSaveNumRedis).divide(new BigDecimal(saveNumTotal), scale, BigDecimal.ROUND_HALF_UP).floatValue() * saveNumWeight;
         //是否推荐权重 40 没有推荐则为0
         Integer recommendWeight = orderWeightMap.get(OrderWeightType.RRECOMMEND);
-        if(recommendWeight == null)
+        if(recommendWeight == null) {
             recommendWeight = 40;
+        }
         int productRecommend = 0;
         if(productRecommendRedis.contains(esId)){
             productRecommend = 1;
@@ -739,8 +753,9 @@ public class ProductServiceImpl implements ProductService {
         //更新权重
         ESGetSingleResponseVO esGetSingleResponseVO = apecESProducer.getSingleESInfoById(ESProducerConstants.INDEX_URL_PRODUCT, esId, ESProductInfoVO.class);
         if(null != esGetSingleResponseVO && esGetSingleResponseVO.getFound()) {
-            Map<String,Float> orderWeightParam = new HashMap<>();
-            orderWeightParam.put("orderWeight", orderWeight);
+            Map<String,String> orderWeightParam = new HashMap<>();
+            orderWeightParam.put("orderWeight", String.valueOf(orderWeight));
+            orderWeightParam.put("timeout", String.valueOf(esHisProductInfoVO.getTimeout()));
             boolean result = apecESProducer.postESInfoForUpdateByDoc(ESProducerConstants.INDEX_URL_PRODUCT, esId, orderWeightParam);
             if(result){
                 logger.info("{} es id: {} update success", ESProducerConstants.INDEX_URL_PRODUCT, esId);
@@ -754,6 +769,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private ESHisProductInfoVO genEsProductInfoVO(ProductInfo productInfo) {
+        //ES ProductInfoVO
         ESHisProductInfoVO esHisProductInfoVO = new ESHisProductInfoVO();
         BeanUtil.copyPropertiesIgnoreNullFilds(productInfo,esHisProductInfoVO);
 
@@ -762,6 +778,14 @@ public class ProductServiceImpl implements ProductService {
         esHisProductInfoVO.setSkuName(marketPreFix + productInfo.getSkuName());
         esHisProductInfoVO.setUserTypeName(productInfo.getUserType().getKey());
         esHisProductInfoVO.setGoodsName(Constants.DEFAULT_GOODS_NAME);
+        esHisProductInfoVO.setFirstImageUrl(productInfo.getFirstImageUrl());
+        if(StringUtils.isNotBlank(productInfo.getMarketPreFix())) {
+            esHisProductInfoVO.setMarketPreFix(productInfo.getMarketPreFix());
+        }else{
+            esHisProductInfoVO.setMarketPreFix("");
+        }
+        esHisProductInfoVO.setWeightUnit(productInfo.getWeightUnit());
+        esHisProductInfoVO.setPriceUnit(productInfo.getPriceUnit());
 
         //查询ProductAttr
         ProductSkuInfo productSkuInfo = new ProductSkuInfo();
@@ -788,6 +812,31 @@ public class ProductServiceImpl implements ProductService {
         esHisProductInfoVO.setProductImages(esProductImageVOList);
 
         return esHisProductInfoVO;
+    }
+
+    /**
+     * 发送 供求下架的站内信
+     * @param sukName
+     * @param userId
+     */
+    private void sendMessageMqInfo(String sukName, Long userId){
+        MessageBodyVO messageBodyVO = new MessageBodyVO();
+        messageBodyVO.setType(MessageType.NOTIFICATION);//系统通知
+        messageBodyVO.setTemplateFlag(true);//使用动态模板发送
+        Map<String, String> contentMap = new HashMap<>();
+        contentMap.put("sukName",sukName);
+        messageBodyVO.setTemplateKey(MessageTemplate.PRODUCT_OFF_SELL_TEMPLATE);
+        messageBodyVO.setRealm(Realm.MESSAGE);
+        messageBodyVO.setContentMap(contentMap);
+        //发送站内信，通知用户积分变动消息
+        MessageVO messageVO = new MessageVO();
+        messageVO.setBody(messageBodyVO);
+        messageVO.setId(idGen.nextId());
+        List<Long> receivers = new ArrayList<>();
+        receivers.add(userId);
+        messageVO.setReceivers(receivers);//接收者
+        messageVO.setMessageStatus(MessageStatus.NEW);//用户状态
+        mqProducerClient.sendConcurrently(MqTag.MESSAGE_TAG.getKey(),String.valueOf(messageVO.getId()),messageVO);
     }
 
     private void offSellProduct(ESHisProductInfoVO esProductInfoVO) {
@@ -839,34 +888,10 @@ public class ProductServiceImpl implements ProductService {
 
             //发站内信 供求已经下架
             sendMessageMqInfo(esProductInfoVO.getSkuName(), esProductInfoVO.getUserId());
-
+            //设置新的ES id
+            esProductInfoVO.setElasticId(esPostResponseVO.getId());
         }else {
             logger.info("{} add es id {} failed", ESProducerConstants.INDEX_URL_OFF_SELL, esPostResponseVO.getId());
         }
-    }
-
-    /**
-     * 发送 供求下架的站内信
-     * @param sukName
-     * @param userId
-     */
-    private void sendMessageMqInfo(String sukName, Long userId){
-        MessageBodyVO messageBodyVO = new MessageBodyVO();
-        messageBodyVO.setType(MessageType.NOTIFICATION);//系统通知
-        messageBodyVO.setTemplateFlag(true);//使用动态模板发送
-        Map<String, String> contentMap = new HashMap<>();
-        contentMap.put("sukName",sukName);
-        messageBodyVO.setTemplateKey(MessageTemplate.PRODUCT_OFF_SELL_TEMPLATE);
-        messageBodyVO.setRealm(Realm.MESSAGE);
-        messageBodyVO.setContentMap(contentMap);
-        //发送站内信，通知用户积分变动消息
-        MessageVO messageVO = new MessageVO();
-        messageVO.setBody(messageBodyVO);
-        messageVO.setId(idGen.nextId());
-        List<Long> receivers = new ArrayList<>();
-        receivers.add(userId);
-        messageVO.setReceivers(receivers);//接收者
-        messageVO.setMessageStatus(MessageStatus.NEW);//用户状态
-        mqProducerClient.sendConcurrently(MqTag.MESSAGE_TAG.getKey(),String.valueOf(messageVO.getId()),messageVO);
     }
 }

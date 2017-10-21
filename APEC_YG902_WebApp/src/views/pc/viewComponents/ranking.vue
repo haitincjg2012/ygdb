@@ -31,7 +31,7 @@
         </span>
           <div class="rContent">
           <span class="headPhoto">
-            <img :src="item.imgUrl" v-if="item.imgUrl!='null'"/>
+            <img :src="item.imgUrl +'?x-oss-process=style/_head'" v-if="item.imgUrl!='null'"/>
             <img src="../../../assets/img/icon.png" v-else />
           </span>
             <span class="name">{{item.name}}</span>

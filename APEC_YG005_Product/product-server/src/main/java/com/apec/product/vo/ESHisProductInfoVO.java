@@ -51,6 +51,21 @@ public class ESHisProductInfoVO {
     private String firstImageUrl;
 
     /**
+     * 营销前缀
+     */
+    private String marketPreFix;
+
+    /**
+     * 单位
+     */
+    private String weightUnit;
+
+    /**
+     * 单价重量
+     */
+    private String priceUnit;
+
+    /**
      * 用户类型
      * 积分等级存储Redis
      */
@@ -115,4 +130,9 @@ public class ESHisProductInfoVO {
      *  图片 属性
      */
     private List<ESProductImageVO> productImages;
+
+    /**
+     * 下架时间
+     */
+    private Date offsellDate;
 }

@@ -7,6 +7,7 @@ import com.apec.framework.common.enumtype.EnableFlag;
 import com.apec.framework.jpa.dao.BaseDAO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Date;
@@ -36,14 +37,44 @@ public interface ArticleDAO extends BaseDAO<Article, Long> {
      * @param enableFlag
      * @return
      */
-    @Query(value = "SELECT id,create_by,create_date,enable_flag,address,author,category,has_image,media,priv,pub_date,title,url,channel_id,ordinal " +
-                     "FROM cms_article /**#pageable**/\n WHERE (TRUE = ?3 OR(FALSE = ?3 and  author like %?4% )) AND (TRUE = ?5 OR(FALSE = ?5 and  date(create_date) >= ?6 ))" +
-            "AND (TRUE = ?7 OR(FALSE = ?7 and  date(create_date) <= ?8 )) AND channel_id = ?1 AND enable_flag = ?2  ORDER BY create_date desc",
-            countQuery = "SELECT COUNT(*) FROM cms_article WHERE (TRUE = ?3 OR(FALSE = ?3 and  author like %?4% )) AND (TRUE = ?5 OR(FALSE = ?5 and  date(create_date) >= ?6 ))" +
-                    "AND (TRUE = ?7 OR(FALSE = ?7 and  date(create_date) <= ?8 )) AND channel_id = ?1 AND enable_flag = ?2 " ,
+    @Query(value = "SELECT id,create_by,create_date,enable_flag,address,if(person_pub,(select name from user where id = c.create_by),author),category,has_image,media,priv,pub_date,title,url,channel_id,ordinal,person_pub,audit_state,pass_date " +
+                     "FROM cms_article c /**#pageable**/\n WHERE (FALSE = ?3 or  (author like %?4% or create_by in (select id from user where name like %?4%)) ) and (FALSE = ?9 or  person_pub = ?10 ) and (FALSE = ?11 or  audit_state = ?12 )  " +
+            " AND (FALSE = ?5 or  date(create_date) >= ?6 )  AND (FALSE = ?7 or  date(create_date) <= ?8 ) AND channel_id = ?1 AND enable_flag = ?2  ORDER BY audit_state ,priv desc ,create_date desc",
+            countQuery = "SELECT COUNT(*) FROM cms_article WHERE (FALSE =" +
+                    "?3 or (author like %?4% or create_by in (select id from user where name like %?4%)) ) and (FALSE = ?9 or  person_pub = ?10 ) and (FALSE = ?11 or  audit_state = ?12 ) " +
+                    " AND (FALSE = ?5 or  date(create_date) >= ?6 )  AND (FALSE = ?7 or  date(create_date) <= ?8 ) AND channel_id = ?1 AND enable_flag = ?2 " ,
             nativeQuery = true)
     Page<Object[]> queryByChannelAndEnableFlagOrderByCreateDate(String channelId, String enableFlag, boolean nameFlag, String name, boolean beginDateFlag, Date beginDate,
-                                                             boolean endDateFlag, Date endDate, Pageable pageable);
+                                                             boolean endDateFlag, Date endDate,boolean personPubFlag,boolean personPub,boolean auditStateFlag,String auditState, Pageable pageable);
+
+    /**
+     * 根据栏目查询行情（前端）
+     * @param channelId
+     * @param enableFlag
+     * @return
+     */
+    @Query(value = "SELECT id,create_by,create_date,enable_flag,address,if(person_pub,(select name from user where id = c.create_by),author),category,has_image,media,priv,pub_date,title,url,channel_id,ordinal,person_pub,audit_state,pass_date " +
+            " FROM cms_article c /**#pageable**/\n WHERE  (FALSE = ?3 or  audit_state = ?4 )  " +
+            " AND channel_id = ?1 AND enable_flag = ?2 and create_by = ?5 ORDER BY create_date desc",
+            countQuery = "SELECT COUNT(*) FROM cms_article WHERE " +
+                    " (FALSE = ?3 or  audit_state = ?4 ) " +
+                    "  AND channel_id = ?1 AND enable_flag = ?2 and create_by = ?5 " ,
+            nativeQuery = true)
+    Page<Object[]> queryMyNewsList(String channelId, String enableFlag,boolean auditStateFlag,String auditState,String userId, Pageable pageable);
+
+    /**
+     * 根据栏目查询最新top n的有图片的新闻行情
+     * @param channelId
+     * @param enableFlag
+     * @return
+     */
+    @Query(value = "SELECT id,create_by,create_date,enable_flag,address,if(person_pub,(select name from user where id = c.create_by),author),category,has_image,media,priv,pub_date,title,url,channel_id,ordinal,person_pub,audit_state,pass_date  " +
+            "FROM cms_article c /**#pageable**/\n WHERE " +
+            "channel_id = ?1 AND enable_flag = ?2  and audit_state = 'Y' AND url IS NOT NULL ORDER BY priv desc ,create_date desc",
+            countQuery = "SELECT COUNT(*) FROM cms_article WHERE " +
+                    "channel_id = ?1 AND enable_flag = ?2 and audit_state = 'Y'" ,
+            nativeQuery = true)
+    Page<Object[]> queryByChannelAndEnableFlagOrderByCreateDate(String channelId, String enableFlag, Pageable pageable);
 
     /**
      * 查询行情最大排序树加1
@@ -54,5 +85,37 @@ public interface ArticleDAO extends BaseDAO<Article, Long> {
     @Query(value = "select max(ordinal)  FROM cms_article WHERE channel_id = ?1 AND enable_flag = ?2",
             nativeQuery = true)
     Object[] getMaxOrdinal(String channelId, String enableFlag);
+
+    /**
+     * 查询行情具体信息
+     * @param id
+     * @param enableFlag
+     * @return
+     */
+    @Query(value = "SELECT id,create_by,create_date,enable_flag,address,if(person_pub,(select name from user where id = c.create_by),author) as author,category,has_image,media,priv,pub_date,title,url,channel_id,ordinal,person_pub,audit_state,pass_date,last_update_by,last_update_date,content,news_id,priority " +
+            "FROM cms_article c WHERE id = ?1 and enable_flag = ?2",nativeQuery = true)
+    Article queryArticleById(Long id, String enableFlag);
+
+    /**
+     * 行情置顶
+     * @param id
+     * @param enableFlag
+     * @return
+     */
+    @Modifying(clearAutomatically = true)
+    @Query(value = "update cms_article set priv = (select * from (SELECT max(priv) + 1 as r FROM cms_article) a) WHERE id = ?1 AND enable_flag = ?2",
+            nativeQuery = true)
+    int setStickArticle(Long id, String enableFlag);
+
+    /**
+     * 行情置顶
+     * @param id
+     * @param enableFlag
+     * @return
+     */
+    @Modifying(clearAutomatically = true)
+    @Query(value = "update cms_article set priv = '' WHERE id = ?1 AND enable_flag = ?2",
+            nativeQuery = true)
+    int closeStickArticle(Long id, String enableFlag);
 
 }

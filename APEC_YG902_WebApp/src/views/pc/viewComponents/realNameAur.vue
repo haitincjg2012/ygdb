@@ -77,6 +77,7 @@
   import fileLoad from '../../../components/common/uploadFile'
   import BigImg from '../../../components/common/bigImg';
   import {MessageBox, Toast, Indicator} from 'mint-ui';
+  import ALIYUN from "../../../components/aliyun.vue"
 
   const api = new API();
   var ob = {
@@ -101,28 +102,29 @@
         num: '',
         imgSrc: '',
         imgSrc_: '',
+        aliyunO:null,//阿里云调用函数
         formData: new FormData(),
 //        formDataS: new FormData(),
         fileloadZM:function (e){//身份证正面压缩回调函数
 //            this.imgSrc=dtBase64;
           var target = e.target || e.srcElement;
           var file = target.files[0];
-         var fd = new FormData();
-          fd.append('file', file);
-//          if(!this.formData.has('file'))
-//          {
-//            this.formData.append('file', file);
-//          }else{
-//            this.formData.set('file', file);
-//          }
-
-          this.uploadImg(fd, 0);
+          var self = this;
+          this.aliyunO(self.$store.state.userId,function (url) {
+            self.imgSrc=url;
+            Toast("正面身份提交成功~");
+          } , file);
         }.bind(this),
         fileloadFM:function (e){//身份证反面压缩回调函数
           var target = e.target || e.srcElement;
           var file = target.files[0];
-          var fd = new FormData();
-          fd.append('file', file);
+          var self = this;
+          this.aliyunO(self.$store.state.userId,function (url) {
+            self.imgSrc_ = url;
+            Toast("反面身份提交成功~");
+          } , file);
+//          var fd = new FormData();
+//          fd.append('file', file);
 //          this.imgSrc_=dtBase64;
 //          if(!this.formData.has('file'))
 //          {
@@ -131,7 +133,7 @@
 //            this.formData.set('file', file);
 //          }
 
-          this.uploadImg(fd, 1);
+//          this.uploadImg(fd, 1);
         }.bind(this)
       }
     },
@@ -139,7 +141,11 @@
       this.name = '',
         this.num = '',
         this.imgSrc = '',
-        this.imgSrc_ = ''
+        this.imgSrc_ = '';
+      this.aliyunO = ALIYUN.aliyun();
+      if(this.$store.state.userId == ""){
+          this.getUserId();
+      }
     },
     computed:{
       _btnshow(){
@@ -315,8 +321,32 @@
         console.log('压缩率：' + ~~(100 * (initSize - ndata.length) / initSize) + "%");
         tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0;
         return ndata;
-      }
+      },
+      getUserId(){
+        const self = this;
+
+        var params = {
+          api:"/_node_user/_info.apno"
+        }
+        try {
+          api.post(params).then((res) => {
+            var item = res.data;
+            var dt;
+
+            if (item.succeed) {
+
+              dt = JSON.parse(item.data);
+              self.$store.state.userId = dt.id;
+            } else {
+            }
+          }).catch((error) => {
+          })
+        } catch (error) {
+          console.log(error)
+        }
+      },
     },
+
 
     created() {
     },

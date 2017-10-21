@@ -7,7 +7,7 @@
       </div>
       <div class="z-trader-search">
         <img src="../../../assets/img/search.png">
-        <input type="text" placeholder="" @change="search"/>
+        <input type="text" placeholder="" @change="search" v-model="traderSearch"/>
       </div>
     </div>
 
@@ -29,6 +29,7 @@
             :item = "item"
         ></li>
       </ul>
+      <scrollS ref="childScroll"></scrollS>
       <div class="z-t-shadow" v-if="shadowF">
         <ul class="z-t-listS clearfix" v-if="firstF">
           <li :is = "item.ss"
@@ -74,6 +75,8 @@
   import Region from './region.vue'
   import dataConfig from "../../../assets/data/search.json"
   import {Toast} from 'mint-ui'
+  import scrollS from "../../../components/scrollSecond.vue"
+
   const api = new API();
   var fn = {
     aD:null,//地区的数据
@@ -167,6 +170,11 @@
       var arr = [];
       var rows = data.data.rows;
       this.pageCount = data.data.pageCount;
+      if(data.data.pageCount == 0){
+        this.$refs.childScroll.init(true);
+      }else{
+        this.$refs.childScroll.init(false);
+      }
       rows.forEach(function (current, index) {
         var obj = {
           showOrgTagsInfo:{}
@@ -177,7 +185,7 @@
         obj.orgId = current.orgId ? current.orgId:"-999";
         obj.userId = current.userId ? current.userId:"-1000";
         obj.orgName = current.orgName;//用户姓名
-        obj.orgFirstBannerUrl = current.orgFirstBannerUrl || agksD;//左侧图片
+        obj.orgFirstBannerUrl = (current.orgFirstBannerUrl || agksD)+"?x-oss-process=style/_list";//左侧图片
         obj.userLevelName = IMG.methods.userLevel(current.userLevelName);//用户等级
         obj.userRealAuthKey = current.userRealAuthKey == ""?false:true;//用户是否实名认证
         obj.mainOperating = current.mainOperating;//用户主营品种
@@ -212,6 +220,7 @@ export default{
           secondF:false,
           tremptyFlag:false,////默认情况是有数据的
           bheight:0,//记录屏幕的默认高度
+          traderSearch:"",
         }
     },
     methods:{
@@ -256,7 +265,7 @@ export default{
         this.shadowF = false;
       },
       search(){
-        this.searchType = "";
+        this.searchType = this.traderSearch;
         this.initPagination();
         this.list(1);
       },
@@ -312,6 +321,7 @@ export default{
         }
       },
       pzSearch(param){
+          console.log(param, 88888);
         var flag = param.flag;
         var type = param.type;
         var path = param.path;
@@ -359,7 +369,7 @@ export default{
       },
       searchArea(param){
 
-        var value = param,key;
+        var value = param.key;
         var path = param.path;
         var code = param.code;
         this.shadowF = false;
@@ -372,6 +382,15 @@ export default{
             current.sh = false;
           }
         });
+
+        var index = value.indexOf("全部");
+        if(index > -1){
+////              alert(value.substring(0, index));
+          this.searchType = value.substring(0, index);
+        }else{
+          this.searchType = value;
+        }
+
         this.initPagination();
         this.list(1);
       },
@@ -452,10 +471,12 @@ export default{
           if(sHeight - offsetH - this.bheight == 0){
 
             if(this.pageCount > this.pageNumber){
+              this.$refs.childScroll.start();
               this.pageNumber ++;
               this.pageNum(this.pageNumber);
             }else{
-              Toast('数据加载完...')
+              this.$refs.childScroll.end();
+//              Toast('数据加载完...')
             }
 
           }
@@ -476,9 +497,11 @@ export default{
         this.initPagination();
         this.list(1);
     },
-
    created(){
     window.addEventListener('scroll', this.menuList, false);
+  },
+  components:{
+    scrollS
   }
 }
 </script>

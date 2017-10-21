@@ -50,9 +50,13 @@
         }
         h1{
           color:#fff;
-          font-size: 30/@rem;
+          font-size: 36/@rem;
           letter-spacing: 3/@rem;
           padding-left: 30/@rem;
+          max-width: 73vw;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
       }
       .mint-swipe-indicators{
@@ -91,9 +95,11 @@
       flex-direction: row;
       .newslistR{
         width:216/@rem;
+        min-width: 216/@rem;
         height:152/@rem;
         margin-right:30/@rem;
         display: inline-block;
+        font-size: 36/@rem;
         img{
           width:100%;
           height:100%;
@@ -103,12 +109,19 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        padding-bottom: 10/@rem;
-        max-width: 446/@rem;
+        //padding-bottom: 10/@rem;
+        //max-width: 446/@rem;
         letter-spacing: 2/@rem;
+        height:152/@rem;
         h2{
           color:#222328;
-          font-size:32/@rem;
+          font-size:36/@rem;
+          //text-align: justify; //文本两端对齐
+          overflow : hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
 
         }
         p{

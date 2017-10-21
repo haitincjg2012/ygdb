@@ -1,6 +1,4 @@
 <!--我的供求-->
-
-
 <template>
   <div class="Jhds">
     <scroller ref="my_scroller_spde" :on-refresh="refresh" :on-infinite="infinite">
@@ -72,7 +70,7 @@
           </li>
         </ul>
         <ul class="tab-inner">
-          <li v-for="item in offlinelist">、
+          <li v-for="item in offlinelist">
             <div class="list" :data-id = "item.id">
               <div class="left-img" :data-id = "item.id">
                 <img :src="item.firstImageUrl" :data-id = "item.id">
@@ -210,7 +208,7 @@
                 self.onlineList.push({
                   'skuName': item.skuName.length > 20 ? item.skuName.substring(0, 20) + '...' : item.skuName,
                   'id': item.id,
-                  'firstImageUrl': item.firstImageUrl,
+                  'firstImageUrl': item.firstImageUrl + "?x-oss-process=style/_list",
                   'productTypeName': item.productTypeName,
                   'address': item.address,
                   'showUserName': item.showUserName,
@@ -257,7 +255,7 @@
           console.log(error)
         }
       },
-      GetdownList(){//获取上市中的供求
+      GetdownList(){//获取下架中的供求
         const self = this;
         self.offlinelist = [];
         Indicator.open({
@@ -278,7 +276,7 @@
                 self.offlinelist.push({
                   'skuName': item.skuName.length > 20 ? item.skuName.substring(0, 20) + '...' : item.skuName,
                   'id': item.id,
-                  'firstImageUrl': item.firstImageUrl,
+                  'firstImageUrl': item.firstImageUrl+"?x-oss-process=style/_list",
                   'productTypeName': item.productTypeName,
                   'address': item.address,
                   'showUserName': item.showUserName,
@@ -290,7 +288,8 @@
                   'isEdit': false,
                   'endAmount':item.endAmount,
                   'startAmount':item.startAmount,
-                  'showCredateTime':item.showCredateTime
+//                  'showCredateTime':item.showCredateTime
+                  'showCredateTime':new Date().format(item.offsellDate, 'yyyy-MM-dd'),
                 })
               });
             } else {
@@ -399,7 +398,11 @@
             return id == i.id
           }
         );
+
+//        var item = self.onlineList[i];
+//        item.offsellDate = new Date().getTime();
         self.offlinelist.push(self.onlineList[i]);
+
         if (i > -1) {
           self.onlineList.splice(i, 1);
         }
@@ -432,7 +435,7 @@
                 self.onlineList.splice(0, 0, ({
                   'skuName': item.skuName.length > 20 ? item.skuName.substring(0, 20) + '...' : item.skuName,
                   'id': item.id,
-                  'firstImageUrl': item.firstImageUrl,
+                  'firstImageUrl': item.firstImageUrl+"?x-oss-process=style/_list",
                   'productTypeName': item.productTypeName,
                   'address': item.address,
                   'showUserName': item.showUserName,
@@ -461,7 +464,7 @@
                 self.onlineList.push({
                   'skuName': item.skuName.length > 20 ? item.skuName.substring(0, 20) + '...' : item.skuName,
                   'id': item.id,
-                  'firstImageUrl': item.firstImageUrl,
+                  'firstImageUrl': item.firstImageUrl +"?x-oss-process=style/_list",
                   'productTypeName': item.productTypeName,
                   'address': item.address,
                   'showUserName': item.showUserName,

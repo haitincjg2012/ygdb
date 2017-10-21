@@ -1135,7 +1135,7 @@
               this.DISTANCE = 0;
               this.pageY = 0;
               if( this.pageCount <= this.pageNumber){
-                Toast('数据加载完...123')
+//                Toast('数据加载完...123')
                 return;
               }
 
@@ -1174,7 +1174,7 @@
                      this.pageNumber ++;
                      this.st(this.pageNumber);
                  }else{
-                   Toast('数据加载完...')
+//                   Toast('数据加载完...')
                  }
                }
            }

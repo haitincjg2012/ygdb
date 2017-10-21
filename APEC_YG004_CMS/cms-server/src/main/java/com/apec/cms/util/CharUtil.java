@@ -1,5 +1,7 @@
 package com.apec.cms.util;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.regex.Pattern;
 /**
  * Title:
@@ -39,6 +41,31 @@ public class CharUtil {
         }
         Pattern pattern = Pattern.compile("[\\u4E00-\\u9FBF]+");
         return pattern.matcher(str.trim()).find();
+    }
+
+    /**
+     * 时间转字符串
+     */
+    public static String getStrFromDate(Date date){
+        String str = "";
+        Long now = (new Date()).getTime();
+        Long dateMillis = date.getTime();
+        Long diff = now - dateMillis;
+        Date t = new Date(diff);
+        if(t.getYear() > 1970){
+            str = (t.getYear() - 1970) + "年前";
+        }else if(t.getMonth() > 1){
+            str = (t.getMonth() - 1) + "月前";
+        }else if(t.getDate() > 1){
+            str = (t.getDate() - 1) + "天前";
+        }else if(t.getHours() > 8){
+            str = (t.getHours()) + "小时前";
+        }else if(t.getMinutes() > 0){
+            str = (t.getMinutes()) + "分钟前";
+        }else{
+            str = "刚刚";
+        }
+        return str;
     }
 
 }

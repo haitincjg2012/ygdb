@@ -1,40 +1,71 @@
 <template>
   <div class="m-point-view-info-page">
       <top-bar title="我的积分"></top-bar>
-    <!--<scroller ref="my_scroller" style="top:42px;" :on-infinite="infinite">-->
-    <div class="wrapper" ref="wrapper">
-      <div>
-        <div class="top-tip">
-          <span class="refresh-hook">下拉刷新</span>
-        </div>
-        <div class="main-page">
-          <div class="m-u-v-form-cli">
-            <div class="m-p-form">
-              <div class="m-p-label">积分汇总</div>
-              <div class="m-p-point">{{point}}</div>
+    <my-scroll class="pointScroll" :data="pointViewList" :pullup="pullup" @scrollToEnd="loadMore">
+      <div class="main-page">
+        <div class="m-u-v-form-cli">
+          <div class="m-p-form">
+            <div class="m-p-label">积分汇总</div>
+            <div class="m-p-point">{{point}}</div>
+          </div>
+          <split></split>
+          <div class="m-p-table">
+            <div class="m-p-cell-p">
+              <span>我的等级：</span>
+              <img :src='userLevelName'>
             </div>
-            <split></split>
-            <div class="m-p-table">
-              <div class="m-p-cell-p">
-                <span>我的等级：</span>
-                <img :src='userLevelName'>
-              </div>
+          </div>
+          <split></split>
+          <div class="m-p-content-label">积分明细</div>
+          <div  v-for="e in pointViewList" class="m-p-content">
+            <span class="time">{{e.createDate}}</span>
+            <span class="remark">{{e.remark}}</span>
+            <span :class="e.class">+{{e.pointsChanged}}</span>
+          </div>
+          <div class="button-tip " :class="{flip:arrive, loading:loadFlag}">
+            <div class="c-z-pullup" :class="{showVisable:showVisableF}">
             </div>
-            <split></split>
-            <div class="m-p-content-label">积分明细</div>
-            <div  v-for="e in pointViewList" class="m-p-content">
-              <span class="time">{{e.createDate}}</span>
-              <span class="remark">{{e.remark}}</span>
-              <span :class="e.class">+{{e.pointsChanged}}</span>
+            <div class="c-z-pullup-text">
+              <span>{{load}}</span>
             </div>
           </div>
         </div>
-        <div class="bottom-tip">
-          <span class="loading-hook">查看更多</span>
-        </div>
       </div>
+    </my-scroll>
+    <!--<scroller ref="my_scroller" style="top:42px;" :on-infinite="infinite">-->
+    <!--<div class="wrapper" ref="wrapper">-->
+      <!--<div>-->
+        <!--<div class="top-tip">-->
+          <!--<span class="refresh-hook">下拉刷新</span>-->
+        <!--</div>-->
+        <!--<div class="main-page">-->
+          <!--<div class="m-u-v-form-cli">-->
+            <!--<div class="m-p-form">-->
+              <!--<div class="m-p-label">积分汇总</div>-->
+              <!--<div class="m-p-point">{{point}}</div>-->
+            <!--</div>-->
+            <!--<split></split>-->
+            <!--<div class="m-p-table">-->
+              <!--<div class="m-p-cell-p">-->
+                <!--<span>我的等级：</span>-->
+                <!--<img :src='userLevelName'>-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<split></split>-->
+            <!--<div class="m-p-content-label">积分明细</div>-->
+            <!--<div  v-for="e in pointViewList" class="m-p-content">-->
+              <!--<span class="time">{{e.createDate}}</span>-->
+              <!--<span class="remark">{{e.remark}}</span>-->
+              <!--<span :class="e.class">+{{e.pointsChanged}}</span>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+        <!--<div class="bottom-tip">-->
+          <!--<span class="loading-hook">查看更多</span>-->
+        <!--</div>-->
+      <!--</div>-->
 
-    </div>
+    <!--</div>-->
     <!--</scroller>-->
   </div>
 </template>
@@ -56,6 +87,7 @@
   import BJ from '../../../assets/img/bj-1.png'//铂金
   import ZS from '../../../assets/img/zs.png'//砖石
   import DS from '../../../assets/img/Ancrown@3x.png'//大师
+  import scroll from '@/components/scroll/scroll'
 
   import BScroll from 'better-scroll';
   const api = new API();
@@ -63,39 +95,41 @@
   var fn = {
       dt:function () {
         this.$nextTick(() => {
-          if (!this.scroll) {
-            this.currentPageNo ++;
-            this.reloadData(this.currentPageNo);
-            this.scroll = new BScroll(this.$refs.wrapper)
-            this.scroll.on('touchend', (pos) => {
-//                   下拉动作
-              if (pos.y > 50) {
-                  //下拉刷新
-//                      console.log();
-//                    this.getPoint()
-              }else if(pos.y < (this.scroll.maxScrollY - 30)) {
-                const eleM = document.querySelector(".loading-hook");
-                if(this.pageCount <= this.currentPageNo){
-                  eleM.innerHTML = '数据加载完成...';
-                }else{
-                  eleM.innerHTML = '加载中...';
-                  setTimeout(function () {
-                    this.currentPageNo ++;
-                    // 恢复文本值
-                    eleM.innerHTML = '查看更多';
-                    // 向列表添加数据
-                    this.reloadData(this.currentPageNo);
-                    // 加载更多后,重新计算滚动区域高度
-                    this.scroll.refresh();
-                  }.bind(this), 1000);
-                }
-
-              }
-            })
-          } else {
-
-            this.scroll.refresh()
-          }
+//          if (!this.scroll) {
+//            this.currentPageNo ++;
+//            this.reloadData(this.currentPageNo);
+//            this.scroll = new BScroll(this.$refs.wrapper)
+//            this.scroll.on('touchend', (pos) => {
+////                   下拉动作
+//              console.log(111);
+//              if (pos.y > 50) {
+//
+//                  //下拉刷新
+////                      console.log();
+////                    this.getPoint()
+//              }else if(pos.y < (this.scroll.maxScrollY - 30)) {
+//                const eleM = document.querySelector(".loading-hook");
+//                if(this.pageCount <= this.currentPageNo){
+//                  eleM.innerHTML = '数据加载完成...';
+//                }else{
+//                  eleM.innerHTML = '加载中...';
+//                  setTimeout(function () {
+//                    this.currentPageNo ++;
+//                    // 恢复文本值
+//                    eleM.innerHTML = '查看更多';
+//                    // 向列表添加数据
+//                    this.reloadData(this.currentPageNo);
+//                    // 加载更多后,重新计算滚动区域高度
+//                    this.scroll.refresh();
+//                  }.bind(this), 1000);
+//                }
+//
+//              }
+//            })
+//          } else {
+//
+//            this.scroll.refresh()
+//          }
         })
       }
   }
@@ -106,27 +140,31 @@
         pointViewList: [],
         userLevelName:'',//积分牌子
         point:'',
-        currentPageNo:1,
         isActivated:true,
-        pageCount:0
+        //上拉加载更多
+        pullup:true,
+        loadMopen:false,//上拉加载标识
+        pageCount:10000,//供求的总数
+        currentPageNo:1,//供求信息的页码
+        load:"数据正在加载中...",
+        arrive:false,//到底底部箭头切换
+        loadFlag:false,//箭头切换以后，加载数据
+        showVisableF:false,//默认显示的
       }
     },
     activated () {
+      this.loadFlag = false;
+        this.load="数据加载中...";
+      this.showVisableF = false;
       this.isActivated = true;
       this.currentPageNo=1;
-//      this.GetPointList();
       this.getPoint();
       this.userLevelName = this.userLevelKeySwitch(this.$store.state.userLevelName || c_js.getLocalValue('userLevelName') || '');
-      console.log(this.$store.state.userLevelName, c_js.getLocalValue('userLevelName'), 888888);
       this.point = this.$store.state.point || c_js.getLocalValue('point') || 0;
     },
     deactivated () {
       this.isActivated = false
     },
-    up(){},
-    move(){},
-    down(){},
-    transition(){},
     mounted(){
 //      this.$refs.my_scroller.finishInfinite(true);
     },
@@ -272,9 +310,11 @@
         }
       },
       reloadData(){
-          var arg = arguments[0];
-          var pageNumber = arg? arg:self.currentPageNo;
         const self = this;
+          var arg = arguments[0];
+
+          var pageNumber = arg? arg:self.currentPageNo;
+
 //        self.pointViewList = [];
         let params = {
           api: "/yg-user-service/userpoint/pageUserPointRecords.apec",
@@ -295,6 +335,11 @@
                   'class':item.pointsChanged-0>0?'blue':'red'
                 })
               });
+
+              if(self.currentPageNo == self.pageCount){
+                self.load = "数据加载完...."
+                self.showVisableF = true;
+              }
             } else {
             }
           }).catch((error) => {
@@ -303,6 +348,16 @@
         } catch (error) {
           console.log(error)
         }
+      },
+      loadMore(){
+          var self = this;
+
+         if(self.currentPageNo < self.pageCount){
+//           this.arrive = true;
+           self.loadFlag = true;
+           self.currentPageNo ++;
+           self.reloadData();
+         }
       }
     },
 
@@ -311,7 +366,8 @@
 
     components: {
       topBar,
-      split
+      split,
+      'my-scroll':scroll
     }
   }
 </script>

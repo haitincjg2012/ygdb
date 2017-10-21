@@ -32,6 +32,8 @@ public class ReindexJobFinishTask implements ListenableFutureCallback<ResultData
     public void onSuccess(ResultData result) {
 
         if (!result.getErrorCode().equals(Constants.RETURN_SUCESS)) {
+            //回滚重新索引操作
+
             //发送执行失败邮件
             Mail mail = new Mail();
             mail.setSubject("定时任务ReindexJob执行失败");

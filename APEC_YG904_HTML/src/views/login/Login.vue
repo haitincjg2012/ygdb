@@ -53,7 +53,7 @@
             loginBtn:function(formName){
                 var vm = this;
                 var staticFlag=vm.$store.state.staticFlag;
-                console.log("staticFlag:"+staticFlag);
+//                console.log("staticFlag:"+staticFlag);
                 if(!staticFlag){
                     //请求后台方法
                      vm.$refs[formName].validate((valid)=>{
@@ -96,7 +96,7 @@
                 //暂时备注防止跳转
                 var vm=this;
                 vm.userInfo=data.data;
-                console.log("登录成功!用户名："+vm.userInfo.name);
+//                console.log("登录成功!用户名："+vm.userInfo.name);
                 //获取token
                 vm.commonJs.setValue('authToken',data.data.token);
                 vm.$store.commit('changeAuthToken',vm.userInfo);
@@ -105,8 +105,11 @@
                 //获取用户名
                 vm.commonJs.setValue('userName',data.data.name);
                 vm.$store.commit('changeUserName',vm.userInfo);
+                //获取用户对象
+                vm.commonJs.setValue('userNo',data.data.userNo);
+                vm.$store.commit('changeUserInfo',vm.userInfo);
 
-                console.log("name："+vm.$store.state.userName+" token："+vm.$store.state.authToken+" phone："+data.data.phone);
+//                console.log("name："+vm.$store.state.userName+" token："+vm.$store.state.authToken+" phone："+data.data.phone+" userid:"+vm.$store.state.userNo);
                 //跳转到“历史记录路径”或者“客户认证页”（默认）
                 var redirect=decodeURIComponent(this.$route.query.redirect||'/certificate');
                 vm.$router.push({path:redirect});

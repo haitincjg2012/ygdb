@@ -129,6 +129,9 @@ public class ESProductInfoVO {
      */
     private List<ESProductImageVO> productImages;
 
-
+    /**
+     * 下架时间
+     */
+    private Date offsellDate;
 
 }

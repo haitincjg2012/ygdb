@@ -113,9 +113,9 @@ router.post('/_node_product/_all' + config.urlSuffix, bodyParser, function(req, 
       console.log("#############API:/_node_product/_all/ [Error]: ")
       console.log(err);
       console.log("##############[END] ")
-      return resdata(res,true,pageData(pageNum,0,[]),"没有数据!");
+      return resdata(res,true,pageData(pageNum,0,0,[]),"没有数据!");
     }
-    return resdata(res,true,pageData(pageNum,Math.ceil(total / perPage),returnData ));
+    return resdata(res,true,pageData(pageNum,Math.ceil(total / perPage),total,returnData ));
   };
   var saveProductArr = [];
   if(token){

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 /**
  * Created by wubi on 2017/9/25.
  */
-@FeignClient(name = "YG-SYSTEMCONFIG-SERVICE")
+@FeignClient(name = "YG-SYSTEMCONFIG-SERVICE", fallback=SysConfigClient.HystrixClientFallback.class)
 public interface SysConfigClient {
     @RequestMapping(value = "/esConfig/reIndexJob", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultData<String> reIndexJobFeign();

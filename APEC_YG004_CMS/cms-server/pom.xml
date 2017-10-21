@@ -38,6 +38,11 @@
 			<artifactId>framework-log</artifactId>
 			<version>1.0.1-RELEASE</version>
 		</dependency>
+		<dependency>
+			<groupId>com.apec</groupId>
+			<artifactId>framework-rockmq</artifactId>
+			<version>1.0.1-RELEASE</version>
+		</dependency>
 
 		<!--依赖项底层接口和模块 end -->
 		<!-- spring cloud依赖包 start -->

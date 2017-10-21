@@ -1,5 +1,5 @@
 <template>
-  <div class="person-info-page">
+  <div class="person-info-page-del">
     <top-bar title="供应商信息"></top-bar>
     <div class="main-page">
       <div class="p-v-info">
@@ -138,7 +138,7 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
   _rem = 20rem;
-  .person-info-page
+  .person-info-page-del
     position: fixed;
     top: 0;
     left: 0;

@@ -92,7 +92,6 @@
   const api = new API();
 
   export default {
-
     data() {
       return {
         upViewList: [],

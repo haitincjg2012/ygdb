@@ -31,7 +31,7 @@
               <div class="z-com-f">
                 <div class="primaryMain clearfix" >
                   <div class="pic-com">
-                    <img :src ="item.orgFirstBannerUrl" v-if="item.orgFirstBannerUrl"/>
+                    <img :src ="item.orgFirstBannerUrl+ '?x-oss-process=style/_detail'" v-if="item.orgFirstBannerUrl"/>
                     <img src="../../../assets/img/coldDefault.png" v-if="item.userType=='LK' && !item.orgFirstBannerUrl"/>
                     <img src="../../../assets/img/DBKS.png" v-if="item.userType==('DB'||'KS'||'ZZH'||'HZS') && !item.orgFirstBannerUrl"/>
                   </div>

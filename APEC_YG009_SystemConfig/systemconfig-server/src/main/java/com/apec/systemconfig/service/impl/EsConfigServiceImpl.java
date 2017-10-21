@@ -128,7 +128,7 @@ public class EsConfigServiceImpl implements EsConfigService {
         //判断新建的索引是否存在
         boolean exist = apecESProducer.headESInfo(esConfigVO.getNewIndexName(), "");
         if (exist) {
-            logger.warn("[EsConfigServiceImpl][updateConfigForReIndex] Can't reIndex for EsConfig , index is exist!");
+            logger.warn("[EsConfigServiceImpl][updateConfigForReIndex] Can't reIndex for EsConfig , index {} is exist!", esConfigVO.getNewIndexName());
             return Constants.COMMON_IS_EXIST;
         }
         //创建新的index
@@ -140,30 +140,15 @@ public class EsConfigServiceImpl implements EsConfigService {
         logger.info("create type :{}", indexUrl);
         apecESProducer.putEsInfo(indexUrl, esConfigVO.getMappingStr());
 
-        //删除别名和旧索引关系
-        indexUrl = esConfigVO.getIndexName() + ESProducerConstants.OPREATION_ALIAS + Constants.SINGLE_SLASH + esConfigVO.getIndexAlias();
-        logger.info("delete alias :{}", indexUrl);
-        Map<String, List<Object>> actionMap = new HashMap<>();
-        List<Object> actionList = new ArrayList();
-        Map<String, AliasIndexDTO> removeAliasMap = new HashMap<>();
-        AliasIndexDTO removeAlias = new AliasIndexDTO(esConfigVO.getIndexName(), esConfigVO.getIndexAlias());
-        Map<String, AliasIndexDTO> addAliasMap = new HashMap<>();
-        AliasIndexDTO addAlias = new AliasIndexDTO(esConfigVO.getNewIndexName(), esConfigVO.getIndexAlias());
-        removeAliasMap.put("remove", removeAlias);
-        addAliasMap.put("add", addAlias);
-        actionList.add(removeAliasMap);
-        actionList.add(addAliasMap);
-        actionMap.put("actions", actionList);
-        String jsonStr = JsonUtil.toJSONString(actionMap);
 
-        apecESProducer.postESInfo(ESProducerConstants.OPREATION_ALIASES, jsonStr);
 
         //从数据库推送数据到ES 调用不同的服务
         if (StringUtils.isNotBlank(esConfigVO.getServerName())
                 && StringUtils.isNotBlank(esConfigVO.getMethodName())) {
             Map<String, String> esPushMap = new HashMap<>();
-            indexUrl = esConfigVO.getIndexAlias() + Constants.SINGLE_SLASH + esConfigVO.getIndexType();
+            indexUrl = esConfigVO.getNewIndexName() + Constants.SINGLE_SLASH + esConfigVO.getIndexType();
             esPushMap.put("indexUrl", indexUrl);
+            logger.info("indexUrl:{}", indexUrl);
             callServer(esConfigVO.getServerName(), esConfigVO.getMethodName(), esPushMap);
         }
 
@@ -182,6 +167,25 @@ public class EsConfigServiceImpl implements EsConfigService {
         //修改数据库中的记录状态为未使用
         esConfig.setStatus(EsConfigStatus.NOT_USED.getKey());
         esConfigDao.saveAndFlush(esConfig);
+
+        //删除别名和旧索引关系
+        indexUrl = esConfigVO.getIndexName() + ESProducerConstants.OPREATION_ALIAS + Constants.SINGLE_SLASH + esConfigVO.getIndexAlias();
+        logger.info("delete alias :{}", indexUrl);
+        Map<String, List<Object>> actionMap = new HashMap<>();
+        List<Object> actionList = new ArrayList();
+        Map<String, AliasIndexDTO> removeAliasMap = new HashMap<>();
+        AliasIndexDTO removeAlias = new AliasIndexDTO(esConfigVO.getIndexName(), esConfigVO.getIndexAlias());
+        Map<String, AliasIndexDTO> addAliasMap = new HashMap<>();
+        AliasIndexDTO addAlias = new AliasIndexDTO(esConfigVO.getNewIndexName(), esConfigVO.getIndexAlias());
+        removeAliasMap.put("remove", removeAlias);
+        addAliasMap.put("add", addAlias);
+        actionList.add(removeAliasMap);
+        actionList.add(addAliasMap);
+        actionMap.put("actions", actionList);
+        String jsonStr = JsonUtil.toJSONString(actionMap);
+        logger.info("reindex script :{}", jsonStr);
+        apecESProducer.postESInfo(ESProducerConstants.OPREATION_ALIASES, jsonStr);
+
         return Constants.RETURN_SUCESS;
     }
 
@@ -245,8 +249,8 @@ public class EsConfigServiceImpl implements EsConfigService {
             result.addCallback(reindexJobFinishTask);
             throw e;//抛出异常保持事务一致性
         }
-        logger.info("======================off sell job execute success============================");
-        logger.info("off sell job execute total time :{}", System.currentTimeMillis() - startTime);
+        logger.info("======================reindex job execute success============================");
+        logger.info("reindex job execute total time :{}", System.currentTimeMillis() - startTime);
     }
 
     private String genNewIndex(EsConfigVO vo) {

@@ -1,36 +1,36 @@
 
 let commonJs = {
 
-  //客户认证设置cookie
-  setCetifateCookie: function (name, value) {
-    var expireTime=30;//过期时间为30min
-    var exp = new Date();
-    exp.setTime(exp.getTime() + expireTime*60*1000);
-    document.cookie = name + "=" + escape(value) +
-      ((expireTime == null) ? "" : ";expires=" + exp.toGMTString());
-  },
-
   //设置cookie
-  setCookie: function (c_name, value, expiredays) {
-    var exdate = new Date()
-    exdate.setDate(exdate.getDate() + expiredays)
-    document.cookie = c_name + "=" + escape(value) +
-      ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString())
+  setCookie: function (name, value, expiresMinute) {
+    var cookieString = name + "=" + escape(value);
+    //判断是否设置过期时间,0代表关闭浏览器时失效
+    if (expiresMinute > 0) {
+      var date = new Date();
+      date.setTime(date.getTime() + expiresMinute * 60 * 1000);
+      cookieString = cookieString + ";expires=" + date.toUTCString();
+    }
+    document.cookie = cookieString;
   },
 
-//取回cookie
-  getCookie: function (c_name) {
-    if (document.cookie.length > 0) {
-      let c_start = document.cookie.indexOf(c_name + "=");
-      if (c_start != -1) {
-        c_start = c_start + c_name.length + 1;
-        let c_end = document.cookie.indexOf(";", c_start);
-        if (c_end == -1) c_end = document.cookie.length;
-        return unescape(document.cookie.substring(c_start, c_end));
+  //根据名字获取cookie的值
+  getCookie: function (name) {
+    var strCookie = document.cookie;
+    //console.log("strCookie:"+strCookie);
+    if(strCookie.length>0){
+      var arrCookie = strCookie.split("; ");
+      for (var i = 0; i < arrCookie.length; i++) {
+        var arr=arrCookie[i].split("=");
+        if(arr[0]==name){
+          return unescape(arr[1]);
+          break;
+        }
       }
     }
-    return ""
+    return "";
   },
+
+
 
   //获取存在localstorage或者cookie中的值
   getValue:function (cl_key) {
@@ -38,7 +38,7 @@ let commonJs = {
   },
   //将值存入storage和cookie
   setValue:function (c_name, value) {
-    this.setCookie(c_name,value,365);//默认365天
+    this.setCookie(c_name,value,365*24*60);//默认365天
     window.localStorage.setItem(c_name,value);
   },
 
@@ -54,21 +54,21 @@ let commonJs = {
 
   //将当前时间转换成“year/month/day h:m:s”
   fmtCurrentTime:function(date) {
-  var year = date.getFullYear()
-  var month = date.getMonth() + 1
-  var day = date.getDate()
+  var year = date.getFullYear();
+  var month = date.getMonth() + 1;
+  var day = date.getDate();
 
-  var hour = date.getHours()
-  var minute = date.getMinutes()
-  var second = date.getSeconds()
+  var hour = date.getHours();
+  var minute = date.getMinutes();
+  var second = date.getSeconds();
 
 
-  return [year, month, day].map(this.formatNumber).join('/') + ' ' + [hour, minute, second].map(formatNumber).join(':')
+  return [year, month, day].map(this.formatNumber).join('/') + ' ' + [hour, minute, second].map(this.formatNumber).join(':')
 },
 
   //当year、month、day为1位数时，前面加‘0’
   formatNumber:function (n) {
-  n = n.toString()
+  n = n.toString();
   return n[1] ? n : '0' + n
   },
 
@@ -99,11 +99,12 @@ let commonJs = {
 },
   //将“yyyy-MM-dd”转成时间戳
   timesdPattern:function(strtime) {
+    var date="";
   if (strtime) {
-    var date = new Date(strtime.replace(/-/g, '/'));
+    date = new Date(strtime.replace(/-/g, '/'));
   }
   else {
-    var date = new Date();
+    date = new Date();
   }
 
   var time = date.getTime();

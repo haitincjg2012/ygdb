@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 /**
  * Created by hmy on 2017/9/28.
  */
-@FeignClient(name = "yg-user-service")
+@FeignClient(name = "yg-user-service", fallback=UserPointClient.HystrixClientFallback.class)
 public interface UserPointClient {
 
     @RequestMapping(value = "/userpoint/perfectUserPoint",method = RequestMethod.POST, produces = "application/json;charset=UTF-8")

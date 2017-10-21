@@ -269,7 +269,7 @@
           if(dt.imgUrl == ""){
             this.person.portrait= P;
           }else{
-            this.person.portrait= dt.imgUrl;
+            this.person.portrait= dt.imgUrl + "?x-oss-process=style/_head";
           }
       }else{
         this.person.portrait= P;
@@ -282,7 +282,7 @@
       this.person.userOrgClientVO.remark = dt.userOrgClientVO.remark;//实力描述
       this.person.userOrgClientVO.orgStockCap = dt.userOrgClientVO.orgStockCap;//库容量
       this.person.representative = dt.userTypeKey;
-      this.person.bannerImgUrl = dt.userOrgClientVO.orgBannerUrl || DBanner;
+      this.person.bannerImgUrl = (dt.userOrgClientVO.orgBannerUrl || DBanner) +"?x-oss-process=style/_detail";
       this.person.level = IMG.methods.userLevel(dt.userPoint.userLevel);
       this.person.userOrgClientVO.address = dt.userOrgClientVO.address;
 
@@ -326,7 +326,7 @@
         var id = current.id;
         obj.id = id;
         obj.levelImg =IMG.methods.userLevel(current.userLevelName);
-        obj.img = current.firstImageUrl;
+        obj.img = current.firstImageUrl + "?x-oss-process=style/_list";
         obj.local = current.address;
         obj.name = current.showUserName;
         obj.Flag = that.name;
@@ -513,10 +513,9 @@
              if(type == "LK_LB"){
                 self.LB = true;
                 self.mobileO = current.mobile;
-                self.LBIcon = current.imgUrl || defaultIcon;
+                self.LBIcon = (current.imgUrl || defaultIcon)+"?x-oss-process=style/_head";
              }else{
-
-               obj.img = current.imgUrl || defaultIcon;
+               obj.img = (current.imgUrl || defaultIcon) +"?x-oss-process=style/_head";
                obj.name = current.name;
                obj.mobile = current.mobile;
                arr.push(obj);

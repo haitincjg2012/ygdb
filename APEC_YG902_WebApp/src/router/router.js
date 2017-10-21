@@ -276,7 +276,7 @@ const router = new VueRouter({
       name: 'gq',
       path: '/gq',
       component: require('../views/home/viewComponents/gq.vue'),
-      meta: {requiresAuth: true}
+      // meta: {requiresAuth: true}
     },
     {
       name: 'search',
@@ -287,6 +287,11 @@ const router = new VueRouter({
       name: 'validate',
       path: '/validate',
       component: require('../views/home/viewComponents/validate.vue'),
+    },
+    {
+      name: 'mainOperating',
+      path: '/mainOperating',
+      component: require('../views/pc/viewComponents/mainOperating.vue'),
     },
     {
       path: '/', redirect: '/home'
@@ -325,7 +330,7 @@ router.beforeEach((to, from, next) => {
       next();
     } else {
        let name1 = to.name;
-       if(name1 != "search" || name1 != "buy"|| name1 != "sell"){
+       if(name1 != "search" || name1 != "buy"|| name1 != "sell" || name != "gq"){
          next({
            path: '/login',
            query: {redirect: to.fullPath}

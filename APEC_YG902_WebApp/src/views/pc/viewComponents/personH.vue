@@ -62,7 +62,7 @@
             <span>所在区域</span>
             <input type="text" disabled v-model="person.address">
         </div>
-        <div class="z-p-pz" >
+        <div class="z-p-pz" v-if="!role.coldF">
           <img src="../../../assets/img/zypz.png"  class="img-com">
           <span>主营品种</span>
           <input type="text" disabled v-model="person.pz">
@@ -145,17 +145,29 @@
   import DBanner from "../../../assets/img/defaultBg.png"
   import P from "../../../assets/img/icon.png"
   import {MessageBox, Indicator, Toast} from 'mint-ui';
+  import ALIYUN from "../../../components/aliyun.vue"
+
   const api = new API();
   var ec = require("../../../assets/js/echarts.min");
 
   var fn = {
       img:[],
-      bannerImg:function (data) {
-          if(!data.succeed){
-          Toast(data.errorMsg);
-          return;
-          }
-        this.person.bannerImgUrl = data.data.orgBannerURL;
+      bannerImg:function (url) {
+//          if(!data.succeed){
+//          Toast(data.errorMsg);
+//          return;
+//          }
+//        this.person.bannerImgUrl = data.data.orgBannerURL;
+        this.person.bannerImgUrl = url + "?x-oss-process=style/_detail";
+        var params = {
+            api:"/yg-user-service/user/uploadBanner.apec",
+            data:{
+              imgUrl:url,
+            }
+        }
+
+        this.post(params, function () {
+        });
       },
       init:function (data) {
 
@@ -208,16 +220,16 @@
           if(dt.imgUrl == "" || !dt.imgUrl){
              this.person.portrait = P;
           }else{
-            this.person.portrait = dt.imgUrl;
+            this.person.portrait = dt.imgUrl + "?x-oss-process=style/_head";
 
           }
           if(!dt.userOrgClientVO){
-            this.person.bannerImgUrl = DBanner;
+            this.person.bannerImgUrl = DBanner + "?x-oss-process=style/_detail";
           }else{
               if(dt.userOrgClientVO.orgBannerUrl == ""){
-                this.person.bannerImgUrl = DBanner;
+                this.person.bannerImgUrl = DBanner + "?x-oss-process=style/_detail";
               }else{
-                this.person.bannerImgUrl = dt.userOrgClientVO.orgBannerUrl;
+                this.person.bannerImgUrl = dt.userOrgClientVO.orgBannerUrl + "?x-oss-process=style/_detail";
               }
 
           }
@@ -225,7 +237,7 @@
           this.person.name = dt.name;
           this.person.levelSrc =IMG.methods.userLevel(dt.userPoint.userLevel);
           this.person.useType = dt.userTypeKey;
-           console.log(dt.userTypeKey);
+          this.$store.state.userId = dt.id;//用户
           this.person.real = dt.userRealAuth =="UNREALAUTH"?false:true;
           if(dt.userOrgClientVO){
             this.person.cold =dt.userOrgClientVO.orgName ;
@@ -367,7 +379,7 @@
                 traderF:false,
               cooperativeF:false,
             },
-
+            aliyunO:null,//阿里云调用函数
           }
       },
       methods:{
@@ -381,16 +393,19 @@
               var e = e || window.event;
               var target = e.toElement || e.srcElement;
               var files = target.files;
+              var file = files[0];
               var type = files[0].type;
-              var fd = new FormData();
-             fd.append("whetherCompression",1);
-             fd.append("file", files[0]);
-            let params = {
-              api:"/yg-user-service/user/uploadBanner/uploadFile.apec",
-              data: fd
-            }
-
-            this.postImg(params, fn.bannerImg.bind(this))
+//              var fd = new FormData();
+//             fd.append("whetherCompression",1);
+//             fd.append("file", files[0]);
+//            let params = {
+//              api:"/yg-user-service/user/uploadBanner/uploadFile.apec",
+//              data: fd
+//            }
+//
+//            this.postImg(params, fn.bannerImg.bind(this))
+              var self = this;
+              this.aliyunO(self.$store.state.userId,fn.bannerImg.bind(this) , file);
           },
         back(){
             this.reset();
@@ -465,6 +480,7 @@
         },
       },
     activated(){
+      this.aliyunO = ALIYUN.aliyun();
       var useId = window.localStorage.useId;
       let params3 = {
         api:"/_node_user_org/_view_org_info.apno",

@@ -78,6 +78,7 @@
   border: 0.05rem solid #1960df;
   color: #1960df;
   border-radius: 0.125rem;
+  vertical-align: text-top;
 }
 .z-traderlist .z-com-f .primaryMain .z-t-info .z-t-real-info .z-t-level {
   width: 0.8rem;

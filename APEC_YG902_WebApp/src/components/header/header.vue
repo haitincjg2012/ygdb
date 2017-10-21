@@ -1,13 +1,14 @@
 /**
 * Created by gsy on 2017/6/26.
 * header
-<!-- <header :headTitle="title"></header>-->
+<!-- <header :headTitle="title" v-on:initPage="initpage"></header>-->
 */
 <template>
   <div class="myHeader">
     <div class="header">
       <i class="return" @click="goBack" v-if="iconFlag">
-        <img src="../../assets/img/arrowLeft.png">
+        <img src="../../assets/img/headArrow.png">
+        <!--<img src="../../assets/img/arrowLeft.png">-->
       </i>
       <h1>{{headTitle}}</h1>
     </div>

@@ -2,6 +2,12 @@
 module.exports = {
   //Request suffix
   "urlSuffix": ".apno",
+  //Aliyun TST
+  "aliTSTAccessKeyId":"LTAIqFAp6BVbL2PA",
+  "aliTSTSecretAccessKey":"B6hgPFfcoiGB0k61QMgcQ2PXX7lIZK",
+  "aliTSTRoleArn": "acs:ram::1553306583222696:role/aliyunosstokengeneratorrole",
+  "aliTSTEndpoint": "https://sts.aliyuncs.com",
+  "aliTSTApiVersion": "2015-04-01",
   //product-index
   "productIndex": {
       index:"apec",
@@ -35,6 +41,7 @@ module.exports = {
   "userCaptchaPrefix": "captcha_", //
   "userInfoPrefix": "user:",  //User Info Prefix
   "userOrgInfoPrefix":"user_org:" , // User Org Prefix
+  "articleInfoPrefix":"article:" , // article Prefix
   "userOrgUserInfoPrefix":"user_list" , // User Org  User List Prefix
   "userOrgViewNumPrefix": "view_num" ,  // User org view num prefix
   "userOrgAttentionKey": "atten_num",  // User org Attention num key
@@ -51,6 +58,7 @@ module.exports = {
   "userMessageCountKey": "message_count",  // User MessageCount key
   "userProSaveKey": "pro_save",    //用户收藏的key
   "userOrgSaveKey": "org_save",    //用户关注的组织用户的key
+  "userArtPraiseKey": "article_praise",    //用户点赞的文章id
   "productReCommendKey": "pro_recommend", //热门推荐
   "productAllView": "pro_allviewnum", //产品总的浏览数
   "productAllSave": "pro_allsavenum",//产品总的收藏数
@@ -58,5 +66,8 @@ module.exports = {
   "proViewNumKey": "view_num", //用户浏览数量的KEy
   "proSaveNumKey": "save_num", // 用户保存数的KEy
   "addressSaveKey": "address_his", //用户地址的历史记录
-  "proPhoneKey": "phone_num"   //  电话联系数KEY
+  "proPhoneKey": "phone_num",  //  电话联系数KEY
+  "praiseNumKey": "praise_num",// 点赞数
+    "readedNumKey": "readed_num", // 阅读数
+    "articleAllRead": "art_allreadnum"//文章总的阅读数
 }

@@ -28,16 +28,17 @@ public class VoucherBSDAOImpl implements VoucherBSDAO{
 	
 	@Override
 	public PageDTO<Object[]> listVoucherBS(VoucherDTO voucherDTO){
-		StringBuffer sb = new StringBuffer("SELECT v.create_date,SUM(number) AS totalNumber,SUM(total_amount) AS totalAmount,sale_market,ship_warehouse,delivery_time,voucher_url,v.id,v.user_id "
-    			+ "FROM voucher_goods AS g INNER JOIN voucher AS v on v.id=g.voucher_id and v.enable_flag='Y'");
+		StringBuffer sb = new StringBuffer("SELECT v.create_date,SUM(number) AS totalNumber,SUM(total_amount) AS totalAmount,sale_market,ship_warehouse,delivery_time,voucher_url,v.id,v.user_id,u.`name`"
+				+ " FROM voucher_goods AS g INNER JOIN voucher AS v INNER JOIN `user` u on v.user_id=u.id and v.id=g.voucher_id where v.enable_flag='Y' and g.enable_flag='Y' and u.enable_flag='Y' ");
         
         //条件查询
         String condition = getBSConditionQuery(voucherDTO);
         sb.append(condition);      
-		sb.append(" GROUP BY v.id ORDER BY v.create_date");		
+		sb.append(" GROUP BY v.id ORDER BY v.create_date desc");		
 		
 		//查询总条数
-        StringBuffer countSql = new StringBuffer("select count(*) from voucher as v where v.enable_flag='Y'");
+        StringBuffer countSql = new StringBuffer("SELECT COUNT(DISTINCT(v.id)) FROM voucher_goods AS g INNER JOIN voucher AS v INNER JOIN `user` u "
+        		+ "on v.user_id=u.id and v.id=g.voucher_id where v.enable_flag='Y' and g.enable_flag='Y' and u.enable_flag='Y'");
         countSql.append(condition);
         
         PageDTO<Object[]> pageDTO = listObjectInfo(voucherDTO, sb.toString(), countSql.toString());
@@ -92,8 +93,12 @@ public class VoucherBSDAOImpl implements VoucherBSDAO{
 		sb.append(condition);
 		sb.append(" group by v.user_id ORDER BY sumNuber DESC");
 		
-		StringBuffer countSql = new StringBuffer("SELECT count(DISTINCT v.user_id) FROM voucher v,`user` u "
-				+ "WHERE u.id=v.user_id and u.user_type='DB'");
+		StringBuffer countSql = new StringBuffer("SELECT count(DISTINCT v.user_id) FROM "
+				+ "voucher_goods g "
+				+ "inner join voucher v "
+				+ "inner join user u "
+				+ "on v.id = g.voucher_id and v.user_id = u.id and u.user_type = 'DB' "
+				+ "and g.enable_flag='Y' and v.enable_flag= 'Y' and u.enable_flag='Y' ");
         countSql.append(condition);
         PageDTO<Object[]> pageDTO = listObjectInfo(voucherDTO, sb.toString(), countSql.toString());
         return pageDTO;
@@ -224,6 +229,10 @@ public class VoucherBSDAOImpl implements VoucherBSDAO{
 			list = query.getResultList();
 		}catch(Exception e){
 			log.error("【voucher】[countVoucherOfUser]exception:{}",e);
+		}finally{
+			if(null != em){
+				em.close();
+			}
 		}
 		return list;
 	}

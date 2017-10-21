@@ -34,7 +34,7 @@ public class ReindexJob implements SimpleJob {
         logger.info("ShardingTotalCount=" + shardingContext.getShardingTotalCount());
 
         //调用重建索引定时服务
-       /* ResultData<String> resultData = sysConfigClient.reIndexJobFeign();
+        ResultData<String> resultData = sysConfigClient.reIndexJobFeign();
         //如果不成功则发送邮件通知
         if (!resultData.getErrorCode().equals(Constants.RETURN_SUCESS)) {
             Mail mail = new Mail();
@@ -46,7 +46,7 @@ public class ReindexJob implements SimpleJob {
             } catch (Exception e) {
                 logger.error("发送邮件失败:", e);
             }
-        }*/
+        }
 
         logger.info("================结束执行offSellJob定时任务================");
     }

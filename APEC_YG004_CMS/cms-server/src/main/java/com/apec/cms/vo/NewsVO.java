@@ -74,9 +74,35 @@ public class NewsVO extends BaseVO<Long> {
     private String address;
 
     /**
-     * 额外信息
+     * 额外信息(0,1,2,3,4)
      *
      * @return
      */
     private String priv;
+
+    /**
+     * 是否为个人发布，默认为平台系统发布
+     */
+    private boolean personPub;
+
+    /**
+     * 审核状态
+     */
+    private String auditState;
+
+    /**
+     * 审核通过时间
+     */
+    private Date passDate;
+
+    /**
+     * 阅读数
+     */
+    private String readNum;
+
+    /**
+     * 发布时间字符（"一天前","刚刚"等等）
+     */
+    private String pubDateStr;
+
 }

@@ -22,19 +22,19 @@ public class ElasticJobContainerConfig extends ElasticJobConfig {
 
     //**************product-offSell配置开始********************
 
-    @Value("${task.product.off.sell}")
-    private String offSellJobConfigJsonStr;
-
-    @Bean(name = "offSellJob")
-    public OffSellJob offSellJob() {
-        return new OffSellJob();
-    }
-
-    @Bean(initMethod = "init")
-    public JobScheduler offSellJobScheduler(@Qualifier("offSellJob") OffSellJob offSellJob, ObjectMapper objectMapper, @Qualifier("zkRegistryCenterProxy") ZkRegistryCenterProxy zkRegistryCenterProxy) throws Exception {
-        logger.info("##########初始化Job:{}##########", offSellJob.getClass().getName());
-        return super.jobScheduler(offSellJob, offSellJobConfigJsonStr, objectMapper, zkRegistryCenterProxy);
-    }
+//    @Value("${task.product.off.sell}")
+//    private String offSellJobConfigJsonStr;
+//
+//    @Bean(name = "offSellJob")
+//    public OffSellJob offSellJob() {
+//        return new OffSellJob();
+//    }
+//
+//    @Bean(initMethod = "init")
+//    public JobScheduler offSellJobScheduler(@Qualifier("offSellJob") OffSellJob offSellJob, ObjectMapper objectMapper, @Qualifier("zkRegistryCenterProxy") ZkRegistryCenterProxy zkRegistryCenterProxy) throws Exception {
+//        logger.info("##########初始化Job:{}##########", offSellJob.getClass().getName());
+//        return super.jobScheduler(offSellJob, offSellJobConfigJsonStr, objectMapper, zkRegistryCenterProxy);
+//    }
 
     // **************product-offSell配置结束********************
 

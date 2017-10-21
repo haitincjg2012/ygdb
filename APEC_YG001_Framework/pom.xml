@@ -45,6 +45,7 @@
 		<module>framework-dispatch</module>
         <module>framework-springcloud</module>
         <module>framework-cache</module>
+		<module>framework-mongodb</module>
 		<module>framework-mq</module>
 		<module>framework-rockmq</module>
 		<module>framework-elasticsearch</module>

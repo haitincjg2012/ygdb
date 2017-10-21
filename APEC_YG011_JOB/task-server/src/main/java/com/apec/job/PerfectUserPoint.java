@@ -1,7 +1,6 @@
 package com.apec.job;
 
 import com.apec.client.UserPointClient;
-import com.apec.framework.common.Constants;
 import com.apec.framework.common.ResultData;
 import com.apec.framework.common.enumtype.MailType;
 import com.apec.framework.log.InjectLogger;
@@ -30,13 +29,14 @@ public class PerfectUserPoint implements SimpleJob {
 
     @Override
     public void execute(ShardingContext shardingContext) {
+
         logger.info("================开始执行perfectUserPoint定时任务================");
 
         logger.info("JobName="+shardingContext.getJobName()+",JobParameter="+shardingContext.getJobParameter());
         logger.info("ShardingItem="+shardingContext.getShardingItem()+",ShardingParameter="+shardingContext.getShardingParameter());
         logger.info("ShardingTotalCount="+shardingContext.getShardingTotalCount());
 
-        //调用下架定时服务
+        //调用积分补偿定时服务
         ResultData<String> resultData = userPointClient.perfectUserPoint();
         //如果不成功则发送邮件通知
         if(!resultData.isSucceed()){
@@ -50,7 +50,6 @@ public class PerfectUserPoint implements SimpleJob {
                 logger.error("发送邮件失败:", e);
             }
         }
-
         logger.info("================结束执行perfectUserPoint定时任务================");
     }
 

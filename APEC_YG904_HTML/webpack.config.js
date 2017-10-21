@@ -82,11 +82,31 @@ module.exports = (options = {}) => ({
         target: 'http://192.168.7.21',
         changeOrigin: true
       },
-      '/common/': {//上传图片
+      '/common/': {//上传图片（old）
         target: 'http://192.168.7.111',
         changeOrigin: true
       },
       '/yg-cms-service/': {//行情
+        target: 'http://192.168.7.111',
+        changeOrigin: true
+      },
+      '/_node_image/': {//上传图片(new)
+        target: 'http://192.168.7.111',
+        changeOrigin: true
+      },
+      '/_node_product/': {
+        target: 'http://192.168.7.111',
+        changeOrigin: true
+      },
+      '/yg-product-service/': {
+        target: 'http://192.168.7.111',
+        changeOrigin: true
+      },
+      '/yg-goods-service/': {
+        target: 'http://192.168.7.111',
+        changeOrigin: true
+      },
+      '/yg-voucher-service/': {
         target: 'http://192.168.7.111',
         changeOrigin: true
       }

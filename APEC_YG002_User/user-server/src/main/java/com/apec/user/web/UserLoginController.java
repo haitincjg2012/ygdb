@@ -68,7 +68,9 @@ public class UserLoginController  extends MyBaseController {
         userLoginVO.setIp((String)pageJSON.getRequestAttrMap().get(Constants.SESSION_IP));
         String source = (String) pageJSON.getRequestAttrMap().get(Constants.SOURCE);
         Source sourceType = Source.WEIXIN;
-        if(StringUtils.isNotBlank(source)) sourceType = Enums.getEnumByNameOrNull(Source.class,source);
+        if(StringUtils.isNotBlank(source)) {
+            sourceType = Enums.getEnumByNameOrNull(Source.class,source);
+        }
         userLoginVO.setSource(sourceType);
         log.info("[UserLogin][doLogin]UserLoginVO:mobile:{},ip:{},source:{}",userLoginVO.getMobile(),userLoginVO.getIp());
         boolean flag = StringUtils.isBlank(userLoginVO.getMobile()) && StringUtils.isBlank(userLoginVO.getPassword());
@@ -108,8 +110,9 @@ public class UserLoginController  extends MyBaseController {
         try {
             //清除用户token
             String token = cacheService.get(LoginConstants.PREFIX_TOKEN_USERNO + userId);
-            if (StringUtils.isNotBlank(token))
+            if (StringUtils.isNotBlank(token)){
                 cacheService.remove(LoginConstants.PREFIX_TOKEN + token);
+            }
             resultData.setSucceed(true);
         }catch (Exception e){
             log.error("[UserLogin][loginOut] Exception", e);

@@ -23,9 +23,9 @@ router.post('/_node_user/_product_list' + config.urlSuffix, bodyParser, function
        console.log("#############API:/_node_org/_product_list/ [Error]: ")
        console.log(err);
        console.log("##############[END] ")
-       return resdata(res,true,pageData(pageNum,0,[]),"没有数据!");
+       return resdata(res,true,pageData(pageNum,0,0,[]),"没有数据!");
      }
-     return resdata(res,true,pageData(pageNum,Math.ceil(total / perPage),returnData ));
+     return resdata(res,true,pageData(pageNum,Math.ceil(total / perPage),total,returnData ));
    };
 
    if(!orgId) return done([],0,400);

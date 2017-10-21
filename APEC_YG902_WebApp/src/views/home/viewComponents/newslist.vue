@@ -6,8 +6,9 @@
   <ul class="newsList">
     <li v-for="item in listFilter" :key="item.id" @click="goDetail(item.id)">
       <div class="newsItem">
-        <div class="newslistR">
-          <img :src="item.url"/>
+        <div class="newslistR" v-if="item.url">
+        <!--<div class="newslistR">-->
+          <img :src="item.url+'?x-oss-process=style/_list_hq'"/>
         </div>
         <div class="newslistL">
           <h2>{{item.title}}</h2>
@@ -32,6 +33,7 @@
           goDetail(id){
             var vm=this;
             vm.$router.push({name:"newsDetail",query:{id:id}});
+            vm.$emit("changeReflag");
           }
         },
         components: {}

@@ -5,7 +5,7 @@
 <template>
   <div class="newsContainer">
     <div class="myheader">
-      <my-header :headTitle="title"></my-header>
+      <my-header :headTitle="title" v-on:initPage="initpage"></my-header>
     </div>
     <my-scroll class="newsScroll" :data="newsData" :pullup="pullup" @scrollToEnd="loadMore">
         <div class="newsContent">
@@ -14,7 +14,7 @@
             <mt-swipe :auto="4000">
               <template v-for="item in carouselFilter" >
                 <mt-swipe-item :key="item.id" >
-                  <img :src="item.url" @click.stop="goDetail(item.id)" /><!--
+                  <img :src="item.url+'?x-oss-process=style/_detail'" @click.stop="goDetail(item.id)" /><!--
                 --><span class="wordWrapper"></span><!--
                 --><h1>{{item.title}}</h1>
                 </mt-swipe-item>
@@ -23,23 +23,7 @@
             </mt-swipe>
           </div>
           <!--列表-->
-          <my-newslist :listFilter="listFilter" :loadMflag="loadMflag"></my-newslist>
-          <!--<ul class="newsList">
-            <li v-for="item in listFilter" :key="item.id" @click="goDetail(item.id)">
-              <div class="newsItem">
-                <div class="newslistR">
-                  <img :src="item.url"/>
-                </div>
-                <div class="newslistL">
-                  <h2>{{item.title}}</h2>
-                  <p>{{item.author}}<span>{{item.createDate|ymdFilter}}</span></p>
-                </div>
-              </div>
-            </li>
-            <li>
-              <div class="loading-wrapper" v-if="!loadMflag">没有更多信息了</div>
-            </li>
-          </ul>-->
+          <my-newslist :listFilter="listFilter" :loadMflag="loadMflag" v-on:changeReflag="changereflag"></my-newslist>
         </div>
       </my-scroll>
 
@@ -56,12 +40,14 @@
     import imgsrc2 from '@/assets/img/xqimg2.png'//测试图片2
     import imgsrc3 from '@/assets/img/xqimg3.png'//测试图片3
     import API from '../../../api/api'
+    import WX from '../../../components/wx.vue'
     const api = new API();
     export default{
         data(){
             return {
               title:"市场行情",
               newsData:[],
+              refershFlag:true,//通过返回icon离开页面再进入页面需要刷新，通过点击进入详情再进入页面不需要刷新
                //新闻列表-测试数据
              /* newsData:[
                 {id:1,title:"2018年红富士苹果走货令人担忧",imgsrc:imgsrc1,websit:"海外网",peroid:"1小时前"},
@@ -90,10 +76,29 @@
           this.loadMopen=false; //上拉加载标志
         },
         mounted(){
+         /* var vm=this;
+          vm.newslist();*/
+        },
+        activated(){
           var vm=this;
-          vm.newslist();
+          WX.wx();
+          if(vm.refershFlag){
+            vm.newslist();
+          }
         },
         methods: {
+          //初始化页面数据
+          initpage(){
+            var vm=this;
+            vm.newsData=[];
+            vm.refershFlag=true;
+            vm.pageNum=1;
+          },
+          //改变refershFlag状态
+          changereflag(){
+            var vm=this;
+            vm.refershFlag=false;
+          },
           //获取新闻列表
           newslist(){
             var vm=this;
@@ -120,7 +125,7 @@
             if(data.succeed){
               if(vm.loadMopen){
                 if(data.data.rows.length<vm.pageSize){
-                  console.log("没数据了");
+//                  console.log("没数据了");
                   this.loadMflag=false;
                 }
                 else{
@@ -149,6 +154,7 @@
           //去新闻详情页
           goDetail(id){
             var vm=this;
+            vm.refershFlag=false;
             vm.$router.push({name:"newsDetail",query:{id:id}});
           },
           //上拉加载更多
@@ -166,7 +172,7 @@
             return this.newsData.slice(0,3);
           },
           listFilter(){
-            console.log("长度："+this.newsData.slice(3).length);
+//            console.log("长度："+this.newsData.slice(3).length);
             return this.newsData.slice(3);
           }
         },

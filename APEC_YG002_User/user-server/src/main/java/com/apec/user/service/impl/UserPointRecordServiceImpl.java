@@ -10,6 +10,7 @@ import com.apec.framework.common.enums.Realm;
 import com.apec.framework.common.enumtype.*;
 import com.apec.framework.common.util.BeanUtil;
 import com.apec.framework.common.util.JsonUtil;
+import com.apec.framework.dto.UserInfoVO;
 import com.apec.framework.dto.UserViewVO;
 import com.apec.framework.log.InjectLogger;
 import com.apec.framework.rockmq.client.MQProducerClient;
@@ -21,25 +22,17 @@ import com.apec.user.model.*;
 import com.apec.user.service.UserPointRecordService;
 import com.apec.user.util.SnowFlakeKeyGen;
 import com.apec.user.vo.*;
-import com.mysema.query.types.Predicate;
-import com.mysema.query.types.Visitor;
-import com.mysema.query.types.expr.BooleanExpression;
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Nullable;
 import javax.persistence.Transient;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -113,6 +106,32 @@ public class UserPointRecordServiceImpl implements UserPointRecordService {
     }
 
     /**
+     * 更新用户基本信息缓存
+     * @param userNo 用户ID
+     * @param user 用户对象
+     */
+    private void updateUserInfoCache(String userNo,User user){
+        String userInfoJson = cacheHashService.hget(RedisHashConstants.HASH_USER_PREFIX + userNo,RedisHashConstants.HASH_OBJCONTENT_CACHE);
+        UserInfoVO userInfo ;
+        if(StringUtils.isBlank(userInfoJson)){
+            //获取不到数据,记录日志
+            logger.warn("[UserServiceImpl][updateUserInfoCache]Can't find user hash cache. userNo:{}",userNo);
+            userInfo = new UserInfoVO();
+        }else{
+            userInfo = JsonUtil.parseObject(userInfoJson,UserInfoVO.class);
+        }
+        BeanUtil.copyPropertiesIgnoreNullFilds(user,userInfo);
+        userInfo.setUserTypeKey(user.getUserType() == null?"":user.getUserType().getKey());
+        if(StringUtils.isBlank(user.getIdNumber())){
+            userInfo.setIdNumber(null);
+        }
+        if(StringUtils.isBlank(user.getRealName())){
+            userInfo.setRealName(null);
+        }
+        cacheHashService.hset(RedisHashConstants.HASH_USER_PREFIX + userNo,RedisHashConstants.HASH_OBJCONTENT_CACHE, JsonUtil.toJSONString(userInfo));
+    }
+
+    /**
      * 发送 积分变动的站内信
      * @param rule 用户积分规则
      * @param user 用户
@@ -176,7 +195,9 @@ public class UserPointRecordServiceImpl implements UserPointRecordService {
         userPointRecord.setPointsChanged(pointsChanged);
         userPointRecord.setPointRuleType(rule.getPointRuleType());
         userPointRecord.setRemark(rule.getRemark());
-        userPointRecord.setRuleId(String.valueOf(rule.getId()));
+        if(rule.getId() != null){
+            userPointRecord.setRuleId(String.valueOf(rule.getId()));
+        }
         userPointRecord.setCreateDate(new Date());
         userPointRecord.setCreateBy(userId);
         userPointRecord.setEnableFlag(EnableFlag.Y);
@@ -356,6 +377,8 @@ public class UserPointRecordServiceImpl implements UserPointRecordService {
      * @return
      */
      @Transient
+     @Async
+     @Override
      public String perfectUserPoint(){
          logger.info("#################user###########time job begin ##########################");
          Iterable<User> iterable = userDAO.findAll();
@@ -363,6 +386,13 @@ public class UserPointRecordServiceImpl implements UserPointRecordService {
          while(it.hasNext()){
              User user = it.next();
              Long userId = user.getId();
+             //更新用户缓存redis信息
+             updateUserInfoCache(String.valueOf(userId),user);
+             if(user.getUserStatus() == UserStatus.FREEZE){
+                 //已经冻结的用户不管
+                 logger.info("the user is freezing ,the userId is {} ",userId);
+                 continue;
+             }
              /*********************积分统计开始***************/
 
              /**
@@ -382,8 +412,33 @@ public class UserPointRecordServiceImpl implements UserPointRecordService {
                      userPointRecordDAO.saveAndFlush(userPointRecord);
                      //发送消息提醒
                      sendMessageMqInfo(rule,user);
+                     logger.info("user {} Compensation register integral",userId);
                  }
              }
+
+             /**
+              * 用户是否实名认证时积分未落地,
+              */
+             if(user.getUserRealAuth() == UserRealAuth.NORMAL){//用户实名认证已经通过
+                 //查询通过实名认证所加的积分记录
+                 List<UserPointRecord> userRealNamePoints = userPointRecordDAO.findByUserIdAndEnableFlagAndPointRuleType(userId,EnableFlag.Y,PointRuleType.VERIFIED_INFO);
+                 if(CollectionUtils.isEmpty(userRealNamePoints)){
+                     //积分记录为空，说明注册时未给该用户加入积分，补偿
+                     //查询实名认证需加的分数和备注信息
+                     List<UserPointRule> rules = ruleDAO.findByPointRuleTypeAndEnableFlagOrderByCreateDateDesc(PointRuleType.VERIFIED_INFO,EnableFlag.Y);
+                     if(!CollectionUtils.isEmpty(rules)){
+                         UserPointRule rule = rules.get(0);
+                         //初始化积分记录
+                         UserPointRecord userPointRecord = initUserPointRecord(user,rule,String.valueOf(userId));
+                         //补偿积分
+                         userPointRecordDAO.saveAndFlush(userPointRecord);
+                         //发送消息提醒
+                         sendMessageMqInfo(rule,user);
+                         logger.info("user {} Compensation userRealName integral",userId);
+                     }
+                 }
+             }
+
 
              /**
               * 用户上传的单据是否有未加积分的情况
@@ -417,6 +472,7 @@ public class UserPointRecordServiceImpl implements UserPointRecordService {
                              sendMessageMqInfo(rule, user);
                          }
                      }
+                     logger.info("user {} Compensation voucher integral,the time id {},weight is {}",userId,size,sumWeights);
                  }
              }
 
@@ -462,6 +518,7 @@ public class UserPointRecordServiceImpl implements UserPointRecordService {
                              sendMessageMqInfo(rule, user);
                          }
                      }
+                     logger.info("user {} Compensation gq integral,the time id {}，the sumSize {} ",userId,gqSize,size);
                  }
              }
 

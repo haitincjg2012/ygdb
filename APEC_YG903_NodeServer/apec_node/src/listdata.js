@@ -42,6 +42,7 @@ exports = module.exports = function (elastic,total,err,done,saveProductArr) {
          "userId": elasticSource.userId,
          "timeout":elasticSource.timeout,
          "createDate":elasticSource.createDate,
+         "offsellDate": elasticSource.offsellDate,
          "showCredateTime": datautil.getDateDiff(elasticSource.createDate,elasticSource.timeout)
      };
      showSecondInfo = [];

@@ -23,9 +23,9 @@ router.post('/_node_product/_recommend' + config.urlSuffix, bodyParser, function
          console.log("#############API:/_node_product/_recommend/ [Error]: ")
          console.log(err);
          console.log("##############[END] ")
-         return resdata(res,true,pageData(pageNum,0,[]),"没有数据!");
+         return resdata(res,true,pageData(pageNum,0,0,[]),"没有数据!");
        }
-       return resdata(res,true,pageData(pageNum,Math.ceil(total / perPage),returnData ));
+       return resdata(res,true,pageData(pageNum,Math.ceil(total / perPage),total,returnData ));
    };
    return ef(done, bind$(redis, 'get'), config.productReCommendKey, function(recomData){
         var arr = [];

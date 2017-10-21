@@ -14,7 +14,7 @@
           <p>{{detailData.author}}<span>{{detailData.createDate|ymdFilter}}</span></p>
         </div>
         <div class="newsImg">
-          <img :src="detailData.url" />
+          <img :src="detailData.url+'?x-oss-process=style/_detail_hq'" />
         </div>
         <div class="newsDbtm">
           <!--<p>{{detailData.content}}</p>-->
@@ -30,6 +30,7 @@
     import header from '@/components/header/header'
     import scroll from '@/components/scroll/scroll'
     import commJs from '@/assets/js/common.js'
+    import WX from '../../../components/wx.vue'
     import API from '@/api/api'
     const api=new API();
     export default{
@@ -60,8 +61,11 @@
         activated(){
           var vm=this;
           vm.id=vm.$route.query.id;
-          console.log("id:"+vm.id);
+//          console.log("id:"+vm.id);
           vm.newsDetailist();
+//          console.log(window);
+          //微信分享功能
+
         },
         methods: {
           //获取行情详情
@@ -87,7 +91,7 @@
               var content=vm.detailData.content;
               vm.contentArray=commJs.trimStr(content).split("\n");
 //              console.log("新闻内容："+vm.contentArray);
-
+              WX.wx(vm.detailData.title)
             }
           },
 

@@ -130,7 +130,7 @@
   import API from '../../../api/api'
   import BScroll from 'better-scroll';
   import topBar from '../../../components/topBar/topBar'
-  import suInfo from './supplyInfo.vue'
+//  import suInfo from './supplyInfo.vue'
   import defaultIcon from "../../../assets/img/defaultForm.png"
 
   import default_1 from '../../../assets/img/xqimg1.png'//默认的详情轮播图
@@ -202,10 +202,17 @@
         self.dataDetail.phoneNum = dt.phoneNum-0?dt.phoneNum:0;
         self.dataDetail.saveFlag = dt.saveFlag;
         self.dataDetail.userId = dt.userId;
-        self.dataDetail.imgRT = dt.imgUrl || defaultIcon;
+        self.dataDetail.imgRT = (dt.imgUrl || defaultIcon) + "?x-oss-process=style/_head";
 
         if(dt.productImages.length){
-          self.detailUrl = dt.productImages;
+            var arr = [];
+            var obj = {};
+            var arrImg = dt.productImages;
+            for(var key in arrImg){
+                obj.imageUrl = arrImg[key].imageUrl+"?x-oss-process=style/_detail";
+                arr.push(obj);
+            }
+          self.detailUrl = arr;
           this.$store.state.xqImgArr = dt.productImages;
         }
 
@@ -625,7 +632,7 @@
     },
     components: {
       topBar,
-      suInfo
+//      suInfo
     }
 
   }

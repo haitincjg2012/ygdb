@@ -89,4 +89,24 @@ public class NewsDTO extends BaseDTO{
      */
     private Date endDate;
 
+    /**
+     * 是否为个人发布，默认为平台系统发布
+     */
+    private String personPub;
+
+    /**
+     * 审核状态
+     */
+    private String auditState;
+
+    /**
+     * 发布人id
+     */
+    private String createBy;
+
+    /**
+     * 审核通过时间
+     */
+    private Date passDate;
+
 }

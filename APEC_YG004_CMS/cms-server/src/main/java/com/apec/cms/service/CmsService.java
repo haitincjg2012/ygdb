@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 /**
  *  CMS相关服务
@@ -55,6 +56,22 @@ public interface CmsService {
      */
     PageDTO<NewsVO> queryNewsList(NewsDTO newsDTO, PageRequest pageRequest) throws ParseException;
 
+   /**
+    * 查询我的行情列表
+    * @param newsDTO
+    * @param pageRequest
+    * @return
+    */
+    PageDTO<NewsVO> queryMyNewsList(NewsDTO newsDTO, PageRequest pageRequest,String userId) throws ParseException;
+
+    /**
+     *
+     * @param newsDTO
+     * @return
+     * @throws ParseException
+     */
+    PageDTO<NewsVO> queryNewsListByTopPic(NewsDTO newsDTO, PageRequest pageRequest) throws ParseException;
+
     /**
      * 根据ID查询文章
      * @param articleVO
@@ -76,4 +93,42 @@ public interface CmsService {
       * @return
       */
      String deleteArticleInfo(ArticleVO articleVO);
+
+    /**
+     * 文章审核
+     * @param articleVO
+     * @return
+     */
+    String articleReview(ArticleVO articleVO, String userId);
+
+    /**
+     * 用户是否关注了该文章的作者
+     * @param articleVO
+     * @return
+     */
+    String isAttentionArticleUser(ArticleVO articleVO, String userId,Map<String,Boolean> resultMap);
+
+    /**
+     * 置顶文章
+     * @param articleVO
+     * @return
+     */
+    String stickArticle(ArticleVO articleVO);
+
+    /**
+     * 取消置顶文章
+     * @param articleVO
+     * @return
+     */
+    String closeStickArticle(ArticleVO articleVO);
+
+    /**
+     * 点赞文章
+     * @param articleVO
+     * @return
+     */
+    String praiseArticle(ArticleVO articleVO,String userId);
+
+
+
 }

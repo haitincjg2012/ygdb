@@ -57,16 +57,20 @@ public interface ProductInfoDAO extends BaseDAO<ProductInfo, Long> {
      * @param enableFlag
      * @return
      */
-    ProductInfo findFirstByElasticId(String elasticId, EnableFlag enableFlag);
+    ProductInfo findFirstByElasticIdAndEnableFlag(String elasticId, EnableFlag enableFlag);
 
     /**
-     * 查询下架的供求 取最新的10条
-     * @param enableFlag
-     * @param timeout
-     * @param pageable
+     * 查询下架的供求 取每个用户的最新的10条
      * @return
      */
-    Page<ProductInfo> findByEnableFlagAndTimeoutLessThanEqualOrderByCreateDate(EnableFlag enableFlag, Integer timeout, Pageable pageable);
+    @Query(value = "SELECT a.*\n" +
+            "         FROM product_info a \n" +
+            "        WHERE a.timeout = 0 and (SELECT COUNT(1) as rest\n" +
+            "         FROM product_info b\n" +
+            "        WHERE ((ifnull(a.offsell_date,now()) <= ifnull(b.offsell_date,now()) and id > a.id ) or  (ifnull(a.offsell_date,now()) > ifnull(b.offsell_date,now()) and id > a.id ))\n" +
+            "          AND b.timeout = 0 and b.user_id = a.user_id and b.enable_flag = 'Y' and a.enable_flag = 'Y') < 10\n" +
+            "     ORDER BY a.user_id, ifnull(a.offsell_date,now()) DESC" ,nativeQuery = true)
+    List<ProductInfo> findByOffsellProduct();
 
     /**
      * 查询未下架的供求信息

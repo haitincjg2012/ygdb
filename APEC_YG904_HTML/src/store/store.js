@@ -12,7 +12,8 @@ const store=new Vuex.Store({
     state:{
         staticFlag:false, //true加载静态数据，false请求后台接口
         authToken:commonjs.getValue('authToken') || '',//登录token
-        userName:commonjs.getValue('userName') || '' //用户名
+        userName:commonjs.getValue('userName') || '', //用户名
+        userNo:commonjs.getValue('userNo') || '' //用户信息
     },
     mutations:{
         changeUserName(state,UT){
@@ -20,6 +21,9 @@ const store=new Vuex.Store({
         },
         changeAuthToken(state,UT){
             state.authToken=UT.token
+        },
+        changeUserInfo(state,UT){
+            state.userNo=UT.userNo
         }
     }
 })

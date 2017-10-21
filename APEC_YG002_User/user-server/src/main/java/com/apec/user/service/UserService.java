@@ -19,7 +19,7 @@ public interface UserService {
      * @param userVO 用户VO
      * @return ReturnCode 返回码
      */
-    String addNewUser(UserVO userVO);
+    String addNewUser(UserVO userVO,String userId);
 
     /**
      * 选择符合用户条件的所有用户
@@ -244,16 +244,37 @@ public interface UserService {
     UserOrgClientVO findUserOrgInfo(UserOrgClientVO userOrgClientVO);
 
     /**
-     * 根据index推送Es数据
-     * @param indexUrl
-     * @return
-     */
-    String pushEsInfoByIndex(String indexUrl);
-
-    /**
      * 关闭认证
      * @return
      */
     String closeOrgPushFlag(UserVO userVO, String userId);
 
+    /**
+     * 批量认证
+     * @param userVO
+     * @param userId
+     * @return
+     */
+    String batchAuthen(UserVO userVO, String userId);
+
+    /**
+     * 根据ES索引推送数据
+     * @param indexUrl
+     * @return
+     */
+    String pushDepotEsInfoByIndex(String indexUrl);
+
+    /**
+     * 根据ES索引推送数据
+     * @param indexUrl
+     * @return
+     */
+    String pushAgencyEsInfoByIndex(String indexUrl);
+
+    /**
+     * 根据ES索引推送数据
+     * @param indexUrl
+     * @return
+     */
+    String pushMerchantEsInfoByIndex(String indexUrl);
 }

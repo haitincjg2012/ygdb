@@ -57,6 +57,21 @@ public interface RedisHashConstants {
     String HASH_PRODUCT_PREFIX="product:";
 
     /**
+     * Article 前缀
+     */
+    String HASH_ARTICLE_PREFIX="article:";
+
+    /**
+     * 文章点赞数量(HASH_ARTICLE_PRAISE_NUM)
+     */
+    String HASH_ARTICLE_PRAISE_NUM = "praise_num";
+
+    /**
+     * 文章阅读数量(HASH_ARTICLE_READ_NUM)
+     */
+    String HASH_ARTICLE_READ_NUM = "readed_num";
+
+    /**
      * 产品收藏量(HASH_PRODUCT_PREFIX)
      */
     String HASH_PRO_SAVE_NUM = "save_num";
@@ -85,5 +100,10 @@ public interface RedisHashConstants {
      * 我的关注
      * */
     String ORG_SAVE = "org_save";
+
+    /**
+     * 我点赞的文章
+     * */
+    String ARTICLE_PRAISE = "article_praise";
 
 }

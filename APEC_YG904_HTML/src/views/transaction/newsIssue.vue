@@ -66,20 +66,27 @@
                     <el-input v-model="newsForm.author" :disabled="viewFlag"></el-input>
                 </el-form-item>
                 <el-form-item label="上传图片：" prop="url">
-                    <el-upload class="avatar-uploader" :headers="{'token':token}" :data="{'whetherCompression':'0'}"  v-if="addFlag || editFlag" :action="uploadApi" :show-file-list="false" :on-success="upLoadImg" :before-upload="validateImg">
-                        <img v-if="imageUrl" :src="imageUrl" class="avatar" alt="上传图片">
-                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
-                    <div>
-                        <img :src="newsForm.url" class="avatar" v-if="newsForm.url && viewFlag">
-                        <span v-if="!newsForm.url && viewFlag">无</span>
-                    </div>
-                </el-form-item>
+                <!--aliyun方式上传图片-->
+                <el-upload class="avatar-uploader" :headers="{'token':token}" :data="{}"  v-if="addFlag || editFlag" :http-request="submitImg" :action="noUse" :show-file-list="false"  :before-upload="beforeLoad">
+                    <img v-if="imageUrl" :src="imageUrl" class="avatar" alt="上传图片">
+                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+
+                <!--ftp方式上传图片
+                    <el-upload class="avatar-uploader" :headers="{'token':token}" :data="{'whetherCompression':'0'}"  v-if="addFlag || editFlag" :action="uploadApi" :show-file-list="false" :on-success="upLoadImg" :before-upload="beforeLoad">
+                    <img v-if="imageUrl" :src="imageUrl" class="avatar" alt="上传图片">
+                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload> -->
+                <div>
+                    <img :src="newsForm.url" class="avatar" v-if="newsForm.url && viewFlag">
+                    <span v-if="!newsForm.url && viewFlag">无</span>
+                </div>
+            </el-form-item>
                 <el-form-item label="新闻内容：" prop="content">
                     <el-input style="width:800px;" :autosize="{minRows:10}" type="textarea" v-model="newsForm.content" :disabled="viewFlag"></el-input>
                 </el-form-item>
                 <el-form-item class="btnGroup">
-                    <el-button type="primary" @click="submitForm('newsForm')" v-if="editFlag || addFlag">保存</el-button>
+                    <el-button type="primary" @click="submitForm('newsForm')" v-if="editFlag || addFlag">提交</el-button>
                     <el-button @click="backTablePage">返回</el-button>
                 </el-form-item>
             </el-form>
@@ -89,6 +96,8 @@
 
 <script>
     import header from '~/components/header/header.vue'
+    import encrypt from '~/assets/js/oss/encrypt'
+
     export default {
         data () {
             return {
@@ -97,7 +106,6 @@
                 secondTit:'行情发布',
                 thirdTit:'',
                 breadflag:false,
-
                 showFlag:true, //true 显示table页; false 显示form页
                 viewFlag:false,//表单只读标识
                 editFlag:false,//表单编辑标识
@@ -122,7 +130,10 @@
                 dataDetailList:[],//详情页数据集
                 operateType:"", //view：详情 edit:编辑
                 imageUrl:"",//上传图片地址
-                uploadApi:this.apiUrl.transaction.uploadImgUrl,//上传图片接口
+                authoriseApi:this.apiUrl.transaction.authoriseUrl,//上传图片接口
+//                aliyunApi:this.apiUrl.transaction.uploadImg,//阿里云
+                noUse:"",//因为ele-upload,action必传参数
+                hasImage:true,//是否上传图片
                 newsForm:{
                     id:null,
                     title:"",//行情标题
@@ -140,7 +151,7 @@
                         {required:true,message:"请输入发布人",trigger:"blur"}
                     ],//发布人
                     url:[
-                        {required:true,message:"请上传图片",trigger:"blur"}
+//                        {required:true,message:"请上传图片",trigger:"blur"}
                     ],//上传图片
                     content:[
                         {required:true,message:"请输入新闻内容",trigger:"blur"}
@@ -151,31 +162,66 @@
         },
         activated(){
             var vm=this;
-            vm.getTableList();//获取列表信息
+            encrypt.getAuthorise();
+//            console.log("阿里云地址："+vm.apiUrl.common.alyserverUrl);
+            vm.initialPage();//初始化页面
+            //获取图片上传授权信息
 
         },
-        mounted(){
-            var vm=this;
-            vm.initialPage();//初始化页面
-        },
         methods: {
-            //上传图片
-            upLoadImg(res,file){
+            //上传图片(ftp)
+            /*  upLoadImg(res,file){
                 var vm=this;
                 vm.imageUrl=URL.createObjectURL(file.raw);
                 if(res.succeed){
                     //将上传后返回的img地址赋值给newsForm.imageUrl
                     var backimgUrl=res.data[0][0].imagePath;
                     vm.newsForm.url=backimgUrl;
-                    console.log("图片地址："+vm.newsForm.url);
+                    console.log("图片地址："+res.data.name);
 
                 }
                 else{
                     vm.$message.error(res.errorMsg);
                 }
+            },*/
+            //校验图片格式
+            beforeLoad(){
+                var vm=this;
+                if(!vm.validateImg) {//图片格式校验通过
+                    return false;
+                }
+            },
+            //上传图片aly
+            submitImg(data){
+                var vm = this;
+                 console.log("submitImg:"+data);
+                //gsy
+                return encrypt.ossUpload(data.file,function(result){
+                 console.log(result,999999);
+                 vm.$message.success('上传图片成功!');
+                 vm.newsForm.url=vm.apiUrl.common.alyserverUrl+result.name;
+                 vm.imageUrl=vm.apiUrl.common.alyserverUrl+result.name;
+                 return true;
+                 },function(err){
+                 console.log("upload image failed by oss,"+ err);
+                 vm.$message.error('上传图片失败!');
+                 return false;
+                 });
+                //上传图片yd
+                /*return encrypt.ossUpload(vm.storeAs,data.file,vm.accessKeyId,vm.accessKeySecret,vm.securityToken,function(result){
+                    console.log(result);
+                    vm.$message.success('上传图片成功!');
+                    vm.newsForm.url=vm.apiUrl.common.alyserverUrl+result.name;
+                    vm.imageUrl=vm.apiUrl.common.alyserverUrl+result.name;
+                    return true;
+                },function(err){
+                     console.log("upload image  failed by oss,"+ err);
+                     vm.$message.success('上传图片失败!');
+                    return false;
+                })*/
             },
             //图片格式校验
-            validateImg(file){
+            validateImg(){
                 var vm=this;
                 var type=file.type;
                 var imgPattern=/image\/(png|jpeg)/g;
@@ -188,7 +234,6 @@
                     return false;
                 }
                 return true;
-
             },
             //数据格式转化
            /* vm.commonJs.getDataFomat(vm.newsForm,data.data);*/
@@ -212,12 +257,13 @@
             //新增行情
             addNews(){
                 var vm=this;
+                vm.hasImage=vm.newsForm.url?true:false;
                 let params={
                     url:vm.apiUrl.transaction.addNewsUrl,
                     data:{
                         "category": "NEWS",   //固参
                         "channelCode": "NEWS",//固参
-                        "hasImage": "true",//固参
+                        "hasImage":vm.hasImage,//固参
                         "author":vm.newsForm.author,//作者
                         "content":vm.newsForm.content,//行情内容
                         "title":vm.newsForm.title,//行情标题
@@ -232,8 +278,19 @@
                     message:'发布成功！',
                     type:'success'
                 });
+                //重置表单
+                vm.resetForm();
+                vm.initialPage();
 
 
+            },
+            //重置表单
+            resetForm(){
+                var vm=this;
+                for(var i in vm.newsForm){
+                    vm.newsForm[i]="";
+                }
+                vm.imageUrl="";
             },
             //批量删除
             batchDel(){
@@ -259,6 +316,7 @@
             //初始化页面
             initialPage(){
                 var vm=this;
+                vm.getTableList();//获取列表信息
                 vm.breadflag=false;//隐藏最后一级
                 vm.showFlag=true;//显示列表，隐藏表单
 
@@ -378,6 +436,11 @@
                         message:'保存成功！',
                         type:'success'
                 });
+
+             //重置表单
+                vm.resetForm();
+                vm.initialPage();
+
             },
             //go formPage    operateType:"" //view：详情 viewFlag; edit:编辑 viewFlag; add:新增 addFlag;
             goDetail(type,id){
@@ -406,10 +469,7 @@
                     vm.thirdTit='新增';
                     vm.breadflag=true;
                     //重置表单
-                    for(var i in vm.newsForm){
-                        vm.newsForm[i]="";
-                        vm.imageUrl="";
-                    }
+                    vm.resetForm();
                     vm.showFlag=false;//显示form 隐藏table
                 }
                 console.log("操作类型："+vm.operateType+"用户id:"+id);
@@ -433,17 +493,22 @@
                 vm.showFlag=false;//显示form 隐藏table
                 vm.dataDetailList=data.data;
 //                vm.newsForm=vm.dataDetailList; //暂时注释
-                if(vm.editFlag){
+                if(vm.editFlag || vm.viewFlag){
                     vm.imageUrl=data.data.url;
                 }
                //将data.data的值赋给 vm.newsForm
                vm.getDataFomat(vm.newsForm,data.data);
                 //如果数据为空，显示“无”
                 for(var i in vm.newsForm){
-                    if(!vm.newsForm[i]){
+                    if(!vm.newsForm[i] && i!='url'){
                         vm.newsForm[i]="无";
                     }
                 }
+
+
+
+
+
                //test 查看属性
                /*for(var i in vm.newsForm){
                  console.log("vm.newsForm["+i+"]:"+vm.newsForm[i]);
@@ -510,9 +575,9 @@
         },
         filters:{
             //暂时不用
-            addrFilter(val){
+           /* addrFilter(val){
                 return val.replace(/"([^|]*)"/g,'');
-            }
+            }*/
         },
         components:{
             'my-header':header

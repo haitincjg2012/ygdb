@@ -5,13 +5,9 @@
 <template>
 <el-menu theme="dark" class="topNav" mode="horizontal" :router="true">
     <el-menu-item class="title" index="">易果代办管理系统</el-menu-item>
-   <!-- <el-submenu index="">
-        <template slot="title">我的工作台</template>
-        <el-menu-item index="login">退出</el-menu-item>
-    </el-submenu>-->
-    <el-submenu class="loginInfo" index="">
+    <el-submenu class="loginInfo" index="1">
         <template slot="title">欢迎您：{{username}}</template>
-        <el-menu-item index="login">退出</el-menu-item>
+        <el-menu-item class="breadBlack" index="" @click="exit">退出</el-menu-item>
     </el-submenu>
 </el-menu>
 </template>
@@ -24,7 +20,13 @@
             }
         },
         methods: {
-
+            exit:function(){
+                var vm=this;
+                vm.$router.replace({
+                    path:'/login',
+                    query:{redirect:vm.$router.currentRoute.fullPath}
+                });
+            }
         },
         computed:{
             username(){

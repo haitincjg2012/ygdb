@@ -2,7 +2,6 @@ package com.apec.user.web;
 
 import com.apec.framework.common.Constants;
 import com.apec.framework.common.PageDTO;
-import com.apec.framework.common.util.JsonUtil;
 import com.apec.framework.log.InjectLogger;
 import com.apec.user.dto.UserDTO;
 import com.apec.user.dto.UserPointRuleDTO;
@@ -200,14 +199,11 @@ public class UserPointController extends MyBaseController {
     @RequestMapping(value = "/perfectUserPoint")
     public String perfectUserPoint(){
         try{
-
             String result = userPointRecordService.perfectUserPoint();
-            if(StringUtils.equals(result,Constants.RETURN_SUCESS)){
-                return super.getResultJSONStr(true, null, null);
-            }else{
-                return super.getResultJSONStr(false, null, result);
+            if(!StringUtils.equals(result,Constants.RETURN_SUCESS)){
+                log.error("[userpoint][perfectUserPoint] exception {}:" ,result);
             }
-
+            return super.getResultJSONStr(true, null, Constants.RETURN_SUCESS);
         }catch(Exception e){
             log.error("[userpoint][perfectUserPoint] exception {}:" ,e);
             return super.getResultJSONStr(false, null, Constants.SYS_ERROR);

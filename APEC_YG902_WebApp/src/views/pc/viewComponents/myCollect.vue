@@ -19,9 +19,13 @@
                 <div class="address" :data-id = "item.id">
                   {{item.address}}
                 </div>
-                <div class="people" :data-id = "item.id">{{item.showUserName}}
+                <div class="people" :data-id = "item.id">
+                  <div class="p-flex">
+                    <div class="p-flex-com">{{item.showUserName}}</div>
+                    <div class="p-flex-com">{{item.upTime}}</div>
+                  </div>
                   <div @click.stop="cancleCollect($event,item.id)" class="r-click">
-                    <span>取消收藏</span>
+                    <span class="collect-sp">取消收藏</span>
                   </div>
                 </div>
               </div>
@@ -98,8 +102,9 @@
               item.data.rows.forEach((item) => {
                 self.myCollectList.push({
                   'skuName': item.skuName.length>15?item.skuName.substring(0,15)+'...':item.skuName,
+                  'upTime':item.showCredateTime,
                   'id':item.id,
-                  'firstImageUrl':item.firstImageUrl,
+                  'firstImageUrl':item.firstImageUrl + "?x-oss-process=style/_list",
                   'productTypeName':item.productTypeName,
                   'address':item.address,
                   'showUserName':item.showUserName,
@@ -153,7 +158,7 @@
                 self.myCollectList.push({
                   'skuName': item.skuName.length>15?item.skuName.substring(0,15)+'...':item.skuName,
                   'id':item.id,
-                  'firstImageUrl':item.firstImageUrl,
+                  'firstImageUrl':item.firstImageUrl+"?x-oss-process=style/_list",
                   'productTypeName':item.productTypeName,
                   'address':item.address,
                   'showUserName':item.showUserName,
@@ -287,41 +292,44 @@
                 left 0
                 bottom 0
               img
-                height (85/_rem)
+                height (90/_rem)
                 display block
-                width (85/_rem)
+                width (90/_rem)
             .right-content
               -moz-box-flex:3;
               -webkit-box-flex:3;
               box-flex:3;
               h4
                 font-size (15/_rem)
-                line-height (30/_rem)
-                height (30/_rem)
+                line-height (25/_rem)
+                height (25/_rem)
                 font-weight bold
               .address
                 height (25/_rem)
                 line-height (25/_rem)
                 font-size (15/_rem)
               .people
-                height (25/_rem)
-                line-height (25/_rem)
+                height (40/_rem)
                 font-size (15/_rem)
                 position relative
+                display:-moz-box;
+                display:-webkit-box;
+                display:box;
+                .p-flex
+                  width (160 /_rem)
+                  .p-flex-com
+                    height (20/_rem)
+                    line-height (20/_rem)
                 .r-click
                   width (80 /_rem)
-                  border 1px solid #28cba7
-                  border-radius 4px
+                  height (40/_rem)
+                  line-height (40 /_rem)
                   text-align center
-                  display inline-block
                   cursor pointer
-                  height (20 /_rem)
-                  line-height (20 /_rem)
                   color #28cba7
-                  position absolute
-                  top 50%
-                  transform translateY(-50%)
-                  right (20/_rem)
+                  .collect-sp
+                    border 1px solid #28cba7
+                    border-radius 4px
         li:before
           top:0
     .title

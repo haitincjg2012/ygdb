@@ -52,12 +52,4 @@ public interface UserOrgClientDAO extends BaseDAO<UserOrgClient,Long> {
      */
     Page<UserOrgClient> findByIdInAndEnableFlagAndAddressLike(List<Long> id, EnableFlag enableFlag,String address,Pageable pageable);
 
-    /**
-     * 查询所有已经推送的数据
-     * @param pushFlag
-     * @param enableFlag
-     * @return
-     */
-    List<UserOrgClient> findByPushFlagAndEnableFlag(Integer pushFlag, EnableFlag enableFlag);
-
 }

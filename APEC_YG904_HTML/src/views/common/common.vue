@@ -8,7 +8,7 @@
         <my-leftnav></my-leftnav>
         <transition>
             <keep-alive>
-                <router-view id="mainContainer"></router-view>
+                <router-view class="mainContainer"></router-view>
             </keep-alive>
         </transition>
 

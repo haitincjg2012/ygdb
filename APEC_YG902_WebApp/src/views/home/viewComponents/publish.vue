@@ -83,7 +83,7 @@
                 <li :is="item.SS" v-for="item in items" :item="item" v-on:selecttype="delItems" class="c-z-m"></li>
                 <li>
                     <div class="z-add-one">
-                        <img src="../../../assets/img/add-9.png"/>
+                      <img src="../../../assets/img/add-9.png"/>
                       <input type="file" accept="image/*"  @change="handleimg"/>
                     </div>
                 </li>
@@ -100,6 +100,8 @@
 <script>
   import API from '../../../api/api'
   import DEL from '../../../components/del.vue'
+  import ALIYUN from "../../../components/aliyun.vue"//使用阿里云上传图片
+
   import { Toast,Indicator} from 'mint-ui';
 
   const api = new API();
@@ -169,10 +171,27 @@
         eleArr[1].classList.remove("active-li");
         this.$router.go(- 1);
 //      this.$router.push({name:"home"})
+    },
+    test:function (data) {
+       console.log(data);
     }
   }
-  var uplaod = {
-  };
+  var cookie = {
+      setCookie:function (name,value,second) {
+
+//        var obj = [];
+//        for(var key in result){
+//            var t = key + "=" +result[key];
+//            obj.push(t);
+//        }
+        var d = new Date();
+        d.setTime(d.getTime() + (second * 60*1000));
+        var expires = "expires=" + d.toUTCString();
+        document.cookie = name + "=" + value + "; " + expires;
+
+//        console.log(obj.join(";"));
+      },
+  }
   export default{
       data(){
         return{
@@ -188,12 +207,14 @@
                 unit:'万斤',
                uploadImg:0, //0代表没有上传图片点击图片 1代表上传了图片 2代表上传完图片后点击提交
                submitRecord:0,//0代表未提交，1代表提交，2...代表未提交
+             aliyunO:null,//阿里云调用函数
         }
       },
     components: {"aaa": DEL},
     methods:{
       back(){
           this.reset();
+          this.items=[];
 //        Indicator.open();
         this.$store.state.skuName = "";
         this.$store.state.skuId = "";
@@ -218,7 +239,6 @@
       },
       reset(){
         this.submitFlag = 0;
-        this.items=[];
       },
       goodinfo(){
           this.$router.push("/goodinfo");
@@ -282,7 +302,6 @@
         }
       },
       handleimg(evt){
-
           var that = this;
           var files = evt.target.files || evt.dataTransfer.files;
           var file = files[0];
@@ -293,36 +312,142 @@
               duration:1000
             })
           }
-          var size = file.size/(1000*1000);
-          var tpattern = /image\/(png|jpeg)/g;
-          if(!tpattern.test(type)){
-              return;
-          }
 
-          if(size > 10){
-            Toast({
-              message:"对不起，您上传的图片过大，请您重新上传图片",
-              duration:1000
-            })
-              return;
-          }
+//          var size = file.size/(1000*1000);
+//          var tpattern = /image\/(png|jpeg)/g;
+//          if(!tpattern.test(type)){
+//              return;
+//          }
+//
+//          if(size > 10){
+//            Toast({
+//              message:"对不起，您上传的图片过大，请您重新上传图片",
+//              duration:1000
+//            })
+//              return;
+//          }
           var name = file.name;
           var nameA = name.split(".");
           var n = encodeURI(nameA[0]);
-          var obj =this.recordImg ;
+          var obj =this.recordImg;
           if(obj.hasOwnProperty(n)){
               return;
           }
-        var fd = new FormData();
-        fd.append("whetherCompression",1);
-        fd.append("file",file);
-        let params = {
-          api:"/common/uploadImg.apec",
-          data:fd
-        }
-//        this.uploadImg = 1;
-        that.img = file;
-        that.postImg(params,fn.picture.bind(that));
+//        var fd = new FormData();
+//        fd.append("whetherCompression",1);
+//        fd.append("file",file);
+//        let params = {
+//          api:"/common/uploadImg.apec",
+//          data:fd
+//        }
+//
+//        that.img = file;
+//        that.postImg(params,fn.picture.bind(that));
+
+
+//        var arr = document.cookie.split(";");
+//        var flag = true;
+//        for(var key in arr){
+//            if(arr[key].indexOf("AccessKeyId") > -1){
+//                flag = false;
+//            }
+//        }
+//        var strFormat = this.$store.state.userId +""+ new Date().getTime();
+//        var storeAs = window.md5(strFormat);
+//        if(flag){
+//          let params = {
+//            api: "/_node_image/_oauth.apno",
+//            data: {}
+//          }
+//
+//          this.post(params,function (response) {
+//            try {
+//              var  result = response.data;
+//            } catch (e) {
+//              return alert('parse sts response info error123: ' + e.message);
+//            }
+//            cookie.setCookie("AccessKeyId",result.AccessKeyId, 50);
+//            cookie.setCookie("AccessKeySecret",result.AccessKeySecret, 50);
+//            cookie.setCookie("SecurityToken",result.SecurityToken, 50);
+//
+//            var client = new OSS.Wrapper({
+//              accessKeyId: result.AccessKeyId,
+//              accessKeySecret: result.AccessKeySecret,
+//              stsToken: result.SecurityToken,
+//              endpoint: 'http://oss-cn-hangzhou.aliyuncs.com/',
+//              bucket: 'ygdb-pro'
+//            });
+//
+////           return client.multipartUpload(storeAs, file).then(function (result) {
+//            client.multipartUpload(storeAs, file).then(function (result) {
+//              var t = new Date().getTime();
+//              var obj = {
+//                SS:DEL,
+////                srcM:result.url,
+//                src:result.url,
+////                srcT:dt[2].imagePath,
+//                index:t
+//              };
+//              that.items.push(obj);
+////              that.uploadPicture(result.url);
+//            }).catch(function (err) {
+//
+//            });
+//          });
+//        }else{
+//          for(var key in arr){
+//            if(arr[key].indexOf("AccessKeyId") > -1){
+//              var AccessKeyId = arr[key].split("=")[1];
+//            }
+//
+//            if(arr[key].indexOf("AccessKeySecret") > -1){
+//              var AccessKeySecret = arr[key].split("=")[1];
+//            }
+//
+//            if(arr[key].indexOf("SecurityToken") > -1){
+//              var SecurityToken = arr[key].split("=")[1];
+//            }
+//          }
+//
+//           console.log(AccessKeyId, AccessKeySecret, SecurityToken);
+////            var SecurityToken = arr.SecurityToken;
+//          var client = new OSS.Wrapper({
+//            accessKeyId: AccessKeyId,
+//            accessKeySecret: AccessKeySecret,
+//            stsToken: SecurityToken,
+//            endpoint: 'http://oss-cn-hangzhou.aliyuncs.com/',
+//            bucket: 'ygdb-pro'
+//          });
+//
+////           return client.multipartUpload(storeAs, file).then(function (result) {
+//          client.multipartUpload(storeAs, file).then(function (result) {
+//            var t = new Date().getTime();
+//            var obj = {
+//              SS:DEL,
+////                srcM:result.url,
+//              src:result.url+"?x-oss-process=style/_list",
+//                srcT:result.url,
+//              index:t
+//            };
+//            that.items.push(obj);
+////            that.uploadPicture(result.url);
+//          }).catch(function (err) {
+//
+//          });
+//        }
+        var userId = this.$store.state.userId;
+        var self = this;
+        this.aliyunO(userId,self.uploadPicture , file);
+      },
+      uploadPicture(url){
+        var t = new Date().getTime();
+        var obj = {
+          SS:DEL,
+          src:url+"?x-oss-process=style/_list",
+          srcT:url,
+          index:t
+        };
+        this.items.push(obj);
       },
       pickup(event){
         var evt = event || window.event;
@@ -414,6 +539,7 @@
         this.uploadImg = 0;
         var imgArr = [];
         this.items.forEach(function (current, index) {
+            console.log(current);
           var o = {
             imageUrl:current.srcT,
             sort:index
@@ -430,7 +556,7 @@
         var remark = document.getElementById("z-des").value;
         var src;
         if(this.items[0]){
-            src = this.items[0].srcM
+            src = this.items[0].srcT;
         }else{
             src = "";
         }
@@ -488,10 +614,26 @@
 //        this.unit = text.length == 2 ? text.slice(1):text;
         this.unit = text;
 
+      },
+      checkUserId(){
+          //检测用户id
+          if(this.$store.state.userId == ""){
+            var params = {
+              api:"/_node_user/_info.apno"
+            }
+           var self = this;
+            this.post(params, function (data) {
+              var dt = JSON.parse(data.data);
+              self.$store.state.userId = dt.userId;
+
+            });
+          }
       }
     },
     activated(){
        this.reset();
+       this.checkUserId();
+      this.aliyunO = ALIYUN.aliyun();
       this.skuName = this.$store.state.skuName;
       this.skuId = this.$store.state.skuId;
       var addreObj = this.$store.state.addrData;

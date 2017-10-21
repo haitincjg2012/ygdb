@@ -29,6 +29,7 @@
                 :item = "item"
             ></li>
           </ul>
+          <scrollS ref="childScroll"></scrollS>
           <div class="z-ag-shadow" v-if="shadowF">
             <ul class="z-ag-listS clearfix">
             <li :is = "item.ss"
@@ -64,6 +65,7 @@
   import Region from './region.vue'
   import API from '../../../api/api'
   import dataConfig from "../../../assets/data/search.json"
+  import scrollS from "../../../components/scrollSecond.vue"
   import {Toast} from 'mint-ui'
 
   const api = new API();
@@ -154,9 +156,15 @@
       if(!data.succeed){
         return;
       }
+
       var arr = [];
       var rows = data.data.rows;
       this.pageCount = data.data.pageCount;
+      if(data.data.pageCount == 0){
+        this.$refs.childScroll.init(true);
+      }else{
+        this.$refs.childScroll.init(false);
+      }
       rows.forEach(function (current, index) {
         var obj = {
           showOrgTagsInfo:{}
@@ -169,7 +177,7 @@
         obj.orgName = current.orgName;//用户名称
         obj.address = current.address;//用户地址
         obj.viewNum = current.viewNum;//浏览数量
-        obj.orgFirstBannerUrl = current.orgFirstBannerUrl || agksD;//左侧图片
+        obj.orgFirstBannerUrl = (current.orgFirstBannerUrl || agksD)+"?x-oss-process=style/_list";//左侧图片
         obj.showOrgTagsInfo.tagName = current.showOrgTagsInfo.tagName;//企业认证
         obj.userLevelName = IMG.methods.userLevel(current.userLevelName);//用户等级
         obj.userRealAuthKey = current.userRealAuthKey == ""?false:true;//用户是否实名认证
@@ -402,12 +410,15 @@
           var offsetH = target.body.scrollTop;
           var sHeight = target.body.scrollHeight;
           var that = this;
+
           if(sHeight - offsetH - this.bheight == 0){
             if(this.pageCount > this.pageNumber){
+              this.$refs.childScroll.start();
               this.pageNumber ++;
               this.pageNum(this.pageNumber);
             }else{
-              Toast('数据加载完...')
+              this.$refs.childScroll.end();
+//              Toast('数据加载完...')
             }
 
           }
@@ -427,11 +438,13 @@
       this.bheight = document.querySelector(".page").clientHeight;
       this.initPagination();
       this.list(1);
-
     },
     created(){
 //      window.addEventListener('scroll', this.menuList, false);
       window.addEventListener('scroll', this.menuList, false);
+    },
+    components:{
+      scrollS
     }
   }
 </script>

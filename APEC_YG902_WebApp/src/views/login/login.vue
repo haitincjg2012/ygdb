@@ -178,9 +178,11 @@
                 self.$store.commit("incrementName", {'name': ''});
                 c_js.setLocalValue('name','');
               }
+
               if(data.userId){
                 self.$store.commit("incrementUserID", {'userId': data.userId});//用户ID
                 self.$store.state.userId = data.userId;
+                console.log(self.$store.state.userId, 88888);
                 storage.id = data.userId;
                 c_js.setLocalValue('userId',data.userId);
               }

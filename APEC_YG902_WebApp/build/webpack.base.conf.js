@@ -46,10 +46,11 @@ module.exports = {
         include: [resolve('src'), resolve('test')]
       },
       {
+        //小图片不做base64位处理,limit不能设置为0
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
         options: {
-          limit: 10000,
+          limit: 1,
           name: utils.assetsPath('img/[name].[hash:7].[ext]'),
           publicPath:'/'
         }

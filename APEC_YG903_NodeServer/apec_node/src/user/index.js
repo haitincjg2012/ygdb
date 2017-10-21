@@ -18,3 +18,5 @@ router.use(require('./user-address-his'));
 router.use(require('./user-address-save'));
 router.use(require('./user-sign'));
 router.use(require('./user-checksign'));
+router.use(require('./user-praisearticle'));
+router.use(require('./article-view'));

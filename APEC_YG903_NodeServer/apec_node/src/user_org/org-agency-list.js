@@ -55,19 +55,16 @@ router.post('/_node_user_org/_agency_list' + config.urlSuffix, bodyParser, funct
          }
      };
   };
-  console.log("============================");
-  console.log(JSON.stringify(searchParams));
-  console.log("============================");
   var done = (returnData,total,err) => {
     if(err != 200 ){
       console.log("#############API:/_node_user_org/_agency_list/ [Error]: ")
       console.log(err);
       console.log("##############[END] ")
-      return resdata(res,true,pageData(pageNum,0,[]),"没有数据!");
+      return resdata(res,true,pageData(pageNum,0,0,[]),"没有数据!");
     }
-    return resdata(res,true,pageData(pageNum,Math.ceil(total / perPage),returnData ));
+    return resdata(res,true,pageData(pageNum,Math.ceil(total / perPage),total,returnData ));
   };
-  return ef(done, bind$(elasticsearch,"search"),searchParams,function(response,err){ 
+  return ef(done, bind$(elasticsearch,"search"),searchParams,function(response,err){
       return listData(response.hits.hits,response.hits.total,err,done);
    });
 });

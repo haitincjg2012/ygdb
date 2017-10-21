@@ -1,0 +1,8 @@
+{
+  "devUrl":"https://ygdb-pro.oss-cn-hangzhou.aliyuncs.com/",
+  "devBucket":"ygdb-pro",
+  "devEndpoint":"https://oss-cn-hangzhou.aliyuncs.com/",
+  "proUrl":"https://yg-pro.oss-cn-qingdao.aliyuncs.com/",
+  "proBucket":"yg-pro",
+  "proEndpoint":"https://oss-cn-qingdao.aliyuncs.com/"
+}

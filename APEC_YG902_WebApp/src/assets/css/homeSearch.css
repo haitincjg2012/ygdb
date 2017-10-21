@@ -47,19 +47,21 @@ p {
   -moz-appearance: none;
   -webkit-appearance: none;
   appearance: none;
+  height: 1.5rem;
+  vertical-align: top;
 }
 .z-header-T1 .z-write .x-del {
   display: inline-block;
-  height: 0.7rem;
+  height: 1.5rem;
   width: 0.7rem;
   background: url("../img/cancel.png") no-repeat center;
   background-size: 0.7rem 0.7rem;
-  vertical-align: middle;
+  vertical-align: top;
 }
 .z-header-T1 .retT img {
   width: 0.55rem;
   height: 0.975rem;
-  vertical-align: middle;
+  vertical-align: text-top;
 }
 .z-header-T1 .z-s {
   width: 2.5rem;
@@ -90,6 +92,7 @@ p {
 .z-column-com .del-com img {
   width: 0.8rem;
   height: 0.85rem;
+  display: block;
 }
 .z-column-com .z-list-com ul {
   padding: 0.25rem 0;

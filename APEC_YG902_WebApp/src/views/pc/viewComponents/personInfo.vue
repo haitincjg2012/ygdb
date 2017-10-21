@@ -103,7 +103,7 @@
 
 
 
-      <div class="p-v-form-cli c-p-sale" v-if="coldBG">
+      <div class="p-v-form-cli c-p-sale" v-if="coldBG && agFlag">
         <div v-if="!comRoleFlag">
           <span class="label">销售区域</span>
           <input type="text" placeholder="销售区域"  v-model="organiza.saleAddr" disabled class="c-pos-r">
@@ -114,7 +114,7 @@
         </div>
       </div>
       <!--<div @click.stop="saleArea" class="p-v-form-cli" v-if="!coldBG">-->
-      <div class="p-v-form-cli c-p-sale" v-if="!coldBG && GNFlag">
+      <div class="p-v-form-cli c-p-sale" v-if="!coldBG && GNFlag && agFlag">
         <div v-if="!comRoleFlag">
           <span class="label">销售区域</span>
           <input type="text" placeholder="销售区域"  v-model="organiza.saleAddr" disabled class="c-pos-r">
@@ -159,24 +159,24 @@
           <input type="text" placeholder="详细地址"  v-model="organiza.addrDetail" class="c-pos-r">
         </div>
       </div>
-      <div class="p-v-form-cli c-p-manage" v-if="coldBG">
-        <div v-if="!comRoleFlag">
-          <span class="label">主营品种</span>
-          <input type="text" placeholder="主营品种"  v-model="organiza.pz" disabled class="c-pos-r">
-        </div>
-        <div v-if="comRoleFlag">
-          <span class="label">主营品种</span>
-          <input type="text" placeholder="主营品种"  v-model="organiza.pz" class="c-pos-r">
-        </div>
-      </div>
+      <!--<div class="p-v-form-cli c-p-manage" v-if="coldBG">-->
+        <!--<div v-if="!comRoleFlag">-->
+          <!--<span class="label">主营品种1</span>-->
+          <!--<input type="text" placeholder="主营品种"  v-model="organiza.pz" disabled class="c-pos-r">-->
+        <!--</div>-->
+        <!--<div v-if="comRoleFlag" @click.stop="managePZ">-->
+          <!--<span class="label">主营品种1</span>-->
+          <!--<input type="text" placeholder="主营品种"  v-model="organiza.pz" disabled class="c-pos-r">-->
+        <!--</div>-->
+      <!--</div>-->
       <div class="p-v-form-cli c-p-manage" v-if="!coldBG">
         <div v-if="!comRoleFlag">
           <span class="label">主营品种</span>
           <input type="text" placeholder="主营品种"  v-model="organiza.pz" disabled class="c-pos-r">
         </div>
-        <div v-if="comRoleFlag">
+        <div v-if="comRoleFlag" @click.stop="managePZ">
           <span class="label">主营品种</span>
-          <input type="text" placeholder="主营品种"  v-model="organiza.pz" class="c-pos-r">
+          <input type="text" placeholder="主营品种"  v-model="organiza.pz" disabled class="c-pos-r">
         </div>
       </div>
       <div v-if="comRoleFlag">
@@ -221,6 +221,7 @@
   import DEL from '../../../components/del.vue'
 
   import userImgUrl from '../../../assets/img/icon.png'
+  import ALIYUN from "../../../components/aliyun.vue"
 
   const api = new API();
   var fn = {
@@ -310,13 +311,15 @@
         ckFlag:false,//默认冷库不可以修改
         coopFlag:false,//默认合作社不可以修改
         GNFlag:true,//默认果农不可以修改
+        agFlag:true,//默认为代办
         comRoleFlag:false,//默认共同角色不可以修改
         isFlag:true,//省份是否可以修改
       }
     },
     activated(){
         var flag = this.$route.query.Flag;
-        if(!this.$store.state.addr && !this.$store.state.saleAddr){
+        this.aliyunO = ALIYUN.aliyun();//阿里云上传
+        if(!this.$store.state.addr && !this.$store.state.saleAddr && !this.$store.state.mainPz){
           this.getUserInfo();
         }else{
             if(this.$store.state.nameN){
@@ -329,11 +332,16 @@
               this.organiza.saleAddr = this.$store.state.saleAddr;
             }
 
+           this.organiza.pz = this.$store.state.mainPz;
+
         }
     },
     methods: {
         back(){
            this.reset();
+          this.$store.state.addr = "";
+          this.$store.state.saleAddr = "";
+          this.$store.state.mainPz = "";
           this.$router.push({name: 'pc'})
         },
         reset(){
@@ -348,6 +356,7 @@
           self.coopFlag = false;
           self.comRoleFlag = false;
           self.GNFlag = true;
+          self.agFlag = true;
         },
       updtName(){
             var name = this.name + "";
@@ -355,6 +364,9 @@
             if(num > 15){
                 this.name = name.substring(0, 15);
             }
+      },
+      managePZ(){
+         this.$router.push({name:"mainOperating"});
       },
       selectID(e){
             var e = e || window.event;
@@ -375,10 +387,10 @@
 
            if(value == "保管"){
                this.userDetailType = "LK_BG";
-               this.coldBG = false;
+               this.coldBG = true;
            }else{
              this.userDetailType = "LK_LB";
-             this.coldBG = false;
+             this.coldBG = true;
            }
         }else if(id == "10000"){
 
@@ -424,36 +436,47 @@
           if(!tpattern.test(type)){
             return;
           }
-          var that = this;
-          var fd = new FormData();
+//          var that = this;
+//          var fd = new FormData();
 
-          fd.append("file",file)
+//          fd.append("file",file)
+//          let params = {
+//              api:"/yg-user-service/user/uploadImage/uploadFile.apec",
+//            data:fd
+//            }
+//            console.log(fd);
+//            try {
+//              api.postImg(params).then((res) => {
+//                var data = res.data;
+//                if(data.succeed){
+//                  self.$store.commit("incrementImgUrl", {'imgUrl': data.data.imgUrl});//用户头像
+//                  c_js.setLocalValue('imgUrl',data.data.imgUrl);
+//                  var fr = new FileReader();
+//                      fr.onload = function (evt) {
+//                        var t = evt.target.result;
+//                        var el = document.querySelector(".p-v-info-user");
+//                        el.src = t;
+//                      };
+//                  fr.readAsDataURL(file);
+//                }
+//              }).catch((error) => {
+//                console.log(error)
+//              })
+//            } catch (error) {
+//              console.log(error)
+//            }
+//        var self = this;
+        this.aliyunO(self.$store.state.userId,self.uploadHead, file);
+      },
+      uploadHead(url){
+          this.imgUrl = url +"?x-oss-process=style/_head";
           let params = {
-              api:"/yg-user-service/user/uploadImage/uploadFile.apec",
-            data:fd
-            }
-            console.log(fd);
-            try {
-              api.postImg(params).then((res) => {
-                var data = res.data;
-                if(data.succeed){
-                  self.$store.commit("incrementImgUrl", {'imgUrl': data.data.imgUrl});//用户头像
-                  c_js.setLocalValue('imgUrl',data.data.imgUrl);
-                  var fr = new FileReader();
-                      fr.onload = function (evt) {
-                        var t = evt.target.result;
-                        var el = document.querySelector(".p-v-info-user");
-                        el.src = t;
-                      };
-                  fr.readAsDataURL(file);
-                }
-              }).catch((error) => {
-                console.log(error)
-              })
-            } catch (error) {
-              console.log(error)
-            }
-
+              api:"/yg-user-service/user/uploadImage.apec",
+              data:{
+                imgUrl:url
+              }
+          }
+          this.post(params, function () {})
       },
       updateAddrDetail(){
         var self = this;
@@ -510,6 +533,7 @@
         }
 
         if(type == "LK"){
+          self.agFlag = true;//冷库 合作社 果农 客商
           self.itemId = fn.LK;
             self.Identity.pIDF = true;
             self.Identity.warehouse = true;
@@ -519,13 +543,14 @@
 //          this.ckFlag = false;
         }else if(type == "DB"){
           self.itemId = fn.DB;
-
+          self.agFlag = false;//代办
           self.Identity.pIDF = true;
           self.Identity.warehouse = false;
           self.Identity.storage = false;
           this.coopF = false;
           this.initCold();
         }else{
+           self.agFlag = true;//冷库 合作社 果农 客商
             var flag = false;
             if(this.comRoleFlag){
               flag = true;
@@ -575,18 +600,25 @@
               self.addrDetail = data.addressDetail || '请修改详细地址';
               self.zySort = data.mainOperating || '请修改主营品种';
               self.workYear = data.workOfYear || '请修改工作年限';
-              self.name = data.name;
-              self.imgUrl = data.imgUrl || userImgUrl;
+              self.name = data.name || data.mobile;
+              self.imgUrl = (data.imgUrl || userImgUrl) + "?x-oss-process=style/_head";
 
               self.userTypeKey = data.userTypeKey || this.$store.state.userTypeKey || c_js.getLocalValue('userTypeKey');
 
               self.userType = data.userType;
               self.mobile = data.mobile;
+              this.$store.state.userId = data.id;
               if(data.userOrgClientVO){
                 self.organiza.addr = data.userOrgClientVO.address;
                 self.organiza.saleAddr = data.userOrgClientVO.saleAddress;
                 self.organiza.addrDetail = data.userOrgClientVO.addressDetail;
-                self.organiza.pz = data.userOrgClientVO.mainOperating;
+                if(self.$store.state.mainPz == ""){
+                  self.organiza.pz = data.userOrgClientVO.mainOperating;
+                  self.$store.state.mainPz = data.userOrgClientVO.mainOperating;
+                }else{
+                  self.organiza.pz = self.$store.state.mainPz
+                }
+
                 self.organiza.name = data.userOrgClientVO.orgName;
                 self.organiza.storage = data.userOrgClientVO.orgStockCap;
                 self.organiza.remark = data.userOrgClientVO.remark;
@@ -623,6 +655,7 @@
                 self.coopFlag = false;
                 self.GNFlag = true;
               if(self.userTypeKey == "代办"){
+                  self.agFlag = false;
                 fn.DB.forEach(function (current,index) {
                   current.sh = false;
                 })
@@ -630,6 +663,7 @@
                 self.Identity.warehouse = false;
                 self.Identity.storage = false;
                 self.initCold();
+
                 if(userDetailType == "DB_DG"){
 //                   调果代办
                    fn.DB[0].sh = true;
@@ -641,31 +675,35 @@
                 self.itemId = fn.DB;
                 return;
               }else if(self.userTypeKey == "冷库"){
+                self.agFlag = true;//冷库 合作社 果农 客商
                 fn.LK.forEach(function (current,index) {
                   current.sh = false;
                 })
                 self.Identity.pIDF = true;
                 self.Identity.warehouse = true;
                 self.Identity.storage = true;
-                this.initCold();
+//                this.initCold();
                 if(userDetailType == "LK_LB"){
                   fn.LK[0].sh = true;
                   self.userDetailType = userDetailType;
                 }else if(userDetailType == "LK_BG"){
-                    this.coldBG = true;
+//                    this.coldBG = true;
                   fn.LK[1].sh = true;
                   self.userDetailType = userDetailType;
                 }
                 self.itemId =fn.LK ;
                 return;
               }else if(self.userTypeKey == "合作社"){
+                  self.agFlag = true;//冷库 合作社 果农 客商
                   self.coopFlag == true;
                 this.initCold();
               }else if(self.userTypeKey == "果农"){
+                self.agFlag = true;//冷库 合作社 果农 客商
                 self.GNFlag = false ;
                 this.initCold();
               }
               else{
+                self.agFlag = true;//冷库 合作社 果农 客商
                   this.initCold();
               }
 

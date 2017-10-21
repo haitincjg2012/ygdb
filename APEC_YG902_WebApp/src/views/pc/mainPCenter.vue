@@ -408,7 +408,7 @@
                 this.name = dt.name;
                 window.localStorage.useId = dt.userOrgId;
                 this.userTypeName = IMG.methods.userTypeNameSwitch(dt.userTypeKey);
-              this.imgUrl = dt.imgUrl || userImgUrl;//用户头像
+              this.imgUrl = (dt.imgUrl || userImgUrl) + "?x-oss-process=style/_head";//用户头像
               this.userRealAuthName = dt.userRealAuth;
 
             } else {
@@ -551,7 +551,6 @@
       height (50 /_rem);
       display flex;
       .line-three
-        opacity 0.4
       .line-one, .line-two, .line-three
         flex 1
         vertical-align middle

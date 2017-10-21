@@ -33,9 +33,10 @@ public interface ErrorCodeConst
     String MAIN_CANNOT_BOUND = "800022"; //主账号不能绑定组织
     String ORG_CANNOT_IDY = "800023"; //组织账号类型不能变为个体账号类型
     String IDY_ONLY_MAIN = "800024"; //个体账号只能设置为组织主账号
-    String ONLY_ONE = "800025"; //该企业已经通过认证，且只剩下这一个账号，你可以通过绑定其他组织或是删除该组织的形式与其解绑，不能解绑
+    String ONLY_ONE = "800025"; //该企业已经通过认证，且只剩下这一个账号了，请将组织取消认证或是删除该组织以达到您的操作要求
     String USERINFO_IMPERFECT = "800026";//用户信息不完整，请先完善信息
     String ORG_NOT_PUSHED = "800027";//组织并未推送，不需要取消
+    String ORG_CANNOT_PUSHED = "800028";//企业已经认证，不允许从个人账号变为组织账号类型
 
     //=========== DISPATCH错误码start===================
     String ERROR_600001 = "600001";//session超时
@@ -85,6 +86,7 @@ public interface ErrorCodeConst
     //===========  Product相关错误码End===================
     //===========  CMS错误码Start===================
     String ERROR_CMS_CHANNELCODE_EXISTS="410001";
+    String ERROR_ARTICLE_PRIV="410002";
 
     //===========  CMS错误码end===================
     //===========  voucher相关错误码start===================

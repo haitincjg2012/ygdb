@@ -11,6 +11,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -209,5 +210,8 @@ public class ProductInfo extends BaseModel<Long> {
             orphanRemoval = true)
     private List<ProductAttr> productAttrs;
 
-
+    /**
+     * 下架时间
+     */
+    private Date offsellDate;
 }

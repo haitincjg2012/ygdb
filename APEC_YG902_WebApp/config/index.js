@@ -23,7 +23,8 @@ module.exports = {
   },
   dev: {
     env: require('./dev.env'),
-    port: 8065,
+    // port: 8065,
+    port: 80,
     autoOpenBrowser: true,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
@@ -81,6 +82,10 @@ module.exports = {
           changeOrigin: true
       },
       '/images':{
+        target: 'http://192.168.7.111',
+        changeOrigin: true
+      },
+      '/_node_image': {
         target: 'http://192.168.7.111',
         changeOrigin: true
       },

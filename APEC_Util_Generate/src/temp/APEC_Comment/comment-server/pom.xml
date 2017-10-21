@@ -1,0 +1,123 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.apec.yiguo</groupId>
+		<artifactId>comment-parent</artifactId>
+		<version>1.0.1-RELEASE</version>
+	</parent>
+
+	<artifactId>comment-server</artifactId>
+	<name>comment-server</name>
+
+	<dependencies>
+
+		<!--依赖项底层接口和模块 start -->
+		<dependency>
+			<groupId>com.apec</groupId>
+			<artifactId>framework-jpa</artifactId>
+			<version>1.0.1-RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>com.apec</groupId>
+			<artifactId>framework-common</artifactId>
+			<version>1.0.1-RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>com.apec</groupId>
+			<artifactId>framework-springcloud</artifactId>
+			<version>1.0.1-RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>com.apec</groupId>
+			<artifactId>framework-cache</artifactId>
+			<version>1.0.1-RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>com.apec</groupId>
+			<artifactId>framework-log</artifactId>
+			<version>1.0.1-RELEASE</version>
+		</dependency>  
+
+		<!--依赖项底层接口和模块 end -->
+		<!-- spring cloud依赖包 start -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-eureka</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>com.apec</groupId>
+            <artifactId>framework-mail</artifactId>
+            <version>1.0.1-RELEASE</version>
+        </dependency>
+		<!-- spring boot 邮件支持 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-classic</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- thymeleaf 模版 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<!-- freemarker 模版 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-freemarker</artifactId>
+		</dependency>
+    </dependencies>
+
+
+
+	<!-- 加入springcloud 依赖 -->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>Brixton.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<!-- 打包方式 -->
+	<build>
+		<finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<!-- querydsl 插件 自动生成Qmodle，简化Criteria操作 -->
+			<plugin>
+				<groupId>com.mysema.maven</groupId>
+				<artifactId>apt-maven-plugin</artifactId>
+				<version>1.1.3</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>target/generated-sources/java</outputDirectory>
+							<processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
