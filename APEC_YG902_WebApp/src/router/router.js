@@ -294,6 +294,16 @@ const router = new VueRouter({
       component: require('../views/pc/viewComponents/mainOperating.vue'),
     },
     {
+      name: 'quotes',
+      path: '/quotes',
+      component: require('../views/pc/viewComponents/quotes.vue'),
+    },
+    {
+      name: 'quotesMessage',
+      path: '/quotesMessage',
+      component: require('../views/pc/viewComponents/quotesMessage.vue'),
+    },
+    {
       path: '/', redirect: '/home'
     },
   ],

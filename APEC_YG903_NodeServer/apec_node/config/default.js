@@ -68,6 +68,7 @@ module.exports = {
   "addressSaveKey": "address_his", //用户地址的历史记录
   "proPhoneKey": "phone_num",  //  电话联系数KEY
   "praiseNumKey": "praise_num",// 点赞数
-    "readedNumKey": "readed_num", // 阅读数
-    "articleAllRead": "art_allreadnum"//文章总的阅读数
+  "readedNumKey": "readed_num", // 阅读数
+  "articleAllRead": "art_allreadnum",//文章总的阅读数
+  "userArticleMsgCountKey": "article_msg_count",  // 用户未读行情消息数
 }

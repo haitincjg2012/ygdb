@@ -184,7 +184,7 @@ public interface Constants
 
     String MAX_TOTAL_CONNECTIONS = "maxTotalConnections";
 
-    String SYSTEM_GENERATOR = "system_generator";
+    String SYSTEM_GENERATOR = "system_generator ";
 
     String IDENTITY = "identity";
 

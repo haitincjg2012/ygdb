@@ -292,5 +292,4 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
   @import '../../../assets/css/ranking.css';
-
 </style>

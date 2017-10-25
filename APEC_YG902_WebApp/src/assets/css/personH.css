@@ -227,10 +227,11 @@
   margin-left: 0.5rem;
 }
 .z-p-home .z-description .z-edit-p {
-  height: 3.75rem;
+  min-height: 3.75rem;
   font-size: 0.75rem;
   margin-left: 2rem;
   color: #919191;
+  word-break: break-all;
 }
 .z-p-home .z-description .z-icon {
   width: 2rem;

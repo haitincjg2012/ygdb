@@ -217,18 +217,20 @@ public class UserServiceImpl implements UserService {
                 ESDepotOrgInfoVO esDepotOrgInfoVO = new ESDepotOrgInfoVO(esOrgInfoVO,userOrgClient.getOrgStockCap()
                         ,userOrgClient.getMainOperating());
                 postJson = JsonUtil.toJSONString(esDepotOrgInfoVO);
-                index = StringUtils.isBlank(index) ? ESProducerConstants.INDEX_URL_DEPORT_ORG : index;
+                index = StringUtils.isBlank(index) ? ESProducerConstants.INDEX_URL_DEPORT_ORG : index + userOrgClient.getElasticId();
                 break;
             case DB:
                 ESAgencyInfoVO esAgencyInfoVO = new ESAgencyInfoVO(esOrgInfoVO,userOrgClient.getSaleAddress(),userOrgClient.getMainOperating(),user.getId());
                 postJson = JsonUtil.toJSONString(esAgencyInfoVO);
-                index = StringUtils.isBlank(index) ? ESProducerConstants.INDEX_URL_DAIBAN_ORG : index;
+                index = StringUtils.isBlank(index) ? ESProducerConstants.INDEX_URL_DAIBAN_ORG : index + userOrgClient.getElasticId();
                 break;
             case KS:
                 ESMerchantInfoVO esMerchantInfoVO = new ESMerchantInfoVO(esOrgInfoVO,userOrgClient.getMainOperating(),user.getId());
                 postJson = JsonUtil.toJSONString(esMerchantInfoVO);
-                index = StringUtils.isBlank(index) ? ESProducerConstants.INDEX_URL_KESHAN_ORG : index;
+                index = StringUtils.isBlank(index) ? ESProducerConstants.INDEX_URL_KESHAN_ORG : index + userOrgClient.getElasticId();
                 break;
+            default:
+                return Constants.RETURN_SUCESS;
         }
         if(StringUtils.isNotEmpty(postJson)) {
             esPostResponseVO = apecESProducer.postESInfo(index, postJson);//发送请求

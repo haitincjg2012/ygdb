@@ -106,7 +106,7 @@ public interface CmsService {
      * @param articleVO
      * @return
      */
-    String isAttentionArticleUser(ArticleVO articleVO, String userId,Map<String,Boolean> resultMap);
+    String isAttentionArticleUser(ArticleVO articleVO, String userId,Map<String,Object> resultMap);
 
     /**
      * 置顶文章

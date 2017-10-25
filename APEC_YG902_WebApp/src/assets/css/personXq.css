@@ -225,6 +225,7 @@
   font-size: 0.75rem;
   margin-left: 2rem;
   color: #919191;
+  word-break: break-all;
 }
 .c-p-xq .z-description .z-icon {
   width: 2rem;

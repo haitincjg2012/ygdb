@@ -20,3 +20,5 @@ router.use(require('./user-sign'));
 router.use(require('./user-checksign'));
 router.use(require('./user-praisearticle'));
 router.use(require('./article-view'));
+router.use(require('./user-articlemsgcount'));
+router.use(require('./user-cleararticlemsgcount'));

@@ -266,6 +266,7 @@ export default{
       },
       search(){
         this.searchType = this.traderSearch;
+        this.shadowF = false;
         this.initPagination();
         this.list(1);
       },

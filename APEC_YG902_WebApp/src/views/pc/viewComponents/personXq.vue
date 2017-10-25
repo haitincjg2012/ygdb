@@ -1,5 +1,5 @@
 <template>
-    <div class="z-p-home c-p-xq">
+    <div class="c-p-xq">
       <my-scroll class="scrollWrapper" :data="itemGQ" :pullup="pullup" @scrollToEnd="loadMore">
         <div>
       <div class="z-p-banner">
@@ -228,13 +228,13 @@
 
           }
           if(!dt.userOrgClientVO){
-            this.person.bannerImgUrl = DBanner;
+            this.person.bannerImgUrl = DBanner + "?x-oss-process=style/_head";
           }else{
               if(dt.userOrgClientVO.orgBannerUrl == ""){
 
-                this.person.bannerImgUrl = DBanner;
+                this.person.bannerImgUrl = DBanner + "?x-oss-process=style/_detail";
               }else{
-                this.person.bannerImgUrl = dt.userOrgClientVO.orgBannerUrl;
+                this.person.bannerImgUrl = dt.userOrgClientVO.orgBannerUrl + "?x-oss-process=style/_detail";
               }
 
           }

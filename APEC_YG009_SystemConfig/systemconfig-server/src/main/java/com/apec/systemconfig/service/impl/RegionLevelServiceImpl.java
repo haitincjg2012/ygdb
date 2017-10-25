@@ -166,7 +166,16 @@ public class RegionLevelServiceImpl implements RegionLevelService {
             {
                 predicates.add(QRegionLevel.regionLevel.parentId.eq(vo.getParentId()));
             }
+            if(!StringUtils.isEmpty(vo.getLevel()))
+            {
+                predicates.add(QRegionLevel.regionLevel.level.eq(vo.getLevel()));
+            }
+            if(!StringUtils.isEmpty(vo.getCode()))
+            {
+                predicates.add(QRegionLevel.regionLevel.code.eq(vo.getCode()));
+            }
         }
+        predicates.add(QRegionLevel.regionLevel.enableFlag.eq(EnableFlag.Y));
         Predicate predicate = BooleanExpression.allOf(predicates.toArray(new BooleanExpression[predicates.size()]));
         return predicate;
     }

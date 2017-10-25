@@ -105,4 +105,6 @@ public class NewsVO extends BaseVO<Long> {
      */
     private String pubDateStr;
 
+
+
 }

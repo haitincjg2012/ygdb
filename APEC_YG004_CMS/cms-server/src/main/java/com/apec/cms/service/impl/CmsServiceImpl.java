@@ -29,7 +29,6 @@ import com.apec.framework.rockmq.client.MQProducerClient;
 import com.apec.framework.rockmq.vo.MessageBodyVO;
 import com.apec.framework.rockmq.vo.MessageVO;
 import org.apache.commons.lang.math.NumberUtils;
-import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +42,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * @author xxx
+ */
 @Service
 public class CmsServiceImpl implements CmsService {
 
@@ -61,17 +63,22 @@ public class CmsServiceImpl implements CmsService {
     @Autowired
     private MQProducerClient mqProducerClient;
 
+    /**
+     *   //缓存服务
+     */
     @Autowired
-    private CacheHashService cacheHashService;  //缓存服务
+    private CacheHashService cacheHashService;
 
     /**
      * 发送 通知文章审核结果的站内信
      */
     private void sendMessageMqInfo(String userId,Article article){
         MessageBodyVO messageBodyVO = new MessageBodyVO();
-        messageBodyVO.setType(MessageType.NOTIFICATION);//系统通知
-        messageBodyVO.setTemplateFlag(true);//使用动态模板发送
-        Map<String, String> contentMap = new HashMap<>();
+        //系统通知
+        messageBodyVO.setType(MessageType.NOTIFICATION);
+        //使用动态模板发送
+        messageBodyVO.setTemplateFlag(true);
+        Map<String, String> contentMap = new HashMap<>(16);
         contentMap.put("title",StringUtils.isBlank(article.getTitle())?"":article.getTitle());
         SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         //转换审核时间格式
@@ -86,8 +93,10 @@ public class CmsServiceImpl implements CmsService {
         messageVO.setId(idGen.nextId());
         List<Long> receivers = new ArrayList<>();
         receivers.add(NumberUtils.createLong(userId));
-        messageVO.setReceivers(receivers);//接收者
-        messageVO.setMessageStatus(MessageStatus.NEW);//用户状态
+        //接收者
+        messageVO.setReceivers(receivers);
+        //用户状态
+        messageVO.setMessageStatus(MessageStatus.NEW);
         mqProducerClient.sendConcurrently(MqTag.MESSAGE_TAG.getKey(),String.valueOf(messageVO.getId()),messageVO);
     }
 
@@ -102,7 +111,7 @@ public class CmsServiceImpl implements CmsService {
             CategoryType type = null ;
             int i = 0;
             List<ChannelVO> listVO = new ArrayList<>();
-            Map<String,List<ChannelVO>> map = new HashMap<>();
+            Map<String,List<ChannelVO>> map = new HashMap<>(16);
             for(Channel channel : list){
                 ChannelVO channelVO = new ChannelVO();
                 BeanUtil.copyPropertiesIgnoreNullFilds(channel,channelVO);
@@ -126,7 +135,6 @@ public class CmsServiceImpl implements CmsService {
     }
 
     @Override
-    @Transactional
     public String createChannelInfo(ChannelVO channelVO,UserInfoVO userInfoVO) {
         boolean flag = channelVO.getCategory() == null || StringUtils.isBlank(channelVO.getName()) || StringUtils.isBlank(channelVO.getCode());
         if(flag){
@@ -182,7 +190,6 @@ public class CmsServiceImpl implements CmsService {
     }
 
     @Override
-    @Transactional
     public String updateArticleInfo(ArticleVO articleVO, UserInfoVO userInfoVO) {
         boolean flag = articleVO.getCategory() == null || StringUtils.isBlank(articleVO.getChannelCode()) || articleVO.getId() == null
                 || StringUtils.isBlank(articleVO.getTitle()) || StringUtils.isBlank(articleVO.getContent());
@@ -197,15 +204,16 @@ public class CmsServiceImpl implements CmsService {
         }
         Article article = new Article();
         BeanUtil.copyPropertiesIgnoreNullFilds(articleVO,article,"personPub","priority");
-        article.setLastUpdateBy(String.valueOf(userInfoVO.getUserId()));//设置最后更新人
-        article.setLastUpdateDate(new Date());//设置最后更新日期
+        //设置最后更新人
+        article.setLastUpdateBy(String.valueOf(userInfoVO.getUserId()));
+        //设置最后更新日期
+        article.setLastUpdateDate(new Date());
         article.setChannel(channel);
         articleDAO.saveAndFlush(article);
         return Constants.RETURN_SUCESS;
     }
 
     @Override
-    @Transactional
     public String deleteArticleInfo(ArticleVO articleVO) {
         if(articleVO.getId() == null){
             logger.warn("[CmsServiceImpl][deleteArticleInfo] Can't create Article  info . Parameter verification failed!");
@@ -215,16 +223,17 @@ public class CmsServiceImpl implements CmsService {
         if(article == null){
             return  Constants.DATA_ISNULL;
         }
-        article.setEnableFlag(EnableFlag.N); //软删除
+        //软删除
+        article.setEnableFlag(EnableFlag.N);
         articleDAO.saveAndFlush(article);
         return Constants.RETURN_SUCESS;
     }
 
     /**
      * 文章审核
-     * @param articleVO
-     * @param userId
-     * @return
+     * @param articleVO articleVO
+     * @param userId userId
+     * @return String
      */
     @Override
     public String articleReview(ArticleVO articleVO, String userId) {
@@ -283,6 +292,20 @@ public class CmsServiceImpl implements CmsService {
         }
         BeanUtil.copyPropertiesIgnoreNullFilds(article,art);
         art.setChannelCode(article.getChannel().getCode());
+        if(art.isPersonPub()){
+            String userInfoJson = cacheHashService.hget(RedisHashConstants.HASH_USER_PREFIX + art.getCreateBy(),RedisHashConstants.HASH_OBJCONTENT_CACHE);
+            UserInfoVO userInfo ;
+            if(StringUtils.isBlank(userInfoJson)){
+                //获取不到数据,记录日志
+                logger.warn("[CmsServiceImpl][queryById]Can't find user hash cache. userNo:{}",art.getCreateBy());
+                userInfo = new UserInfoVO();
+            }else{
+                userInfo = JsonUtil.parseObject(userInfoJson,UserInfoVO.class);
+            }
+            art.setImgUrl(userInfo.getImgUrl());
+        }
+        String readNum = cacheHashService.hget(RedisHashConstants.HASH_ARTICLE_PREFIX+art.getId(),RedisHashConstants.HASH_ARTICLE_READ_NUM);
+        art.setReadNum(StringUtils.isBlank(readNum)?"0":readNum);
         return art;
     }
 
@@ -311,11 +334,15 @@ public class CmsServiceImpl implements CmsService {
             }
         }
         boolean auditStateFlag = !StringUtils.isBlank(newsDTO.getAuditState());
+        boolean notAuditStateFlag = false;
+        if(StringUtils.equals(newsDTO.getAuditState(),"0")){
+            newsDTO.setAuditState("");
+            notAuditStateFlag = true;
+        }
 
-        newsDTO.getPubDate();
         PageRequest page = new PageRequest(pageRequest.getPageNumber(),pageRequest.getPageSize());
         Page<Object[]> listModel = articleDAO.queryByChannelAndEnableFlagOrderByCreateDate(String.valueOf(channel.getId()), EnableFlag.Y.name(), nameFlag, newsDTO.getAuthor(),
-                beginDateFlag, newsDTO.getBeginDate(), endDateFlag, newsDTO.getEndDate(),personPubFlag,personPub,auditStateFlag,newsDTO.getAuditState(), page);
+                beginDateFlag, newsDTO.getBeginDate(), endDateFlag, newsDTO.getEndDate(),personPubFlag,personPub,auditStateFlag,newsDTO.getAuditState(), notAuditStateFlag, page);
         logger.info("[APP]Query News List: ChannelCode:{},size:{}",newsDTO.getChannelCode(),listModel.getTotalElements());
         List<NewsVO> listNews = getNewsVOS(listModel);
         res.setNumber(listModel.getNumber()+1);
@@ -327,9 +354,9 @@ public class CmsServiceImpl implements CmsService {
 
     /**
      * 查询我的行情列表
-     * @param newsDTO
-     * @param pageRequest
-     * @return
+     * @param newsDTO newsDTO
+     * @param pageRequest pageRequest
+     * @return PageDTO<NewsVO>
      */
     @Override
     public PageDTO<NewsVO> queryMyNewsList(NewsDTO newsDTO, PageRequest pageRequest,String userId) throws ParseException{
@@ -345,10 +372,14 @@ public class CmsServiceImpl implements CmsService {
             return  new PageDTO<>();
         }
         boolean auditStateFlag = !StringUtils.isBlank(newsDTO.getAuditState());
+        boolean notAuditStateFlag = false;
+        if(StringUtils.equals(newsDTO.getAuditState(),"0")){
+            newsDTO.setAuditState("");
+            notAuditStateFlag = true;
+        }
 
-        newsDTO.getPubDate();
         PageRequest page = new PageRequest(pageRequest.getPageNumber(),pageRequest.getPageSize());
-        Page<Object[]> listModel = articleDAO.queryMyNewsList(String.valueOf(channel.getId()), EnableFlag.Y.name(),auditStateFlag,newsDTO.getAuditState(),userId, page);
+        Page<Object[]> listModel = articleDAO.queryMyNewsList(String.valueOf(channel.getId()), EnableFlag.Y.name(),auditStateFlag,newsDTO.getAuditState(),notAuditStateFlag,userId, page);
         logger.info("[APP]Query News List: ChannelCode:{},size:{}",newsDTO.getChannelCode(),listModel.getTotalElements());
         List<NewsVO> listNews = getNewsVOS(listModel);
         res.setNumber(listModel.getNumber()+1);
@@ -371,7 +402,8 @@ public class CmsServiceImpl implements CmsService {
             logger.warn("[CmsServiceImpl][listArticleInfo] Can't find Article info .The Channel encoding not exists");
             return  new PageDTO<>();
         }
-        PageRequest page = new PageRequest(pageRequest.getPageNumber(),pageRequest.getPageSize()); //默认去top3的数据
+        //默认去top3的数据
+        PageRequest page = new PageRequest(pageRequest.getPageNumber(),pageRequest.getPageSize());
         Page<Object[]> listModel = articleDAO.queryByChannelAndEnableFlagOrderByCreateDate(String.valueOf(channel.getId()), EnableFlag.Y.name(), page);
         logger.info("[APP]Query News List: ChannelCode:{},size:{}",newsDTO.getChannelCode(),listModel.getTotalElements());
         List<NewsVO> listNews = getNewsVOS(listModel);
@@ -442,15 +474,15 @@ public class CmsServiceImpl implements CmsService {
 
     /**
      * 用户是否关注了该文章的作者
-     * @param articleVO
-     * @return
+     * @param articleVO articleVO
+     * @return String
      */
     @Override
-    public String isAttentionArticleUser(ArticleVO articleVO, String userId,Map<String,Boolean> resultMap){
+    public String isAttentionArticleUser(ArticleVO articleVO, String userId,Map<String,Object> resultMap){
         boolean isAttention = false;
         Article article = articleDAO.findOne(articleVO.getId());
         if(article == null) {
-            logger.warn("[CmsServiceImpl][queryById] Can't find  Article info !");
+            logger.warn("[CmsServiceImpl][isAttentionArticleUser] Can't find  Article info !");
             return Constants.DATA_ISNULL;
         }
         String id = article.getCreateBy();
@@ -458,7 +490,7 @@ public class CmsServiceImpl implements CmsService {
         UserInfoVO userInfo ;
         if(StringUtils.isBlank(userInfoJson)){
             //获取不到数据,记录日志
-            logger.warn("[UserServiceImpl][updateUserInfoCache]Can't find user hash cache. userNo:{}",id);
+            logger.warn("[CmsServiceImpl][isAttentionArticleUser]Can't find user hash cache. userNo:{}",id);
             userInfo = new UserInfoVO();
         }else{
             userInfo = JsonUtil.parseObject(userInfoJson,UserInfoVO.class);
@@ -472,12 +504,13 @@ public class CmsServiceImpl implements CmsService {
                 isAttention = Arrays.asList(orgIds).contains(String.valueOf(userOrgId));
             }
         }
+        resultMap.put("orgId",userOrgId == null || userOrgId == 0L?"":userOrgId);
         resultMap.put("attentionArticleUser",isAttention);
         boolean isPraise = false;
         String articlePraise = cacheHashService.hget(RedisHashConstants.HASH_USER_PREFIX + userId,RedisHashConstants.ARTICLE_PRAISE);
         if(StringUtils.isNotBlank(articlePraise)){
             String[] articlePraiseArray = articlePraise.split(",",-1);
-            logger.info("the attention userOrgs is {} , the article author's org is {}",articlePraise,articleVO.getId());
+            logger.info("[CmsServiceImpl][isAttentionArticleUser]the attention userOrgs is {} , the article author's org is {}",articlePraise,articleVO.getId());
             isPraise = Arrays.asList(articlePraiseArray).contains(String.valueOf(articleVO.getId()));
         }
         resultMap.put("praiseArticle",isPraise);
@@ -486,8 +519,8 @@ public class CmsServiceImpl implements CmsService {
 
     /**
      * 置顶文章
-     * @param articleVO
-     * @return
+     * @param articleVO articleVO
+     * @return String
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -503,8 +536,8 @@ public class CmsServiceImpl implements CmsService {
 
     /**
      * 置顶文章
-     * @param articleVO
-     * @return
+     * @param articleVO articleVO
+     * @return String
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -523,8 +556,8 @@ public class CmsServiceImpl implements CmsService {
 
     /**
      * 点赞文章
-     * @param articleVO
-     * @return
+     * @param articleVO articleVO
+     * @return String
      */
     @Override
     public String praiseArticle(ArticleVO articleVO,String userId){

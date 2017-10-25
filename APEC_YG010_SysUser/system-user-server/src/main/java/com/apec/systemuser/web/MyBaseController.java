@@ -7,7 +7,6 @@ import com.apec.framework.common.ResultData;
 import com.apec.framework.common.util.JsonUtil;
 import com.apec.framework.common.util.SpringUtil;
 import com.apec.framework.dto.BaseDTO;
-import com.apec.framework.dto.UserInfoVO;
 import com.apec.systemuser.vo.SysUserVO;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;

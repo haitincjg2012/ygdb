@@ -162,8 +162,10 @@
       this.pageCount = data.data.pageCount;
       if(data.data.pageCount == 0){
         this.$refs.childScroll.init(true);
-      }else{
-        this.$refs.childScroll.init(false);
+      }else if(data.data.pageCount == 1){
+        this.$refs.childScroll.init();
+      }else if(this.pageCount > this.pageNumber){
+        this.$refs.childScroll.start();
       }
       rows.forEach(function (current, index) {
         var obj = {
@@ -243,9 +245,11 @@
           this.emptyFlag = false;
       },
       search(){
+
         this.searchType = "";
         this.initPagination();
         this.list(1);
+        this.shadowF = false;
       },
       initPagination(){
         fn.agData = [];
@@ -413,12 +417,10 @@
 
           if(sHeight - offsetH - this.bheight == 0){
             if(this.pageCount > this.pageNumber){
-              this.$refs.childScroll.start();
               this.pageNumber ++;
               this.pageNum(this.pageNumber);
             }else{
               this.$refs.childScroll.end();
-//              Toast('数据加载完...')
             }
 
           }

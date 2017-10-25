@@ -321,7 +321,7 @@ public class CmsController extends MyBaseController {
             if(articleVO == null || articleVO.getId() == null || articleVO.getId() == 0L){
                 return super.getResultJSONStr(false, null, Constants.ERROR_100003);
             }
-            Map<String,Boolean> resultMap = new HashedMap();
+            Map<String,Object> resultMap = new HashedMap();
             String result = cmsService.isAttentionArticleUser(articleVO,String.valueOf(getUserId(jsonStr)),resultMap);
             if(StringUtils.equals(result,Constants.RETURN_SUCESS)){
                 return super.getResultJSONStr(true, resultMap, null);
@@ -405,6 +405,7 @@ public class CmsController extends MyBaseController {
             return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
         }
     }
+
 
 
 }

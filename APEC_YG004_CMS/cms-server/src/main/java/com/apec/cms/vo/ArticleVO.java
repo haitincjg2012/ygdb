@@ -107,4 +107,15 @@ public class ArticleVO extends BaseVO<Long> {
      */
     private Date passDate;
 
+    /**
+     * 发布人头像地址
+     */
+    private String imgUrl;
+
+    /**
+     * 阅读数
+     */
+    private String readNum;
+
+
 }

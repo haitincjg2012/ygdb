@@ -106,4 +106,9 @@ public interface RedisHashConstants {
      * */
     String ARTICLE_PRAISE = "article_praise";
 
+    /**
+     * 行情消息未读数
+     */
+    String HASH_USER_ARTICLE_MSG_COUNT = "article_msg_count";
+
 }
