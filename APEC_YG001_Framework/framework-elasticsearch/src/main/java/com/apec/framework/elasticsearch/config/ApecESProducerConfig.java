@@ -21,9 +21,8 @@ import org.springframework.context.annotation.Configuration;
  *
  * @author yirde  2017/7/10.
  */
-
 @Configuration
-public class ApecESProducerConfig {
+public class ApecEsProducerConfig {
 
     @Value("${elasticsearch.host1.name}")
     private String  hostOneName;
@@ -104,26 +103,26 @@ public class ApecESProducerConfig {
 
     @Value("${elasticsearch.ioThreadCount}")
     public void setIoThreadCount(int ioThreadCount) {
-        ApecESProducerConfig.ioThreadCount = ioThreadCount;
+        ApecEsProducerConfig.ioThreadCount = ioThreadCount;
     }
 
     @Value("${elasticsearch.maxConnTotal}")
     public void setMaxConnTotal(int maxConnTotal) {
-        ApecESProducerConfig.maxConnTotal = maxConnTotal;
+        ApecEsProducerConfig.maxConnTotal = maxConnTotal;
     }
 
     @Value("${elasticsearch.maxConnPerRoute}")
     public void setMaxConnPerRoute(int maxConnPerRoute) {
-        ApecESProducerConfig.maxConnPerRoute = maxConnPerRoute;
+        ApecEsProducerConfig.maxConnPerRoute = maxConnPerRoute;
     }
 
     @Value("${elasticsearch.connectionTime}")
     public void setConnectionTime(int connectionTime) {
-        ApecESProducerConfig.connectionTime = connectionTime;
+        ApecEsProducerConfig.connectionTime = connectionTime;
     }
 
     @Value("${elasticsearch.socketTimeout}")
     public void setSocketTimeout(int socketTimeout) {
-        ApecESProducerConfig.socketTimeout = socketTimeout;
+        ApecEsProducerConfig.socketTimeout = socketTimeout;
     }
 }

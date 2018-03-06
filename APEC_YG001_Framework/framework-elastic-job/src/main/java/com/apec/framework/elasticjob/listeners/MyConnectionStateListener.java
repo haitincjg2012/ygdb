@@ -6,6 +6,9 @@ import org.apache.curator.framework.state.ConnectionStateListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author xx
+ */
 public class MyConnectionStateListener implements ConnectionStateListener 
 {
     private static Logger logger = LoggerFactory.getLogger(MyConnectionStateListener.class);

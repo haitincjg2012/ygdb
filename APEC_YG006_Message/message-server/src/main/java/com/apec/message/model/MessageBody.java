@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.apec.framework.common.Constants;
@@ -26,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  *
  * @author yirde  2017/6/30.
  */
+@Data
 @Entity
 @GenericGenerator(name = Constants.SYSTEM_GENERATOR, strategy = Constants.ASSIGNED)
 public class MessageBody extends BaseModel<Long> {
@@ -35,7 +37,7 @@ public class MessageBody extends BaseModel<Long> {
     /**
      * 标题
      */
-    @Column(name = "title", nullable = true, length = 50)
+    @Column(name = "title", length = 50)
     private String title;
 
     /**
@@ -81,60 +83,6 @@ public class MessageBody extends BaseModel<Long> {
             orphanRemoval = true)
     private List<Message> messages;
 
-	public String getTitle() {
-		return title;
-	}
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public Date getSendTime() {
-		return sendTime;
-	}
-
-	public void setSendTime(Date sendTime) {
-		this.sendTime = sendTime;
-	}
-
-	public Realm getRealm() {
-		return realm;
-	}
-
-	public void setRealm(Realm realm) {
-		this.realm = realm;
-	}
-
-	public MessageType getType() {
-		return type;
-	}
-
-	public void setType(MessageType type) {
-		this.type = type;
-	}
-
-	public boolean isAllReceiver() {
-		return allReceiver;
-	}
-
-	public void setAllReceiver(boolean allReceiver) {
-		this.allReceiver = allReceiver;
-	}
-
-	public List<Message> getMessages() {
-		return messages;
-	}
-
-	public void setMessages(List<Message> messages) {
-		this.messages = messages;
-	}
 
 }

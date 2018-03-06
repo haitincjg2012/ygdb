@@ -21,6 +21,7 @@ import java.util.List;
 
 /**
  * Created by hmy on 2017/8/3.
+ * @author hmy
  */
 @RestController
 @RequestMapping("/wordBook")
@@ -37,8 +38,6 @@ public class WordBookController extends MyBaseController {
 
     /**
      * 获取需要的字典表相关数据，根据code
-     * @param json
-     * @return
      */
     @RequestMapping(value = "/listNeedWordBook",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
     public String listNeedWordBook(@RequestBody String json){
@@ -58,76 +57,80 @@ public class WordBookController extends MyBaseController {
 
     /**
      * 打包字典表中数据，生成文件给前端
-     * @param json
-     * @return
      */
     @RequestMapping(value = "/getNeedWordBook",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
     public String getNeedWordBook(@RequestBody String json){
         try{
             JSONArray ja = new JSONArray();
             WordBookViewVO vo = new WordBookViewVO();
-            vo.setCode(Constants.FORMAT_CODE);//规格code
-            Iterable<WordBookViewVO> formats = wordBookService.listNeedWordBook(vo);//规格数据
+            //规格code
+            vo.setCode(Constants.FORMAT_CODE);
+            //规格数据
+            Iterable<WordBookViewVO> formats = wordBookService.listNeedWordBook(vo);
             JSONObject jo = new JSONObject();
-            JSONArray ja_formats = new JSONArray();
+            JSONArray jaFormats = new JSONArray();
             Iterator<WordBookViewVO> it = formats.iterator();
             while(it.hasNext()){
                 WordBookViewVO viewVO = it.next();
                 if(viewVO == null){
                     continue;
                 }
-                JSONObject jo_format = new JSONObject();
-                jo_format.put("keyWord",viewVO.getKeyword());
-                ja_formats.add(jo_format);
+                JSONObject joFormat = new JSONObject();
+                joFormat.put("keyWord",viewVO.getKeyword());
+                jaFormats.add(joFormat);
             }
-            jo.put(Constants.FORMAT_CODE,ja_formats);
+            jo.put(Constants.FORMAT_CODE,jaFormats);
             ja.add(jo);
-            vo.setCode(Constants.VARIETY_CODE);//品种code
-            Iterable<WordBookViewVO> variety = wordBookService.listNeedWordBook(vo);//品种数据
+            //品种code
+            vo.setCode(Constants.VARIETY_CODE);
+            //品种数据
+            Iterable<WordBookViewVO> variety = wordBookService.listNeedWordBook(vo);
             jo = new JSONObject();
-            JSONArray ja_varietys = new JSONArray();
+            JSONArray jaVarietys = new JSONArray();
             it = variety.iterator();
             while(it.hasNext()){
                 WordBookViewVO viewVO = it.next();
                 if(viewVO == null){
                     continue;
                 }
-                JSONObject jo_variety = new JSONObject();
-                jo_variety.put("keyWord",viewVO.getKeyword());
-                ja_varietys.add(jo_variety);
+                JSONObject joVariety = new JSONObject();
+                joVariety.put("keyWord",viewVO.getKeyword());
+                jaVarietys.add(joVariety);
             }
-            jo.put(Constants.VARIETY_CODE,ja_varietys);
+            jo.put(Constants.VARIETY_CODE,jaVarietys);
             ja.add(jo);
-            vo.setCode(Constants.AREA_CODE);//区域code
-            Iterable<WordBookViewVO> areas = wordBookService.listNeedWordBook(vo);//品种数据
+            //区域code
+            vo.setCode(Constants.AREA_CODE);
+            //品种数据
+            Iterable<WordBookViewVO> areas = wordBookService.listNeedWordBook(vo);
             jo = new JSONObject();
-            JSONArray ja_areas = new JSONArray();
+            JSONArray jaAreas = new JSONArray();
             it = areas.iterator();
             while(it.hasNext()){
                 WordBookViewVO viewVO = it.next();
                 if(viewVO == null){
                     continue;
                 }
-                JSONObject jo_area = new JSONObject();
-                jo_area.put("keyWord",viewVO.getKeyword());
-                jo_area.put("value",viewVO.getValue());
+                JSONObject joArea = new JSONObject();
+                joArea.put("keyWord",viewVO.getKeyword());
+                joArea.put("value",viewVO.getValue());
                 RegionLevelVO regionLevelVO = new RegionLevelVO();
-                JSONArray ja_subCity = new JSONArray();
+                JSONArray jaSubCity = new JSONArray();
                 if(StringUtils.isNotBlank(viewVO.getValue())){
                     regionLevelVO.setParentId(viewVO.getValue());
                     //获取配置区域的下属管辖区域
                     List<RegionLevelVO> regionLevelVOS = regionLevelService.selectAll(regionLevelVO);
 
                     for(RegionLevelVO vo1:regionLevelVOS){
-                        JSONObject jo_subCity = new JSONObject();
-                        jo_subCity.put("keyWord",vo1.getName());
-                        ja_subCity.add(jo_subCity);
+                        JSONObject joSubCity = new JSONObject();
+                        joSubCity.put("keyWord",vo1.getName());
+                        jaSubCity.add(joSubCity);
                     }
                 }
-                jo_area.put(viewVO.getValue(),ja_subCity);
-                ja_areas.add(jo_area);
+                joArea.put(viewVO.getValue(),jaSubCity);
+                jaAreas.add(joArea);
             }
-            jo.put(Constants.AREA_CODE,ja_areas);
+            jo.put(Constants.AREA_CODE,jaAreas);
             ja.add(jo);
 
             return super.getResultJSONStr(true,ja, "");

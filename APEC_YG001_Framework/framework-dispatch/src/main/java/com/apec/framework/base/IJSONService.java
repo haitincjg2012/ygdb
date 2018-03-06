@@ -2,12 +2,16 @@ package com.apec.framework.base;
 
 import javax.servlet.http.HttpServletRequest;
 
-public interface IJSONService
+/**
+ * @author xxxx
+ */
+public interface IJsonService
 {
     /**
      * 发送rest服务到后台
      * @param serviceUrl 服务uri
      * @param jsonStr 请求json
+     * @return String
      */
     String invokeRestful(String serviceUrl, String jsonStr);
 

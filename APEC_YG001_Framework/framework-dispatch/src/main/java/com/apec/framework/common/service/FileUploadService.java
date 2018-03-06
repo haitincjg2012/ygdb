@@ -6,6 +6,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
+/**
+ * @author xxx
+ */
 public interface FileUploadService
 {
 
@@ -27,6 +30,7 @@ public interface FileUploadService
      * 从ftp下载文件
      * @param ftpFileName ftp文件名称
      * @throws BusinessException 业务异常
+     * @return byte[] 字节流
      */
     byte[] download(String ftpFileName) throws BusinessException;
 }

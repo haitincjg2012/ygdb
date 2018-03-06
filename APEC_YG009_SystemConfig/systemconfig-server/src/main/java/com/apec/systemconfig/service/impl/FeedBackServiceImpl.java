@@ -1,7 +1,6 @@
 package com.apec.systemconfig.service.impl;
 
 import com.apec.framework.common.Constants;
-import com.apec.framework.common.ErrorCodeConst;
 import com.apec.framework.common.PageDTO;
 import com.apec.framework.common.enumtype.EnableFlag;
 import com.apec.framework.common.util.BeanUtil;
@@ -29,6 +28,7 @@ import java.util.List;
 
 /**
  * Created by hmy on 2017/8/28.
+ * @author hmy
  */
 @Service
 public class FeedBackServiceImpl implements FeedBackService {
@@ -44,9 +44,6 @@ public class FeedBackServiceImpl implements FeedBackService {
 
     /**
      * 增加反馈信息
-     * @param feedBackVO
-     * @param userId
-     * @return
      */
     @Override
     public String addFeedBackInfo(FeedBackVO feedBackVO,String userId){
@@ -66,10 +63,8 @@ public class FeedBackServiceImpl implements FeedBackService {
      * 根据多种情况查询
      * 包括like:informantUser,reportedUser,feedBackInfo
      * eq:id,feedBackType
-     * @param vo
-     * @return
      */
-    private Predicate getInputCondition(FeedBackVO vo)
+    private Predicate getInputCondition(FeedBackDTO vo)
     {
         List<BooleanExpression> predicates = new ArrayList<>();
         if(null != vo)
@@ -86,10 +81,6 @@ public class FeedBackServiceImpl implements FeedBackService {
             {
                 predicates.add(QFeedBack.feedBack.reportedUser.like("%" + vo.getReportedUser() + "%"));
             }
-            if(!StringUtils.isEmpty(vo.getSupplementary()))
-            {
-                predicates.add(QFeedBack.feedBack.supplementary.like("%" + vo.getSupplementary() + "%"));
-            }
             if(!StringUtils.isEmpty(vo.getFeedBackInfo()))
             {
                 predicates.add(QFeedBack.feedBack.feedBackInfo.like("%" + vo.getFeedBackInfo() + "%"));
@@ -98,6 +89,16 @@ public class FeedBackServiceImpl implements FeedBackService {
             {
                 predicates.add(QFeedBack.feedBack.feedBackType.eq(vo.getFeedBackType()));
             }
+            if(vo.getRealm() != null)
+            {
+                predicates.add(QFeedBack.feedBack.realm.eq(vo.getRealm()));
+            }
+            if(vo.getStartDate() != null){
+                predicates.add(QFeedBack.feedBack.createDate.goe(vo.getStartDate()));
+            }
+            if(vo.getEndDate() != null){
+                predicates.add(QFeedBack.feedBack.createDate.loe(vo.getEndDate()));
+            }
         }
         predicates.add(QFeedBack.feedBack.enableFlag.eq(EnableFlag.Y));
         return BooleanExpression.allOf(predicates.toArray(new BooleanExpression[predicates.size()]));
@@ -105,19 +106,16 @@ public class FeedBackServiceImpl implements FeedBackService {
 
     /**
      * 分页查询反馈信息
-     * @param pageRequest
-     * @param dto 查询相应的条件信息
-     * @return
      */
+    @Override
     public PageDTO<FeedBackVO> queryFeedBackPage(PageRequest pageRequest, FeedBackDTO dto){
         PageDTO<FeedBackVO> result = new PageDTO<>();
-        FeedBackVO vo = new FeedBackVO();
-        BeanUtil.copyPropertiesIgnoreNullFilds(dto,vo);
-        Page<FeedBack> page = feedBackDAO.findAll(getInputCondition(vo),pageRequest);
+        Page<FeedBack> page = feedBackDAO.findAll(getInputCondition(dto),pageRequest);
         List<FeedBackVO> list = new ArrayList<>();
         for(FeedBack feedBack:page){
             FeedBackVO feedBackVO = new FeedBackVO();
             BeanUtil.copyPropertiesIgnoreNullFilds(feedBack,feedBackVO);
+            feedBackVO.setFeedBackTypeKey(feedBack.getFeedBackType().getKey());
             list.add(feedBackVO);
         }
         result.setRows(list);
@@ -129,8 +127,6 @@ public class FeedBackServiceImpl implements FeedBackService {
 
     /**
      * 查询举报具体信息
-     * @param feedBackVO
-     * @return
      */
     @Override
     public FeedBackVO queryFeedBackInfo(FeedBackVO feedBackVO){
@@ -144,15 +140,13 @@ public class FeedBackServiceImpl implements FeedBackService {
 
     /**
      * 增加反馈信息
-     * @param feedBackVO
-     * @param userId
-     * @return
      */
     @Override
     public String deleteFeedBackInfo(FeedBackVO feedBackVO, String userId){
         FeedBack feedBack = feedBackDAO.findOne(feedBackVO.getId());
         if(feedBack == null || feedBack.getId() == null || feedBack.getId() == 0L){
-            return Constants.DATA_ISNULL;//数据不存在
+            //数据不存在
+            return Constants.DATA_ISNULL;
         }
         feedBack.setEnableFlag(EnableFlag.N);
         feedBack.setLastUpdateBy(userId);
@@ -163,14 +157,11 @@ public class FeedBackServiceImpl implements FeedBackService {
 
     /**
      * 批量删除反馈信息
-     * @param ids
-     * @param userId
-     * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String deleteFeedBackList(List<Long> ids, String userId){
-        int row = feedBackDAO.deleteFeedBackList(ids, userId);
+        feedBackDAO.deleteFeedBackList(ids, userId);
         return Constants.RETURN_SUCESS;
     }
 

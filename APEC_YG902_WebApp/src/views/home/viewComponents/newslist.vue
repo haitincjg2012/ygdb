@@ -12,13 +12,19 @@
         </div>
         <div class="newslistL">
           <h2>{{item.title}}</h2>
-          <p>{{item.author}}<span>{{item.createDate|ymdFilter}}</span></p>
+          <!-- <p>{{item.author}}<span>{{item.createDate|ymdFilter}}</span></p> -->
+          <div class="newsinfo">
+            <p class="infoItem author">{{item.author}}</p>
+            <p class="infoItem">{{item.viewCount}}人阅读 · {{item.pubDateStr}}</p>
+          </div>
         </div>
       </div>
     </li>
+    <!--
     <li v-if="!loadMflag" class="liLast">
       <div class="loading-wrapper">没有更多信息了</div>
     </li>
+  -->
   </ul>
 </template>
 

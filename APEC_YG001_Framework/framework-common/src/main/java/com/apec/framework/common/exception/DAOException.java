@@ -1,10 +1,11 @@
 package com.apec.framework.common.exception;
 /**
  * 类 编 号： BL_PU4320201_DAOException
- * 类 名 称： DAOException
+ * 类 名 称： DaoException
  * 内容摘要: DAO异常
  * 完成日期： 2016-07-25
- * 编码作者： 
+ * 编码作者：
+ * @author xxx
 */
 public class DAOException extends ApecRuntimeException
 {
@@ -25,6 +26,7 @@ public class DAOException extends ApecRuntimeException
         super(errorCode, message, e);
     }
 
+    @Override
     public String toString()
     {
         return super.toString();

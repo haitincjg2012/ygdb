@@ -1,0 +1,18 @@
+.c-blank {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 18.75rem;
+  height: 31.15rem;
+  padding-top: 50%;
+  text-align: center;
+}
+.c-blank img {
+  height: 5.5rem;
+}
+.c-blank p {
+  position: relative;
+  font-size: 0.8rem;
+  color: #323232;
+  letter-spacing: 0.25rem;
+}

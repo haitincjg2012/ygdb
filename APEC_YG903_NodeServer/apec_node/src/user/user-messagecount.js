@@ -20,13 +20,29 @@ router.post('/_node_user/_message' + config.urlSuffix , bodyParser, function(req
         return resdata(res,succeed,response,errorMsg,errorCode);
     };
 
+var returnObj = {
+       "messageCount": 0,
+       "replyCount":0,
+       "praiseCount":0
+    };
     return ef(done, bind$(redis, 'get'), config.userTokenPrefix + token, function(json){
         if(!json){
-           return done(true,0);
+           return done(true,returnObj);
         }
+
         return ef(done, bind$(redis, 'hget'), config.userInfoPrefix + json, config.userMessageCountKey , function(obj){
-           return done(true,obj);
+          returnObj.messageCount = obj;
+          return ef(done, bind$(redis, 'hget'), config.userInfoPrefix + json, config.userReplyCountKey , function(obj){
+              returnObj.replyCount = obj;
+              return ef(done, bind$(redis, 'hget'), config.userInfoPrefix + json, config.userPraiseCountKey , function(obj){
+                  returnObj.praiseCount = obj;
+                  return done(true,returnObj);
+               });
+           });
+             return done(true,returnObj);
        });
+
+        
     });
 });
 

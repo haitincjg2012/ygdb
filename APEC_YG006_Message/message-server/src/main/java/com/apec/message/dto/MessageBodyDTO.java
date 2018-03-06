@@ -5,7 +5,16 @@ import java.util.Date;
 import com.apec.framework.common.enums.Realm;
 import com.apec.framework.common.enumtype.MessageType;
 import com.apec.framework.dto.BaseDTO;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+/**
+ * @author xxx
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class MessageBodyDTO extends BaseDTO {
 
 	/**
@@ -33,43 +42,5 @@ public class MessageBodyDTO extends BaseDTO {
 	 */
 	private MessageType type;
 
-	public String getTitle() {
-		return title;
-	}
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public Date getSentTime() {
-		return sentTime;
-	}
-
-	public void setSentTime(Date sentTime) {
-		this.sentTime = sentTime;
-	}
-
-	public Realm getRealm() {
-		return realm;
-	}
-
-	public void setRealm(Realm realm) {
-		this.realm = realm;
-	}
-
-	public MessageType getType() {
-		return type;
-	}
-
-	public void setType(MessageType type) {
-		this.type = type;
-	}
 }

@@ -18,23 +18,26 @@ public interface GoodsDAO extends BaseDAO<Goods, Long> {
 
     /**
      * 查找数据库中最近一个添加的主类信息
-     * @param mainGoods
-     * @return
+     * @param enableFlag 状态码
+     * @param mainGoods 主类商品
+     * @return Goods
      */
     Goods findFirstByMainGoodsAndEnableFlagOrderByCreateDateDesc(boolean mainGoods, EnableFlag enableFlag);
 
     /**
-     * 批量删除goods
-     * @param ids
-     * @return
+     * * 批量删除goods
+     * @param ids ids
+     * @param userId 用户id
+     * @return 删除的行数
      */
     @Modifying(clearAutomatically = true)
     @Query(value = "update goods set enable_flag = 'N',last_update_date = now(),last_update_by = :userId where id in :ids and enable_flag = 'Y'",nativeQuery = true)
     int deleteGoodsList(@Param("ids") List<Long> ids,@Param("userId") String userId);
 
     /**
-     * @param
-     * @return
+     * 查询商品信息
+     * @param id id
+     * @return 商品对象
      */
     @Query(value = " SELECT * FROM ygdb.goods g inner join ygdb.goods_attr a inner join ygdb.attribute_value v where g.id = a.goods_id \n" +
             "and a.attr_id = v.attribute_name_id and g.id = :id and g.enable_flag = 'Y' \n" +

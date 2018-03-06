@@ -10,6 +10,7 @@ import java.util.Date;
 
 /**
  * Created by wubi on 2017/9/13.
+ * @author wubi
  */
 @Data
 @NoArgsConstructor
@@ -32,12 +33,12 @@ public class NewsDTO extends BaseDTO{
     /**
      * 是否含有图片
      */
-    private boolean hasImage;
+    private Boolean hasImage;
 
     /**
      * 是否显示
      */
-    private boolean priority;
+    private Boolean priority;
 
     /**
      * 图片URL
@@ -67,46 +68,24 @@ public class NewsDTO extends BaseDTO{
 
     /**
      * 地址信息
-     *
-     * @return
      */
     private String address;
 
     /**
      * 额外信息
-     *
-     * @return
      */
     private String priv;
 
     /**
      * 开始时间
      */
-    private Date beginDate;
+    private Date startDate;
 
     /**
      * 结束时间
      */
     private Date endDate;
 
-    /**
-     * 是否为个人发布，默认为平台系统发布
-     */
-    private String personPub;
 
-    /**
-     * 审核状态
-     */
-    private String auditState;
-
-    /**
-     * 发布人id
-     */
-    private String createBy;
-
-    /**
-     * 审核通过时间
-     */
-    private Date passDate;
 
 }

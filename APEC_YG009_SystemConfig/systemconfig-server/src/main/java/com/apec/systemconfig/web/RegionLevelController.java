@@ -1,12 +1,8 @@
 package com.apec.systemconfig.web;
 
-import com.alibaba.fastjson.JSONObject;
 import com.apec.framework.common.Constants;
 import com.apec.framework.common.PageDTO;
-import com.apec.framework.common.ResultData;
-import com.apec.framework.common.util.JsonUtil;
 import com.apec.framework.log.InjectLogger;
-import com.apec.systemconfig.model.RegionLevel;
 import com.apec.systemconfig.service.RegionLevelService;
 import com.apec.systemconfig.vo.RegionLevelVO;
 import org.apache.commons.lang3.StringUtils;
@@ -18,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Created by hmy on 2017/7/28.
+ * @author hmy
  */
 @RestController
 @RequestMapping("/regionLevel")
@@ -70,7 +66,7 @@ public class RegionLevelController extends MyBaseController {
             regionLevelVO.setPageSize(50);
             PageRequest pageRequest = genPageRequest(regionLevelVO);
 
-            PageDTO<RegionLevelVO> page = null;
+            PageDTO<RegionLevelVO> page ;
             PageDTO<RegionLevelVO> pageDTO = null;
             if(regionLevelVO == null || StringUtils.isBlank(regionLevelVO.getCode())){
                 //没有传入初始父级地区id，默认查询数据库中最顶级的两个等级的地区，分页形式，如数据库中存储最大等级的地区为省，则查询省市两个等级的分页信息
@@ -90,7 +86,7 @@ public class RegionLevelController extends MyBaseController {
                 regionLevelVO.setParentId(vo.getCode());
                 pageDTO = regionLevelService.pageRegionLevel(regionLevelVO,pageRequest);
             }
-            Map<String,PageDTO<RegionLevelVO>> result = new HashMap<>();
+            Map<String,PageDTO<RegionLevelVO>> result = new HashMap<>(16);
             result.put("city",page);
             result.put("subcity",pageDTO);
             return super.getResultJSONStr(true,result,"");
@@ -108,7 +104,7 @@ public class RegionLevelController extends MyBaseController {
             regionLevelVO.setPageSize(50);
             PageRequest pageRequest = genPageRequest(regionLevelVO);
 
-            PageDTO<RegionLevelVO> page = null;
+            PageDTO<RegionLevelVO> page ;
             if(regionLevelVO == null || StringUtils.isBlank(regionLevelVO.getCode())){
                 //没有传入初始父级地区id，默认查询数据库中最顶级的两个等级的地区，分页形式，如数据库中存储最大等级的地区为省，则查询省市两个等级的分页信息
                 return super.getResultJSONStr(false,null,Constants.ERROR_100003);
@@ -127,13 +123,10 @@ public class RegionLevelController extends MyBaseController {
 
     /**
      * 查询地址信息（从最低级查到最顶级）
-     * @param json
-     * @return
      */
     @RequestMapping(value = "/searchAddress",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
     public String searchAddress(@RequestBody String json){
         try {
-//            String formJSOn = JsonUtil.getValueBykey("addId");
             RegionLevelVO regionLevelVO = getFormJSON(json,RegionLevelVO.class);
             if(regionLevelVO == null || StringUtils.isBlank(regionLevelVO.getCode())){
                 return super.getResultJSONStr(false,null, Constants.ERROR_100003);

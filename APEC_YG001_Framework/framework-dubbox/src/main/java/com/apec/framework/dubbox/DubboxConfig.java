@@ -9,6 +9,7 @@ import org.springframework.context.annotation.ImportResource;
  * 内容摘要：dubbox配置
  * 完成日期：2016-07-14
  * 编码作者：
+ * @author xxx
  */
 @Configuration
 @ImportResource("classpath:dubbox/apec-dubbo-provider.xml")

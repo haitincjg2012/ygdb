@@ -1,9 +1,5 @@
 package com.apec.systemuser.model;
 
-
-import com.apec.framework.cache.CacheHashService;
-import com.apec.framework.cache.CacheService;
-import com.apec.framework.cache.service.RedisHashCacheServiceImpl;
 import com.apec.framework.common.Constants;
 import com.apec.framework.jpa.model.BaseModel;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -11,15 +7,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.util.Date;
-import java.util.Map;
 
+/**
+ *@author xxx
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

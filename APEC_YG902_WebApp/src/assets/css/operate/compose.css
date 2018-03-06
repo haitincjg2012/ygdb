@@ -1,0 +1,124 @@
+.c-preview .preview--wrapper {
+  border-top: 1px solid transparent;
+  width: 18.75rem;
+  height: 33.35rem;
+  background-color: #B6353C;
+}
+.c-preview .preview--img_wrapper {
+  margin: 1rem auto 0;
+  width: 17.3rem;
+  height: 18.1rem;
+}
+.c-preview .preview--img {
+  width: 100%;
+}
+.c-preview .preview--user_wrapper {
+	margin-top: -0.05rem;
+  width: 17.2rem;
+  height: 6.925rem;
+  background: url("../../img/shading.png") no-repeat center;
+  background-size: 100% 100%;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-preview .preview--info_wrapper {
+  margin: auto;
+  width: 17.3rem;
+  height: 10.75rem;
+  background-color: #F9ECDF;
+}
+.c-preview .preview--user_img {
+  display: inline-block;
+  width: 4.3rem;
+  height: 4.3rem;
+  margin: 1.6rem 0.9rem 0 1.3rem;
+  border-radius: 50%;
+}
+.c-preview .preview--user_portrait {
+  width: 5.75rem;
+}
+.c-preview .c-preview-headPortrait {
+  margin: 1.25rem auto;
+  display: block;
+  width: 4.35rem;
+  height: 4.35rem;
+  border-radius: 100%;
+}
+.c-preview .preview--user_profile {
+  margin-top: 0.8rem;
+  width: 11.5rem;
+}
+.c-preview .preview--profile {
+  color: #571813;
+  font-size: 0.8rem;
+  line-height: 1.4rem;
+  width: 10.5rem;
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.c-preview .preview--footer_wrapper {
+  margin-top: 0.5rem;
+  width: 17.3rem;
+  height: 3.5rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  white-space: nowrap;
+}
+.c-preview .footer_qrcode {
+  width: 4rem;
+  height: 3rem;
+}
+.c-preview .c-znw-qrcode {
+  margin: auto;
+  display: block;
+  width: 3rem;
+  height: 3rem;
+}
+.c-preview .preview-footer_desc {
+  line-height: 1.1rem;
+  color: #9D6D6D;
+  font-size: 0.75rem;
+  vertical-align: top;
+}
+.c-preview .preview-desc_slogan {
+  font-size: 0.65rem;
+}
+.c-preview .diamond {
+  display: inline-block;
+  width: 0.4rem;
+  height: 0.4rem;
+  margin-left: 0.3rem;
+  transform-origin: 0 100%;
+  transform: rotate(-45deg);
+  background: #9D6D6D;
+}
+.c-preview .c-preview-game {
+  margin-top: 1.25rem;
+  width: 5.975rem;
+  height: 0.725rem;
+}
+.c-preview .c-preview-game-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

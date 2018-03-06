@@ -32,30 +32,31 @@ router.post('/_node_product/_user_push_list' + config.urlSuffix, bodyParser, fun
 
    return ef(done, bind$(redis, 'get'), config.userTokenPrefix + token, function(json){
        if(!json)  return done([],0,400);
-       return ef(done, bind$(redis, 'hget'), config.userInfoPrefix + json, config.userProductPushKey , function(obj){
-           var arr = [];
-           if(!obj) return done(arr,0,400); //没有数据
-           arr = obj.split(",");
-           arr.reverse();
-           var pageArr = [],j = 0 ;
-           for(var i = (pageNum - 1) * perPage ; i < pageNum*perPage ; i ++ ){
-              if(!arr[i]) break;
-              pageArr[j] = arr[i];
-              j++;
-           }
-           if(pageArr.length == 0)  return done(arr,0,400); //没有数据
-           //Search 参数拼装
-           var searchParams = {
+       var searchParams = {
               index: config.productIndex.index,
               type: config.productIndex.type,
               body: {
-                  ids: pageArr
+                query:{
+                  bool:{}
+                },
+                from: (pageNum - 1) * perPage,
+                size: perPage
               }
           };
-          return ef(done, bind$(elasticsearch,"mget"),searchParams,function(response,err){
-            return listData(response.docs,arr.length,err,done,pageArr);
+          searchParams.body.query.bool.filter = {
+              "term" : {"userId":json}
+          };
+          searchParams.body.sort = {
+            "_score":{
+               "order":"desc"
+             },
+             "createDate": {
+                "order": "desc"
+             }
+          };
+       return ef(done, bind$(elasticsearch,"search"),searchParams,function(response,err){
+            return listData(response.hits.hits,response.hits.total,err,done,[]); 
           });
-       });
    });
 });
 

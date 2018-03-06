@@ -13,13 +13,14 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
+ * @author xxx
  * Created by wjw on 2016/11/15.
  */
 @Configuration
 @ConfigurationProperties(prefix = "spring.redis.cluster")
 public class CacheConfig {
 
-   List<String> nodes;
+   private List<String> nodes;
 
     public List<String> getNodes() {
         return nodes;
@@ -36,7 +37,7 @@ public class CacheConfig {
     }
     @Bean(name="redisTemplate")
     public RedisTemplate<String,Object> redisTemplate() {
-        RedisTemplate<String,Object> template = new RedisTemplate<String,Object>();
+        RedisTemplate<String,Object> template = new RedisTemplate<>();
         RedisConnectionFactory redisConnectionFactory = redisConnectionFactory();
         template.setConnectionFactory(redisConnectionFactory);
         template.setEnableTransactionSupport(false);

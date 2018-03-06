@@ -14,6 +14,10 @@ import org.springframework.util.StringUtils;
 import com.apec.framework.cache.CacheException;
 import com.apec.framework.cache.CacheService;
 
+/**
+ * @author xxx
+ *
+ */
 @Service("cacheService")
 public class RedisCacheServiceImpl implements CacheService
 {
@@ -25,7 +29,7 @@ public class RedisCacheServiceImpl implements CacheService
 	/**
 	 * 批量删除对应的value
 	 * 
-	 * @param keys
+	 * @param keys keys
 	 */
 	public void remove(final String... keys)
 	{
@@ -38,21 +42,23 @@ public class RedisCacheServiceImpl implements CacheService
 	/**
 	 * 批量删除key
 	 * 
-	 * @param pattern
+	 * @param pattern pattern
 	 */
 	public void removePattern(final String pattern)
 	{
 		Set<String> keys = redisTemplate.keys(pattern);
-		if (keys.size() > 0)
+		if (keys.size() > 0){
 			redisTemplate.delete(keys);
+		}
+
 	}
 
 	/**
 	 * 删除对应的value
 	 * 
-	 * @param key
+	 * @param key key
 	 */
-	public void removeObject(final String key)
+	private void removeObject(final String key)
 	{
 		if (exists(key))
 		{
@@ -63,9 +69,9 @@ public class RedisCacheServiceImpl implements CacheService
 	/**
 	 * 判断缓存中是否有对应的value
 	 * 
-	 * @param key
-	 * @return
+	 * @param key key
 	 */
+	@Override
 	public boolean exists(final String key)
 	{
 		return redisTemplate.hasKey(key);
@@ -74,9 +80,9 @@ public class RedisCacheServiceImpl implements CacheService
 	/**
 	 * 写入缓存
 	 * 
-	 * @param key
-	 * @param value
-	 * @return
+	 * @param key key
+	 * @param value value
+	 * @return result result
 	 */
 	public boolean set(final String key, String value)
 	{
@@ -96,9 +102,9 @@ public class RedisCacheServiceImpl implements CacheService
 	/**
 	 * 写入缓存
 	 * 
-	 * @param key
-	 * @param value
-	 * @return
+	 * @param key key
+	 * @param value value
+	 * @return result result
 	 */
 	public boolean set(final String key, String value, Long expireTime)
 	{
@@ -119,11 +125,10 @@ public class RedisCacheServiceImpl implements CacheService
 	@Override
 	public Long increment(final String key, Long value) throws CacheException
 	{
-		Long result = 0L;
+		Long result;
 		try
 		{
-			Long operations = redisTemplate.opsForValue().increment(key, value);
-			result = operations;
+			result = redisTemplate.opsForValue().increment(key, value);
 		} catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
@@ -135,11 +140,10 @@ public class RedisCacheServiceImpl implements CacheService
 	@Override
 	public Long getIncrValue(String key) throws CacheException
 	{
-		Long result = 0L;
+		Long result;
 		try
 		{
-			Long operations = redisTemplate.opsForValue().increment(key, 0L);
-			result = operations;
+			result = redisTemplate.opsForValue().increment(key, 0L);
 		} catch (Exception e)
 		{
 			logger.error(e.getMessage(), e);
@@ -175,7 +179,6 @@ public class RedisCacheServiceImpl implements CacheService
 	{
 		try
 		{
-			//redisTemplate.delete(redisTemplate.keys(key));
 			if (exists(key))
 			{
 				redisTemplate.delete(key);
@@ -227,8 +230,8 @@ public class RedisCacheServiceImpl implements CacheService
 			ValueOperations<String, String> operations = redisTemplate.opsForValue();
 			operations.set(key, value, minutes, TimeUnit.MINUTES);
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CacheException("EXC_CACHE_ERROR", e.getMessage());
+			logger.info("exception e{}",e);
+//			throw new CacheException("EXC_CACHE_ERROR", e.getMessage());
 		}
 		
 	}

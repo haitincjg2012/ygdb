@@ -1,20 +1,18 @@
 package com.apec.framework.common.filter;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.apec.framework.cache.CacheHashService;
 import com.apec.framework.cache.CacheService;
 import com.apec.framework.common.Constants;
 import com.apec.framework.common.ErrorCodeConst;
 import com.apec.framework.common.RedisHashConstants;
 import com.apec.framework.common.ResultData;
+import com.apec.framework.common.constants.ConfigConstants;
 import com.apec.framework.common.constants.LoginConstants;
 import com.apec.framework.common.enums.Source;
 import com.apec.framework.common.exception.ApecRuntimeException;
-import com.apec.framework.common.util.JsonUtil;
-import com.apec.framework.common.util.SpringUtil;
+import com.apec.framework.common.util.BaseJsonUtil;
+import com.apec.framework.common.util.BaseSpringUtil;
 import com.apec.framework.common.util.WebUtils;
-import com.apec.framework.dto.UserInfoVO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -36,6 +34,7 @@ import java.io.PrintWriter;
  * 内容摘要：处理session超时
  * 完成日期：
  * 编码作者：
+ * @author xxx
  */
 @Component("sessionTimeOutFilter")
 public class SessionTimeOutFilter implements Filter
@@ -49,6 +48,10 @@ public class SessionTimeOutFilter implements Filter
     @Value("${repeatSubmitUrl}")
     private String repeatSubmitUrl;
 
+    @Value("${whiteListIp}")
+    private String whiteListIp;
+
+
     @Autowired
     private CacheService cacheService;
 
@@ -59,7 +62,6 @@ public class SessionTimeOutFilter implements Filter
     public void init(FilterConfig filterConfig) throws ServletException
     {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -72,41 +74,63 @@ public class SessionTimeOutFilter implements Filter
         String type = servletRequest.getHeader( Constants.CLIENT_TYPE_PARAM );
         String url = servletRequest.getRequestURI();
         String sessionId = session.getId();
-        boolean isPass = true; //如果session超时则不调用服务，默认为通过
-        boolean isRepeat = true; //是否为重复提交
-        if(allowUrls.contains( url ))
-        {
-            session.setAttribute( Constants.SESSION_ID, sessionId );
-            session.setAttribute( Constants.SESSION_IP, WebUtils.getIP((HttpServletRequest) request));
+        //如果session超时则不调用服务，默认为通过
+        boolean isPass = true;
+        //是否为重复提交
+        boolean isRepeat = true;
+        //IP
+        String ip = WebUtils.getIP(servletRequest);
+        String showLog = "请求URL：%,请求IP：%";
+        showLog = showLog.replaceFirst("%", StringUtils.isBlank(url)?"":url);
+        showLog = showLog.replaceFirst("%",StringUtils.isBlank(ip)?"":ip);
+        log.info(showLog);
+
+        //内部接口逻辑
+        if(url.endsWith(ConfigConstants.INNER_INTERFACE_SUFFIX)){
+            if(!whiteListIp.contains(ip)){
+                retFaileResponse(servletResponse);
+            }
+            request.setAttribute( Constants.USER_NO, ConfigConstants.COMMON_USERNO );
             session.setAttribute( Constants.SOURCE, type );
-        }
-        else
-        {
-        	log.info("请求来源>>>  " + type );
-            log.info(">>>>>" + servletRequest.getHeader( Constants.UA ));
-        	if(Source.WEIXIN.name().equals( type ) )
+            chain.doFilter( request, response );
+        }else{
+            //对外接口
+            if(allowUrls.contains( url ))
             {
-                servletRequest.setAttribute( Constants.CLIENT_TYPE_PARAM, type );
-                String ua = servletRequest.getHeader( Constants.UA ); //版本号：手机相关信息
-                String imei = servletRequest.getHeader( Constants.IMEI );//设备号
-
-                servletRequest.setAttribute( Constants.UA, ua );
-                servletRequest.setAttribute( Constants.IMEI, imei );
-
-                isPass = appLogTimeOut( servletRequest, servletResponse );
-                isRepeat = appRepeatAction( servletRequest, servletResponse );
+                session.setAttribute( Constants.TOKEN , servletRequest.getHeader( Constants.TOKEN ) );
+                session.setAttribute( Constants.SESSION_ID, sessionId );
+                session.setAttribute( Constants.SESSION_IP,ip  );
+                session.setAttribute( Constants.SOURCE, type );
             }
             else
             {
-                servletRequest.setAttribute( Constants.CLIENT_TYPE_PARAM, Constants.WEB );
-                isPass = webLogTimeOut( servletResponse, sessionId, servletRequest );
-                isRepeat = webRepeatAction( servletResponse, sessionId, servletRequest );
-            }
-        }
-        if(isPass && isRepeat)
-        {
+                log.info("请求来源>>>  " + type );
+                log.info(">>>>>" + servletRequest.getHeader( Constants.UA ));
+                if(Source.WEIXIN.name().equals( type ) )
+                {
+                    servletRequest.setAttribute( Constants.CLIENT_TYPE_PARAM, type );
+                    //版本号：手机相关信息
+                    String ua = servletRequest.getHeader( Constants.UA );
+                    //设备号
+                    String imei = servletRequest.getHeader( Constants.IMEI );
 
-            chain.doFilter( request, response );
+                    servletRequest.setAttribute( Constants.UA, ua );
+                    servletRequest.setAttribute( Constants.IMEI, imei );
+
+                    isPass = appLogTimeOut( servletRequest, servletResponse );
+                    isRepeat = appRepeatAction( servletRequest, servletResponse );
+                }
+                else
+                {
+                    servletRequest.setAttribute( Constants.CLIENT_TYPE_PARAM, Constants.WEB );
+                    isPass = webLogTimeOut( servletResponse, sessionId, servletRequest );
+                    isRepeat = webRepeatAction( servletResponse, sessionId, servletRequest );
+                }
+            }
+            if(isPass && isRepeat)
+            {
+                chain.doFilter( request, response );
+            }
         }
 
     }
@@ -115,7 +139,6 @@ public class SessionTimeOutFilter implements Filter
     public void destroy()
     {
         // TODO Auto-generated method stub
-
     }
 
     /**
@@ -201,9 +224,9 @@ public class SessionTimeOutFilter implements Filter
             {
                 PrintWriter out = response.getWriter();
                 resultData.setErrorCode( ErrorCodeConst.ERROR_600001 );
-                resultData.setErrorMsg( SpringUtil.getMessage( ErrorCodeConst.ERROR_600001 ) );
+                resultData.setErrorMsg( BaseSpringUtil.getMessage( ErrorCodeConst.ERROR_600001 ) );
                 resultData.setSucceed( false );
-                out.print( JsonUtil.toJSONString( resultData ) );
+                out.print( BaseJsonUtil.toJSONString( resultData ) );
                 out.close();
             }
             catch (IOException e)
@@ -237,7 +260,8 @@ public class SessionTimeOutFilter implements Filter
             String serverRepeat = cacheService.get( repeatKey );
             if(StringUtils.isBlank( serverRepeat ))
             {
-                cacheService.add( repeatKey, clientRepeat ,10); //固定缓存10分钟
+                //固定缓存10分钟
+                cacheService.add( repeatKey, clientRepeat ,10);
                 return true;
             }
             if(serverRepeat.equals( clientRepeat ))
@@ -247,10 +271,10 @@ public class SessionTimeOutFilter implements Filter
                     ResultData<Object> resultData = new ResultData<>();
                     PrintWriter out = response.getWriter();
                     resultData.setErrorCode( ErrorCodeConst.ERROR_600004 );
-                    resultData.setErrorMsg( SpringUtil.getMessage( ErrorCodeConst.ERROR_600004 ) );
+                    resultData.setErrorMsg( BaseSpringUtil.getMessage( ErrorCodeConst.ERROR_600004 ) );
                     resultData.setSucceed( false );
                     resultData.setRepeatAct( serverRepeat );
-                    out.print( JsonUtil.toJSONString( resultData ) );
+                    out.print( BaseJsonUtil.toJSONString( resultData ) );
                     out.close();
                 }
                 catch (IOException e)
@@ -263,6 +287,23 @@ public class SessionTimeOutFilter implements Filter
             cacheService.add( repeatKey, clientRepeat,10);
         }
         return true;
+    }
 
+    private void retFaileResponse( HttpServletResponse response){
+        try
+        {
+            PrintWriter out = response.getWriter();
+            ResultData<Object> resultData = new ResultData<>();
+            resultData.setErrorCode( Constants.ERROR_100008 );
+            resultData.setErrorMsg( BaseSpringUtil.getMessage( Constants.ERROR_100008 ) );
+            resultData.setSucceed( false );
+            out.print( BaseJsonUtil.toJSONString( resultData ) );
+            out.close();
+        }
+        catch (IOException e)
+        {
+            log.error( "sessionTimeOutFilter.isRepeatSubmit case:" + e.getMessage() );
+            throw new ApecRuntimeException( "sessionTimeOutFilter.isRepeatSubmit case:", e );
+        }
     }
 }

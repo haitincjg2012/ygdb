@@ -1,0 +1,44 @@
+.c-comment {
+  width: 17.75rem;
+  padding: 0 0.5rem;
+  background-color: #fff;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-comment-textarea {
+  width: 15rem;
+  height: 3rem;
+}
+.c-comment-textarea-string {
+  height: 2.75rem;
+  width: 90%;
+  font-size: 0.75rem;
+  color: #323232;
+  outline: none;
+  resize: none;
+}
+.c-comment-submit {
+  width: 2.75rem;
+  height: 3rem;
+  text-align: center;
+}
+.c-comment-submit-btn {
+  margin: 0.75rem auto;
+  width: 2.5rem;
+  height: 1rem;
+  line-height: 1rem;
+  border: 0.05rem solid #ff0000;
+  background-color: red;
+  border-radius: 0.2rem;
+  color: #fff;
+  font-size: 0.8rem;
+}

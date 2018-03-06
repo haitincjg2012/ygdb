@@ -2,6 +2,7 @@ package com.apec.goods.dto;
 
 import com.apec.framework.dto.BaseDTO;
 import com.apec.goods.vo.GoodsAttrVO;
+import lombok.Data;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import java.util.List;
  *
  * @author yirde  2017/3/23
  */
+@Data
 public class GoodsDTO extends BaseDTO {
 
     /**

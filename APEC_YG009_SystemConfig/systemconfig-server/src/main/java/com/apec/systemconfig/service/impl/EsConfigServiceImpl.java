@@ -8,9 +8,9 @@ import com.apec.framework.common.enumtype.EnableFlag;
 import com.apec.framework.common.enumtype.EsConfigStatus;
 import com.apec.framework.common.exception.BusinessException;
 import com.apec.framework.common.util.BeanUtil;
-import com.apec.framework.common.util.JsonUtil;
-import com.apec.framework.elasticsearch.producer.ApecESProducer;
-import com.apec.framework.elasticsearch.producer.ESProducerConstants;
+import com.apec.framework.common.util.BaseJsonUtil;
+import com.apec.framework.elasticsearch.producer.ApecEsProducer;
+import com.apec.framework.elasticsearch.producer.EsProducerConstants;
 import com.apec.framework.log.InjectLogger;
 import com.apec.framework.springcloud.SpringCloudClient;
 import com.apec.systemconfig.dao.EsConfigDao;
@@ -39,6 +39,7 @@ import java.util.*;
 
 /**
  * Created by wubi on 2017/9/22.
+ * @author wubi
  */
 @Service
 public class EsConfigServiceImpl implements EsConfigService {
@@ -50,7 +51,7 @@ public class EsConfigServiceImpl implements EsConfigService {
     private EsConfigDao esConfigDao;
 
     @Autowired
-    private ApecESProducer apecESProducer;
+    private ApecEsProducer apecESProducer;
 
     @Autowired
     private SpringCloudClient springCloudClient;
@@ -74,8 +75,8 @@ public class EsConfigServiceImpl implements EsConfigService {
             return Constants.COMMON_MISSING_PARAMS;
         }
 
-        //新增ES索引
-        boolean exist = apecESProducer.headESInfo(esConfigVO.getIndexName(), ""); //只判断索引
+        //新增ES索引//只判断索引
+        boolean exist = apecESProducer.headESInfo(esConfigVO.getIndexName(), "");
         if (exist) {
             logger.warn("[EsConfigServiceImpl][addConfig] Can't save New EsConfig , create index exist!");
             return Constants.COMMON_IS_EXIST;
@@ -84,12 +85,12 @@ public class EsConfigServiceImpl implements EsConfigService {
         apecESProducer.putEsInfo(esConfigVO.getIndexName(), "");
         String indexUrl;
         //创建类型
-        indexUrl = esConfigVO.getIndexName() + ESProducerConstants.OPREATION_MAPPING + Constants.SINGLE_SLASH + esConfigVO.getIndexType();
+        indexUrl = esConfigVO.getIndexName() + EsProducerConstants.OPREATION_MAPPING + Constants.SINGLE_SLASH + esConfigVO.getIndexType();
         logger.info("create type :{}", indexUrl);
         apecESProducer.putEsInfo(indexUrl, esConfigVO.getMappingStr());
         //创建别名
         logger.info("create alias :{}", indexUrl);
-        indexUrl = esConfigVO.getIndexName() + ESProducerConstants.OPREATION_ALIAS + Constants.SINGLE_SLASH + esConfigVO.getIndexAlias();
+        indexUrl = esConfigVO.getIndexName() + EsProducerConstants.OPREATION_ALIAS + Constants.SINGLE_SLASH + esConfigVO.getIndexAlias();
         apecESProducer.putEsInfo(indexUrl, "");
 
         //保存数据库
@@ -108,7 +109,7 @@ public class EsConfigServiceImpl implements EsConfigService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String updateConfigForReIndex(EsConfigVO esConfigVO, String userId) {
         //校验参数
         if (null == esConfigVO.getId()
@@ -136,7 +137,7 @@ public class EsConfigServiceImpl implements EsConfigService {
         apecESProducer.putEsInfo(esConfigVO.getNewIndexName(), "");
         String indexUrl;
         //创建类型
-        indexUrl = esConfigVO.getNewIndexName() + ESProducerConstants.OPREATION_MAPPING + Constants.SINGLE_SLASH + esConfigVO.getIndexType();
+        indexUrl = esConfigVO.getNewIndexName() + EsProducerConstants.OPREATION_MAPPING + Constants.SINGLE_SLASH + esConfigVO.getIndexType();
         logger.info("create type :{}", indexUrl);
         apecESProducer.putEsInfo(indexUrl, esConfigVO.getMappingStr());
 
@@ -145,7 +146,7 @@ public class EsConfigServiceImpl implements EsConfigService {
         //从数据库推送数据到ES 调用不同的服务
         if (StringUtils.isNotBlank(esConfigVO.getServerName())
                 && StringUtils.isNotBlank(esConfigVO.getMethodName())) {
-            Map<String, String> esPushMap = new HashMap<>();
+            Map<String, String> esPushMap = new HashMap<>(16);
             indexUrl = esConfigVO.getNewIndexName() + Constants.SINGLE_SLASH + esConfigVO.getIndexType();
             esPushMap.put("indexUrl", indexUrl);
             logger.info("indexUrl:{}", indexUrl);
@@ -169,28 +170,28 @@ public class EsConfigServiceImpl implements EsConfigService {
         esConfigDao.saveAndFlush(esConfig);
 
         //删除别名和旧索引关系
-        indexUrl = esConfigVO.getIndexName() + ESProducerConstants.OPREATION_ALIAS + Constants.SINGLE_SLASH + esConfigVO.getIndexAlias();
+        indexUrl = esConfigVO.getIndexName() + EsProducerConstants.OPREATION_ALIAS + Constants.SINGLE_SLASH + esConfigVO.getIndexAlias();
         logger.info("delete alias :{}", indexUrl);
-        Map<String, List<Object>> actionMap = new HashMap<>();
-        List<Object> actionList = new ArrayList();
-        Map<String, AliasIndexDTO> removeAliasMap = new HashMap<>();
+        Map<String, List<Object>> actionMap = new HashMap<>(16);
+        List<Object> actionList = new ArrayList<>();
+        Map<String, AliasIndexDTO> removeAliasMap = new HashMap<>(16);
         AliasIndexDTO removeAlias = new AliasIndexDTO(esConfigVO.getIndexName(), esConfigVO.getIndexAlias());
-        Map<String, AliasIndexDTO> addAliasMap = new HashMap<>();
+        Map<String, AliasIndexDTO> addAliasMap = new HashMap<>(16);
         AliasIndexDTO addAlias = new AliasIndexDTO(esConfigVO.getNewIndexName(), esConfigVO.getIndexAlias());
         removeAliasMap.put("remove", removeAlias);
         addAliasMap.put("add", addAlias);
         actionList.add(removeAliasMap);
         actionList.add(addAliasMap);
         actionMap.put("actions", actionList);
-        String jsonStr = JsonUtil.toJSONString(actionMap);
+        String jsonStr = BaseJsonUtil.toJSONString(actionMap);
         logger.info("reindex script :{}", jsonStr);
-        apecESProducer.postESInfo(ESProducerConstants.OPREATION_ALIASES, jsonStr);
+        apecESProducer.postESInfo(EsProducerConstants.OPREATION_ALIASES, jsonStr);
 
         return Constants.RETURN_SUCESS;
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String deleteConfig(EsConfigVO esConfigVO, String userId) {
         //校验参数
         if (null == esConfigVO.getId() || StringUtils.isBlank(esConfigVO.getIndexName())
@@ -199,8 +200,8 @@ public class EsConfigServiceImpl implements EsConfigService {
             return Constants.COMMON_MISSING_PARAMS;
         }
 
-        //新增ES索引
-        boolean exist = apecESProducer.headESInfo(esConfigVO.getIndexName(), ""); //只判断索引
+        //新增ES索引//只判断索引
+        boolean exist = apecESProducer.headESInfo(esConfigVO.getIndexName(), "");
         if (!exist) {
             logger.warn("[EsConfigServiceImpl][deleteConfig] Can't delete EsConfig , delete index is not exist!");
             return Constants.DATA_ISNULL;
@@ -210,7 +211,8 @@ public class EsConfigServiceImpl implements EsConfigService {
         EsConfigStatus configStatus = EsConfigStatus.valueOf(esConfigVO.getStatus());
         if (EsConfigStatus.USED.compareTo(configStatus) == 0) {
             logger.warn("[EsConfigServiceImpl][deleteConfig] Can't delete EsConfig , delete index is used!");
-            return Constants.COMMON_IS_EXIST;//已经被使用 不能删除
+            //已经被使用 不能删除
+            return Constants.COMMON_IS_EXIST;
         }
 
         //删除索引
@@ -247,7 +249,8 @@ public class EsConfigServiceImpl implements EsConfigService {
             AsyncResult<ResultData> result = new AsyncResult<>(jobResult);
             //新增回调方法处理job执行结果
             result.addCallback(reindexJobFinishTask);
-            throw e;//抛出异常保持事务一致性
+            //抛出异常保持事务一致性
+            throw e;
         }
         logger.info("======================reindex job execute success============================");
         logger.info("reindex job execute total time :{}", System.currentTimeMillis() - startTime);
@@ -266,7 +269,7 @@ public class EsConfigServiceImpl implements EsConfigService {
         PageDTO<EsConfigVO> res = new PageDTO<>();
         List<EsConfigVO> dtoList = Lists.newArrayList();
         Page<EsConfig> esConfigPage = esConfigDao.findAll(filterConditions(dto), pageRequest);
-        EsConfigVO target = null;
+        EsConfigVO target;
         for (EsConfig o : esConfigPage) {
             target = new EsConfigVO();
             BeanUtil.copyPropertiesIgnoreNullFilds(o, target);
@@ -278,7 +281,7 @@ public class EsConfigServiceImpl implements EsConfigService {
     }
 
     /**
-     * @function: 生成过滤查询条件
+     *  生成过滤查询条件
      */
     private Predicate filterConditions(EsConfigDTO dto) {
         List<BooleanExpression> myFilter = Lists.newArrayList();
@@ -293,27 +296,20 @@ public class EsConfigServiceImpl implements EsConfigService {
             if (StringUtil.isNotEmpty(dto.getStatus())) {
                 myFilter.add(param.status.eq(dto.getStatus()));
             }
-            myFilter.add(param.enableFlag.eq(EnableFlag.Y));
         }
-
         myFilter.add(param.enableFlag.eq(EnableFlag.Y));
         return BooleanExpression.allOf(myFilter.toArray(new BooleanExpression[myFilter.size()]));
     }
 
     /**
      * 请求其他服务
-     *
-     * @param server
-     * @param method
-     * @param reqMap
-     * @return
      */
     private ResultData callServer(String server, String method, Map<String, String> reqMap) {
-        ResultData resultData = null;
+        ResultData resultData;
         String url = Constants.HTTP_COLON + Constants.DOUBLE_SLASH + server + Constants.SINGLE_SLASH + method;
         try {
-            String res = springCloudClient.post(url, JsonUtil.toJSONString(reqMap));
-            resultData = JsonUtil.parseObject(res, ResultData.class);
+            String res = springCloudClient.post(url, BaseJsonUtil.toJSONString(reqMap));
+            resultData = BaseJsonUtil.parseObject(res, ResultData.class);
             if (!resultData.isSucceed()) {
                 logger.error("{},result:{},msg:{}", url, resultData.getErrorCode(), resultData.getErrorMsg());
                 throw new BusinessException(resultData.getErrorCode(), resultData.getErrorMsg());

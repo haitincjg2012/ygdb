@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * @author xx
+ */
 @RestController
 @RequestMapping(value = "sysRoleResource")
 public class SysRoleResourceController extends MyBaseController
@@ -29,7 +32,7 @@ public class SysRoleResourceController extends MyBaseController
     @RequestMapping(value = "/selectAll", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultData<List<SysRoleResourceVO>> selectAll(@RequestBody String json)
     {
-        ResultData<List<SysRoleResourceVO>> resultData = new ResultData<List<SysRoleResourceVO>>();
+        ResultData<List<SysRoleResourceVO>> resultData = new ResultData<>();
         try{
         	log.error(json);
         	String userRoleNo = getUserRoleNo(json);
@@ -61,7 +64,7 @@ public class SysRoleResourceController extends MyBaseController
     @RequestMapping(value = "/selectAllResource", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultData<List<SysResourceVO>> selectAllResource(@RequestBody String json)
     {
-        ResultData<List<SysResourceVO>> resultData = new ResultData<List<SysResourceVO>>();
+        ResultData<List<SysResourceVO>> resultData = new ResultData<>();
         try{
         	SysRoleResourceVO dto = getFormJSON(json, SysRoleResourceVO.class);
             List<SysResourceVO> data = service.selectAllResource(dto);
@@ -77,7 +80,7 @@ public class SysRoleResourceController extends MyBaseController
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultData<SysRoleResourceVO> save(@RequestBody String json)
     {
-        ResultData<SysRoleResourceVO> resultData = new ResultData<SysRoleResourceVO>();
+        ResultData<SysRoleResourceVO> resultData = new ResultData<>();
         try
         {
         	SysRoleResourceVO dto = getFormJSON(json, SysRoleResourceVO.class);

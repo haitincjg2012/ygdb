@@ -8,7 +8,7 @@ import com.apec.framework.common.ResultData;
 import com.apec.framework.common.constants.LoginConstants;
 import com.apec.framework.common.enums.Enums;
 import com.apec.framework.common.enums.Source;
-import com.apec.framework.common.util.JsonUtil;
+import com.apec.framework.common.util.BaseJsonUtil;
 import com.apec.framework.log.InjectLogger;
 import com.apec.user.service.UserService;
 import com.apec.user.vo.UserLoginVO;
@@ -64,7 +64,7 @@ public class UserLoginController  extends MyBaseController {
         ResultData<Map<String,String>> resultData = new ResultData<>();
 
         PageJSON<String> pageJSON = super.getPageJSON(jsonStr, String.class);
-        UserLoginVO userLoginVO = JsonUtil.parseObject(pageJSON.getFormJSON(), UserLoginVO.class);
+        UserLoginVO userLoginVO = BaseJsonUtil.parseObject(pageJSON.getFormJSON(), UserLoginVO.class);
         userLoginVO.setIp((String)pageJSON.getRequestAttrMap().get(Constants.SESSION_IP));
         String source = (String) pageJSON.getRequestAttrMap().get(Constants.SOURCE);
         Source sourceType = Source.WEIXIN;
@@ -80,11 +80,8 @@ public class UserLoginController  extends MyBaseController {
             return resultData;
         }
         try {
-            Long star = System.currentTimeMillis();
-            Map<String,String> resultMap = new HashMap<>();
+            Map<String,String> resultMap = new HashMap<>(16);
             String returnCode = userService.quickLogin(userLoginVO,token_out_time,resultMap,false);
-            Long end = System.currentTimeMillis();
-            log.error("[UserLogin][doLogin] Use Time : " + (end - star));
             if(StringUtils.equals(returnCode,Constants.RETURN_SUCESS)){
                 resultData.setData(resultMap);
                 resultData.setSucceed(true);

@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
@@ -16,15 +15,22 @@ import javax.mail.internet.MimeMessage;
 
 /**
  * Created by wubi on 2017/8/4.
+ * @author xxx
  */
 @Component
-public class ThymeleafMailEngin extends MailEngin{
+public class ThymeleafMailEngin extends AbstractMailEngin {
 
+    /**
+     * //执行者
+     */
     @Autowired
-    private JavaMailSender mailSender;//执行者
+    private JavaMailSender mailSender;
 
+    /**
+     * //thymeleaf
+     */
     @Autowired
-    private SpringTemplateEngine templateEngine;//thymeleaf
+    private SpringTemplateEngine templateEngine;
 
     @InjectLogger
     private Logger logger;

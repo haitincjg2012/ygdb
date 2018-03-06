@@ -3,7 +3,7 @@ package com.apec.framework.rockmq.client;
 import com.apec.framework.common.ErrorCodeConst;
 import com.apec.framework.common.ResultData;
 import com.apec.framework.common.exception.BusinessException;
-import com.apec.framework.common.util.JsonUtil;
+import com.apec.framework.common.util.BaseJsonUtil;
 import com.apec.framework.log.InjectLogger;
 import com.apec.framework.springcloud.SpringCloudClient;
 import com.apec.framework.vo.MQMessageLogVO;
@@ -27,8 +27,11 @@ public class RemotingClient {
     @Autowired
     private SpringCloudClient springCloudClient;
 
+    /**
+     * //Mq消息的URL
+     */
     @Value("${mq_message_url}")
-    private String mqMessageUrl; //Mq消息的URL
+    private String mqMessageUrl;
 
     /**
      * 推送 MQ 消息发送错误的数据
@@ -36,11 +39,11 @@ public class RemotingClient {
      */
     public void sendMqProducerFailLog(MQMessageLogVO messageLogVO){
         try {
-            String paramStr =  JsonUtil.toJSONString(messageLogVO);
+            String paramStr =  BaseJsonUtil.toJSONString(messageLogVO);
             logger.info("Send the  MQ Producer Fail MessageLog  Start. paramSr:{}", paramStr);
             String respStr = springCloudClient.post(mqMessageUrl, paramStr);
             logger.info("Send the  MQ Producer Fail MessageLog End. respStr:{}", respStr);
-            ResultData resultData= JsonUtil.parseObject(respStr, ResultData.class);
+            ResultData resultData= BaseJsonUtil.parseObject(respStr, ResultData.class);
             if((!resultData.isSucceed()) && StringUtils.isNotBlank(resultData.getErrorCode())){
                 logger.error(mqMessageUrl
                         +"\n result:"+resultData.getErrorCode()+",msg:"+resultData.getErrorMsg());

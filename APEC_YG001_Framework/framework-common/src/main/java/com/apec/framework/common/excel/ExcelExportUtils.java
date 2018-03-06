@@ -1,5 +1,7 @@
 package com.apec.framework.common.excel;
 
+import com.apec.framework.common.util.FileUtils;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,10 +12,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
-
+import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -22,27 +24,32 @@ import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.Region;
+import org.apache.poi.ss.util.CellRangeAddress;
 
+/**
+ * @author xx
+ */
 public class ExcelExportUtils {
+
+	private static final int TEN_THOUSAND = 10000;
 
 	public static String getSystemResourceMapped(HttpServletRequest request) {
 		return request.getSession().getServletContext().getRealPath("/");
 	}
 
 	public static ByteArrayOutputStream exportExcel(String[] excelheader, List<?> excellist, boolean ishk) {
-		return exportExcel(excelheader, excellist, ishk, new HashSet<Object>(), new ArrayList<Object>());
+		return exportExcel(excelheader, excellist, ishk, new HashSet<>(), new ArrayList<>());
 	}
 
 	public static void exportExcel(String templetPath, int startRow, OutputStream output, List<?> excellist,
 			boolean ishk) {
-		exportExcel(templetPath, startRow, output, excellist, ishk, new HashSet<Object>(), new ArrayList<Object>());
+		exportExcel(templetPath, startRow, output, excellist, ishk, new HashSet<>(), new ArrayList<>());
 	}
 
 	public static void exportExcel(String templetPath, int startRow, int startCol, OutputStream output,
 			List<?> excellist, boolean ishk) {
-		exportExcel(templetPath, startRow, startCol, output, excellist, ishk, new HashSet<Object>(),
-				new ArrayList<Object>());
+		exportExcel(templetPath, startRow, startCol, output, excellist, ishk, new HashSet<>(),
+				new ArrayList<>());
 	}
 
 	// javax.swing.plaf.synth
@@ -67,7 +74,7 @@ public class ExcelExportUtils {
 			sheet.setDefaultRowHeightInPoints(20);
 			if(excelheader != null){
 				for (int i = 0; i < excelheader.length; i++) {
-					sheet.setColumnWidth((short) i, (short) 3840);
+					sheet.setColumnWidth(i, 3840);
 				}
 			}
 
@@ -92,9 +99,9 @@ public class ExcelExportUtils {
 			if (excelheader != null) {
 				for (int i = 0; i < excelheader.length; i++) {
 
-					cell = row.createCell((short) i);
-					cell.setCellStyle(getHeaderStyle(book));// 单元格添加样式
-					// cell.setEncoding(HSSFCell.ENCODING_UTF_16);
+					cell = row.createCell(i);
+					cell.setCellStyle(getHeaderStyle(book));
+					// 单元格添加样式
 
 					if (ishk) {
 						cell.setCellValue(
@@ -107,8 +114,8 @@ public class ExcelExportUtils {
 			}
 			if (excellist != null && excellist.size() != 0) {
 				int n = excellist.size();
-				if (n > 10000) {
-					n = 10000;
+				if (n > TEN_THOUSAND) {
+					n = TEN_THOUSAND;
 				}
 				for (int i = 0; i < n; i++) {
 
@@ -117,56 +124,66 @@ public class ExcelExportUtils {
 					row = sheet.createRow(i + 1);
 
 					for (int j = 0; j < excelrow.length; j++) {
-						cell = row.createCell((short) j);
+						cell = row.createCell(j);
 						if (excelrow[j] instanceof Long) {
 
-							if (redcells.contains(new ExcelCell(i, j)))
+							if (redcells.contains(new ExcelCell(i, j))){
 								cell.setCellStyle(styleLongRed);
-							else
+							}
+							else {
 								cell.setCellStyle(styleLong);
+							}
 
 							cell.setCellValue(((Long) excelrow[j]).doubleValue());
 
 						} else if (excelrow[j] instanceof BigDecimal) {
 
 							if (((BigDecimal) excelrow[j]).scale() == 0) {
-								if (redcells.contains(new ExcelCell(i, j)))
+								if (redcells.contains(new ExcelCell(i, j))){
 									cell.setCellStyle(styleLongRed);
-								else
+								}
+								else {
 									cell.setCellStyle(styleLong);
+								}
 							} else {
-								if (redcells.contains(new ExcelCell(i, j)))
+								if (redcells.contains(new ExcelCell(i, j))) {
 									cell.setCellStyle(styleNumberRed);
-								else
+								}
+								else {
 									cell.setCellStyle(styleNumber);
+								}
 							}
 
 							cell.setCellValue(((Number) excelrow[j]).doubleValue());
 
 						} else if (excelrow[j] instanceof Number) {
 
-							if (redcells.contains(new ExcelCell(i, j)))
+							if (redcells.contains(new ExcelCell(i, j))){
 								cell.setCellStyle(styleNumberRed);
-							else
+							}
+							else {
 								cell.setCellStyle(styleNumber);
+							}
 
 							cell.setCellValue(((Number) excelrow[j]).doubleValue());
 
 						} else if (excelrow[j] instanceof Date) {
-							if (redcells.contains(new ExcelCell(i, j)))
+							if (redcells.contains(new ExcelCell(i, j))){
 								cell.setCellStyle(styleDateRed);
-							else
+							}
+							else {
 								cell.setCellStyle(styleDate);
+							}
 
 							cell.setCellValue((Date) excelrow[j]);
 
 						} else {
-							if (redcells.contains(new ExcelCell(i, j)))
+							if (redcells.contains(new ExcelCell(i, j))){
 								cell.setCellStyle(styleLeftRed);
-							else
+							}
+							else{
 								cell.setCellStyle(styleLeft);
-
-							// cell.setEncoding(HSSFCell.ENCODING_UTF_16);
+							}
 
 							if (ishk) {
 								cell.setCellValue(EncodingTranslate.convertString(
@@ -180,7 +197,7 @@ public class ExcelExportUtils {
 			}
 
 			for (int i = 0; i < mergedcells.size(); i++) {
-				sheet.addMergedRegion((Region) mergedcells.get(i));
+				sheet.addMergedRegion((CellRangeAddress) mergedcells.get(i));
 			}
 
 			book.write(os);
@@ -245,56 +262,66 @@ public class ExcelExportUtils {
 				row = sheet.createRow(len);
 
 				for (int j = 0; j < excelrow.length; j++) {
-					cell = row.createCell((short) j);
+					cell = row.createCell(j);
 					if (excelrow[j] instanceof Long) {
 
-						if (redcells.contains(new ExcelCell(i, j)))
+						if (redcells.contains(new ExcelCell(i, j))) {
 							cell.setCellStyle(styleLongRed);
-						else
+						}
+						else{
 							cell.setCellStyle(styleLong);
+						}
 
 						cell.setCellValue(((Long) excelrow[j]).doubleValue());
 
 					} else if (excelrow[j] instanceof BigDecimal) {
 
 						if (((BigDecimal) excelrow[j]).scale() == 0) {
-							if (redcells.contains(new ExcelCell(i, j)))
+							if (redcells.contains(new ExcelCell(i, j))){
 								cell.setCellStyle(styleLongRed);
-							else
+							}
+							else{
 								cell.setCellStyle(styleLong);
+							}
 						} else {
-							if (redcells.contains(new ExcelCell(i, j)))
+							if (redcells.contains(new ExcelCell(i, j))){
 								cell.setCellStyle(styleNumberRed);
-							else
+							}
+							else{
 								cell.setCellStyle(styleNumber);
+							}
 						}
 
 						cell.setCellValue(((Number) excelrow[j]).doubleValue());
 
 					} else if (excelrow[j] instanceof Number) {
 
-						if (redcells.contains(new ExcelCell(i, j)))
+						if (redcells.contains(new ExcelCell(i, j))){
 							cell.setCellStyle(styleNumberRed);
-						else
+						}
+						else{
 							cell.setCellStyle(styleNumber);
+						}
 
 						cell.setCellValue(((Number) excelrow[j]).doubleValue());
 
 					} else if (excelrow[j] instanceof Date) {
-						if (redcells.contains(new ExcelCell(i, j)))
+						if (redcells.contains(new ExcelCell(i, j))){
 							cell.setCellStyle(styleDateRed);
-						else
+						}
+						else{
 							cell.setCellStyle(styleDate);
+						}
 
 						cell.setCellValue((Date) excelrow[j]);
 
 					} else {
-						if (redcells.contains(new ExcelCell(i, j)))
+						if (redcells.contains(new ExcelCell(i, j))){
 							cell.setCellStyle(styleLeftRed);
-						else
+						}
+						else{
 							cell.setCellStyle(styleLeft);
-
-						// cell.setEncoding(HSSFCell.ENCODING_UTF_16);
+						}
 
 						if (ishk) {
 							cell.setCellValue(EncodingTranslate.convertString(
@@ -311,7 +338,7 @@ public class ExcelExportUtils {
 			}
 
 			for (int i = 0; i < mergedcells.size(); i++) {
-				sheet.addMergedRegion((Region) mergedcells.get(i));
+				sheet.addMergedRegion((CellRangeAddress) mergedcells.get(i));
 			}
 
 			book.write(output);
@@ -387,57 +414,67 @@ public class ExcelExportUtils {
 				row = sheet.createRow(len);
 
 				for (int j = 0; j < excelrow.length; j++) {
-					cell = row.createCell((short) startCol);
+					cell = row.createCell(startCol);
 					if (excelrow[j] instanceof Long) {
 
-						if (redcells.contains(new ExcelCell(i, j)))
+						if (redcells.contains(new ExcelCell(i, j))){
 							cell.setCellStyle(styleLongRed);
-						else
+						}
+						else{
 							cell.setCellStyle(styleLong);
+						}
 
 						cell.setCellValue(((Long) excelrow[j]).doubleValue());
 
 					} else if (excelrow[j] instanceof BigDecimal) {
 
 						if (((BigDecimal) excelrow[j]).scale() == 0) {
-							if (redcells.contains(new ExcelCell(i, j)))
+							if (redcells.contains(new ExcelCell(i, j))){
 								cell.setCellStyle(styleLongRed);
-							else
+							}
+							else{
 								cell.setCellStyle(styleLong);
+							}
 						} else {
-							if (redcells.contains(new ExcelCell(i, j)))
+							if (redcells.contains(new ExcelCell(i, j))){
 								cell.setCellStyle(styleNumberRed);
-							else
+							}
+							else{
 								cell.setCellStyle(styleNumber);
+							}
 						}
 
 						cell.setCellValue(((Number) excelrow[j]).doubleValue());
 
 					} else if (excelrow[j] instanceof Number) {
 
-						if (redcells.contains(new ExcelCell(i, j)))
+						if (redcells.contains(new ExcelCell(i, j))){
 							cell.setCellStyle(styleNumberRed);
-						else
+						}
+						else{
 							cell.setCellStyle(styleNumber);
+						}
 
 						cell.setCellValue(((Number) excelrow[j]).doubleValue());
 
 					} else if (excelrow[j] instanceof Date) {
-						if (redcells.contains(new ExcelCell(i, j)))
+						if (redcells.contains(new ExcelCell(i, j))){
 							cell.setCellStyle(styleDateRed);
-						else
+						}
+						else{
 							cell.setCellStyle(styleDate);
+						}
 
 						cell.setCellValue((Date) excelrow[j]);
 
 					} else {
-						if (redcells.contains(new ExcelCell(i, j)))
+						if (redcells.contains(new ExcelCell(i, j))){
 							cell.setCellStyle(styleLeftRed);
-						else
+						}
+						else{
 							cell.setCellStyle(styleLeft);
 
-						// cell.setEncoding(HSSFCell.ENCODING_UTF_16);
-
+						}
 						if (ishk) {
 							cell.setCellValue(EncodingTranslate.convertString(
 									ExcelExportUtils.formatString(excelrow[j]), Encoding.GB2312, Encoding.BIG5));
@@ -453,7 +490,7 @@ public class ExcelExportUtils {
 			}
 
 			for (int i = 0; i < mergedcells.size(); i++) {
-				sheet.addMergedRegion((Region) mergedcells.get(i));
+				sheet.addMergedRegion((CellRangeAddress) mergedcells.get(i));
 			}
 
 			book.write(output);
@@ -471,8 +508,8 @@ public class ExcelExportUtils {
 	/**
 	 * 传参文件名构造
 	 * 
-	 * @param fileName
-	 * @return
+	 * @param fileName fileName
+	 * @return String
 	 */
 	private static String getFileName(String fileName) {
 		StringBuffer str = new StringBuffer(fileName);
@@ -480,38 +517,39 @@ public class ExcelExportUtils {
 		return str.toString();
 	}
 
-	public static final String EMPTY = "";
+	private static String formatString(Object val) {
+		if (val == null){
+			return "";
+		}
 
-	public static String formatString(Object val) {
-		if (val == null)
-			return EMPTY;
-
-		if (val instanceof Date)
+		if (val instanceof Date){
 			return formatDate((Date) val);
+		}
 
 		return StringUtils.stripToEmpty(val.toString());
 
 	}
 
-	public static String formatDate(Date val) {
+	private static String formatDate(Date val) {
 
-		if (val == null)
+		if (val == null){
 			return "";
+		}
 
 		return DateFormatUtils.ISO_DATE_FORMAT.format(val);
 
 	}
 
-	public static HSSFCellStyle getHeaderStyle(HSSFWorkbook workBook) {
+	private static HSSFCellStyle getHeaderStyle(HSSFWorkbook workBook) {
 		HSSFFont font = workBook.createFont();
 		font.setColor(HSSFFont.COLOR_NORMAL);
 		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 		font.setFontHeightInPoints((short) 10);
 		font.setFontName("宋体");
-		HSSFCellStyle cellStyle = workBook.createCellStyle();// 创建格式
+		// 创建格式
+		HSSFCellStyle cellStyle = workBook.createCellStyle();
 		cellStyle.setFont(font);
-		cellStyle.setWrapText(true);// 自动换行 强制换行 cell.setCellValue(new
-									// HSSFRichTextString("hello/r/n world!"));
+		cellStyle.setWrapText(true);
 		cellStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
 		cellStyle.setBorderTop(HSSFCellStyle.BORDER_DOTTED);
 		cellStyle.setBorderBottom(HSSFCellStyle.BORDER_DOTTED);
@@ -519,4 +557,26 @@ public class ExcelExportUtils {
 		cellStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
 		return cellStyle;
 	}
+
+	public static XlsVO exportExcel(String[] excelHeader,List<Object[]> results,String fileName, String excelOutPath,String excelOutUrl){
+		String filePath = FileUtils.getFileRelativePath(excelOutPath);
+		ByteArrayOutputStream os = exportExcel(excelHeader, results, false);
+		byte[] b = os.toByteArray();
+		ByteArrayInputStream in = new ByteArrayInputStream(b);
+//		ftpService.uploadFile(filePath, fileName, in);
+		XlsVO xlsVO = new XlsVO();
+		xlsVO.setFileName(fileName);
+		xlsVO.setUrl(excelOutUrl +filePath + fileName);
+		return xlsVO;
+	}
+
+	public static String getExcelFileName(String fileName){
+		UUID uuid = UUID.randomUUID();
+		int random = new Random().nextInt(10);
+		//uuid获取的字符串中随机取前十位为开始长度,取6位
+		String randomStr = uuid.toString().substring(random,random + 6).replace("-", "");
+		return fileName + randomStr + ".xls";
+	}
+
+
 }

@@ -24,7 +24,7 @@ public interface ChannelDAO extends BaseDAO<Channel, Long> {
      * 根据状态和EnableFlag 状态 统计
      * @param code 栏目编码
      * @param enableFlag 状态控制
-     * @return
+     * @return 统计结果
      */
     Long countByCodeAndEnableFlag(String code,EnableFlag enableFlag);
 
@@ -32,7 +32,7 @@ public interface ChannelDAO extends BaseDAO<Channel, Long> {
      * 根据Code查询
      * @param code 编码
      * @param enableFlag 状态
-     * @return
+     * @return Channel
      */
     Channel findByCodeAndEnableFlag(String code,EnableFlag enableFlag);
 

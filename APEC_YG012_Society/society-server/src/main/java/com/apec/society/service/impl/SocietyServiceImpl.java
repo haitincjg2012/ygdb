@@ -18,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 圈子服务实现类
@@ -53,4 +55,21 @@ public class SocietyServiceImpl implements SocietyService {
         societyInfoDAO.save(societyInfo);
         return Constants.RETURN_SUCESS;
     }
+
+    /**
+     * 查看所有的圈子信息
+     * @return 所有的圈子信息
+     */
+    @Override
+    public List<SocietyInfoVO> getAllSocietyInfo(){
+        List<SocietyInfoVO> societyInfoVOS = new ArrayList<>();
+        List<SocietyInfo> societyInfos = societyInfoDAO.findAll();
+        societyInfos.forEach(societyInfo -> {
+            SocietyInfoVO societyInfoVO = new SocietyInfoVO();
+            BeanUtil.copyPropertiesIgnoreNullFilds(societyInfo,societyInfoVO);
+            societyInfoVOS.add(societyInfoVO);
+        });
+        return societyInfoVOS;
+    }
+
 }

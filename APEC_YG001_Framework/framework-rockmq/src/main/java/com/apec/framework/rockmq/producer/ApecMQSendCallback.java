@@ -8,7 +8,7 @@ import com.alibaba.rocketmq.client.producer.SendResult;
  *
  * @author yirde  2017/7/4.
  */
-public class ApecMQSendCallback  implements SendCallback {
+public class ApecMqSendCallback implements SendCallback {
 
    //TODO 暂时不考虑采用异步回调的方式
     @Override

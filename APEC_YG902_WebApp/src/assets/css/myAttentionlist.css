@@ -104,19 +104,24 @@
   height: 0.7rem;
 }
 .gsy-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-address {
-  height: 0.625rem;
-  line-height: 0.625rem;
-  margin-top: 0.65rem;
+  height: 0.75rem;
+  line-height: 0.75rem;
+  margin-top: 0.6rem;
   vertical-align: top;
 }
 .gsy-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-address .pos-pic {
   width: 0.425rem;
   height: 0.55rem;
-  vertical-align: middle;
+  vertical-align: 0.15rem;
 }
 .gsy-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-address .z-ag-addr {
   font-size: 0.65rem;
   color: #969696;
+  display: inline-block;
+  width: 11rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .gsy-agencylist .z-com-f .primaryMain .z-ag-info .z-ag-result {
   height: 0.65rem;

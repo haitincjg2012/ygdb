@@ -1,6 +1,8 @@
 package com.apec.framework.dto;
 
-
+/**
+ * @author xxx
+ */
 public class MenuVO
 {
     private Long id;
@@ -13,7 +15,7 @@ public class MenuVO
 
     private String upMenuNo;
     
-    private String sortpos;
+    private String sortPos;
     
     private String menuImgUrl;
     
@@ -69,14 +71,14 @@ public class MenuVO
         this.upMenuNo = upMenuNo;
     }
 
-    public String getSortpos()
+    public String getSortPos()
     {
-        return sortpos;
+        return sortPos;
     }
 
-    public void setSortpos(String sortpos)
+    public void setSortpos(String sortPos)
     {
-        this.sortpos = sortpos;
+        this.sortPos = sortPos;
     }
 
     public String getMenuImgUrl()
@@ -97,6 +99,11 @@ public class MenuVO
     public void setMenuLevel(String menuLevel)
     {
         this.menuLevel = menuLevel;
+    }
+
+    @Override
+    public String toString(){
+        return super.toString();
     }
     
 }

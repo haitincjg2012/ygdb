@@ -20,7 +20,7 @@ import java.io.InputStream;
 
 /**
  * 基本描述：FtpServiceImpl FTP业务逻辑处理
- *
+ * @author xxx
  */
 @Service
 public class FtpServiceImpl implements FtpService
@@ -179,7 +179,8 @@ public class FtpServiceImpl implements FtpService
         FTPClient ftpClient = createNewConnect();
         try
         {
-            FTPFile[] fileInfoArray = ftpClient.listFiles( ftpFileName );//列出指定路径所有文件（包括文件夹）
+            //列出指定路径所有文件（包括文件夹）
+            FTPFile[] fileInfoArray = ftpClient.listFiles( ftpFileName );
             if(fileInfoArray != null && fileInfoArray.length > 0)
             {
                 ByteArrayOutputStream out = new ByteArrayOutputStream();

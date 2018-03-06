@@ -1,28 +1,22 @@
 package com.apec.framework.mail.service.impl;
 
-import com.apec.framework.common.Constants;
-import com.apec.framework.common.ErrorCodeConst;
-import com.apec.framework.common.excel.ExcelStyle;
-import com.apec.framework.common.exception.BusinessException;
 import com.apec.framework.common.exception.ServerException;
 import com.apec.framework.log.InjectLogger;
 import com.apec.framework.mail.config.MailConfig;
-import com.apec.framework.mail.engin.MailEngin;
+import com.apec.framework.mail.engin.AbstractMailEngin;
 import com.apec.framework.mail.engin.facotry.EnginFactory;
 import com.apec.framework.mail.service.MailService;
 import com.apec.framework.mail.vo.Mail;
-import com.netflix.loadbalancer.Server;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.formula.constant.ErrorConstant;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
 /**
  * Created by wubi on 2017/8/4.
+ * @author xxx
  */
 @Service
 public class MailServiceImpl implements MailService{
@@ -41,9 +35,9 @@ public class MailServiceImpl implements MailService{
 
     /**
      * 发送邮件服务 根据type选择不同模板发送
-     * @param mail
+     * @param mail mail
      * @param genEnv 标题是否生成环境信息
-     * @throws Exception
+     * @throws Exception Exception
      */
     @Override
     @Async
@@ -62,7 +56,7 @@ public class MailServiceImpl implements MailService{
     private void send(Mail mail) {
         try {
             logger.info("=================get mail engin===================");
-            MailEngin engin = facotry.createEngin(mail.getType());
+            AbstractMailEngin engin = facotry.createEngin(mail.getType());
             logger.info("============send mail start=================");
             engin.sendMail(mail);
             logger.info("============send mail end=================");

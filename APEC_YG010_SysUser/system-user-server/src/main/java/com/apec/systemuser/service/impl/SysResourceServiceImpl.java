@@ -27,6 +27,9 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ *@author xxx
+ */
 @Service
 public class SysResourceServiceImpl implements SysResourceService
 {
@@ -40,7 +43,7 @@ public class SysResourceServiceImpl implements SysResourceService
     public PageDTO<SysResourceVO> searchPage(SysResourceVO dto, PageRequest pageRequest)
     {
         Page<SysResource> page = dao.findAll(getInputCondition(dto), pageRequest);
-        PageDTO<SysResourceVO> pageDto = new PageDTO<SysResourceVO>();
+        PageDTO<SysResourceVO> pageDto = new PageDTO<>();
         List<SysResourceVO> list = new ArrayList<>();
         for(SysResource emtity : page)
         {
@@ -76,7 +79,7 @@ public class SysResourceServiceImpl implements SysResourceService
     	sort = sort.and(sort1);
         Iterable<SysResource> iterable = dao.findAll(getInputCondition(vo),sort);
         Iterator<SysResource> it = iterable.iterator();
-        List<SysResourceVO> list = new ArrayList<SysResourceVO>();
+        List<SysResourceVO> list = new ArrayList<>();
         while (it.hasNext())
         {
             SysResource entity = it.next();
@@ -132,12 +135,10 @@ public class SysResourceServiceImpl implements SysResourceService
     /**
      * 根据多种情况查询
      * 包括like：name，eq：mobile，eq：orgCode，like：loginName
-     * @param vo
-     * @return
      */
     private Predicate getInputCondition(SysResourceVO vo)
     {
-        List<BooleanExpression> predicates = new ArrayList<BooleanExpression>();
+        List<BooleanExpression> predicates = new ArrayList<>();
         if(null != vo)
         {
             if(!StringUtil.isEmpty(vo.getName()))

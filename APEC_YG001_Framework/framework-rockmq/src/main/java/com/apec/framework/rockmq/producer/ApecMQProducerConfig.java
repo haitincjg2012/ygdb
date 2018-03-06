@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * @author yirde  2017/7/3.
  */
 @Configuration
-public class ApecMQProducerConfig {
+public class ApecMqProducerConfig {
 
     /**
      * MQ Producer Group
@@ -37,8 +37,8 @@ public class ApecMQProducerConfig {
     private Logger logger;
 
     @Bean
-    public ApecMQProducer getApecMQProducer(){
-        ApecMQProducer apecMQProducer = new ApecMQProducer();
+    public ApecMqProducer getApecMQProducer(){
+        ApecMqProducer apecMQProducer = new ApecMqProducer();
         apecMQProducer.setNamesrvAddr(namesrvAddr);
         apecMQProducer.setProducerGroup(producerGroup);
         apecMQProducer.setCreateTopicKey(Constants.DEFAULT_ROCKETMQ_TOPIC);

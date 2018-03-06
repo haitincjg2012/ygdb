@@ -10,6 +10,9 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+/**
+ * @author xx
+ */
 public class HttpRequestUtil {
 	private static final String DEFAULT_ENCODING = "UTF-8";
 
@@ -28,7 +31,6 @@ public class HttpRequestUtil {
 				}
 				getURL.deleteCharAt(getURL.length() - 1);
 			}
-			// System.out.println("url:" + getURL.toString());
 			URL getUrl = new URL(getURL.toString());
 			// 根据拼凑的URL，打开连接，URL.openConnection函数会根据URL的类型，
 			// 返回不同的URLConnection子类的对象，这里URL是一个http，因此实际返回的是HttpURLConnection
@@ -40,10 +42,10 @@ public class HttpRequestUtil {
 			// 服务器
 			connection.connect();
 			// 取得输入流，并使用Reader读取
-			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), encoding));// 设置编码,否则中文乱码
+			// 设置编码,否则中文乱码
+			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), encoding));
 			String lines;
 			while ((lines = reader.readLine()) != null) {
-				// lines = new String(lines.getBytes(), "utf-8");
 				result += lines;
 			}
 			reader.close();
@@ -73,18 +75,7 @@ public class HttpRequestUtil {
 		connection.setRequestMethod("POST");
 		// Post 请求不能使用缓存
 		connection.setUseCaches(false);
-		// This method takes effects to every instances of this class.
-		// URLConnection.setFollowRedirects是static函数，作用于所有的URLConnection对象。
-		// connection.setFollowRedirects(true);
-		// This methods only takes effacts to this instance.
-		// URLConnection.setInstanceFollowRedirects是成员函数，仅作用于当前函数
 		connection.setInstanceFollowRedirects(true);
-		// Set the content type to urlencoded,because we will write some
-		// URL-encoded content to the connection.
-		// Settings above must be set before connect!
-		// 配置本次连接的Content-type，配置为application/x-www-form-urlencoded的
-		// 意思是正文是urlencoded编码过的form参数，下面我们可以看到我们对正文内容使用URLEncoder.encode
-		// 进行编码
 		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
 		connection.setConnectTimeout(60000);
@@ -99,11 +90,10 @@ public class HttpRequestUtil {
 			StringBuilder content = new StringBuilder("");
 			for (Entry<String, Object> param : params.entrySet()) {
 				if (null == param.getValue()) {
-					content.append(param.getKey()).append("=").append(URLEncoder.encode("", "UTF-8")).append("&");
+					content.append(param.getKey()).append("=").append(URLEncoder.encode("", encoding)).append("&");
 				} else {
-					content.append(param.getKey()).append("=").append(URLEncoder.encode(param.getValue().toString(), "UTF-8")).append("&");
+					content.append(param.getKey()).append("=").append(URLEncoder.encode(param.getValue().toString(), encoding)).append("&");
 				}
-				// content.append(param.getKey()).append("=").append(param.getValue().toString()).append("&");
 			}
 			content.deleteCharAt(content.length() - 1);
 			// DataOutputStream.writeBytes将字符串中的16位的unicode字符以8位的字符形式写道流里面
@@ -112,18 +102,19 @@ public class HttpRequestUtil {
 			try {
 				out.close();
 			} catch (IOException e) {
+				throw new IOException();
 			}
 		}
-
-		BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));// 设置编码,否则中文乱码
-		String line = "";
+		// 设置编码,否则中文乱码
+		BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), encoding));
+		String line;
 		while ((line = reader.readLine()) != null) {
-			// line = new String(line.getBytes(), "utf-8");
 			result += line;
 		}
 		try {
 			reader.close();
 		} catch (IOException e) {
+			throw new IOException();
 		}
 		connection.disconnect();
 

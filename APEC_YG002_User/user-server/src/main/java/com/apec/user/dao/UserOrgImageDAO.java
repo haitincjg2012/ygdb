@@ -9,6 +9,7 @@ import java.util.List;
 /**
  * 用户组织的实例图片
  * Created by hmy on 2017/9/1.
+ * @author hmy
  */
 public interface UserOrgImageDAO extends BaseDAO<UserOrgImage,Long> {
 

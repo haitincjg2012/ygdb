@@ -2,12 +2,10 @@ package com.apec.systemuser.service.impl;
 
 import com.apec.framework.common.Constants;
 import com.apec.framework.common.PageDTO;
-import com.apec.framework.common.ResultData;
 import com.apec.framework.common.StringUtil;
 import com.apec.framework.common.enumtype.EnableFlag;
 import com.apec.framework.common.exception.ServerException;
 import com.apec.framework.common.util.BeanUtil;
-import com.apec.framework.common.util.JsonUtil;
 import com.apec.framework.log.InjectLogger;
 import com.apec.framework.springcloud.SpringCloudClient;
 import com.apec.systemuser.dao.SysUserDao;
@@ -26,9 +24,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
+/**
+ * @author xxx
+ */
 @Service
 public class SysUserServiceImpl implements SysUserService
 {
@@ -50,15 +52,14 @@ public class SysUserServiceImpl implements SysUserService
     @Override
     public PageDTO<SysUserVO> searchPage(SysUserVO dto, PageRequest pageRequest)
     {
-    	Map<String,String> reqMap = new HashMap<String,String>();
         //调用用户接口
-        Map<String,String> map = new HashMap<String,String>();
+        Map<String,String> map = new HashMap<>(16);
         List<SysRoleVO> sysRoleList =sysRoleService.selectAll(new SysRoleVO());
         for (SysRoleVO sysRoleVO: sysRoleList) {
             map.put(String.valueOf(sysRoleVO.getId()), sysRoleVO.getName());
         }
         Page<SysUser> page = dao.findAll(getInputCondition(dto), pageRequest);
-        PageDTO<SysUserVO> pageDto = new PageDTO<SysUserVO>();
+        PageDTO<SysUserVO> pageDto = new PageDTO<>();
         List<SysUserVO> list = new ArrayList<>();
         for(SysUser emtity : page)
         {
@@ -90,17 +91,7 @@ public class SysUserServiceImpl implements SysUserService
     @Override
     public List<SysUserVO> selectAll(SysUserVO vo)
     {
-        Iterable<SysUser> iterable = dao.findAll(getInputCondition(vo));
-        Iterator<SysUser> it = iterable.iterator();
-        List<SysUserVO> list = new ArrayList<SysUserVO>();
-        while (it.hasNext())
-        {
-            SysUser entity = it.next();
-            SysUserVO dto = new SysUserVO();
-            BeanUtil.copyPropertiesIgnoreNullFilds(entity, dto);
-            list.add(dto);
-        }
-        return list;
+        return selectAll(getInputCondition(vo));
     }
 
     @Override
@@ -108,7 +99,7 @@ public class SysUserServiceImpl implements SysUserService
     {
         Iterable<SysUser> iterable = dao.findAll(predicate);
         Iterator<SysUser> it = iterable.iterator();
-        List<SysUserVO> list = new ArrayList<SysUserVO>();
+        List<SysUserVO> list = new ArrayList<>();
         while (it.hasNext())
         {
             SysUser entity = it.next();
@@ -185,22 +176,16 @@ public class SysUserServiceImpl implements SysUserService
     public boolean isExist(SysUserVO vo)
     {
         List<SysUserVO> list = this.selectAll(vo);
-        if(list != null && list.size() > 0)
-        {
-            return true;
-        }
-        return false;
+        return !CollectionUtils.isEmpty(list);
     }
 
     /**
      * 根据多种情况查询
      * 包括like：name，eq：mobile，like：loginName
-     * @param vo
-     * @return
      */
     private Predicate getInputCondition(SysUserVO vo)
     {
-        List<BooleanExpression> predicates = new ArrayList<BooleanExpression>();
+        List<BooleanExpression> predicates = new ArrayList<>();
         if(null != vo)
         {
             if(!StringUtil.isEmpty(vo.getName()))
@@ -216,26 +201,5 @@ public class SysUserServiceImpl implements SysUserService
         Predicate predicate = BooleanExpression.allOf(predicates.toArray(new BooleanExpression[predicates.size()]));
         return predicate;
     }
-    
-    /**
-     * 请求其他服务
-     * @param server
-     * @param method
-     * @param reqMap
-     * @return
-     */
-    private ResultData callServer(String server, String method, Map<String,String> reqMap){
-        ResultData resultData = null;
-        String url = Constants.HTTP_COLON + Constants.DOUBLE_SLASH + server + Constants.SINGLE_SLASH + method;
-        try{
-            String res = springCloudClient.post(url, JsonUtil.toJSONString(reqMap));
-            resultData = JsonUtil.parseObject(res, ResultData.class);
-        }catch (Exception e){
-            log.error("调用后台服务异常 " + url, e);
-            resultData =  new ResultData<>();
-            resultData.setSucceed(false);
-            resultData.setErrorCode(Constants.SYS_ERROR);
-        }
-        return resultData;
-    }
+
 }

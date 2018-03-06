@@ -135,7 +135,7 @@
         deliveryTime: '',//
         voucherUrl: '',//凭据图片路径
         voucherGoodsVO: '',//上传凭据商品信息
-        goodsList: [],//商品集合
+        goodsList: null,//商品集合
         goodCom: '',//用于显示的商品
         menuLeft: '新增单据',
         dataAur: [
@@ -159,6 +159,7 @@
 //        this._initScroll();
     },
     activated(){
+//        this.goodsList = null;
     },
     computed: {
       _btnshow(){
@@ -224,6 +225,7 @@
         }
       },
       _goSelGoods(){
+//          this.goodsList = [];
         this.$router.push({name: 'billList'})
       },
       addrSel(){
@@ -344,6 +346,7 @@
 //      window.addEventListener('scroll', this.pos, false);
     },
     beforeRouteEnter(to, from, next) {
+        console.log(1111);
       next(vm=>
       {
         if (from.name === "addressSel") {
@@ -364,6 +367,7 @@
           if (data.attrValueId) {
             vm.goodInfo['skuName'] = data.attrValue;
             vm.goodInfo['skuId'] = data.attrValueId;
+            vm.goodsList = vm.goodsList?vm.goodsList:[];
             vm.goodsList.push(vm.goodInfo);
             vm.$store.commit("incrementuploadGoodList", {'uploadGoodList': {}});
           }
@@ -382,7 +386,7 @@
           vm.deliveryTime = '';//
           vm.voucherUrl = '';//凭据图片路径
           vm.voucherGoodsVO = '';//上传凭据商品信息
-          vm.goodsList = [];
+          vm.goodsList = null;
           vm.cityId = '';
           vm.countyId = '';
           vm.townId =  '';

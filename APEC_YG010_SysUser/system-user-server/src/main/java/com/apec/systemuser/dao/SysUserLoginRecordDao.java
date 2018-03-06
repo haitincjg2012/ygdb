@@ -5,6 +5,7 @@ import com.apec.systemuser.model.SysUserLoginRecord;
 
 /**
  * Created by wubi on 2017/8/1.
+ * @author xxx
  */
 public interface SysUserLoginRecordDao extends BaseDAO<SysUserLoginRecord, Long> {
 }

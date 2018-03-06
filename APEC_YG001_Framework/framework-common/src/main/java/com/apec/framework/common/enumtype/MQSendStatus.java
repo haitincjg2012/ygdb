@@ -9,13 +9,19 @@ import com.apec.framework.common.enums.BaseEnum;
  */
 public enum MQSendStatus implements BaseEnum {
 
+    /**
+     * 发送失败
+     */
      FAILURE("发送失败"),
 
-     SUCCESS("发送成功") ; //远程地址访问
+    /**
+     *  //远程地址访问
+     */
+     SUCCESS("发送成功") ;
 
     private final String key;
 
-    private MQSendStatus(String key) {
+    MQSendStatus(String key) {
         this.key = key;
     }
 

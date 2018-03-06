@@ -41,6 +41,7 @@ exports = module.exports = function (elastic,total,err,done,saveProductFlag) {
        "userId": elasticSource.userId,
        "timeout":elasticSource.timeout,
        "createDate":elasticSource.createDate,
+       "productTags":elasticSource.productTags,
        "showCredateTime": datautil.getDateDiff(elasticSource.createDate,elasticSource.timeout)
    };
    var showSecondInfo = [];
@@ -81,7 +82,6 @@ exports = module.exports = function (elastic,total,err,done,saveProductFlag) {
     } catch (e) {
        console.log("============Detail  Product Error==============");
        console.log(e);
-       console.log("============Detail Product Error==============");
        return done(returnObj,total,err);
     }
 };

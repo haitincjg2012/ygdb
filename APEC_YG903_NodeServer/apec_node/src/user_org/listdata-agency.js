@@ -78,7 +78,6 @@ exports = module.exports = function (elastic,total,err,done) {
     } catch (e) {
        console.log("============List Agency Error==============");
        console.log(e);
-       console.log("============List Agency Error==============");
        return done(returnData,total,err);
     }
 };

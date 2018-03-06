@@ -12,6 +12,7 @@ import org.springframework.amqp.rabbit.core.RabbitAdmin;
  * 内容摘要：
  * 创建日期：2017-01-06 15:32
  * 编码作者：zhaolei
+ * @author xxx
  */
 public class QueueFactory {
     private static Log log = LogFactory.getLog(ProducerConfig.class);

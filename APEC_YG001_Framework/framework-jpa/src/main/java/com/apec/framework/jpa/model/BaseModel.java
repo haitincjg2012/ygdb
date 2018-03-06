@@ -27,6 +27,7 @@ import java.util.Date;
  * 内容摘要：框架基本实体类,所有的实体需集成该类
  * 完成日期：2016-07-14
  * 编码作者：
+ * @author xxx
  */
 @MappedSuperclass
 @EntityListeners(

@@ -9,10 +9,29 @@ import com.apec.framework.common.enums.BaseEnum;
  */
 public enum UserType implements BaseEnum {
 
+    /**
+     * 代办
+     */
     DB("代办"),
+
+    /**
+     * 客商
+     */
     KS("客商"),
+
+    /**
+     * 冷库
+     */
     LK("冷库"),
+
+    /**
+     * 果农
+     */
     ZZH("果农"),
+
+    /**
+     * 合作社
+     */
     HZS("合作社");
 
     private final String key;

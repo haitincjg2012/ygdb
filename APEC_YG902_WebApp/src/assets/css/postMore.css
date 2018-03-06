@@ -1,0 +1,107 @@
+.c-postsMore .c-pM-head {
+  height: 2.2rem;
+  line-height: 2.2rem;
+  width: 17.75rem;
+  padding: 0 0.5rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-postsMore .c-pM-h-back {
+  width: 0.55rem;
+}
+.c-postsMore .c-pM-h-b-img {
+  width: 0.55rem;
+  height: 0.975rem;
+}
+.c-postsMore .c-pM-h-title {
+  width: 16.5rem;
+  text-align: center;
+  color: #323232;
+  font-size: 0.8rem;
+}
+.c-postsMore .c-pM-scroll {
+  position: fixed;
+  top: 2.2rem;
+  left: 0;
+  right: 0;
+  bottom: 2.45rem;
+  border-top: 0.05rem solid #f4f4f4;
+  border-bottom: 0.05rem solid #f4f4f4;
+}
+.c-postsMore .c-pM-c-portrait {
+  padding-top: 0;
+}
+.c-postsMore .c-pM-c-t-text {
+  width: 17.75rem;
+  padding: 0 0.5rem 0.5rem;
+  font-size: 0.75rem;
+  color: #323232;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+.c-postsMore .c-pM-submit {
+  width: 17.75rem;
+  padding: 0 0.5rem;
+  height: 2.45rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  position: fixed;
+  bottom: 0;
+}
+.c-postsMore .c-pM-s-input {
+  width: 14.5rem;
+  line-height: 2.45rem;
+}
+.c-postsMore .c-pM-s-input-text {
+  width: 14rem;
+  height: 1.75rem;
+  line-height: 1.75rem;
+  font-size: 0.7rem;
+  color: #969696;
+  vertical-align: middle;
+  background-color: #f4f4f4;
+  border-radius: 0.3rem;
+  padding-left: 0.5rem;
+}
+.c-postsMore .c-pM-s-btn {
+  width: 3.25rem;
+}
+.c-postsMore .c-pM-s-text {
+  margin: 0.35rem auto;
+  width: 2.75rem;
+  height: 1.75rem;
+  line-height: 1.75rem;
+  border-radius: 0.3rem;
+  background-color: #28CBA7;
+  font-size: 0.7rem;
+  text-align: center;
+  color: #fff;
+}
+.c-postsMore .c-pM-c-line {
+  width: 17.75rem;
+  height: 0.05rem;
+  background-color: #f4f4f4;
+  margin: 0 auto;
+}
+.c-postsMore .c-pM-c-post {
+  width: 17.75rem;
+  padding: 0 0.5rem;
+}

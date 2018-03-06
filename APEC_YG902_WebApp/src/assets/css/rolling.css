@@ -51,4 +51,8 @@
   -moz-perspective: 10000;
   -ms-perspective: 10000;
   perspective: 10000;
+  transition: all 200ms;
+  -moz-transition: all 200ms ease-out;
+  -webkit-transition: all 200ms ease-out;
+  -o-transition: all 200ms ease-out;
 }

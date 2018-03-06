@@ -10,11 +10,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import com.apec.framework.jpa.common.DbDateTimeProvider;
 
 /**
- * @Description:获取当前时间
+ * Description:获取当前时间
  *
  * @author huangcl
  *
- * @date 2016年7月14日
+ * date 2016年7月14日
  *  
  */
 @Configuration

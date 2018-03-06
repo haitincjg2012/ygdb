@@ -2,7 +2,7 @@ package com.apec.framework.core;
 
 /**
  * Hello world!
- *
+ *@author xxx
  */
 public class App 
 {

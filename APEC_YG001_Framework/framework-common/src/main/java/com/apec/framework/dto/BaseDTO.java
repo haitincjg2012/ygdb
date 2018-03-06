@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * 内容摘要：抽象出公用属性
  * 创建日期：2016/10/25
  * 编码作者：
+ * @author xxx
  */
 public class BaseDTO
 {
@@ -88,7 +89,13 @@ public class BaseDTO
 
     public void setCurrentNo(int currentNo)
     {
+
         this.currentNo = currentNo;
         this.pageNumber= currentNo;
+    }
+
+    @Override
+    public String toString(){
+        return super.toString();
     }
 }

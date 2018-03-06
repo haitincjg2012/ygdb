@@ -47,17 +47,17 @@ public class UserOrgClientVO{
     /**
      * 关注数
      */
-    private int attentionNum;
+    private Integer attentionNum;
 
     /**
      * 浏览数
      */
-    private int viewNum;
+    private Integer viewNum;
 
     /**
      * 供求数
      */
-    private int productNum;
+    private Integer productNum;
 
     /**
      * 所在地区
@@ -118,7 +118,7 @@ public class UserOrgClientVO{
     /**
      * 开关，
      */
-    private boolean pushFlag;
+    private Boolean pushFlag;
 
     /**
      * 组织账户下的用户账号信息

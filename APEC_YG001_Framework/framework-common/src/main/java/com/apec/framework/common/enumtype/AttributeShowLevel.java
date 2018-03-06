@@ -9,15 +9,24 @@ import com.apec.framework.common.enums.BaseEnum;
  */
 public enum AttributeShowLevel  implements BaseEnum {
 
+    /**
+     * 首要显示
+     */
     FIRST("首要显示"),
 
+    /**
+     * 次要显示
+     */
     SECOND("次要显示"),
 
-    OTHER("其它"); //远程地址访问
+    /**
+     * 远程地址访问
+     */
+    OTHER("其它");
 
     private final String key;
 
-    private AttributeShowLevel(String key) {
+    AttributeShowLevel(String key) {
         this.key = key;
     }
 

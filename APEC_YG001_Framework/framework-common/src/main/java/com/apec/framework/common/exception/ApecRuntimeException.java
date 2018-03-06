@@ -21,6 +21,7 @@ import java.util.Arrays;
  * 内容摘要：运行期异常
  * 完成日期：2016-07-25
  * 编码作者：
+ * @author xx
  */
 public class ApecRuntimeException extends RuntimeException
 {
@@ -85,22 +86,28 @@ public class ApecRuntimeException extends RuntimeException
         this.args = args;
     }
 
+    @Override
     public String getMessage()
     {
         return this.message;
     }
 
+    @Override
     public String toString()
     {
         StringBuffer buf = new StringBuffer();
         buf.append( super.toString() );
         if(null != message)
         {
-            buf.append( "[" + message + "]" );
+            buf.append( "[" );
+            buf.append( message );
+            buf.append( "]"  );
         }
         if(null != errorCode)
         {
-            buf.append( "<" + errorCode + ">" );
+            buf.append( "<" );
+            buf.append( errorCode );
+            buf.append( ">" );
         }
         return buf.toString();
     }

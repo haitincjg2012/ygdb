@@ -15,9 +15,17 @@ public interface UserLevelRuleDAO extends BaseDAO<UserLevelRule, Long> {
      * 查询用户积分所对应的等级
      * @param point 用户积分
      * @param enableFlag 状态控制
-     * @return
+     * @return UserLevelRule
      */
-    UserLevelRule findFirstByPointLessThanEqualAndEnableFlagOrderByPointDesc(Integer point, EnableFlag enableFlag);
+    UserLevelRule findFirstByPointLessThanEqualAndEnableFlagAndFrezzingIsFalseOrderByPointDesc(Integer point, EnableFlag enableFlag);
+
+    /**
+     * 查询下一个积分等级的情况
+     * @param point 用户积分
+     * @param enableFlag 状态码
+     * @return 积分等级信息
+     */
+    UserLevelRule findFirstByPointGreaterThanAndEnableFlagAndFrezzingIsFalseOrderByPointAsc(Integer point, EnableFlag enableFlag);
 
 
 

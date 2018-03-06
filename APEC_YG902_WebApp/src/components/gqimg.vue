@@ -8,12 +8,12 @@
   import lengku from '../assets/img/AgencyTipsL.png'//冷库
   import hezuoshang from  '../assets/img/hezuoshang.png'//合作商
 
-  import QT from '../assets/img/t.png'//铜牌
-  import BY from '../assets/img/y.png'//银牌
-  import HJ from '../assets/img/j.png'//金牌
-  import BJ from '../assets/img/bj-1.png'//铂金
-  import ZS from '../assets/img/zs.png'//钻石
-//  import DS from '../assets/img/ds.png'//大师
+  import QT from '../assets/img/bronzeMedal.png'//铜牌
+  import BY from '../assets/img/silverMedal.png'//银牌
+  import HJ from '../assets/img/goldMedal.png'//金牌
+  import BJ from '../assets/img/platinumMedal.png'//铂金
+  import ZS from '../assets/img/diamondsMedal.png'//钻石
+  import DS from '../assets/img/masterMedal.png'//大师
 
   export default{
       methods:{

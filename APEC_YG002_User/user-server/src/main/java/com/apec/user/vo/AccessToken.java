@@ -6,13 +6,18 @@ import lombok.NoArgsConstructor;
 
 /**
  * Created by wubi on 2017/10/9.
+ * @author wubi
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccessToken {
-    //token
+    /**
+     * token
+     */
     private String token;
-    //有效时间
+    /**
+     * 有效时间
+     */
     private int expiresIn;
 }

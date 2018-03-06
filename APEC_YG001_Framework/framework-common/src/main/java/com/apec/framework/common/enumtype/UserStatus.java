@@ -9,13 +9,24 @@ import com.apec.framework.common.enums.BaseEnum;
  */
 public enum UserStatus implements BaseEnum {
 
+    /**
+     * 未实名认证
+     */
     UNREALAUTH("未实名认证"),
+
+    /**
+     * 正常
+     */
     NORMAL("正常"),
-    FREEZE("已冻结"); //冻结不能登陆  //
+
+    /**
+     * //冻结不能登陆  //
+     */
+    FREEZE("已冻结");
 
     private final String key;
 
-    private UserStatus(String key) {
+    UserStatus(String key) {
         this.key = key;
     }
 

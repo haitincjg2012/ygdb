@@ -1,0 +1,42 @@
+.c-h-publish {
+  position: fixed;
+  bottom: 0;
+  width: 18.75rem;
+  height: 10rem;
+}
+.c-h-p-add {
+  padding-top: 0.5rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  height: 7.5rem;
+  text-align: center;
+}
+.c-h-p-addCom {
+  -webkit-flex: 1;
+  /* Chrome */
+  -ms-flex: 1;
+  /* IE 10 */
+  flex: 1;
+  font-size: 0.8rem;
+  color: #323232;
+}
+.c-h-p-addCom img {
+  width: 3rem;
+  height: 3rem;
+}
+.c-h-p-cancel {
+  height: 2rem;
+  text-align: center;
+}
+.c-h-p-cancel img {
+  height: 0.7rem;
+}

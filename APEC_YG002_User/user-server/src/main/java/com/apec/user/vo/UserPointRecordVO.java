@@ -3,7 +3,7 @@ package com.apec.user.vo;
 import com.apec.framework.common.enumtype.PointRuleType;
 import com.apec.framework.common.enumtype.PointsChangedType;
 import com.apec.framework.dto.BaseVO;
-import com.apec.framework.rockmq.vo.IMQBody;
+import com.apec.framework.rockmq.vo.IMqBody;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +18,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserPointRecordVO extends BaseVO<Long>  implements IMQBody{
+public class UserPointRecordVO extends BaseVO<Long>  implements IMqBody {
 
     /**
      * 用户 ID

@@ -29,9 +29,7 @@ public class GoodsAttr extends BaseModel<Long> {
     /**
      * 商品
      */
-    @ManyToOne
-    @JoinColumn(name = "GOODS_ID", nullable = false)
-    private Goods  goods;
+    private Long  goodsId;
 
     /**
      * 属性ID

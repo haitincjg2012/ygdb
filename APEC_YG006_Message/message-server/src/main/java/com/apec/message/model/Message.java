@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -22,6 +23,7 @@ import com.apec.framework.jpa.model.BaseModel;
  *
  * @author yirde  2017/6/30.
  */
+@Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,7 +40,7 @@ public class Message extends BaseModel<Long>{
     /**
      * 发送人ID
      */
-    @Column(nullable = true , length = 30)
+    @Column(length = 30)
     private String sender;
 
     /**
@@ -54,35 +56,4 @@ public class Message extends BaseModel<Long>{
     @Column(nullable = false, length = 20)
     private MessageStatus messageStatus;
 
-	public MessageBody getBody() {
-		return body;
-	}
-
-	public void setBody(MessageBody body) {
-		this.body = body;
-	}
-
-	public String getSender() {
-		return sender;
-	}
-
-	public void setSender(String sender) {
-		this.sender = sender;
-	}
-
-	public Long getReceiver() {
-		return receiver;
-	}
-
-	public void setReceiver(Long receiver) {
-		this.receiver = receiver;
-	}
-
-	public MessageStatus getMessageStatus() {
-		return messageStatus;
-	}
-
-	public void setMessageStatus(MessageStatus messageStatus) {
-		this.messageStatus = messageStatus;
-	}
 }

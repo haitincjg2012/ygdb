@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * @author xxxx
+ */
 @RestController
 @RequestMapping(value = "sysResourc")
 public class SysResourceController extends MyBaseController
@@ -36,12 +39,12 @@ public class SysResourceController extends MyBaseController
      *      (eq)orgCode，
      *      (like)loginName
      * }
-     * @return
+     * @return 结果
      */
     @RequestMapping(value = "searchList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultData<PageDTO<SysResourceVO>> searchList(@RequestBody String json)
     {
-        ResultData<PageDTO<SysResourceVO>> resultData = new ResultData<PageDTO<SysResourceVO>>();
+        ResultData<PageDTO<SysResourceVO>> resultData = new ResultData<>();
         try
         {
             SysResourceVO dto = getFormJSON(json, SysResourceVO.class);
@@ -60,13 +63,11 @@ public class SysResourceController extends MyBaseController
 
     /**
      * 根据条件查询
-     * @param json
-     * @return
      */
     @RequestMapping(value = "/selectAll", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultData<List<SysResourceVO>> selectAll(@RequestBody String json)
     {
-        ResultData<List<SysResourceVO>> resultData = new ResultData<List<SysResourceVO>>();
+        ResultData<List<SysResourceVO>> resultData = new ResultData<>();
         try
         {
             SysResourceVO dto = getFormJSON(json, SysResourceVO.class);
@@ -84,16 +85,11 @@ public class SysResourceController extends MyBaseController
 
     /**
      * 资源信息详情
-     * @param json
-     * {
-     *      id
-     * }
-     * @return
      */
     @RequestMapping(value = "/detail", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultData<SysResourceVO> detail(@RequestBody String json)
     {
-        ResultData<SysResourceVO> resultData = new ResultData<SysResourceVO>();
+        ResultData<SysResourceVO> resultData = new ResultData<>();
         try
         {
             SysResourceVO dto = getFormJSON(json, SysResourceVO.class);
@@ -126,12 +122,12 @@ public class SysResourceController extends MyBaseController
      *      loginName,
      *      password
      * }
-     * @return
+     * @return 结果
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultData<SysResourceVO> add(@RequestBody String json)
     {
-        ResultData<SysResourceVO> resultData = new ResultData<SysResourceVO>();
+        ResultData<SysResourceVO> resultData = new ResultData<>();
         try
         {
             SysResourceVO dto = getFormJSON(json, SysResourceVO.class);
@@ -159,12 +155,12 @@ public class SysResourceController extends MyBaseController
      * {
      *      id
      * }
-     * @return
+     * @return 结果
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultData<SysResourceVO> update(@RequestBody String json)
     {
-        ResultData<SysResourceVO> resultData = new ResultData<SysResourceVO>();
+        ResultData<SysResourceVO> resultData = new ResultData<>();
         try
         {
             SysResourceVO dto = getFormJSON(json, SysResourceVO.class);
@@ -187,16 +183,11 @@ public class SysResourceController extends MyBaseController
 
     /**
      * 软删除资源信息
-     * @param json
-     * {
-     *      id
-     * }
-     * @return
      */
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultData<SysResourceVO> delete(@RequestBody String json)
     {
-        ResultData<SysResourceVO> resultData = new ResultData<SysResourceVO>();
+        ResultData<SysResourceVO> resultData = new ResultData<>();
         try
         {
             SysResourceVO dto = getFormJSON(json, SysResourceVO.class);

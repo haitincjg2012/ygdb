@@ -97,7 +97,7 @@
              </div>
           </div>
         <div v-if="space" class="z-tip-img">
-          <img src="../../../assets/img/searchF.svg">
+          <img src="../../../assets/img/searchF.png">
           <p>抱歉,没有找到符合条件的供求</p>
         </div>
       <!--</scroller>-->
@@ -108,12 +108,12 @@
 </style>
 
 <script>
-  import QT from '../../../assets/img/copper@3x.png'//铜牌
-  import BY from '../../../assets/img/silver@3x.png'//银牌
-  import HJ from '../../../assets/img/gold@3x.png'//金牌
-  import BJ from '../../../assets/img/Pt@3x.png'//铂金
-  import ZS from '../../../assets/img/Diamonds.png'//砖石
-  import DS from '../../../assets/img/Ancrown@3x.png'//大师
+//  import QT from '../../../assets/img/copper@3x.png'//铜牌
+//  import BY from '../../../assets/img/silver@3x.png'//银牌
+//  import HJ from '../../../assets/img/gold@3x.png'//金牌
+//  import BJ from '../../../assets/img/Pt@3x.png'//铂金
+//  import ZS from '../../../assets/img/Diamonds.png'//砖石
+//  import DS from '../../../assets/img/Ancrown@3x.png'//大师
   import {Toast} from 'mint-ui'
   import rank from './rank.vue'
   import goodD from  './goodlist.vue'
@@ -359,7 +359,7 @@
         var id = current.id;
         obj.id = current.id;
         obj.levelImg =QG.methods.userLevel(current.userLevelName);
-        obj.img = current.firstImageUrl;
+        obj.img = current.firstImageUrl+"?x-oss-process=style/_list";
         obj.local = current.address;
         obj.local = current.address;
         obj.name = current.showUserName;
@@ -378,28 +378,25 @@
         len += obj.weight.length;
         obj.path = index;
 
-        var goodTime = current.showSecondInfo;
-        var text = goodTime.join(" ");
-
-        obj.fruitdate = text;
-
+        var html = "";
+        current.showSecondInfo.forEach(function (fruitC) {
+          html +="<span class='g-sp-com g-first ' data-id="+current.id+">"+fruitC + "</span>";
+        });
+        obj.fruitdate = html;
         var Identification = current.productTypeName;
         obj.gq = current.productTypeName;
-        //单一的排序
-        //只有求购和供应
+        //求购和供应的价格
+        var hprice = "";
         if(Identification == "求购"){
-          obj.bg = true;
-          obj.indentification = 0;
-          obj.endAmount = current.endAmount.toString();
-          len += obj.endAmount.length;
-          obj.startAmount = current.startAmount.toString();
-          len += obj.startAmount.length;
+          hprice = "<span data-id=" + current.id +" class='g-price-com-f gy'>&yen;" + current.startAmount + "~" +current.endAmount + "</span><span class='g-unit'  data-id=" + current.id + ">" + current.priceUnit +"</span>";
+          obj.price = hprice;
+
         }else{
-          obj.bg = false;
-          obj.indentification = 1;
-          obj.amount = current.amount.toString();
-          len += obj.amount.length;
+          hprice = "<span data-id=" + current.id +" class='g-price-com-f gy'>&yen;" + current.amount + "</span><span class='g-unit'  data-id=" + current.id + ">" + current.priceUnit +"</span>";
+          obj.price = hprice;
         }
+        //重量
+        obj.weight = "<span class='g-unit'>" + current.weight + "&nbsp;" + current.weightUnit + "</span>";
         obj.productTypeName = QG.methods.img(current.productTypeName);
         var n = (250 - (len + 3 + 3 + 3) * 10)/20;
 
@@ -417,7 +414,7 @@
         arrtttt.forEach(function (current) {
           lt += current.length;
         })
-        obj.addreeWh = (186 - (obj.name.toString().length + obj.agency.length) * 12 + lF * 6 + lt*8)/20;;
+        obj.addreeWh = (186 - ((obj.name?(obj.name+""):"").length + (obj.agency?(obj.name+""):"").length) * 12 + lF * 6 + lt*8)/20;;
         obj.wh = n;
         if(that.del.hasOwnProperty(id)){
             return;
@@ -582,31 +579,31 @@
         }
         this.post(params, fn.init.bind(that))
       },
-      userLevelKeySwitch(key){
-        switch (key) {
-          case 'QT':
-            return QT;
-            break;
-          case 'BY':
-            return BY;
-            break;
-          case 'HJ':
-            return HJ;
-            break;
-          case 'BJ':
-            return BJ;
-            break;
-          case 'ZS':
-            return ZS;
-            break;
-          case 'DS':
-            return DS;
-            break;
-          default:
-            return '';
-            break;
-        }
-      },
+//      userLevelKeySwitch(key){
+//        switch (key) {
+//          case 'QT':
+//            return QT;
+//            break;
+//          case 'BY':
+//            return BY;
+//            break;
+//          case 'HJ':
+//            return HJ;
+//            break;
+//          case 'BJ':
+//            return BJ;
+//            break;
+//          case 'ZS':
+//            return ZS;
+//            break;
+//          case 'DS':
+//            return DS;
+//            break;
+//          default:
+//            return '';
+//            break;
+//        }
+//      },
       back(){
         this.$store.state.xqF = false;
         this.itemG = null;
@@ -614,12 +611,7 @@
         this.$store.state.recordArea = null;
         this.$store.state.urban = null;
         this.content = "";
-        if (this.smain == 0) {
-          this.$router.go(-1);
-        } else {
-          this.$router.push({name: "home"})
-          this.smain = 0;
-        }
+
         this.items = null;
         this.showShadow = false;
         var liA = document.querySelector(".z-k-list")
@@ -658,6 +650,13 @@
           });
         }
 
+        var wxF = localStorage.wx;
+        if(wxF){
+          this.$router.push({name:"home"});
+          localStorage.removeItem("wx");
+        }else{
+          this.$router.go(-1);
+        }
       },
       search(event){
         var evt = event || window.event;

@@ -1,5 +1,8 @@
 package com.apec.framework.common.exception;
 
+/**
+ * @author xx
+ */
 public class DomainServiceException extends ApecRuntimeException
 {
     private static final long serialVersionUID = -240536959932968350L;
@@ -19,6 +22,7 @@ public class DomainServiceException extends ApecRuntimeException
         super(errorCode, message, e);
     }
 
+    @Override
     public String toString()
     {
         return super.toString();

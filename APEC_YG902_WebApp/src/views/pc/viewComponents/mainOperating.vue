@@ -54,10 +54,6 @@
               });
 
              this.itemPZ = obj;
-//             var self = this;
-//             setTimeout(function () {
-//               console.log(self.$refs.tableCell);
-//             },0)
 
         },
         initTableCell(){
@@ -87,7 +83,9 @@
                 var t = obj[key] + " ";
                str += t;
             }
-            this.$store.state.mainPz = str;
+
+          localStorage.pz = str;
+
           this.initTableCell();
           this.$router.go(-1);
 

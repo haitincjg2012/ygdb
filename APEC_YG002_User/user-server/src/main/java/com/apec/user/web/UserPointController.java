@@ -6,10 +6,7 @@ import com.apec.framework.log.InjectLogger;
 import com.apec.user.dto.UserDTO;
 import com.apec.user.dto.UserPointRuleDTO;
 import com.apec.user.service.UserPointRecordService;
-import com.apec.user.vo.UserPointRecordVO;
-import com.apec.user.vo.UserPointRecordViewVO;
-import com.apec.user.vo.UserPointRuleVO;
-import com.apec.user.vo.UserPointVO;
+import com.apec.user.vo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * @author hmy
  * Created by hmy on 2017/7/5.
  */
 @RestController
@@ -39,8 +36,8 @@ public class UserPointController extends MyBaseController {
 
     /**
      * 给新注册的用户初始化积分及记录
-     * @param json
-     * @return
+     * @param json json
+     * @return String
      */
     @RequestMapping(value="/addNewPoint",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
     public String addNewUserPoint(@RequestBody String json){
@@ -66,8 +63,8 @@ public class UserPointController extends MyBaseController {
 
     /**
      * 给用户加减积分,传入积分规则id不为空时，按积分规则表进行积分变换，为空时则必须保证积分规则描述和改变的积分不为空，按传入的积分改变时来修改用户积分
-     * @param json
-     * @return
+     * @param json json
+     * @return String
      */
     @RequestMapping(value="/reducePoint",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
     public String reducePoint(@RequestBody String json){
@@ -102,6 +99,29 @@ public class UserPointController extends MyBaseController {
     }
 
     /**
+     * 增加积分规则表中规则分数
+     */
+    @RequestMapping(value = "/addRulePoints",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
+    public String addRulePoints(@RequestBody String json){
+        String result = Constants.SYS_ERROR;
+        try{
+            //获取数据
+            UserPointRuleVO ruleVO = getFormJSON(json,UserPointRuleVO.class);
+            if(ruleVO == null || ruleVO.getPointRuleType() == null || ruleVO.getPointsChanged() == null || ruleVO.getPointsChangedType() == null){
+                return super.getResultJSONStr(false,null,Constants.ERROR_100003);
+            }
+            result = userPointRecordService.updateUserPointRule(ruleVO,String.valueOf(getUserId(json)));
+        }catch(Exception e){
+            log.error("[userpoint][updateRulePoints] exception:{}" , e);
+        }
+        if(StringUtils.equals(result,Constants.RETURN_SUCESS)){
+            return super.getResultJSONStr(true, null, "");
+        }else{
+            return super.getResultJSONStr(false, null, result);
+        }
+    }
+
+    /**
      * 修改积分规则表中规则分数
      */
     @RequestMapping(value = "/updateRulePoints",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
@@ -110,12 +130,35 @@ public class UserPointController extends MyBaseController {
         try{
             //获取数据
             UserPointRuleVO ruleVO = getFormJSON(json,UserPointRuleVO.class);
-            if(ruleVO == null || ruleVO.getId() == null || ruleVO.getId() == 0L || ruleVO.getPointsChanged() == null){
+            if(ruleVO == null || ruleVO.getId() == null || ruleVO.getId() == 0L){
                 return super.getResultJSONStr(false,null,Constants.ERROR_100003);
             }
             result = userPointRecordService.updateUserPointRule(ruleVO,String.valueOf(getUserId(json)));
         }catch(Exception e){
             log.error("[userpoint][updateRulePoints] exception:{}" , e);
+        }
+        if(StringUtils.equals(result,Constants.RETURN_SUCESS)){
+            return super.getResultJSONStr(true, null, "");
+        }else{
+            return super.getResultJSONStr(false, null, result);
+        }
+    }
+
+    /**
+     * 删除积分规则表中规则分数
+     */
+    @RequestMapping(value = "/deleteRulePoints",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
+    public String deleteRulePoints(@RequestBody String json){
+        String result = Constants.SYS_ERROR;
+        try{
+            //获取数据
+            UserPointRuleVO ruleVO = getFormJSON(json,UserPointRuleVO.class);
+            if(ruleVO == null || ruleVO.getId() == null || ruleVO.getId() == 0L){
+                return super.getResultJSONStr(false,null,Constants.ERROR_100003);
+            }
+            result = userPointRecordService.deleteRulePoints(ruleVO,String.valueOf(getUserId(json)));
+        }catch(Exception e){
+            log.error("[userpoint][deleteRulePoints] exception:{}" , e);
         }
         if(StringUtils.equals(result,Constants.RETURN_SUCESS)){
             return super.getResultJSONStr(true, null, "");
@@ -142,12 +185,26 @@ public class UserPointController extends MyBaseController {
     }
 
     /**
+     * 分页查询积分规则
+     */
+    @RequestMapping(value = "/listUserPointRule",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
+    public String listUserPointRule(@RequestBody String json){
+        try{
+            return super.getResultJSONStr(true, userPointRecordService.listUserPointRule(), null);
+        }catch(Exception e){
+            log.error("[userpoint][listUserPointRule] exception {}:" ,e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
+    /**
      * 分页查询用户积分信息
      */
     @RequestMapping(value = "/pageUserPoints",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
     public String getUserPointsPage(@RequestBody String json){
         try{
             UserDTO dto = getFormJSON(json,UserDTO.class);
+            UserPointVO userPointVO = getFormJSON(json,UserPointVO.class);
             List<Sort.Order> orders = new ArrayList<>();
             orders.add(new Sort.Order(Sort.Direction.DESC, "availablePoints"));
             orders.add(new Sort.Order(Sort.Direction.DESC, "createDate"));
@@ -156,11 +213,11 @@ public class UserPointController extends MyBaseController {
             if (dto.getPageNumber() > 0) {
                 pageNumber = dto.getPageNumber();
             }
-            if (dto.getPageSize() > 0 && dto.getPageSize() < 1000) {
+            if (dto.getPageSize() > 0 && dto.getPageSize() < Integer.valueOf(Constants.MAX_FETCHSIZE)) {
                 pageSize = dto.getPageSize();
             }
             PageRequest pageRequest = new PageRequest(pageNumber - 1, pageSize, new Sort(orders));
-            PageDTO<UserPointVO> page = userPointRecordService.pageUserPoints(dto, pageRequest);
+            PageDTO<UserPointVO> page = userPointRecordService.pageUserPoints(userPointVO, pageRequest);
             return super.getResultJSONStr(true, page, "");
         }catch(Exception e){
             log.error("[userpoint][pageUserPoints] exception {}:" ,e);
@@ -209,5 +266,70 @@ public class UserPointController extends MyBaseController {
             return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
         }
     }
+
+    /**
+     * 分页查询积分等级规则
+     */
+    @RequestMapping(value = "/pageUserLevelRules",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
+    public String pageUserLevelRules(@RequestBody String json){
+        try{
+            UserDTO dto = getFormJSON(json,UserDTO.class);
+            PageRequest pageRequest = genPageRequest(dto);
+            return super.getResultJSONStr(true, userPointRecordService.pageUserLevelRules(pageRequest), null);
+        }catch(Exception e){
+            log.error("[userpoint][pageUserLevelRules] exception {}:" ,e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
+    /**
+     * 查询所有的积分等级规则
+     */
+    @RequestMapping(value = "/listUserLevelRules",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
+    public String listUserLevelRules(@RequestBody String json){
+        try{
+            return super.getResultJSONStr(true, userPointRecordService.listUserLevelRules(), null);
+        }catch(Exception e){
+            log.error("[userpoint][listUserLevelRules] exception {}:" ,e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
+    /**
+     * 修改等级积分对象
+     */
+    @RequestMapping(value = "/updateUserLevelRule",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
+    public String updateUserLevelRule(@RequestBody String json){
+        try{
+            UserLevelRuleVO userLevelRuleVO = getFormJSON(json,UserLevelRuleVO.class);
+            boolean flag = userLevelRuleVO == null || userLevelRuleVO.getId() == null || userLevelRuleVO.getId() == 0L;
+            if(flag){
+                return super.getResultJSONStr(false,null,Constants.ERROR_100003);
+            }
+            String result = userPointRecordService.updateUserLevelRule(userLevelRuleVO,String.valueOf(getUserId(json)));
+            if(StringUtils.equals(result,Constants.RETURN_SUCESS)){
+                return super.getResultJSONStr(true, null, "");
+            }else{
+                return super.getResultJSONStr(false, null, result);
+            }
+        }catch(Exception e){
+            log.error("[userpoint][pageUserPointRecords] exception {}:" ,e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
+    /**
+     * 分页查询用户积分记录信息
+     */
+    @RequestMapping(value = "/queryMyPoint",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
+    public String queryMyPoint(@RequestBody String json){
+        try{
+            return super.getResultJSONStr(true, userPointRecordService.queryMyPoint(getUserId(json)), null);
+        }catch(Exception e){
+            log.error("[userpoint][queryMyPoint] exception {}:" ,e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
 
 }

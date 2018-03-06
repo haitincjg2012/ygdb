@@ -1,0 +1,23 @@
+.c-address-header {
+  position: fixed;
+  top: 0;
+  z-index: 11;
+}
+.c-addressC-p .c-address,
+.c-addressC-c .c-address {
+  position: fixed;
+  top: 2.2rem;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.c-addressC-p .c-address-content,
+.c-addressC-c .c-address-content {
+  margin-left: 0.5rem;
+  height: 2.2rem;
+  line-height: 2.2rem;
+  width: 18.25rem;
+  border-bottom: 0.05rem solid #f4f4f4;
+  color: #646464;
+  font-size: 0.8rem;
+}

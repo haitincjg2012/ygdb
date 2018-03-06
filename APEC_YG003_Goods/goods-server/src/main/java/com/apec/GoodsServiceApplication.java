@@ -8,6 +8,9 @@ import org.springframework.context.annotation.Import;
 import com.apec.framework.base.BaseApplication;
 import com.apec.framework.springcloud.SpringCloudConfig;
 
+/**
+ * @author hmy
+ */
 @EnableDiscoveryClient
 @SpringBootApplication
 @Import(value = SpringCloudConfig.class)

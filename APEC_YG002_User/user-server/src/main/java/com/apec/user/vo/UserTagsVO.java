@@ -5,6 +5,7 @@ import lombok.Data;
 
 /**
  * Created by hmy on 2017/9/13.
+ * @author hmy
  */
 @Data
 public class UserTagsVO {
@@ -30,7 +31,7 @@ public class UserTagsVO {
     /**
      * 排序
      */
-    private int sort;
+    private Integer sort;
 
     /**
      * OrgId 用户组织ID

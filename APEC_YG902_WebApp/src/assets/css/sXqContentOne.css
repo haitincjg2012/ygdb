@@ -1,0 +1,96 @@
+.c-sXq-goodslist {
+  padding: 0.25rem 0 0.25rem 0.85rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  border-bottom: 0.05rem solid #f4f4f4;
+  height: 2.4rem;
+}
+.c-sXq-goodslist .c-sXq-one {
+  width: 10rem;
+}
+.c-sXq-goodslist .c-sXq-one .c-sXq-goods {
+  line-height: 1.05rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-sXq-goodslist .c-sXq-one .c-sXq-sku {
+  height: 1.05rem;
+  display: inline-block;
+  font-size: 0.75rem;
+  color: #323232;
+  max-width: 7.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.c-sXq-goodslist .c-sXq-one .c-sXq-orignIcon {
+  margin-left: 0.25rem;
+  width: 2rem;
+  height: 1.05rem;
+  background-image: url("../img/gmcIcon.png");
+  background-size: 4rem 0.75rem;
+  background-repeat: no-repeat;
+}
+.c-sXq-goodslist .c-sXq-one .c-gnh {
+  background-position: 0 center;
+}
+.c-sXq-goodslist .c-sXq-one .c-ksh {
+  background-position: 100% center;
+}
+.c-sXq-goodslist .c-sXq-one .c-sXq-number {
+  line-height: 1.05rem;
+  font-size: 0.75rem;
+  color: #323232;
+}
+.c-sXq-goodslist .c-sXq-direction {
+  width: 7rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  direction: rtl;
+}
+.c-sXq-goodslist .c-sXq-label {
+  margin-right: 0.25rem;
+  width: 2.25rem;
+  line-height: 2.65rem;
+  font-size: 0.65rem;
+  color: #969696;
+}
+.c-sXq-goodslist .c-sXq-digital {
+  line-height: 2.4rem;
+  max-width: 3.25rem;
+  font-size: 1.2rem;
+  color: #323232;
+}
+.c-sXq-goodslist .c-sXq-unit {
+  line-height: 2.65rem;
+  width: 1.65rem;
+  font-size: 0.65rem;
+  color: #969696;
+}

@@ -12,9 +12,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 /**
  * Created by wubi on 2017/8/7.
  * yg-product-service服务调用类
+ * @author wubi
  */
 @FeignClient(name = "yg-product-service", fallback=ProductClient.HystrixClientFallback.class)
 public interface ProductClient {
+    /**
+     * 下架client
+     * @return 任务处理结果
+     */
     @RequestMapping(value = "/product/offSellJob", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultData<String> offSellJobFeign();
 
@@ -29,7 +34,7 @@ public interface ProductClient {
             String url = "/product/offSellJob";
             String msg = String.format("调用服务:%s  URL:%s  发生异常,进入fallback方法", serverName, url);
             logger.info(msg);
-            ResultData<String> resultData = new ResultData();
+            ResultData<String> resultData = new ResultData<>();
             resultData.setErrorCode(Constants.SYS_ERROR);
             resultData.setErrorMsg(msg);
             return resultData;

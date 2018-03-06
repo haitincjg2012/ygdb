@@ -6,6 +6,7 @@ package com.apec.framework.dto;
  * 内容摘要：文件上传DTO
  * 创建日期：2016/10/18
  * 编码作者：
+ * @author xxx
  */
 public class ImageUploadVO
 {
@@ -22,7 +23,7 @@ public class ImageUploadVO
     /**
      * 图片尺寸
      */
-    private int sizeLevel;
+    private Integer sizeLevel;
 
     /**
      * 获取 图片名称
@@ -70,5 +71,10 @@ public class ImageUploadVO
     public void setSizeLevel(int sizeLevel)
     {
         this.sizeLevel = sizeLevel;
+    }
+
+    @Override
+    public String toString(){
+        return super.toString();
     }
 }

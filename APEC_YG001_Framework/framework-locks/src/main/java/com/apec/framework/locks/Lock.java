@@ -2,6 +2,9 @@ package com.apec.framework.locks;
 
 import java.util.Date;
 
+/**
+ * @author xxx
+ */
 public class Lock implements Comparable<Lock> {
 
 	/**

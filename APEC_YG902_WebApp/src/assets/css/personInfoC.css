@@ -1,0 +1,72 @@
+.c-personInfo {
+  padding-left: 0.5rem;
+  width: 18.25rem;
+}
+.c-personInfo .c-pI-com {
+  width: 18.25rem;
+  height: 2.25rem;
+  line-height: 2.25rem;
+  font-size: 0.75rem;
+  border-bottom: 0.05rem solid #f4f4f4;
+  color: #646464;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-personInfo .c-pI-com:nth-last-child(1) {
+  border-bottom: none;
+}
+.c-personInfo .c-pI-label {
+  width: 3.75rem;
+  color: #323232;
+}
+.c-personInfo .c-pI-Img {
+  width: 1.75rem;
+}
+.c-personInfo .c-pI-identify {
+  width: 13.5rem;
+}
+.c-personInfo .c-pI-signature {
+  width: 14.5rem;
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.c-personInfo .c-pI-levelPicture {
+  width: 1.5rem;
+  height: 1.5rem;
+  vertical-align: middle;
+}
+.c-personInfo .c-pI-levelText {
+  font-size: 0.7rem;
+  padding: 0 0.15rem;
+  border: 0.05rem solid #fd9e24;
+  border-radius: 0.125rem;
+  vertical-align: middle;
+  background-color: #FD9E24 ;
+  color: #fff;
+}
+.c-personInfo .c-pI-real {
+  font-size: 0.7rem;
+  color: #28cba5;
+  border: 0.05rem solid #28cba5;
+  border-radius: 0.125rem;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+.c-personInfo .signDefault {
+  font-size: 0.6rem;
+  color: #646464;
+}
+.c-personInfo .c-pI-sign-text {
+  color: #323232;
+}

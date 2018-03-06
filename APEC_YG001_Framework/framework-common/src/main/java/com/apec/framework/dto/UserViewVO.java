@@ -66,4 +66,10 @@ public class UserViewVO {
     public void setUserRealAuthName(String userRealAuthName) {
         this.userRealAuthName = userRealAuthName;
     }
+
+    @Override
+    public String toString(){
+        return super.toString();
+    }
+
 }

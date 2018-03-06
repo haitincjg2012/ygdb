@@ -9,27 +9,28 @@ import java.util.Formatter;
 
 /**
  * Created by wubi on 2017/10/9.
+ * @author xxxx
  */
 public class SignUtil {
 
     /**
      * 签名
-     * @param jsapiTicket
-     * @param url
-     * @return
-     * @throws NoSuchAlgorithmException
-     * @throws UnsupportedEncodingException
+     * @param jsapiTicket jsapiTicket
+     * @param url  url
+     * @return WeixinShareVO
+     * @throws  NoSuchAlgorithmException NoSuchAlgorithmException
+     * @throws  UnsupportedEncodingException UnsupportedEncodingException
      */
     public static WeixinShareVO sign(String jsapiTicket, String url) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         WeixinShareVO ret = new WeixinShareVO();
-        String nonce_str = createNonceStr();
+        String nonceStr = createNonceStr();
         String timestamp = createTimestamp();
         String string1;
-        String signature = "";
+        String signature;
 
         //注意这里参数名必须全部小写，且必须有序
         string1 = "jsapi_ticket=" + jsapiTicket +
-                "&noncestr=" + nonce_str +
+                "&noncestr=" + nonceStr +
                 "&timestamp=" + timestamp +
                 "&url=" + url;
         System.out.println(string1);
@@ -44,7 +45,7 @@ public class SignUtil {
 
         ret.setUrl(url);
         ret.setJsapiTicket(jsapiTicket);
-        ret.setNonceStr(nonce_str);
+        ret.setNonceStr(nonceStr);
         ret.setTimestamp(timestamp);
         ret.setSignature(signature);
 
@@ -69,4 +70,6 @@ public class SignUtil {
     private static String createTimestamp() {
         return Long.toString(System.currentTimeMillis() / 1000);
     }
+
+
 }

@@ -150,7 +150,6 @@
                   self.countyS = item.name;
                   self.county = item.code;//缓存县code
                   self.fircountyaddrCode = item.code;
-                  console.log(self.cityS,self.countyS,22222);
                 }
 
               });
@@ -207,6 +206,10 @@
                 }
 
               });
+
+              if(item.data.length <= 0){
+                self.addressThirList = null;
+              }
             } else {
             }
             Indicator.close();

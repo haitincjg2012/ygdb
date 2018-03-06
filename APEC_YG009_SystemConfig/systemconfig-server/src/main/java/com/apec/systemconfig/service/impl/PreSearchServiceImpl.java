@@ -19,15 +19,13 @@ import java.util.Random;
 
 /**
  * Created by hmy on 2017/7/31.
+ * @author hmy
  */
 @Service
 public class PreSearchServiceImpl implements PreSearchService {
 
     @Autowired
     private PreSearchDAO preSearchDAO;
-
-    @InjectLogger
-    private Logger logger;
 
 
     @Override
@@ -46,14 +44,12 @@ public class PreSearchServiceImpl implements PreSearchService {
 
     /**
      * 随机查询一个预制搜索关键字
-     * @return
      */
     @Override
     public PreSearchVO getYZPreSearch() {
         Integer l = preSearchDAO.countBySearchTypeAndEnableFlag(SearchType.YZSS,EnableFlag.Y);
         Random random = new Random();
         Integer sort = random.nextInt(l);
-//        logger.info(" l :{} qqqq:{}",l,sort);
         PreSearch preSearch = preSearchDAO.findBySearchTypeAndEnableFlagAndSort(SearchType.YZSS,EnableFlag.Y,sort);
         PreSearchVO preSearchVO = new PreSearchVO();
         BeanUtil.copyPropertiesIgnoreNullFilds(preSearch,preSearchVO);

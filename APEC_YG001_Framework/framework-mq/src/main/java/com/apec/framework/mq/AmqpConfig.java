@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Bean;
  * 内容摘要：
  * 创建日期：2017/1/13 15:04
  * 编码作者：zhaolei
+ * @author xxx
  */
 public class AmqpConfig {
     @Value("${spring.rabbitmq.host}")
@@ -39,9 +40,9 @@ public class AmqpConfig {
 
     private static Log log = LogFactory.getLog(AmqpConfig.class);
 
-    public static RoutingKey key;
+    private static RoutingKey key;
 
-    public static RoutingKey[] keyArray;
+    private static RoutingKey[] keyArray;
 
 
 
@@ -67,8 +68,7 @@ public class AmqpConfig {
 
     @Bean
     RabbitAdmin rabbitAdmin() {
-        RabbitAdmin rabbitAdmin = new RabbitAdmin(connectionFactory());
-        return rabbitAdmin;
+        return new RabbitAdmin(connectionFactory());
     }
 
     @Bean

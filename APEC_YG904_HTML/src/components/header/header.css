@@ -14,10 +14,10 @@
   float: right;
   margin-top: 11px;
 }
-.bread .greyTit .el-breadcrumb__item__inner {
+.bread .greyTit .el-breadcrumb__inner {
   cursor: text;
 }
-.bread .greyTit .el-breadcrumb__item__inner:hover {
+.bread .greyTit .el-breadcrumb__inner:hover {
   color: #48576a;
 }
 .breadIcon {

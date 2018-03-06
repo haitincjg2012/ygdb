@@ -8,6 +8,7 @@ Vue.use(VueRouter);
 
 const router = new VueRouter({
   mode: 'hash',
+  // mode: 'history',
   routes: [
     {
       name: 'home',
@@ -16,16 +17,27 @@ const router = new VueRouter({
       meta: {requireNav: true}
     },
     {
+      name: 'add',
+      path: '/add',
+      component: require('../views/home/home.vue'),
+      meta: {requireNav: false}
+    },
+    {
       name: 'pc',
       path: '/pc',
       component: require('../views/pc/mainPCenter'),
       meta: {requireNav: true, requiresAuth: true}
     },
     {
+      name: 'pictureOriginal',
+      path: '/pictureOriginal',
+      component: require('../views/businessV/pictureOriginal'),
+    },
+    {
       name: 'pcInfo',
       path: '/pcInfo',
       component: require('../views/pc/viewComponents/personInfo'),
-      meta: {requiresAuth: true}
+      // meta: {requiresAuth: true}
     },
     {
       name: 'messageList',
@@ -74,6 +86,11 @@ const router = new VueRouter({
       path: '/mySpDe',
       component: require('../views/pc/viewComponents/mySpDe.vue'),
       meta: {requiresAuth: true}
+    },
+    {
+      name: 'edit',
+      path: '/edit',
+      component: require('../views/pc/viewComponents/edit.vue'),
     },
     {
       name: 'myCollect',
@@ -179,6 +196,16 @@ const router = new VueRouter({
       path: '/newsDetail',
       component: require('../views/home/viewComponents/newsDetail.vue'),
     },
+    {//新闻发布
+      name: 'newsPublish',
+      path: '/newsPublish',
+      component: require('../views/home/viewComponents/newsPublish.vue'),
+    },
+    {//发表评论
+      name: 'newsComm',
+      path: '/newsComm',
+      component: require('../views/home/viewComponents/newsComm.vue'),
+    },
     {
       name: 'xqframe',
       path: '/xqframe',
@@ -244,7 +271,7 @@ const router = new VueRouter({
     },
     {
       name: 'detail',
-      path: '/detail/:id',
+      path: '/detail/',
       component: require('../views/home/viewComponents/xq.vue'),
     },
     {
@@ -261,6 +288,11 @@ const router = new VueRouter({
       name: 'activePage_three',
       path: '/activePage_three',
       component: require('../views/home/viewComponents/activePage_three.vue'),
+    },
+    {
+      name: 'activePage_four',
+      path: '/activePage_four',
+      component: require('../views/home/viewComponents/activePage_four.vue'),
     },
     {
       name: 'cold',
@@ -281,7 +313,7 @@ const router = new VueRouter({
     {
       name: 'search',
       path: '/search',
-      component: require('../views/home/viewComponents/fSearch.vue'),
+      component: require('../views/home/viewComponents/search.vue'),
     },
     {
       name: 'validate',
@@ -304,6 +336,156 @@ const router = new VueRouter({
       component: require('../views/pc/viewComponents/quotesMessage.vue'),
     },
     {
+      name: 'setting',
+      path: '/setting',
+      component: require('../views/pc/viewComponents/setting.vue'),
+    },
+    {
+      name: 'fruitCircle',
+      path: '/fruitCircle',
+      component: require('../views/fruit/fruitCircle.vue'),
+      meta: {requireNav: true}
+    },
+    {
+      name: 'publishPost',
+      path: '/publishPost',
+      component: require('../views/fruit/publishPost.vue'),
+    },
+    {
+      name: 'socialDetail',
+      path: '/socialDetail',
+      component: require('../views/fruit/socialDetail.vue'),
+    },
+    {
+      name: 'newsfruitComment',
+      path: '/newsfruitComment',
+      component: require('../views/fruit/newsfruitComment.vue'),
+    },
+    {
+      name: 'morePost',
+      path: '/morePost',
+      component: require('../views/fruit/morePosts.vue'),
+    },
+    {
+      name: 'myTidings',
+      path: '/myTidings',
+      component: require('../views/fruit/myTidings.vue'),
+    },
+    //消息管理-主页面
+    {
+      name: 'messageInfo',
+      path: '/messageInfo',
+      component: require('../views/comm/messageInfo.vue'),
+    },
+    //消息管理-赞
+    {
+      name: 'praise',
+      path: '/praise',
+      component: require('../views/comm/viewComponents/praise.vue'),
+    },
+    //消息管理-评论
+    {
+      name: 'comments',
+      path: '/comments',
+      component: require('../views/comm/viewComponents/comments.vue'),
+    },
+    //消息管理-系统消息
+    {
+      name: 'sysmessage',
+      path: '/sysmessage',
+      component: require('../views/comm/viewComponents/sysmessage.vue'),
+    },
+    {
+      name: 'findSHome',
+      path: '/findSHome',
+      component: require('../views/sourcing/findSHome.vue'),
+      meta: {requireNav: true}
+    },
+    //果价猜猜猜
+    {
+      name: 'priveMovement',
+      path: '/priveMovement',
+      component: require('../views/home/viewComponents/priceMovement.vue'),
+    },
+    //省
+    {
+      name: 'province',
+      path: '/province',
+      component: require('../views/businessV/province.vue'),
+    },
+    // 市
+    {
+      name: 'city',
+      path: '/city',
+      component: require('../views/businessV/city.vue'),
+    },
+    // 区
+    {
+      name: 'county',
+      path: '/county',
+      component: require('../views/businessV/county.vue'),
+    },
+    //镇
+    {
+      name: 'town',
+      path: '/town',
+      component: require('../views/businessV/town.vue'),
+    },
+    //定位所在的城市
+    {
+      name: 'location',
+      path: '/location',
+      component: require('../views/sourcing/location.vue'),
+    },
+    //果满仓的商品详情
+    {
+      name: 'sourcingXq',
+      path: '/sourcingXq',
+      component: require('../views/sourcing/sourcingXq.vue'),
+    },
+    {
+      name: 'warn',
+      path: '/warn',
+      component: require('../views/home/viewComponents/warn.vue'),
+    },
+    //二维码扫描注册果来乐
+    {
+      name: 'Twocode',
+      path: '/Twocode',
+      component: require('../views/register/TwoCode.vue'),
+    },
+    {
+      name:'invite',
+      path:'/invite',
+      component:require('../views/register/invite.vue'),
+    },
+    {
+      name:'qrcode',
+      path:'/qrcode',
+      component:require('../views/register/inviteRegist.vue'),
+    },
+    //活动运营一
+    {
+      name:'oHomeF',
+      path:'/oHomeF',
+      component:require('../views/operateF/home.vue'),
+    },
+    {
+      name: 'test',
+      path: '/test',
+      component: require('../views/home/viewComponents/test.vue'),
+    },
+    // {
+    //   name:'revise',
+    //   path:'/revise',
+    //   component:require('../views/operateF/revise.vue'),
+    // },
+    // {
+    //   name:'compose',
+    //   path:'/compose',
+    //   component:require('../views/operateF/composePicture.vue'),
+    // },
+    {
       path: '/', redirect: '/home'
     },
   ],
@@ -315,30 +497,31 @@ router.beforeEach((to, from, next) => {
   let fromPath = from.path;
   let name = to.name;
 
-  // let flag = to.query.flag;
-  // let obj = {};
-  // obj.flag = flag;
-  // if (flag == 1) {
-  //   obj.flag = flag;
-  // }else{
-  //
-  // }
-  // obj.name = name;
-  // console.log(123);
+
   if (to.matched.some(record => record.meta.requireNav)) {//控制导航栏显现
     store.commit("incrementNavIndex", {'navIndex': true});
-    // store.commit("incrementInit", obj);
   } else {
     store.commit("incrementNavIndex", {'navIndex': false});
   }
 
+  var fakePath = window.location.search;//url?后面的字符
+  var path = '',
+      pos = fakePath.indexOf("FakePath");
 
-  next();
+  if(pos > -1){
+    var strArr = fakePath.split("=");
+    strArr.splice(0, 1);
+    path =window.location.origin + "/#/" + strArr.join("=");
+    localStorage.wx = true;
+    window.location.replace(path);
+    return;
+  }
+
 
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (store.state.token || c_js.getLocalValue('token')) {
       next();
-    } else {
+    }else {
        let name1 = to.name;
        if(name1 != "search" || name1 != "buy"|| name1 != "sell" || name != "gq"){
          next({
@@ -348,6 +531,11 @@ router.beforeEach((to, from, next) => {
        }
     }
   }
+  else{
+    next();
+  }
+
+
   // else if (to.matched.some(record => record.meta.requiresUserInfoRes)) {
   //   if (window.localStorage.getItem('userInfoRes')=='true') {
   //     next();
@@ -363,6 +551,7 @@ router.beforeEach((to, from, next) => {
 });
 
 router.afterEach(function (to) {
+
 });
 
 //输出router

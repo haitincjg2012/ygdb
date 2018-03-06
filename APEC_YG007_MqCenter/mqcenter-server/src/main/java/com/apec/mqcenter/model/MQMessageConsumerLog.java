@@ -4,6 +4,7 @@ import com.apec.framework.common.Constants;
 import com.apec.framework.common.enumtype.MQConsumerStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -16,6 +17,7 @@ import java.util.Date;
  *
  * @author yirde  2017/7/4.
  */
+@Data
 @Entity
 @GenericGenerator(name = Constants.SYSTEM_GENERATOR, strategy = Constants.ASSIGNED)
 @EntityListeners(
@@ -105,99 +107,5 @@ public class MQMessageConsumerLog implements Persistable<String> {
         return null == this.msgKey;
     }
 
-    public String getTopic() {
-        return topic;
-    }
 
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
-
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public String getMsgKey() {
-        return msgKey;
-    }
-
-    public void setMsgKey(String msgKey) {
-        this.msgKey = msgKey;
-    }
-
-    public String getMsgId() {
-        return msgId;
-    }
-
-    public void setMsgId(String msgId) {
-        this.msgId = msgId;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public String getOrderlyKey() {
-        return orderlyKey;
-    }
-
-    public void setOrderlyKey(String orderlyKey) {
-        this.orderlyKey = orderlyKey;
-    }
-
-    public MQConsumerStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(MQConsumerStatus status) {
-        this.status = status;
-    }
-
-    public Long getConsumerTime() {
-        return consumerTime;
-    }
-
-    public void setConsumerTime(Long consumerTime) {
-        this.consumerTime = consumerTime;
-    }
-
-    public Long getConsumerEndTime() {
-        return consumerEndTime;
-    }
-
-    public void setConsumerEndTime(Long consumerEndTime) {
-        this.consumerEndTime = consumerEndTime;
-    }
-
-    public Long getRetryTime() {
-        return retryTime;
-    }
-
-    public void setRetryTime(Long retryTime) {
-        this.retryTime = retryTime;
-    }
-
-    public Long getRetryEndTime() {
-        return retryEndTime;
-    }
-
-    public void setRetryEndTime(Long retryEndTime) {
-        this.retryEndTime = retryEndTime;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
 }

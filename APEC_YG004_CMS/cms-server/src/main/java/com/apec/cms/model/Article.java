@@ -47,50 +47,50 @@ public class Article extends BaseModel<Long> {
      * 新闻内容,也用作图片路径
      */
     @Lob
-    @Column(nullable = true)
+    @Column(nullable = false)
     private String content;
 
     /**
      * 是否含有图片
      */
-    @Column(nullable = true)
+    @Column
     private boolean hasImage;
 
     /**
      * 是否显示
      */
-    @Column(nullable = true)
+    @Column
     private boolean priority;
 
     /**
      * 新闻id
      */
-    @Column(nullable = true)
+    @Column
     private String newsId;
 
     /**
      * 新闻url
      */
-    @Column(nullable = true)
+    @Column
     private String url;
 
     /**
      * 发布时间
      */
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = true)
+    @Column
     private Date pubDate;
 
     /**
      * 作者
      */
-    @Column(nullable = true)
+    @Column
     private String author;
 
     /**
      * Meiti
      */
-    @Column(nullable = true)
+    @Column
     private String media;
 
 
@@ -108,25 +108,14 @@ public class Article extends BaseModel<Long> {
 
     /**
      * 额外信息
-     *
-     * @return
      */
     private String priv;
 
     /**
-     * 是否为个人发布，默认为平台系统发布
+     * 备注
      */
-    private boolean personPub;
+    private String remark;
 
-    /**
-     * 审核状态
-     */
-    private String auditState;
-
-    /**
-     * 审核通过时间
-     */
-    private Date passDate;
 
 
 }

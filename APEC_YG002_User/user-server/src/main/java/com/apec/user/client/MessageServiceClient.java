@@ -14,6 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @FeignClient(name = "YG-MESSAGE-SERVICE")
 public interface MessageServiceClient {
 
+    /**
+     * 添加新消息
+     * @param messageVO 消息内容
+     * @return  String
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/message/addMessage", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     String addMessage(MessageVO messageVO);
 

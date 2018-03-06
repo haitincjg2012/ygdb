@@ -5,12 +5,12 @@ package com.apec.framework.elasticsearch.vo;
  *
  * @author yirde  2017/7/11.
  */
-public class ESGetSingleResponseVO<V> extends  ESResponseVO {
+public class EsGetSingleResponseVO<V> extends  EsResponseVO {
 
     /**
      * 是否发现  true 发现 ，false 未发现
      */
-    private boolean found;
+    private Boolean found;
 
     /**
      * Source 对象
@@ -33,4 +33,10 @@ public class ESGetSingleResponseVO<V> extends  ESResponseVO {
     public void setSource(V source) {
         this.source = source;
     }
+
+    @Override
+    public String toString(){
+        return super.toString();
+    }
+
 }

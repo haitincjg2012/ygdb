@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.apec.framework.common.Constants;
@@ -26,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  * @author gunj
  * create by 2017-07-14
  * */
+@Data
 @Entity
 @GenericGenerator(name = Constants.SYSTEM_GENERATOR, strategy = Constants.ASSIGNED)
 @Table(name = "voucher")
@@ -42,44 +44,44 @@ public class Voucher extends BaseModel<Long>{
 	/**
 	 * 手机号
 	 * */
-	@Column(name = "mobile", nullable = false, length = 20)
+	@Column(name = "mobile")
 	private String mobile;
 	
 	/**
 	 * 城市id
 	 * */
-	@Column(name = "city_id", nullable = false, length = 30)
+	@Column(name = "city_id")
 	private String cityId;
 	
 	/**
 	 * 城市名称
 	 * */
-	@Column(name = "city_name", nullable = false, length = 30)
+	@Column(name = "city_name")
 	private String cityName;
 	
 	
 	/**
 	 * 县id
 	 * */
-	@Column(name = "county_id", nullable = false, length = 30)
+	@Column(name = "county_id")
 	private String countyId;
 	
 	/**
 	 * 县名称
 	 * */
-	@Column(name = "county_name", nullable = false, length = 30)
+	@Column(name = "county_name")
 	private String countyName;
 	
 	/**
 	 * 镇id
 	 * */
-	@Column(name = "town_id", nullable = false, length = 30)
+	@Column(name = "town_id")
 	private String townId;
 	
 	/**
 	 * 镇名称
 	 * */
-	@Column(name = "town_name", nullable = false, length = 30)
+	@Column(name = "town_name")
 	private String townName;
 
 	/**
@@ -118,130 +120,19 @@ public class Voucher extends BaseModel<Long>{
 	/**
 	 * 凭据图片路径
 	 * */
-	@Column(name = "voucher_url", nullable = true)
+	@Column(name = "voucher_url")
 	private String voucherUrl;
-	
-	@OneToMany(mappedBy = "voucher", cascade = CascadeType.ALL, 
-			fetch = FetchType.LAZY,orphanRemoval = true)
-	private List<VoucherGoods> voucherGoods;
 
-	public Long getUserId() {
-		return userId;
-	}
+	/**
+	 * 审核状态
+	 */
+	private String auditState;
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
+	/**
+	 * 通过状态
+	 */
+	private Date passDate;
 
-	public String getMobile() {
-		return mobile;
-	}
 
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
 
-	public String getCityId() {
-		return cityId;
-	}
-
-	public void setCityId(String cityId) {
-		this.cityId = cityId;
-	}
-
-	public String getCityName() {
-		return cityName;
-	}
-
-	public void setCityName(String cityName) {
-		this.cityName = cityName;
-	}
-
-	public String getCountyId() {
-		return countyId;
-	}
-
-	public void setCountyId(String countyId) {
-		this.countyId = countyId;
-	}
-
-	public String getCountyName() {
-		return countyName;
-	}
-
-	public void setCountyName(String countyName) {
-		this.countyName = countyName;
-	}
-
-	public String getTownId() {
-		return townId;
-	}
-
-	public void setTownId(String townId) {
-		this.townId = townId;
-	}
-
-	public String getTownName() {
-		return townName;
-	}
-
-	public void setTownName(String townName) {
-		this.townName = townName;
-	}
-
-	public UserType getType() {
-		return type;
-	}
-
-	public void setType(UserType type) {
-		this.type = type;
-	}
-
-	public String getShipWarehouse() {
-		return shipWarehouse;
-	}
-
-	public void setShipWarehouse(String shipWarehouse) {
-		this.shipWarehouse = shipWarehouse;
-	}
-
-	public String getSaleMarket() {
-		return saleMarket;
-	}
-
-	public void setSaleMarket(String saleMarket) {
-		this.saleMarket = saleMarket;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Date getDeliveryTime() {
-		return deliveryTime;
-	}
-
-	public void setDeliveryTime(Date deliveryTime) {
-		this.deliveryTime = deliveryTime;
-	}
-
-	public String getVoucherUrl() {
-		return voucherUrl;
-	}
-
-	public void setVoucherUrl(String voucherUrl) {
-		this.voucherUrl = voucherUrl;
-	}
-
-	public List<VoucherGoods> getVoucherGoods() {
-		return voucherGoods;
-	}
-
-	public void setVoucherGoods(List<VoucherGoods> voucherGoods) {
-		this.voucherGoods = voucherGoods;
-	}
 }

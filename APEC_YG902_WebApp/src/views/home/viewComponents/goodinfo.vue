@@ -11,7 +11,7 @@
              <div class="z-history clearfix ">
                <p class="z-text">历史浏览记录</p>
                <div v-for = "item in historys"
-                        class="c-history"
+                        class="c-history-bs"
                          >
                          <ul class="clearfix">
                              <li :data-id="item.skuId" @click="historyRecord">
@@ -19,7 +19,6 @@
                              </li>
 
                          </ul>
-
                </div>
              </div>
          </div>
@@ -70,6 +69,7 @@
   var fn = {
       message:function (data) {
         if(!data.succeed){
+            Toast(data.errorMsg);
           return;
         }
           var dt = data.data.goodsAttrVOList;
@@ -133,14 +133,17 @@
             obj.skuId = current.skuId;
             arr.push(obj);
         });
-        this.historys = arr;
+        if(dt.length > 0){
+          this.historys = arr;
+        }
+
       }
   }
    export default{
       data(){
         return{
           goodinfos:[],
-          historys:[],
+          historys:null,
           RECORD:null,
         }
       },

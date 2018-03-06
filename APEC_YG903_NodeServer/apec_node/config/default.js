@@ -56,6 +56,8 @@ module.exports = {
   "userProductPushKey": "product_info", //用户发布的供求Key
   "userProductOffKey": "product_off_sell_info",
   "userMessageCountKey": "message_count",  // User MessageCount key
+  "userReplyCountKey":"article_msg_count",  //用户的评论通知未读消息数量
+  "userPraiseCountKey":"give_up_msg_count",  //用户的点赞通知未读消息数量
   "userProSaveKey": "pro_save",    //用户收藏的key
   "userOrgSaveKey": "org_save",    //用户关注的组织用户的key
   "userArtPraiseKey": "article_praise",    //用户点赞的文章id
@@ -70,5 +72,11 @@ module.exports = {
   "praiseNumKey": "praise_num",// 点赞数
   "readedNumKey": "readed_num", // 阅读数
   "articleAllRead": "art_allreadnum",//文章总的阅读数
-  "userArticleMsgCountKey": "article_msg_count",  // 用户未读行情消息数
+  "quotationPrefix":"quotation:", //行情竞猜前缀
+  "quotationHigh":"quotation_high", //行情竞猜看涨的人数
+  "quotationLight":"quotation_light", //行情竞猜看跌的人数
+  "quotationHighUser":"quotation_high_user", //行情竞猜看涨的人
+  "quotationLightUser":"quotation_light_user", //行情竞猜看跌的人
+  "highQuotation":"quotation_high", //看涨的行情竞猜
+  "lightQuotation":"quotation_light" //看跌的行情竞猜
 }

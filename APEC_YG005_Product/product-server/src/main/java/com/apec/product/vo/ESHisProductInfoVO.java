@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * Created by wubi on 2017/8/7.
+ * @author wubi
  */
 @Data
 @NoArgsConstructor
@@ -98,7 +99,7 @@ public class ESHisProductInfoVO {
      * 7天 15天 30 天， 每晚凌晨三点 进行有效期变更
      * 权重 2
      */
-    private int timeout;
+    private Integer timeout;
 
     private String  address;
     /**
@@ -130,6 +131,11 @@ public class ESHisProductInfoVO {
      *  图片 属性
      */
     private List<ESProductImageVO> productImages;
+
+    /**
+     * 标签属性
+     */
+    private List<ESProductTagsVO> productTags;
 
     /**
      * 下架时间

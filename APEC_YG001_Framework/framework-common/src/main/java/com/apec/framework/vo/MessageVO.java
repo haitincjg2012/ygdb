@@ -45,7 +45,7 @@ public class MessageVO extends BaseVO<Long> {
     /**
      * 是否全部通知
      */
-    private boolean allReceiver;
+    private Boolean allReceiver;
 
     public String getTitle() {
         return title;
@@ -102,4 +102,10 @@ public class MessageVO extends BaseVO<Long> {
     public void setAllReceiver(boolean allReceiver) {
         this.allReceiver = allReceiver;
     }
+
+    @Override
+    public String toString(){
+        return super.toString();
+    }
+
 }

@@ -5,9 +5,11 @@ package com.apec.framework.elasticsearch.vo;
  *
  * @author yirde  2017/7/11.
  */
-public class ESUpdateDocRequestVO {
+public class EsUpdateDocRequestVO {
 
-    //DOC
+    /**
+     * DOC
+     */
     private Object doc;
 
     public Object getDoc() {
@@ -18,11 +20,17 @@ public class ESUpdateDocRequestVO {
         this.doc = doc;
     }
 
-    public ESUpdateDocRequestVO(Object doc) {
+    public EsUpdateDocRequestVO(Object doc) {
         this.doc = doc;
     }
 
-    public static ESUpdateDocRequestVO  getInstnce(Object doc){
-        return new ESUpdateDocRequestVO(doc);
+    public static EsUpdateDocRequestVO  getInstnce(Object doc){
+        return new EsUpdateDocRequestVO(doc);
     }
+
+    @Override
+    public String toString(){
+        return super.toString();
+    }
+
 }

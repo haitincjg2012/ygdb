@@ -10,6 +10,12 @@ public enum MessageTemplate {
 	 * 验证码替换key值
 	 * */
 	CAPTCHA("captcha"),
+
+	/**
+	 * 果满仓用户注册通知
+	 * */
+	REGISTER_WMS("REGISTER_WMS"),
+
 	/**
 	 * 设置实名成功的消息模板以及相应的内容值
 	 */
@@ -46,6 +52,16 @@ public enum MessageTemplate {
 	RESULT_OF_ARTICLE("RESULT_OF_ARTICLE"),
 
 	/**
+	 * 通知交收单审核结果的模板
+	 * */
+	RESULT_OF_VOUCHER("RESULT_OF_VOUCHER"),
+
+	/**
+	 * 通知行情竞猜结果的模板
+	 * */
+	RESULT_OF_QUOTATION("RESULT_OF_QUOTATION"),
+
+	/**
 	 * 找回密码验证码模板key值
 	 * */
 	FIND_PASSWORD_CAPTCHA_TEMPLATE("FIND_PASSWORD_CAPTCHA_TEMPLATE");
@@ -54,10 +70,10 @@ public enum MessageTemplate {
 	
 	private String key;
 	
-	private MessageTemplate(String key){
+	MessageTemplate(String key){
 		this.key = key;
 	}
-	
+
 	public String getKey(){
 		return key;
 	}

@@ -6,8 +6,12 @@
       <div class="return" @click="back">
         <img src="../../../assets/img/ret.png">
       </div>
+      <div class="c-xq-warn" @click="warn">
+          举报
+      </div>
     </div>
-    <scroller ref="my_scroller" :style="styleCal">
+    <my-scroll class="c-xq-goods" :data="itemG?itemG:[]" :pullup="pullup" ref="scrollBar" @scrollToEnd="loadMore">
+      <div>
     <div class="z-calcuros">
       <mt-swipe :auto="4000" class="cssHeight">
         <template v-for="(item,index) in detailUrl">
@@ -33,27 +37,33 @@
 
     </div>
     <div class="goods-info">
-      <span class="sp-one" v-if="dataDetail.name == '供应'">{{dataDetail.amount}}</span>
-      <span class="sp-one" v-if="dataDetail.name == '求购'">{{dataDetail.startAmount}}-{{dataDetail.endAmount}}</span>
-      <span class="sp-com">{{dataDetail.priceUnit}}</span>
-      <span class="z-g-j">{{dataDetail.weight}}{{dataDetail.weightUnit}}</span>
-      <!--<span class="sp-com"></span>-->
-      <span class="sp-com">{{dataDetail.showSecondInfo}}</span>
-    </div>
-    <div class="com">
+      <div class="c-goods-pz" v-html="dataDetail.classify"></div>
       <div class="z-area clearfix">
-        <img class="pos-pic" src="../../../assets/img/pos.png">
+        <!--<img class="pos-pic" src="../../../assets/img/pos.png">-->
         <span class="sp-two">{{dataDetail.address}}</span>
-        <!--<span class="sp-three sp-three-com"></span>-->
         <span class="sp-three-com">{{dataDetail.phoneNum}} 人联系</span>
         <span class="sp-three-com">{{dataDetail.viewNum}} 次浏览</span>
 
       </div>
     </div>
+    <div class="c-goods-price">
+      <span class="sp-one" v-if="dataDetail.name == '供应'">{{dataDetail.amount}}</span>
+      <span class="sp-one" v-if="dataDetail.name == '求购'">{{dataDetail.startAmount}}-{{dataDetail.endAmount}}</span>
+      <span class="sp-com">{{dataDetail.priceUnit}}</span>
+      <span class="z-g-j">{{dataDetail.weight}}{{dataDetail.weightUnit}}</span>
+    </div>
+     <!--<div v-html="dataDetailSpecifications">-->
+     <div class="c-specification" v-html="dataDetail.specification">
+       <!--<div class="c-detai-blank"></div>-->
+       <!--<h4 class="c-specification-title">详情规格</h4>-->
+       <!--<p class="c-specification-text"></p>-->
+     </div>
+     <div class="c-describe" v-html="dataDetail.describe"></div>
+     <div class="c-detai-blank"></div>
     <div class="z-p-x">
-      <div @click.stop="routerPerInfo" class="peoson-info clearfix">
+      <div @click.stop="routerPerInfo($event)" class="peoson-info clearfix">
         <div class="z-img-person">
-          <img :src="dataDetail.imgRT">
+          <img :src="dataDetail.imgRT" data-flag="protrait" :data-src ="dataDetail.imgUrl">
         </div>
         <div class="z-p-info">
           <div class="z-p-text">{{dataDetail.showUserName}}</div>
@@ -67,59 +77,48 @@
         <div class="z-d">
              <img src="../../../assets/img/back.png">
         </div>
-
       </div>
     </div>
+     <div class="c-detai-blank"></div>
     <div class="z-my-publishes">
-        <!--<div class="z-my-goods" @click ="popup">-->
-          <!--<p>我发布的商品</p>-->
-        <!--</div>-->
-      <div class="wrapper" ref="wrapper" v-if="pp">
+      <div class="z-my-publish-title">
+        <h6>他的发布</h6>
+      </div>
+        <!--//临时的切换-->
         <div>
-          <div class="top-tip">
-            <span class="refresh-hook">下拉刷新</span>
-          </div>
           <ul>
             <li :is="item.ss" v-for="item in itemG"
                 :item = "item"
-            >
+                v-on:receive="switchT"
+                >
             </li>
           </ul>
-          <div class="bottom-tip">
-            <span class="loading-hook">查看更多</span>
-          </div>
         </div>
-      </div>
     </div>
-    <div class="z-cs">
-      <!--<div class="xq" @click="goodxq">-->
-      <div class="xq">
-        <span class="sp-f">商品详情:</span>
-        <!--<img class="z-d-o" src="../../../assets/img/more-1.png">-->
+    <!--<div class="z-cs">-->
+      <!--&lt;!&ndash;<div class="xq" @click="goodxq">&ndash;&gt;-->
+      <!--<div class="xq">-->
+        <!--<span class="sp-f">商品详情:</span>-->
+        <!--&lt;!&ndash;<img class="z-d-o" src="../../../assets/img/more-1.png">&ndash;&gt;-->
+      <!--</div>-->
+      <!--<table class="z-table">-->
+        <!--<tr v-for="item in items"-->
+        <!--&gt;-->
+          <!--<td v-for="key in item">{{key}}</td>-->
+          <!--&lt;!&ndash;<td class="z-name">{{item.key}}</td>&ndash;&gt;-->
+          <!--&lt;!&ndash;<td class="z-key">{{item.value}}</td>&ndash;&gt;-->
+        <!--</tr>-->
+      <!--</table>-->
+      <!--&lt;!&ndash;<div class="z-f-s">&ndash;&gt;-->
+          <!--&lt;!&ndash;<p>描述:</p>&ndash;&gt;-->
+          <!--&lt;!&ndash;<p>{{dataDetail.remark}}</p>&ndash;&gt;-->
+      <!--&lt;!&ndash;</div>&ndash;&gt;-->
+    <!--</div>-->
       </div>
-      <table class="z-table">
-        <tr v-for="item in items"
-        >
-          <td v-for="key in item">{{key}}</td>
-          <!--<td class="z-name">{{item.key}}</td>-->
-          <!--<td class="z-key">{{item.value}}</td>-->
-        </tr>
-      </table>
-      <div class="z-f-s">
-          <p>描述:</p>
-          <p>{{dataDetail.remark}}</p>
-      </div>
-    </div>
-    </scroller>
-    <div class="footer">
-       <ul>
-           <li class="z-phone-T">
-             <a @click.stop="phoneClick" :href="`tel:${dataDetail.mobile}`">打电话</a>
-           </li>
-           <li @click.stop="collect($event,dataDetail.id)" class="z-t z-collect" :class="{activeDel:dataDetail.saveFlag}">{{save_cl}}</li>
-       </ul>
-    </div>
-
+    </my-scroll>
+    <!--<div class="footer">-->
+    <my-phone class="footer" :mobile="dataDetail.mobile" :attentionFlag.sync="dataDetail.saveFlag" @phone="phoneClick" @attention="collect" @share="shareT" mark="1"></my-phone>
+    <shareWx :wxflag="Wxflag" @getWx="getWx"></shareWx>
   </div>
 </template>
 <style scoped>
@@ -130,10 +129,16 @@
   import API from '../../../api/api'
   import BScroll from 'better-scroll';
   import topBar from '../../../components/topBar/topBar'
-//  import suInfo from './supplyInfo.vue'
+
+
+  import WX from '../../../components/wx.vue'  //微信分享功能
+  import phoneC from '../../businessV/phone.vue' //打电话组件
   import defaultIcon from "../../../assets/img/defaultForm.png"
 
   import default_1 from '../../../assets/img/xqimg1.png'//默认的详情轮播图
+  import scroll from '../../../components/scroll/scrollbg.vue'//分页
+//  import scroll from '../../../components/scroll/scroll.vue'
+
   import default_2 from '../../../assets/img/xqimg2.png'//默认的详情轮播图
   import default_3 from '../../../assets/img/xqimg3.png'//默认的详情轮播图
 
@@ -141,20 +146,10 @@
   import buy from '../../../assets/img/logo-1.png'//求购
 
   import Aur from '../../../assets/img/AgencyTipsR.png'//是否认证
+  import shareWx from '../../../components/shareWx.vue' //微信引导图
 
-  import daiban from '../../../assets/img/AgencyTips.png'//代办
-  import zzHu from '../../../assets/img/AgencyTipsG.png'//种植户
-  import keshang from '../../../assets/img/AgencyTipsK.png'//客商
-  import lengku from '../../../assets/img/AgencyTipsL.png'//冷库
-  import hezuoshang from  '../../../assets/img/hezuoshang.png'//合作商
+  import IMG from '../../../components/gqimg.vue'
 
-
-  import QT from '../../../assets/img/t.png'//铜牌
-  import BY from '../../../assets/img/y.png'//银牌
-  import HJ from '../../../assets/img/j.png'//金牌
-  import BJ from '../../../assets/img/bj-1.png'//铂金
-  import ZS from '../../../assets/img/zs.png'//砖石
-  import DS from '../../../assets/img/Ancrown@3x.png'//大师
   import goodD from  './goodlist.vue'
 
   const api = new API();
@@ -171,12 +166,14 @@
           }
 
       },
-      plain:function (data) {
+      plain:function (type,data) {
         if(!data.succeed){
           return;
         }
+
         var dt = data.data;
         var self = this;
+
         self.dataDetail.id = dt.id;
         self.dataDetail.orgId = dt.orgId;
         self.dataDetail.skuName = dt.skuName;
@@ -189,26 +186,50 @@
         self.dataDetail.mobile = dt.mobile;
         self.dataDetail.weight = dt.weight;
         self.dataDetail.weightUnit = dt.weightUnit;
-        self.dataDetail.userLevelName = self.userLevelKeySwitch(dt.userLevelName);
-//        self.dataDetail.userTypeName = self.userTypeNameSwitch(dt.userTypeName);
+
+//        self.dataDetail.userLevelName = self.userLevelKeySwitch(dt.userLevelName);
+        self.dataDetail.userLevelName = IMG.methods.userLevel(dt.userLevelName);
+
         self.dataDetail.userTypeName = dt.userTypeName;
         self.dataDetail.showUserName = dt.showUserName;
+        var name = dt.showUserName == ""?"商品详情":dt.showUserName;
+        WX.wx("果来乐" + name,undefined, self.getWx);//分享功能
 //        self.dataDetail.productTypeName = self.productTypeSwitch(dt.productTypeName);
         self.dataDetail.productTypeName = dt.productTypeName;
         self.dataDetail.userShow = dt.userRealAuthFlag;
         self.dataDetail.userReal = dt.userRealAuthFlag?"实名认证":'';
-        self.dataDetail.showSecondInfo = dt.showSecondInfo.join('|');
+
+        var html = "";//苹果品种的
+        if(dt.productTags){
+          dt.productTags.forEach(function (recommands) {
+            html +="<span class='c-goods-pz-text g-second'>"+recommands.tagName + "</span>";
+          });
+        }
+        dt.showSecondInfo.forEach(function (current) {
+          html += "<span class='c-goods-pz-text'>" +current +"</span>"
+        });
+        self.dataDetail.classify = html;
+        //商品的描述
+        var htmlDes = "";
+        if(dt.remark){
+          htmlDes = "<div class='c-detai-blank'></div><h4 class='c-describe-title'>产品描述</h4><p class='c-describe-text'>" +dt.remark +"</p>";
+        }
+
+        self.dataDetail.describe = htmlDes;
+
         self.dataDetail.viewNum = dt.viewNum-0?dt.viewNum:0;
         self.dataDetail.phoneNum = dt.phoneNum-0?dt.phoneNum:0;
         self.dataDetail.saveFlag = dt.saveFlag;
+
         self.dataDetail.userId = dt.userId;
         self.dataDetail.imgRT = (dt.imgUrl || defaultIcon) + "?x-oss-process=style/_head";
+        self.dataDetail.imgUrl = dt.imgUrl;
 
         if(dt.productImages.length){
             var arr = [];
-            var obj = {};
             var arrImg = dt.productImages;
             for(var key in arrImg){
+                var obj = {};
                 obj.imageUrl = arrImg[key].imageUrl+"?x-oss-process=style/_detail";
                 arr.push(obj);
             }
@@ -219,23 +240,20 @@
         var tables = dt.productAttrs;
 
         var arr = [];
-//        tables.forEach(function (current) {
-//          var obj ={};
-//          obj.value = current.attrValue;
-//          if(obj.key == ""){
-//            return;
-//          }
-//          obj.key = current.attrName;
-//          arr.push(obj);
-//        });
+
         self.dataDetail.name = dt.productTypeName;
-        self.dataDetail.remark = dt.remark;
+
         this.items = fn.parameter(tables);
         this.$store.state.productImages = dt.productImages;
         this.$store.state.productTypeName = dt.productTypeName;
         this.title = dt.productTypeName + "商品";
 
+        this.orgId = dt.orgId;
 
+        if(!self.xqtype){
+            this.gqlist(type);
+            return;
+        }
       },
       collectFn:function (data) {
         if(data.succeed){
@@ -284,9 +302,13 @@
 
          return arr;
       },
-      format(){
+      format(type,data){
         if(!data.succeed){
           return;
+        }
+
+        if(this.xqtype != type){
+            return;
         }
         this.pageCount = data.data.pageCount;
         var rows = data.data.rows;
@@ -297,14 +319,19 @@
           var obj = {};
           var len = 0;
           obj.ss = goodD;
+          obj.Flag = "xq";
           obj.skuName = current.skuName;
           obj.showCredateTime = current.showCredateTime;
           var id = current.id;
+          if(that.treeRecord[id]){
+              return;
+          }
+          that.treeRecord[id] = 1;
           obj.id = id;
-          obj.levelImg = that.userLevelKeySwitch(current.userLevelName);
+//          obj.levelImg = that.userLevelKeySwitch(current.userLevelName);
           obj.gq = current.productTypeName;
-          obj.productTypeName = QG.methods.img(current.productTypeName);
-          obj.img = current.firstImageUrl;
+//          obj.productTypeName = QG.methods.img(current.productTypeName);
+          obj.img = current.firstImageUrl + "?x-oss-process=style/_list";
           obj.local = current.address;
           obj.name = current.showUserName;
           obj.priceUnit = current.priceUnit;
@@ -322,30 +349,34 @@
           len += obj.weight.length;
           obj.path = index;
 
-          var goodTime = current.showSecondInfo;
-          var text = goodTime.join(" ");
-          obj.fruitdate = text;
-          var Identification = current.productTypeName;
-          if(Identification == "求购"){
-            obj.bg = true;
-            obj.indentification = 0;
-            obj.endAmount = current.endAmount.toString();
-            len += obj.endAmount.length;
-            obj.startAmount = current.startAmount.toString();
-            len += obj.startAmount.length;
-
-            var n = (250 - (len + 6) * 10)/20;
-            obj.wh = n;
-            obj.qg = true;
-          }else{
-            obj.bg = false;
-            obj.indentification = 1;
-            obj.amount = current.amount.toString();
-            len += obj.amount.length;
-            var n = (230 - (len + 1) * 10)/20;
-            obj.wh = n;
-            obj.gy = true;
+//          var goodTime = current.showSecondInfo;
+//          var text = goodTime.join(" ");
+//          obj.fruitdate = text;
+          //品种的种类
+          var html = "";
+          if(current.productTags){
+            current.productTags.forEach(function (recommands) {
+              html +="<span class='g-sp-com g-first g-second'>"+recommands.tagName + "</span>";
+            });
           }
+          current.showSecondInfo.forEach(function (fruitC) {
+            html +="<span class='g-sp-com g-first ' data-id="+current.id+">"+fruitC + "</span>";
+          });
+          obj.fruitdate = html;
+
+          var Identification = current.productTypeName;
+          var hprice = "";
+          if(Identification == "求购"){
+            hprice = "<span data-id=" + current.id +" class='g-price-com-f gy'>&yen;" + current.startAmount + "~" +current.endAmount + "</span><span class='g-unit'  data-id=" + current.id + ">" + current.priceUnit +"</span>";
+            obj.price = hprice;
+            obj.bg = true;
+          }else{
+            hprice = "<span data-id=" + current.id +" class='g-price-com-f gy'>&yen;" + current.amount + "</span><span class='g-unit'  data-id=" + current.id + ">" + current.priceUnit +"</span>";
+            obj.price = hprice;
+          }
+
+          //重量
+          obj.weight = "<span class='g-unit'>" + current.weight + "&nbsp;" + current.weightUnit + "</span>";
 
           var pattern =/[0-9]*/g;
           var pt = /([a-z]*|[A-Z]*|(\s*))/g;
@@ -362,28 +393,37 @@
             lt += current.length;
           })
           obj.addreeWh = (201 - (obj.name.toString().length + obj.agency.length) * 12 + lF * 6 + lt*8)/20;
-          if(that.del.hasOwnProperty(id)){
-            return;
-          }
+//          if(that.del.hasOwnProperty(id)){
+//            return;
+//          }
 
-          that.del[id] = 0;
+//          that.del[id] = 0;
           arr.push(obj);
         });
 
+          if(rows.length > 0){
+              if(data.data.currentNo == 1){
+                this.itemG = [].concat(arr);
+              }else{
+                this.itemG = this.itemG.concat(arr);
+              }
+          }
 
-        if(this.pageNumber == 1){
-          this.publishViewList = arr;
-        }else{
-          fn.cacheData = arr;
-        }
+//        if(this.pageNumber == 1){
+//          this.publishViewList = arr;
+//        }else{
+//          fn.cacheData = arr;
+//        }
       },
-      dt(){}
   }
   export default{
+      created(){
+        this.$store.state.xqF = false;
+      },
       data(){
           return{
               browse:100,
-              mobile:100,
+              mobile:0,
               data:null,
               dataDetail:{
                 id:'',
@@ -409,7 +449,7 @@
                 },
                 imgRT:"",
               },
-              detailUrl:[],
+              detailUrl:null,
               dataId: '',
               title:'',
               items:null,
@@ -418,7 +458,15 @@
             publishViewList:[],
             pageCount:1,
             pageNumber:1,
-            styleCal:""
+            styleCal:"",
+            arr:[],//滑动的数组
+            pullup:true,
+            orgId:"",//组织id
+            itemG:null,//数组
+            treeRecord:{},
+
+            xqtype:"",//切换 不切换两种问题
+            Wxflag:false,//控制引导图
           }
       },
     computed:{
@@ -427,29 +475,84 @@
       }
     },
     methods:{
+      getWx(){
+        this.Wxflag = false;
+      },
+      shareT(){
+        this.Wxflag = true;
+      },
+      warn(){
+        //举报的
+        var name = localStorage.name;
+        if(name){
+          var self = this;
+          this.$router.push({name:"warn",query:{
+            articalId:self.$route.query.id,
+            articalName:self.dataDetail.showUserName,
+            realm:self.dataDetail.productTypeName,
+          }})
+        }else{
+          Toast("请您先登录，再进行举报!");
+        }
+      },
+      switchT(id){
+//        this.itemG = null;
+        this.$refs.scrollBar.scrollTo(0, 0);
+        this.$refs.scrollBar.init();
+        this.treeRecord = {};
+        this.content(id);
+        this.xqtype = "tab";
+      },
       originalPic(index){
-
           this.$router.push({name:"picShow", query:{index:index}});
       },
-      _initScroll(){
-        const self = this;
-        self.$nextTick(function () {
-          var winHeight = window.innerHeight;
-          var mainHeight = winHeight-50;
-          self.styleCal='top:42px;height:'+mainHeight+'px';
-        })
+      loadMore(){
+          var that = this;
+
+        if(that.pageCount > that.pageNumber){
+          that.pageNumber ++;
+          that.gqlist(that.xqtype);
+        }
       },
-      routerPerInfo(){
+      gqlist(type){
+        var pg = this.pageNumber;
+        var that = this;
+        let params = {
+          api:"/_node_user/_product_list.apno",
+          data:{
+            orgId:that.orgId,
+            pageNumber: pg,
+          }
+        }
+        this.post(params,fn.format.bind(this, type));
+      },
+      routerPerInfo(event){
+          var el = event.toElement || event.srcElement;
+          var flag = el.dataset.flag;
+          if(flag == "protrait"){
+            var src = el.dataset.src;
+            if(src){
+              this.$router.push({name:"pictureOriginal",query:{src:src}});
+              return;
+            }
+          }
         if(!this.dataDetail.userId)
             return;
         var id = this.dataDetail.userId;
         var type = this.dataDetail.userTypeName;
         var orgId = this.dataDetail.orgId;
-//        this.$router.push({path: '/supplyInfo/' + this.dataDetail.userId});
+
         this.$router.push({name:"personXq",query:{userId:id,orgId:orgId}});
       },
       back(){
-        this.$router.go(-1);
+        var wxF = localStorage.wx;
+        if(wxF){
+          this.$router.push({name:"home"});
+          localStorage.removeItem("wx");
+        }else{
+          this.$router.go(-1);
+        }
+
       },
       bs(){
           let params = {
@@ -485,39 +588,27 @@
           console.log(error)
         }
       },
-      content(){
+      content(id){
           var that= this ;
           let params = {
               api:"/_node_product/_info.apno",
               data:{
-                elasticId:this.dataId
+                elasticId:id,
               }
           };
-          this.post(params, fn.plain.bind(that));
+          this.post(params, fn.plain.bind(that,that.xqtype));
       },
-      collect(e,id){//收藏
+      collect(flag){//收藏
         var that= this ;
-        if(that.dataDetail.saveFlag){
-          that.dataDetail.saveFlag = false;
-        }
-        else{
-          that.dataDetail.saveFlag = true;
-        }
-        var el = document.querySelector(".z-collect");
-        var cl = el.classList;
-        var flag = cl.contains("activeDel");
-        if(flag){
-            cl.remove("activeDel");
-        }else{
-            cl.add("activeDel");
-        }
         let params = {
           api:"_node_user/_save_product.apno",
           data:{
-            elasticId:this.dataId,
-            saveFlag:that.dataDetail.saveFlag
+            elasticId:that.dataId,
+//            saveFlag:that.dataDetail.saveFlag
+            saveFlag:flag
           }
         };
+        this.dataDetail.saveFlag = flag;
         this.post(params, fn.collectFn.bind(that));
       },
       productTypeSwitch(key){//求购和供应转换
@@ -533,57 +624,6 @@
             break;
         }
       },
-      userLevelKeySwitch(key){//用户积分转换
-        switch (key) {
-          case 'QT':
-            return QT;
-            break;
-          case 'BY':
-            return BY;
-            break;
-          case 'HJ':
-            return HJ;
-            break;
-          case 'BJ':
-            return BJ;
-            break;
-          case 'ZS':
-            return ZS;
-            break;
-          case 'DS':
-            return DS;
-            break;
-          default:
-            return '';
-            break;
-        }
-      },
-      userTypeNameSwitch(key){//用户身份转换
-        switch (key) {
-          case 'DB':
-            return daiban;
-            break;
-          case 'ZZH':
-            return zzHu;
-            break;
-          case 'LK':
-            return lengku;
-            break;
-          case 'KS':
-            return keshang;
-            break;
-          case 'HZS':
-            return hezuoshang;
-            break;
-          default:
-            return '';
-            break;
-        }
-      },
-      goodxq(){
-//          var id = this.dataId;
-//          this.$router.push({name:'goodDetail',query:{id:id}})
-      },
       parameter(){
         var that= this ;
         var id = this.dataId;
@@ -598,40 +638,28 @@
       },
       popup(){
       },
-      list(){
-        var page =arguments[0] || this.pageNumber;
-        let params = {
-          api: "/_node_product/_all.apno",
-          data: {
-            keyWord: "",
-            orderType: "DATEDES",
-            searchType: "",
-            pageNumber: page
-          }
-        }
-//        this.post(params);
-      },
     },
     activated(){
-       this.dataId = this.$route.params.id;
-       this.content();
-       this.bs();
-//       this.parameter();
-       this._initScroll();
 
-      var el = document.querySelector(".page");
-      if(el){
-        var flag =  el.classList.contains("z-scroll");
-        if(flag){
-          el.classList.remove("z-scroll");
-          el.classList.add("z-scroll-y");
-        }else{
-          el.classList.add("z-scroll-y");
-        }
-      }
+       var id = this.$route.query.id;
+       this.attentionFlag = false;//默认的情况
+       this.dataId = id;
+      this.xqtype = "";
+       this.content(id);
+
+
+       this.bs();
+       this.detailUrl = null;
+       this.itemG = null;
+       this.treeRecord = {};
+       this.$refs.scrollBar.init();
+
     },
     components: {
       topBar,
+      'my-scroll':scroll,
+      'my-phone':phoneC,
+      shareWx
 //      suInfo
     }
 

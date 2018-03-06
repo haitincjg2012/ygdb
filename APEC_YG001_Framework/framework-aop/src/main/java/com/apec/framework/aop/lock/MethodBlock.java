@@ -35,7 +35,7 @@ public class MethodBlock
 
     private static String CACHE_KEY_LOCK_PREFIX = "cache_key_lock_prex_";
 
-    private long timeOut = 600000;
+    private long timeOut = 600000L;
 
     @Around("execution(* com.apec..service..*.*(..))")
     public Object lock(ProceedingJoinPoint point) throws Throwable
@@ -47,10 +47,10 @@ public class MethodBlock
         {
             MethodLock anno = method.getAnnotation(MethodLock.class);
             String cacheKeyPrefix = anno.value();
-            boolean findAnno=false;
+            boolean findAnno = false;
             Object[] args = point.getArgs();
             Parameter[] parameters = method.getParameters();
-            String lockKey="";
+            String lockKey = "";
             
             //偿试去找加注解的参数,只要找到一个就把它当作是key
             if(parameters.length>0)
@@ -68,19 +68,20 @@ public class MethodBlock
             }
             
             //在没有找到注解时,如果第一个参数是string,int,long也可以被认定是key
-            if(findAnno ||( args.length > 0 && (args[0] instanceof String || args[0] instanceof Integer || args[0] instanceof Long)))
+            boolean flag = findAnno ||( args.length > 0 && (args[0] instanceof String || args[0] instanceof Integer || args[0] instanceof Long));
+            if(flag)
             {
                 if(!findAnno)
                 {
                     lockKey = String.valueOf(args[0]);
                 }
                 
-                lockKey=cacheKeyPrefix+lockKey;
+                lockKey = cacheKeyPrefix + lockKey;
                 //分布式环境采用redis机制
                 if(null != redisTemplate)
                 {
                     String cacheKey = CACHE_KEY_LOCK_PREFIX+lockKey;
-                    Object retVal = null;
+                    Object retVal;
                     if(1 == redisTemplate.opsForValue().increment(cacheKey, 1L))
                     {
                         try

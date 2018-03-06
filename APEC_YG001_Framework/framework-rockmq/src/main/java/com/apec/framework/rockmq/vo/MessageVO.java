@@ -10,7 +10,7 @@ import com.apec.framework.dto.BaseVO;
  *
  * @author yirde  2017/7/3.
  */
-public class MessageVO extends BaseVO<Long> implements IMQBody{
+public class MessageVO extends BaseVO<Long> implements IMqBody {
 
     /**
      * 消息体
@@ -63,4 +63,10 @@ public class MessageVO extends BaseVO<Long> implements IMQBody{
 	public void setMessageStatus(MessageStatus messageStatus) {
 		this.messageStatus = messageStatus;
 	}
+
+	@Override
+	public String toString(){
+		return sender + "|" + body.getTitle();
+	}
+
 }

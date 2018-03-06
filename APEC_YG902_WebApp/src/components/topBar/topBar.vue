@@ -33,13 +33,16 @@
     },
     methods: {
       back() {
-          var login = this.$route.name;
-          if(login && login == "login"){
-              this.$router.push({name:"home"});
-          }else{
-            this.$router.go(-1)
-          }
-
+        var flag = this.$route.query.path;
+        console.log(flag == "home");
+        switch (flag){
+          case "home":
+            this.$router.push({name:"home"});
+            break;
+          default:
+            this.$router.go(-1);
+            break;
+        }
       },
       _leftClick() {
         this.$emit('rightBtn')
@@ -53,7 +56,7 @@
     watch: {
       isCancel: function (newVal) {
         this.isCancel = newVal
-      }
+      },
     },
   }
 
@@ -65,6 +68,8 @@
   .top-bar
     border-1px(rgba(7, 17, 27, 0.1))
     background-color #fff
+    position relative
+    z-index 100
     .top-title
       height 42px
       width 100%

@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
  * 内容摘要：
  * 创建日期：2017-01-05 19:38
  * 编码作者：zhaolei
+ * @author xxx
  */
 @Configuration
 public class ProducerConfig extends AmqpConfig {

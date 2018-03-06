@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  * Created by hmy on 2017/9/15.
+ * @author hmy
  */
 @Data
 public class UserAllInfo {
@@ -35,6 +36,11 @@ public class UserAllInfo {
      * 公司名称 ；冷库名称
      */
     private String companyName;
+
+    /**
+     * 二维码图片地址
+     */
+    private String qrCodeUrl;
 
     /**
      * 手机号
@@ -229,7 +235,9 @@ public class UserAllInfo {
      */
     private Date lastConsumeTime;
 
-    //组织标签
+    /**
+     * 组织标签
+     */
     private List<UserTagsVO> userTagsVOS;
 
 

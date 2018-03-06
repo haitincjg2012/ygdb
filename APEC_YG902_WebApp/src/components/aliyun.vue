@@ -36,14 +36,15 @@
       checkcookie();//异步执行
     }else{
       for(var key in arr){
+      	console.log(arr[key])
         if(arr[key].indexOf("AccessKeyId") > -1){
-          AccessKeyId = arr[key].split("=")[1];
+          AccessKeyId = arr[key].split("AccessKeyId=")[1];
         }
         if(arr[key].indexOf("AccessKeySecret") > -1){
-          AccessKeySecret = arr[key].split("=")[1];
+          AccessKeySecret = arr[key].split("AccessKeySecret=")[1];
         }
         if(arr[key].indexOf("SecurityToken") > -1){
-          SecurityToken = arr[key].split("=")[1];
+          SecurityToken = arr[key].split("SecurityToken=")[1];//截取SecurityToken= 直接截取=token自带的==会被截取
         }
       }
     }
@@ -99,11 +100,10 @@
       }
       AccessKeyId = result.AccessKeyId;
       AccessKeySecret = result.AccessKeySecret;
-        SecurityToken = result.SecurityToken;
+      SecurityToken = result.SecurityToken;
       setCookie("AccessKeyId",AccessKeyId, 50);
       setCookie("AccessKeySecret",AccessKeySecret, 50);
       setCookie("SecurityToken",SecurityToken, 50);
-
     });
   }
 //设置cookie的有效期

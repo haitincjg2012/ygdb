@@ -2,11 +2,13 @@ package com.apec.framework.common.exception;
 
 import java.io.Serializable;
 
+/**
+ * @author xxx
+ * @param <T>
+ */
 public class ExceptionInfo<T> implements Serializable
 {
     private static final long serialVersionUID = 5841390047513892294L;
-    
-    public static final Integer OK = 0;
 
     public static final Integer ERROR = 100;
 

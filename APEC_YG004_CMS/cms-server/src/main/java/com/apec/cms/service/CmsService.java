@@ -14,15 +14,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *  CMS相关服务
+ * CMS相关服务
+ *  @author hmy
  */
 public interface CmsService {
-
-    /**
-     * 查询所有的栏目
-     * @return ReturnCode
-     */
-   String listChannelInfo(List<ChannelListVO> resultData);
 
     /**
      * 创建栏目
@@ -33,102 +28,55 @@ public interface CmsService {
     String createChannelInfo(ChannelVO channelVO, UserInfoVO userInfoVO);
 
     /**
+     * 查询所有的栏目
+     * @param resultData resultData
+     * @return String
+     */
+    List<ChannelVO> listChannelInfo();
+
+    /**
      * 创建文章
-     * @param articleVO
-     * @param userInfoVO
-     * @return
+     * @param articleVO 行情对象
+     * @param userInfoVO 用户对象
+     * @return 处理结果
      */
     String createArticleInfo(ArticleVO articleVO, UserInfoVO userInfoVO);
 
-    /**
-     *
-     * @param articleVO
-     * @return
-     */
-    List<ArticleVO> listArticleInfo(ArticleVO articleVO);
-
-
-    /**
-     * 查询行情列表
-     * @param newsDTO
-     * @param pageRequest
-     * @return
-     */
-    PageDTO<NewsVO> queryNewsList(NewsDTO newsDTO, PageRequest pageRequest) throws ParseException;
-
    /**
-    * 查询我的行情列表
-    * @param newsDTO
-    * @param pageRequest
-    * @return
+    * 查询所有的行情消息
+    * @param articleVO 查询条件对象
+    * @return 所有满足条件的对象集合
     */
-    PageDTO<NewsVO> queryMyNewsList(NewsDTO newsDTO, PageRequest pageRequest,String userId) throws ParseException;
+   List<ArticleVO> listArticleInfo(ArticleVO articleVO);
 
     /**
-     *
-     * @param newsDTO
-     * @return
-     * @throws ParseException
+     * 查询所有的行情信息
+     * @param newsDTO 查询条件
+     * @param pageRequest 分页条 件
+     * @return 分页结果
      */
-    PageDTO<NewsVO> queryNewsListByTopPic(NewsDTO newsDTO, PageRequest pageRequest) throws ParseException;
+    PageDTO<ArticleVO> queryArticlePage(NewsDTO newsDTO, PageRequest pageRequest);
 
     /**
      * 根据ID查询文章
-     * @param articleVO
-     * @return
+     * @param articleVO articleVO
+     * @return ArticleVO
      */
     ArticleVO queryById(ArticleVO articleVO);
 
     /**
      * 修改文章
-     * @param articleVO
-     * @param userInfoVO
-     * @return
+     * @param articleVO 文章对象
+     * @param userInfoVO 用户信息对象
+     * @return 处理结果
      */
     String updateArticleInfo(ArticleVO articleVO, UserInfoVO userInfoVO);
 
      /**
       * 删除文章
-      * @param articleVO
-      * @return
+      * @param articleVO 文章对象
+      * @return 处理结果
       */
      String deleteArticleInfo(ArticleVO articleVO);
-
-    /**
-     * 文章审核
-     * @param articleVO
-     * @return
-     */
-    String articleReview(ArticleVO articleVO, String userId);
-
-    /**
-     * 用户是否关注了该文章的作者
-     * @param articleVO
-     * @return
-     */
-    String isAttentionArticleUser(ArticleVO articleVO, String userId,Map<String,Object> resultMap);
-
-    /**
-     * 置顶文章
-     * @param articleVO
-     * @return
-     */
-    String stickArticle(ArticleVO articleVO);
-
-    /**
-     * 取消置顶文章
-     * @param articleVO
-     * @return
-     */
-    String closeStickArticle(ArticleVO articleVO);
-
-    /**
-     * 点赞文章
-     * @param articleVO
-     * @return
-     */
-    String praiseArticle(ArticleVO articleVO,String userId);
-
-
 
 }

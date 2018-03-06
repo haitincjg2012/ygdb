@@ -16,6 +16,7 @@ import javax.persistence.Enumerated;
 /**
  * Created by hmy on 2017/7/31.
  * 预制搜索表（热门搜索/预制搜索）
+ * @author hmy
  */
 @Entity
 @Data

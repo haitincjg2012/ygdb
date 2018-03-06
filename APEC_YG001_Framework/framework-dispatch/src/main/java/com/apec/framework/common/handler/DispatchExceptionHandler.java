@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * @author  xxx
+ */
 @ControllerAdvice
 public class DispatchExceptionHandler
 {

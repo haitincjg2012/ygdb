@@ -5,7 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Created by hmy on 2017/10/12.
+ * Created by hmy on 2017/10/12.、
+ * @author hmy
  */
 @Configuration
 public class ClientConfig {

@@ -68,7 +68,6 @@ router.post('/_node_user/_product_list' + config.urlSuffix, bodyParser, function
        } catch (e) {
           console.log("============_node_org/_product_list Error==============");
           console.log(e);
-          console.log("============_node_org/_product_list Error==============");
           return done(userIds,0,400);
        }
    });

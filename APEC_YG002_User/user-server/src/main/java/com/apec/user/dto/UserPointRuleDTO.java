@@ -3,10 +3,17 @@ package com.apec.user.dto;
 import com.apec.framework.common.enumtype.PointRuleType;
 import com.apec.framework.common.enumtype.PointsChangedType;
 import com.apec.framework.dto.BaseDTO;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Created by hmy on 2017/7/14.
+ * @author hmy
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserPointRuleDTO extends BaseDTO {
 
     /**

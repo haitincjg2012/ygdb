@@ -7,12 +7,10 @@ import com.apec.framework.cache.CacheService;
 import com.apec.framework.common.Constants;
 import com.apec.framework.common.ErrorCodeConst;
 import com.apec.framework.common.PageJSON;
-import com.apec.framework.common.ResultData;
 import com.apec.framework.common.constants.LoginConstants;
-import com.apec.framework.common.util.JsonUtil;
-import com.apec.framework.common.util.SpringUtil;
+import com.apec.framework.common.util.BaseJsonUtil;
+import com.apec.framework.common.util.BaseSpringUtil;
 import com.apec.framework.log.InjectLogger;
-import com.apec.framework.springcloud.SpringCloudClient;
 import com.apec.systemuser.model.SysUserLoginRecord;
 import com.apec.systemuser.service.SysRoleService;
 import com.apec.systemuser.service.SysUserLoginRecordService;
@@ -34,7 +32,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 /**
  * 类 编 号：
@@ -42,6 +39,7 @@ import java.util.regex.Pattern;
  * 内容摘要：请求用户信息
  * 完成日期：
  * 编码作者：
+ * @author xxx
  */
 @RestController
 @RequestMapping("/login")
@@ -50,9 +48,6 @@ public class SysUserLoginController extends BaseController
 
     @Autowired
     private CacheService cacheService;
-    
-    @Autowired
-    private SpringCloudClient springCloudClient;
 
     @Autowired
     private SysRoleService sysRoleService;
@@ -65,9 +60,7 @@ public class SysUserLoginController extends BaseController
 
     @InjectLogger
     private Logger log;
-    
-    private static Pattern pattern = Pattern.compile("^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$");
-    
+
     /**
      * token超时时间
      */
@@ -86,16 +79,15 @@ public class SysUserLoginController extends BaseController
         log.info("login start");
         Long star = System.currentTimeMillis();
         String code = Constants.RETURN_SUCESS;
-        String msg = SpringUtil.getMessage(code);
+        String msg = BaseSpringUtil.getMessage(code);
         boolean flag = true;
         PageJSON<String> pageJSON = super.getPageJSON(jsonStr, String.class);
-        JSONObject formObj = JsonUtil.parseObject(pageJSON.getFormJSON(), JSONObject.class);
+        JSONObject formObj = BaseJsonUtil.parseObject(pageJSON.getFormJSON(), JSONObject.class);
         log.info("step1：invalid request params");
         if(null==formObj){
             code = Constants.COMMON_MISSING_PARAMS;
-            msg = SpringUtil.getMessage(code);
-            flag = false;
-            return getResultJSONStr(flag, null, code, msg);
+            msg = BaseSpringUtil.getMessage(code);
+            return getResultJSONStr(false, null, code, msg);
         }
         String account = (String)formObj.get("userName");
         String password = (String)formObj.get("password");
@@ -103,11 +95,10 @@ public class SysUserLoginController extends BaseController
         log.info("step2：invalid login params");
         if(StringUtils.isEmpty(account)||StringUtils.isEmpty(password)){
             code = Constants.COMMON_MISSING_PARAMS;
-            msg = SpringUtil.getMessage(code);
-            flag = false;
-            return getResultJSONStr(flag, null, code, msg);
+            msg = BaseSpringUtil.getMessage(code);
+            return getResultJSONStr(false, null, code, msg);
         }
-        Map<String,String> data = new HashMap<String,String>();
+        Map<String,String> data = new HashMap<>(16);
         try{
             log.info("step3：get user info");
             //调用用户接口
@@ -118,15 +109,14 @@ public class SysUserLoginController extends BaseController
             log.info("step4：check user exist");
             if(null==list||list.size()==0){
                 code = ErrorCodeConst.USER_NOT_EXIST_ERROR;
-                msg = SpringUtil.getMessage(code);
+                msg = BaseSpringUtil.getMessage(code);
                 return getResultJSONStr(false, null, code, msg);
             }
             log.info("step5：invalid user password");
-            SysUserVO sysUser = new SysUserVO();
-            sysUser = list.get(0);
+            SysUserVO sysUser = list.get(0);
             if(!dto.getPassword().equals(sysUser.getPassword())){
                 code = ErrorCodeConst.PASSWORD_ERROR;
-                msg = SpringUtil.getMessage(code);
+                msg = BaseSpringUtil.getMessage(code);
                 return getResultJSONStr(false, null, code, msg);
             }
             String userNo = String.valueOf(sysUser.getId());
@@ -153,7 +143,7 @@ public class SysUserLoginController extends BaseController
             data.put("userRoleNo", userRoleNo);
             data.put("phone", phone);
             log.info("step7：add user info to session");
-            cacheService.add(Constants.CACHE_USERINFO_PREFIX + userNo, JsonUtil.toJSONString(data));
+            cacheService.add(Constants.CACHE_USERINFO_PREFIX + userNo, BaseJsonUtil.toJSONString(data));
             //sysUserLoginInfo
             SysUserLoginRecordVO sysLoginRecordVO = new SysUserLoginRecordVO();
             sysLoginRecordVO.setUserId(userNo);
@@ -165,32 +155,12 @@ public class SysUserLoginController extends BaseController
             log.error("doLogin use time end-star : " + (end - star));
         }catch (Exception e){
             code = Constants.SYS_ERROR;
-            msg = SpringUtil.getMessage(code);
+            msg = BaseSpringUtil.getMessage(code);
             flag = false;
             log.error("调用后台服务异常", e);
         }
         log.info("login end");
         return getResultJSONStr(flag, data, code, msg);
-    }
-    
-    /**
-     * 请求其他服务
-     * @param server
-     * @param method
-     * @param reqMap
-     * @return
-     */
-    private ResultData callServer(String server, String method, Map<String,String> reqMap){
-        ResultData resultData = null;
-        String url = Constants.HTTP_COLON + Constants.DOUBLE_SLASH + server + Constants.SINGLE_SLASH + method;
-        try{
-            String res = springCloudClient.post(url, JsonUtil.toJSONString(reqMap));
-            resultData = JsonUtil.parseObject(res, ResultData.class);
-        }catch (Exception e){
-            log.error("调用后台服务异常 " + url, e);
-            resultData = getResultData(false, null, Constants.SYS_ERROR);
-        }
-        return resultData;
     }
     
     private String getLoginToken(String userNo)
@@ -199,13 +169,15 @@ public class SysUserLoginController extends BaseController
 
         // 清除之前用户id的 token
         Object oldToken = cacheService.get(LoginConstants.PREFIX_TOKEN_USERNO + userNo);
-        if (null != oldToken)
+        if (null != oldToken){
             cacheService.remove(LoginConstants.PREFIX_TOKEN + oldToken);
+        }
 
-        // 保存token 到redis
-        cacheService.add(LoginConstants.PREFIX_TOKEN_USERNO + userNo, token, token_out_time*24*60); // (userNo , token)
+        // 保存token 到redis// (userNo , token)
+        cacheService.add(LoginConstants.PREFIX_TOKEN_USERNO + userNo, token, token_out_time*24*60);
 
-        cacheService.add(LoginConstants.PREFIX_TOKEN + token, userNo, token_out_time*24*60); // (token , userNo)
+        // (token , userNo)
+        cacheService.add(LoginConstants.PREFIX_TOKEN + token, userNo, token_out_time*24*60);
 
         return token;
     }
@@ -214,20 +186,17 @@ public class SysUserLoginController extends BaseController
     public String loginOut(@RequestBody String jsonStr)
     {
         String code = Constants.RETURN_SUCESS;
-        String msg = SpringUtil.getMessage(code);
-        boolean flag = true;
+        String msg = BaseSpringUtil.getMessage(code);
         PageJSON<String> pageJSON = super.getPageJSON(jsonStr, String.class);
         String sessionId = (String)pageJSON.getRequestAttrMap().get(Constants.SESSION_ID);
-        //JSONObject formObj = JsonUtil.parseObject(pageJSON.getFormJSON(), JSONObject.class);
         if(StringUtils.isEmpty(sessionId)){
             code = Constants.COMMON_MISSING_PARAMS;
-            msg = SpringUtil.getMessage(code);
-            flag = false;
+            msg = BaseSpringUtil.getMessage(code);
             log.error("loginOut 错误" + jsonStr);
-            return getResultJSONStr(flag, null, code, msg);
+            return getResultJSONStr(false, null, code, msg);
         }
           cacheService.remove(LoginConstants.PREFIX_SESSIONID + sessionId);
-        return getResultJSONStr(flag, null, code, msg);
+        return getResultJSONStr(true, null, code, msg);
     }
     
     @RequestMapping(value = "/validateToken", method = RequestMethod.POST)
@@ -236,18 +205,19 @@ public class SysUserLoginController extends BaseController
         String userNo = pageJSON.getRequestParameterMap().get("userNo");
         String token = pageJSON.getRequestParameterMap().get("token");
         String code = Constants.RETURN_SUCESS;
-        String msg = SpringUtil.getMessage(code);
+        String msg = BaseSpringUtil.getMessage(code);
         boolean flag = true;
         boolean login = false;
         try{
             if(!StringUtils.isEmpty(userNo)&&!StringUtils.isEmpty(token)){
-                String redis_token = (String)cacheService.get(LoginConstants.PREFIX_TOKEN_USERNO + userNo);
-                if(redis_token.equals(token))
+                String redisToken = cacheService.get(LoginConstants.PREFIX_TOKEN_USERNO + userNo);
+                if(redisToken.equals(token)){
                     login = true;
+                }
             }
         }catch (CacheException e){
             code = Constants.SYS_ERROR;
-            msg = SpringUtil.getMessage(code);
+            msg = BaseSpringUtil.getMessage(code);
             flag = false;
             log.error("调用后台服务异常", e);
         }

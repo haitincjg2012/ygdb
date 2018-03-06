@@ -9,13 +9,19 @@ import com.apec.framework.common.enums.BaseEnum;
  */
 public enum ProductType implements BaseEnum {
 
+    /**
+     * 供应
+     */
     SALE("供应"),
 
+    /**
+     * 求购
+     */
     BUY("求购");
 
     private final String key;
 
-    private ProductType(String key) {
+    ProductType(String key) {
         this.key = key;
     }
 

@@ -26,9 +26,6 @@ import java.util.Date;
 public class SysUserLoginRecord extends BaseModel<Long>
 {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 6364667460550764857L;
 
     /**

@@ -1,0 +1,21 @@
+.c-post {
+  background-color: #ffffff;
+  padding: 0;
+  word-break: break-all;
+}
+.c-post .c-p-name {
+  font-size: 0.75rem;
+  color: #4E7CC9;
+}
+.c-post .c-p-content {
+  font-size: 0.75rem;
+  color: #323232;
+}
+.cPostMore {
+  height: 1.75rem;
+  line-height: 1.75rem;
+  font-size: 0.6rem;
+  text-align: right;
+  color: #28cba7;
+  background-color: #fff;
+}

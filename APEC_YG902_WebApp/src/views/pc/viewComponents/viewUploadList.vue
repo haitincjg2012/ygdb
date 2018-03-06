@@ -1,82 +1,81 @@
 <template>
   <div class="upload-view-info-page">
-      <top-bar title="我的单据"></top-bar>
-      <scroller ref="my_scroller" style="top:42px;" :on-infinite="infinite">
-      <div class="main-page">
-        <!--<div class="m-u-v-total"><span>合计：{{totalCount}}&nbsp;斤</span></div>-->
-        <div class="c-z-total">
-            <p class="c-z-w-title">合计交收数量(斤)</p>
-            <p class="c-z-w-number">{{totalCount}}</p>
-        </div>
-        <div  v-for="(item,index) in upViewList" class="z-m-u-v-form-cli">
-             <div class="c-z-space-viewmenu"></div>
-            <div class="c-z-m-p">
-              <div class="c-z-viewmenu-bg">
-                <p class="c-z-viewmunu-bg-T">{{item.createTime}}</p>
-              </div>
-              <div class="c-z-del-menu">
-                 <span class="c-z-p-text" @click.stop="delMenu(index,item.voucherId)">删除</span>
-              </div>
-            </div>
+      <!--<top-bar title="我的单据"></top-bar>-->
+      <div class="c-upload-head">
+         <div class="c-u-h-back" @click="back">
+           <img src="../../../assets/img/ret.png">
+         </div>
+         <div class="c-u-h-title"><h4>我的单据</h4></div>
+         <div class="c-u-h-newMenu" @click="jumpMenu"><span>上传</span></div>
+      </div>
+     <my-scroll class="c-upload-Scroll" :data="upViewList" :pullup="pullup" @scrollToEnd="loadMore" :pulldown="pulldown" @pulldown="downRefresh">
+       <div class="mainc-page">
+         <div class="downRefresh" v-if="dnfreshFlag">
+           <my-scrollTip ref="refreshTip"></my-scrollTip>
+         </div>
+         <div class="c-z-total">
+           <p class="c-z-w-title">合计交收数量(斤)</p>
+           <p class="c-z-w-number">{{totalCount}}</p>
+         </div>
+         <div  v-for="(item,index) in upViewList" class="z-m-u-v-form-cli">
+           <div class="c-z-space-viewmenu"></div>
+           <div class="c-z-m-p">
+             <div class="c-z-viewmenu-bg">
+               <p class="c-z-viewmunu-bg-T">{{item.createTime}}</p>
+             </div>
+             <div class="c-z-m-check">
+               {{item.auditState}}
+             </div>
+             <div class="c-z-del-menu">
+               <span class="c-z-p-text" @click.stop="delMenu(index,item.voucherId,item)">删除</span>
+             </div>
+           </div>
 
-             <div class="c-z-viewmenu">
-                 <div class="c-z-viewmenu-s">
-                    <div class="c-z-flex-com-One">卖货方：</div>
-                    <div class="c-z-flex-com-Two">{{item.saleName}}</div>
-                 </div>
-                 <div class="c-z-viewmenu-b">
-                    <div class="c-z-flex-com-One">买货方：</div>
-                    <div class="c-z-flex-com-Two">{{item.name}}</div>
-                 </div>
-               <div class="c-z-viewmenu-b">
-                 <div class="c-z-flex-com-One">交收时间：</div>
-                 <div class="c-z-flex-com-Two">{{item.deliveryTime}}</div>
+           <div class="c-z-viewmenu">
+             <div class="c-z-viewmenu-s">
+               <div class="c-z-flex-com-One">卖货方：</div>
+               <div class="c-z-flex-com-Two">{{item.saleName}}</div>
+             </div>
+             <div class="c-z-viewmenu-b">
+               <div class="c-z-flex-com-One">买货方：</div>
+               <div class="c-z-flex-com-Two">{{item.saleMarket}}</div>
+             </div>
+             <div class="c-z-viewmenu-b">
+               <div class="c-z-flex-com-One">买货姓名：</div>
+               <div class="c-z-flex-com-Two">{{item.name}}</div>
+             </div>
+             <div class="c-z-viewmenu-b">
+               <div class="c-z-flex-com-One">交收时间：</div>
+               <div class="c-z-flex-com-Two">{{item.deliveryTime}}</div>
+             </div>
+             <div class="c-z-viewmenu-info-title">
+               <div>商品信息</div>
+             </div>
+             <div v-for="e in item.voucherGoodsVVO" class="c-m-u-v-content">
+               <div class="c-z-viewmenu-info-l">
+                 <p class="c-z-v-info-t">{{e.number}}</p>
+                 <p class="c-z-v-info-n">数量(斤)</p>
                </div>
-                 <div class="c-z-viewmenu-info-title">
-                    <div>商品信息</div>
-                 </div>
-               <div v-for="e in item.voucherGoodsVVO" class="c-m-u-v-content">
-                 <div class="c-z-viewmenu-info-l">
-                    <p class="c-z-v-info-t">{{e.number}}</p>
-                    <p class="c-z-v-info-n">数量(斤)</p>
-                 </div>
-                 <div class="c-z-viewmenu-info-r">
-                    <p  class="c-z-v-info-r-t">{{e.skuName}}</p>
-                    <div class="c-z-v-info-r-price">
-                       <div class="c-z-v-i-r-p-l">
-                          <p>单价：{{e.amount}}斤/元</p>
-                       </div>
-                       <div class="c-z-v-i-r-p-r">
-                           <p>总金额：{{e.totalAmount}}元</p>
-                       </div>
-                    </div>
+               <div class="c-z-viewmenu-info-r">
+                 <p  class="c-z-v-info-r-t">{{e.skuName}}</p>
+                 <div class="c-z-v-info-r-price">
+                   <div class="c-z-v-i-r-p-l">
+                     <p>单价：{{e.amount}}斤/元</p>
+                   </div>
+                   <div class="c-z-v-i-r-p-r">
+                     <p>总金额：{{e.totalAmount}}元</p>
+                   </div>
                  </div>
                </div>
              </div>
-        </div>
-        <!--<div v-for="item in upViewList" class="m-u-v-form-cli">-->
-          <!--<div class="m-u-v-table">-->
-            <!--<div class="m-u-v-cell">-->
-              <!--<span>卖货方：{{item.saleMarket}}</span>-->
-            <!--</div>-->
-            <!--<div class="m-u-v-cell">-->
-              <!--<span>买货方：{{item.name}}</span>-->
-            <!--</div>-->
-            <!--<div class="m-u-v-cell">-->
-              <!--<span>交收时间：{{item.deliveryTime}}</span>-->
-            <!--</div>-->
-          <!--</div>-->
-          <!--<div v-for="e in item.voucherGoodsVVO" class="m-u-v-content">-->
-            <!--<span>{{e.skuName}}</span>-->
-            <!--<span class="con-cell">{{e.number}}斤</span>-->
-            <!--<span class="con-cell">{{e.amount}}斤/元</span>-->
+           </div>
+         </div>
+         <my-scrollTip ref="loadmoreTip" ></my-scrollTip>
+       </div>
+     </my-scroll>
+      <!--<scroller ref="my_scroller" style="top:42px;" :on-infinite="infinite">-->
 
-            <!--<span class="con-cell">{{e.totalAmount}}元</span>-->
-          <!--</div>-->
-          <!--<split></split>-->
-        <!--</div>-->
-      </div>
-      </scroller>
+      <!--</scroller>-->
   </div>
 </template>
 <style>
@@ -88,20 +87,31 @@
   import API from '../../../api/api'
   import c_js from '../../../assets/js/common'
   import {MessageBox, Indicator} from 'mint-ui';
+  import scroll from '@/components/scroll/scroll'//分页
+//  import scrollTip from '@/components/downLoadAnimal' //滚动提示
+  import scrollTip from '../../../components/loading.vue' //分页提示
+
 
   const api = new API();
 
   export default {
     data() {
       return {
-        upViewList: [],
+        upViewList: null,
         totalCount: 0,//总上传斤数
         isActivated:true,
         currentPageNo:1,
+        pageCount:1000,
+        //上拉分页
+        pullup:true,
+        //下拉刷新
+        pulldown:true,
+        dnfreshFlag:false //下拉刷新标志
       }
     },
     activated () {
-      this.upViewList = [];
+        this.dnfreshFlag = false;
+       this.upViewList = null;
       this.isActivated = true;
       this.currentPageNo = 1;
       this.GetViewList();
@@ -111,13 +121,12 @@
     },
 
     mounted(){
-      this.$refs.my_scroller.finishInfinite(true);
+//      this.$refs.my_scroller.finishInfinite(true);
     },
 
     methods: {
       GetViewList(){//获取信息
         const self = this;
-        self.upViewList = [];
         Indicator.open({
           text: '加载中...',
           spinnerType: 'fading-circle'
@@ -132,19 +141,39 @@
           api.post(params).then((res) => {
             var item = res.data;
             if (item.succeed) {
+              self.pageCount = item.data.voucherVVOs.pageCount;
               self.totalCount = item.data.totalNumber || 0;
+
+              if(self.pageCount > 1){
+                self.$refs.loadmoreTip.start();
+              }else{
+                self.$refs.loadmoreTip.end();
+              }
+              var arr = [];
               item.data.voucherVVOs.rows.forEach((item) => {
-                self.upViewList.push({
+                arr.push({
                   'saleMarket': item.saleMarket,
                   "saleName":item.shipWarehouse,
                   'name': item.name,
                   "voucherId":item.voucherId,
                   "createTime":new Date().format(item.createDate,"yyyy/MM/dd"),
+                  "auditState":item.auditState,
                   'deliveryTime': item.deliveryTime,
-                  'voucherGoodsVVO': item.voucherGoodsVVO
+                  'voucherGoodsVVO': item.voucherGoodsVVO,
+                  'weight':item.voucherGoodsVVO.number,
                 })
               });
-            } else {
+              if(arr.length){
+                self.upViewList = arr;
+              }
+
+            }else {
+//              Indicator.close();
+//              Indicator.open({
+//                text: item.errorMsg,
+//                spinnerType: 'fading-circle'
+//              });
+//               return;
             }
             Indicator.close();
           }).catch((error) => {
@@ -176,9 +205,10 @@
         }
       },
       infinite (done) {
-        if (!this.isActivated) return done(true);
+
+//        if (!this.isActivated) return done(true);
         const self = this;
-        self.currentPageNo++;
+        self.currentPageNo = 1;
         self.busy = true;
         setTimeout(()=>{
           self.refresh_infinite_dt(function (data) {
@@ -187,9 +217,13 @@
               data.data.voucherVVOs.rows.forEach((item) => {
                 self.upViewList.push({
                 'saleMarket': item.saleMarket,
+                 "saleName":item.shipWarehouse,
                 'name': item.name,
+                "voucherId":item.voucherId,
+                "createTime":new Date().format(item.createDate,"yyyy/MM/dd"),
+                  "auditState":item.auditState,
                 'deliveryTime': item.deliveryTime,
-                'voucherGoodsVVO': item.voucherGoodsVVO
+                'voucherGoodsVVO': item.voucherGoodsVVO,
               })
             });
             } else {
@@ -198,10 +232,9 @@
           done(true);
         }, 1500);
       },
-      delMenu(index, id){
+      delMenu(index, id,data){
           var self = this;
-          console.log(index, id);
-        MessageBox.confirm('您确定要删除该单据吗?', "提示").then(action => {
+          MessageBox.confirm('您确定要删除该单据吗?', "提示").then(action => {
             let param = {
                 api:"/yg-voucher-service/voucher/deleteVoucherInfo.apec",
                 data:{
@@ -212,7 +245,12 @@
             api.post(param).then((res) => {
               var item = res.data;
               if (item.succeed) {
-                self.upViewList.splice(index, 1);
+//                  self.totalCount = self.totalCount - data.voucherGoodsVVO[0].number;
+//                self.upViewList.splice(index, 1);
+                self.upViewList = null;
+                self.currentPageNo = 1;
+                self.GetViewList();
+
               } else {
               }
               Indicator.close();
@@ -225,7 +263,101 @@
             console.log(error)
           }
       });
-      }
+      },
+      back(){
+          self.dnfreshFlag=false;
+          this.$router.go(-1);
+      },
+      jumpMenu(){
+        const self = this;
+        let params = {
+          api: "/_node_user/_check_pronum.apno"
+        };
+        try {
+          api.post(params).then((res)=>{
+            Indicator.close();
+            var item = res.data;
+            if (item.succeed){
+              var checkStatus = item.data.checkStatus;
+              var realAuth = item.data.realAuth;//是否实名验证
+              var realInfo = item.data.realInfo;//是否填写资料
+              if(!checkStatus && !realInfo){
+                //self.$store.commit("incrementCheck",{'check':'1'});
+                self.$store.state.check = "1";
+                self.$router.push({name:'validate'});
+              }
+              else
+                self.$router.push({name: 'uploadList'});
+            } else {
+            }
+          }).catch((error)=> {
+
+            }
+          )
+        } catch (error) {
+          console.log(error)
+        }
+      },
+      downRefresh(){
+          //上拉刷新
+        var self = this;
+        self.dnfreshFlag=true;
+        self.$nextTick(function(){
+          self.$refs.refreshTip.refresh("刷新中...");
+        });
+
+        let params = {
+          api: "/yg-voucher-service/voucher/getVoucherInfo.apec",
+          data: {
+            pageNumber: 1
+          }
+        };
+        try {
+          api.post(params).then((res) => {
+            var data = res.data;
+            if (data.succeed && data.data.voucherVVOs.rows.length){
+              self.totalCount = data.data.totalNumber;
+              setTimeout(function(){
+                self.dnfreshFlag=false;
+              },1000);
+            }
+          }).catch((error) => {
+            console.log(error)
+          })
+        } catch (error) {
+          console.log(error)
+        }
+      },
+      loadMore(){
+        var self = this;
+        if(self.pageCount > self.currentPageNo){
+          self.$nextTick(function(){
+            self.$refs.loadmoreTip.start();
+          });
+          self.currentPageNo ++;
+          self.refresh_infinite_dt(function (data) {
+            if (data.succeed && data.data.voucherVVOs.rows.length) {
+              self.totalCount = data.data.totalNumber;
+              data.data.voucherVVOs.rows.forEach((item) => {
+                self.upViewList.push({
+                  'saleMarket': item.saleMarket,
+                  "saleName":item.shipWarehouse,
+                  'name': item.name,
+                  "voucherId":item.voucherId,
+                  "createTime":new Date().format(item.createDate,"yyyy/MM/dd"),
+                  "auditState":item.auditState,
+                  'weight':item.voucherGoodsVVO.number,
+                  'deliveryTime': item.deliveryTime,
+                  'voucherGoodsVVO': item.voucherGoodsVVO
+                })
+              });
+            } else {
+            }
+          });
+        }else{
+          self.$refs.loadmoreTip.end();
+        }
+      },
     },
 
     created() {
@@ -233,7 +365,9 @@
 
     components: {
       topBar,
-      split
+      split,
+      'my-scroll':scroll,
+      'my-scrollTip':scrollTip,
     }
   }
 </script>

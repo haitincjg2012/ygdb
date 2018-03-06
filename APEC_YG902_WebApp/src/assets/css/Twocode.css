@@ -1,0 +1,41 @@
+.c-twocode {
+  background-color: #ec534d;
+}
+.c-twocode .c-twocode-header {
+  background-color: #ec534d;
+}
+.c-twocode .c-twocode-title {
+  width: 16rem;
+  font-size: 0.8rem;
+  color: #fff;
+  text-align: center;
+}
+.c-twocode .c-twocode-content {
+  margin-top: 1rem;
+  position: relative;
+  width: 18.75rem;
+  height: 24.55rem;
+  background-color: #ec534d;
+  background-image: url("../img/Twocode.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
+}
+.c-twocode .c-twoContent {
+  position: relative;
+  top: 8.55rem;
+  left: 4.65rem;
+  width: 8.9rem;
+  height: 8.9rem;
+}
+.c-twocode .c-code-png {
+  width: 100%;
+  height: 100%;
+}
+.c-twocode #canvas {
+  position: fixed;
+  z-index: -1;
+  left: -9999px;
+  width: 100%;
+  height: 100%;
+}

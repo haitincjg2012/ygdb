@@ -1,7 +1,8 @@
 package com.apec.society.model;
 
 import com.apec.framework.mongodb.model.BaseModel;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -9,7 +10,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
  *
  * @author yirde  2017/10/20.
  */
-@Data
+@Getter
+@Setter
 @Document
 public class SocietyLzlReply extends BaseModel<Long>{
 
@@ -44,4 +46,10 @@ public class SocietyLzlReply extends BaseModel<Long>{
      * 回复内容
      */
     private String content;
+
+    /**
+     * 是否来源于系统
+     */
+    private Boolean formSystem;
+
 }

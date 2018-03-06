@@ -8,91 +8,29 @@
             <img :src="person.bannerImgUrl">
            <!--<img src="../../../assets/img/xqimg1.png">-->
          </div>
-          <div class="z-canmer" v-if="person.poritable">
-            <input type="file" class="z-imgInput" multiple @change="modify">
-          </div>
+          <!--<div class="z-canmer" v-if="person.poritable">-->
+            <!--<input type="file" class="z-imgInput" @change="modify">-->
+          <!--</div>-->
+         <label for="personInput" class="z-canmer" v-if="person.poritable"></label>
+         <input type="file" class="z-imgInput" @change="modify" id="personInput">
           <div class="z-h-t">
              <img :src="person.portrait">
           </div>
       </div>
       <div class="z-p-info">
          <span class="z-p-name">{{person.name}}</span>
-        <img :src="person.levelSrc" class="z-p-level" >
-         <span class="z-p-agency" >{{person.useType}}</span>
-         <span class="z-p-real" v-if="person.real">实名认证</span>
-        <!--<img src="../../../assets/img/Diamonds.png" class="z-p-level">-->
+         <img :src="person.levelSrc" class="z-p-level" >
       </div>
-      <div class="z-p-concat">
-         <div class="z-p-notice">
-            <p class="z-common-t">{{person.notice}}</p>
-            <p class="z-common-t2">关注</p>
-         </div>
-        <div class="z-p-browse">
-          <p class="z-common-t">{{person.bs}}</p>
-          <p class="z-common-t2">浏览</p>
-        </div>
-        <div class="z-p-c">
-          <p class="z-common-t">{{person.concat}}</p>
-          <p class="z-common-t2">联系</p>
-        </div>
-        <!--<div class="z-p-economy">-->
-           <!--<span class="z-p-economy-text">供应链金融合作库</span>-->
-        <!--</div>-->
-      </div>
-      <!--<div class="z-space"></div>-->
+      <my-introduction :notice="person.notice" :bs="person.bs" :concat="person.concat" :identityHtml="person.identityHtml" :remark="person.remark"></my-introduction>
       <div class="c-z-kg"></div>
-      <div class="z-p-manage-info">
-        <div class="z-p-cold" v-if="role.coldF">
-          <img src="../../../assets/img/lk.png" class="img-com">
-          <span>冷库名称</span>
-          <input type="text" disabled v-model="person.lk">
-        </div>
-        <div class="z-p-c-storage" v-if="role.coldF">
-          <img src="../../../assets/img/kr.png"  class="img-com">
-          <span>库容量 &nbsp;&nbsp;</span>
-          <input type="text" disabled v-model="person.kr">
-        </div>
-        <div class="z-p-c-cooperative" v-if="role.cooperativeF">
-          <img src="../../../assets/img/lk.png"  class="img-com">
-          <span>合作社 &nbsp;&nbsp;</span>
-          <input type="text" disabled v-model="person.hzs">
-        </div>
-        <div class="z-p-area">
-            <img src="../../../assets/img/qy.png"  class="img-com">
-            <span>所在区域</span>
-            <input type="text" disabled v-model="person.address">
-        </div>
-        <div class="z-p-pz" v-if="!role.coldF">
-          <img src="../../../assets/img/zypz.png"  class="img-com">
-          <span>主营品种</span>
-          <input type="text" disabled v-model="person.pz">
-        </div>
-        <div class="z-p-cmarket" v-if="role.agencyF">
-          <img src="../../../assets/img/kh.png"  class="img-com">
-          <span>客户市场</span>
-          <input type="text" disabled v-model="person.xsq">
-        </div>
-        <!--<div class="z-p-transship" v-if="role.traderF">-->
-          <!--<img src="../../../assets/img/dhqy.png" class="img-com">-->
-          <!--<span>调货区域</span>-->
-          <!--<input type="text" readonly v-model="person.dhq">-->
-        <!--</div>-->
-        <div class="z-p-sale"  v-if="role.traderF">
-          <img src="../../../assets/img/xsqy.png" class="img-com">
-          <span>销售区域</span>
-          <input type="text" disabled v-model="person.xsq">
-        </div>
+      <div class="z-p-manage-info" v-html="business">
       </div>
       <div class="z-description">
         <div class="z-p-edit-save">
-          <img src="../../../assets/img/sl.png" class="img-com">
+          <!--<img src="../../../assets/img/sl.png" class="img-com">-->
           <span class="z-p-text">实力描述:</span>
-          <!--<div class="z-save" v-if="saveFlag" @click="save">保存</div>-->
         </div>
-         <!--<textarea placeholder="赶快填写吧，让更多用户关注你" ref="edit" disabled></textarea>-->
          <p class="z-edit-p">{{person.des == ""?"赶快填写吧，让更多用户关注你":person.des}}</p>
-         <!--<div class="z-icon" @click="edit">-->
-         <!--</div>-->
          <ul>
              <li v-for="item in person.itemRImg"
                 >
@@ -123,15 +61,13 @@
           <div class="c-z-kg"></div>
          <h4 class="z-num-main-t">调果数据</h4>
         <div class="z-space"></div>
-        <div id="mainST" class="z-p-main"></div>
+        <div id="mainST" class="z-p-main">
+          <div v-if="fruitDataFlag" class="fruitNoData">
+            <img src="../../../assets/img/noData.png" class="c-z-nodata-img">
+            <p class="c-z-nodata-text">暂无数据</p>
+          </div>
+        </div>
       </div>
-      <!--<div class="c-test">-->
-         <!--<div class="c-t-com" @click="test1">代办</div>-->
-        <!--<div class="c-t-com" @click="test2">客商</div>-->
-        <!--<div class="c-t-com" @click="test3">种植户</div>-->
-        <!--<div class="c-t-com" @click="test4">冷库</div>-->
-        <!--<div class="c-t-com" @click="test5">合作社</div>-->
-      <!--</div>-->
     </div>
 </template>
 <style scoped>
@@ -146,6 +82,9 @@
   import P from "../../../assets/img/icon.png"
   import {MessageBox, Indicator, Toast} from 'mint-ui';
   import ALIYUN from "../../../components/aliyun.vue"
+  import idIntroduction from "../../businessV/personIdIntroduction.vue" //个人介绍组件
+
+  import personHot from '../../businessV/personalHot.vue'//个人热点组件
 
   const api = new API();
   var ec = require("../../../assets/js/echarts.min");
@@ -153,11 +92,6 @@
   var fn = {
       img:[],
       bannerImg:function (url) {
-//          if(!data.succeed){
-//          Toast(data.errorMsg);
-//          return;
-//          }
-//        this.person.bannerImgUrl = data.data.orgBannerURL;
         this.person.bannerImgUrl = url + "?x-oss-process=style/_detail";
         var params = {
             api:"/yg-user-service/user/uploadBanner.apec",
@@ -180,42 +114,6 @@
         }
 
         var role = dt.userType;
-        switch (role){
-          case "LK":
-             this.role.agencyF = false;
-             this.role.coldF = true;
-              break;
-          case "DB":
-//              var userId = window.localStorage.userId;
-              var params = {
-                  api:"/yg-voucher-service/voucher/getSelfNumberRankViewVO.apec",
-                  data:{
-//                      userId:userId
-                  }
-              }
-              this.post(params, this.DBRet);
-              break;
-          case "KS":
-            this.role.agencyF = false;
-            this.role.traderF = true;
-//            var userId = window.localStorage.userId;
-            var params = {
-              api:"/yg-voucher-service/voucher/getSelfNumberRankViewVO.apec",
-              data:{
-//                userId:userId
-              }
-            }
-            this.post(params, this.DBRet);
-            break;
-          case "HZS":
-             this.role.agencyF = false;
-             this.role.cooperativeF = true;
-            break;
-          case "ZZH":
-            this.role.agencyF = false;
-            break;
-
-        }
 
           if(dt.imgUrl == "" || !dt.imgUrl){
              this.person.portrait = P;
@@ -237,8 +135,33 @@
           this.person.name = dt.name;
           this.person.levelSrc =IMG.methods.userLevel(dt.userPoint.userLevel);
           this.person.useType = dt.userTypeKey;
+        //身份的html
+        var html = "<span class='z-p-name'>" + dt.userTypeKey +"</span>";
+        if(dt.userType == "LK"){
+          //供应链金融,企业认证
+          var arrT = dt.userOrgClientVO.userTagsVOS;
+          var self = this;
+          arrT.forEach(function (current) {
+            var className = current.className;
+            if(className == "QYRZ"){
+              html += " <span class='z-p-authentication'>"+ current.tagName + "</span>";
+              self.person.coldF1 = true;
+            }
+            if(className == "GYLJRHZK"){
+              html += " <span class='z-p-coor'>"+ current.tagName + "</span>";
+              self.person.coldS = true;
+            }
+          })
+
+
+        }else{
+          html += (dt.userStatus == "UNREALAUTH")? "":"实名认证";
+        }
+        this.person.identityHtml = html;
+
           this.$store.state.userId = dt.id;//用户
-          this.person.real = dt.userRealAuth =="UNREALAUTH"?false:true;
+          this.person.real = dt.userStatus =="UNREALAUTH"?false:true;
+
           if(dt.userOrgClientVO){
             this.person.cold =dt.userOrgClientVO.orgName ;
             this.person.lk = dt.userOrgClientVO.orgName;
@@ -250,6 +173,61 @@
             this.person.des = dt.userOrgClientVO.remark;
 //            this.person.itemRImg = dt.userOrgClientVO
           }
+
+        //
+        var business = "";
+        switch (role){
+          case "LK":
+            this.role.agencyF = false;
+            this.role.coldF = true;
+            business += '<div class="c-p-manage-com"><div class="c-p-m-nameCom"><span>冷库名称</span></div><div class="c-p-m-contentCom"><p>'+this.person.lk +'</p></div></div>';
+            business += '<div class="c-p-manage-com"><div class="c-p-m-nameCom"><span>库容量</span></div><div class="c-p-m-contentCom"><p>'+(this.person.kr == "" || !this.person.kr?"暂无数据":this.person.kr)+'</p></div></div>';
+            business += '<div class="c-p-manage-com"><div class="c-p-m-nameCom"><span>所在区域</span></div><div class="c-p-m-contentCom"><p>'+(this.person.address == "" || !this.person.address?"暂无数据":this.person.address) +'</p></div></div>';
+            business += '<div class="c-p-manage-com"><div class="c-p-m-nameCom"><span>主营品种</span></div><div class="c-p-m-contentCom"><p>'+(this.person.pz == "" || !this.person.pz?"暂无数据":this.person.pz) +'</p></div></div>';
+            this.business = business;
+            break;
+          case "DB":
+            var params = {
+              api:"/yg-voucher-service/voucher/getSelfNumberRankViewVO.apec",
+              data:{
+              }
+            }
+            this.post(params, this.DBRet);
+            business += '<div class="c-p-manage-com"><div class="c-p-m-nameCom"><span>所在区域</span></div><div class="c-p-m-contentCom"><p>'+(this.person.address == "" || !this.person.address?"暂无数据":this.person.address) +'</p></div></div>';
+            business += '<div class="c-p-manage-com"><div class="c-p-m-nameCom"><span>主营品种</span></div><div class="c-p-m-contentCom"><p>'+(this.person.pz == "" || !this.person.pz?"暂无数据":this.person.pz) +'</p></div></div>';
+            business += '<div class="c-p-manage-com"><div class="c-p-m-nameCom"><span>客户市场</span></div><div class="c-p-m-contentCom"><p>'+(this.person.xsq == "" || !this.person.xsq?"暂无数据":this.person.xsq) +'</p></div></div>';
+            this.business = business;
+            break;
+          case "KS":
+            this.role.agencyF = false;
+            this.role.traderF = true;
+            var params = {
+              api:"/yg-voucher-service/voucher/getSelfNumberRankViewVO.apec",
+              data:{
+              }
+            }
+            this.post(params, this.DBRet);
+            business += '<div class="c-p-manage-com"><div class="c-p-m-nameCom"><span>所在区域</span></div><div class="c-p-m-contentCom"><p>'+(this.person.address == "" || !this.person.address?"暂无数据":this.person.address) +'</p></div></div>';
+            business += '<div class="c-p-manage-com"><div class="c-p-m-nameCom"><span>主营品种</span></div><div class="c-p-m-contentCom"><p>'+(this.person.pz == "" || !this.person.pz?"暂无数据":this.person.pz) +'</p></div></div>';
+            business += '<div class="c-p-manage-com"><div class="c-p-m-nameCom"><span>销售区域</span></div><div class="c-p-m-contentCom"><p>'+(this.person.xsq == "" || !this.person.xsq?"暂无数据":this.person.xsq) +'</p></div></div>';
+            this.business = business;
+            break;
+          case "HZS":
+            this.role.agencyF = false;
+            this.role.cooperativeF = true;
+            business += '<div class="c-p-manage-com"><div class="c-p-m-nameCom"><span>合作社</span></div><div class="c-p-m-contentCom"><p>'+this.person.lk +'</p></div></div>';
+            business += '<div class="c-p-manage-com"><div class="c-p-m-nameCom"><span>所在区域</span></div><div class="c-p-m-contentCom"><p>'+(this.person.address == "" || !this.person.address?"暂无数据":this.person.address) +'</p></div></div>';
+            this.business = business;
+            break;
+          case "ZZH":
+            this.role.agencyF = false;
+            business += '<div class="c-p-manage-com"><div class="c-p-m-nameCom"><span>所在区域</span></div><div class="c-p-m-contentCom"><p>'+ (this.person.address == "" || !this.person.address?"暂无数据":this.person.address)+'</p></div></div>';
+            business += '<div class="c-p-manage-com"><div class="c-p-m-nameCom"><span>主营品种</span></div><div class="c-p-m-contentCom"><p>'+(this.person.pz == "" || !this.person.pz?"暂无数据":this.person.pz) +'</p></div></div>';
+            business += '<div class="c-p-manage-com"><div class="c-p-m-nameCom"><span>客户市场</span></div><div class="c-p-m-contentCom"><p>'+(this.person.xsq == "" || !this.person.xsq?"暂无数据":this.person.xsq) +'</p></div></div>';
+            this.business = business;
+            break;
+        }
+
 
           if(dt.userDetailType == "LK_BG"){
                this.person.poritable = false;
@@ -317,9 +295,6 @@
           axisLabel:{
             interval:0 ,
             rotate:45
-//            formatter:function(val){
-//              return val.split("").join("\n");
-//            }
           }
         },
         yAxis: {
@@ -332,7 +307,6 @@
           name: '数量' ,
           type: 'bar',
           barWidth:"30%",
-//          data: [5, 20, 36, 20, 36, 10]
           data:yData
         }]
       };
@@ -347,6 +321,7 @@
             saveFlag:false,
             editFlag:true,
             items:null,
+            business:"",
             person:{
                   name:'',
               lk:"",
@@ -380,10 +355,12 @@
               cooperativeF:false,
             },
             aliyunO:null,//阿里云调用函数
+            fruitDataFlag:true,//默认情况下,都认为有数据存在
           }
       },
       methods:{
           reset(){
+            this.fruitDataFlag = true;//默认情况下,都认为有数据存在
               this.role.agencyF = true;
             this.role.coldF = false;
             this.role.traderF = false;
@@ -395,15 +372,7 @@
               var files = target.files;
               var file = files[0];
               var type = files[0].type;
-//              var fd = new FormData();
-//             fd.append("whetherCompression",1);
-//             fd.append("file", files[0]);
-//            let params = {
-//              api:"/yg-user-service/user/uploadBanner/uploadFile.apec",
-//              data: fd
-//            }
-//
-//            this.postImg(params, fn.bannerImg.bind(this))
+
               var self = this;
               this.aliyunO(self.$store.state.userId,fn.bannerImg.bind(this) , file);
           },
@@ -466,8 +435,7 @@
           this.battlefield.number = dt.totalNumber + weight;
           this.battlefield.rank = dt.rankNo;
           if(dt.attrNumberMap){
-            fn.initChat(dt.attrNumberMap, weight);
-          }else{
+            this.fruitDataFlag = false;
             fn.initChat(dt.attrNumberMap, weight);
           }
         },
@@ -494,7 +462,9 @@
         api:"/yg-user-service/user/findSelfInfo.apec",
       }
       this.post(params, fn.init.bind(this));
-
+    },
+    components:{
+      "my-introduction":idIntroduction,
     }
   }
 </script>

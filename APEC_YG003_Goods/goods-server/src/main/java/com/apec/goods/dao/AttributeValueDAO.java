@@ -11,12 +11,14 @@ import java.util.List;
 
 /**
  * Created by hmy on 2017/7/10.
+ * @author hmy
  */
 public interface AttributeValueDAO extends BaseDAO<AttributeValue,Long> {
 
     /**
      * 删除相关attributeId下的所有属性对象
-     * @param attributeId
+     * @param attributeId attributeId
+     * @param userId userId
      */
     @Modifying(clearAutomatically = true)
     @Query(value = " update attribute_value set enable_flag = 'N',last_update_date = now(),last_update_by = :userId where attribute_id = :attributeId and  enable_flag = 'Y'",nativeQuery = true)
@@ -24,15 +26,17 @@ public interface AttributeValueDAO extends BaseDAO<AttributeValue,Long> {
 
     /**
      * 查询相关attributeId下的所有属性对象
-     * @param attributeNameId
+     * @param attributeNameId attributeNameId
+     * @param enableFlag enableFlag
+     * @return List<AttributeValue>
      */
     List<AttributeValue> findByAttributeNameIdAndEnableFlagOrderBySort(Long attributeNameId,EnableFlag enableFlag);
 
     /**
      * 批量删除所有goodsIds下的goodsAttr
-     * @param attrIds
-     * @param userId
-     * @return
+     * @param attrIds  attrIds
+     * @param userId  用户id
+     * @return int
      */
     @Modifying(clearAutomatically = true)
     @Query(value = "update attribute_value set enable_flag = 'N',last_update_date = now(),last_update_by = :userId where attribute_id in :attrIds and enable_flag = 'Y'",nativeQuery = true)
@@ -40,9 +44,9 @@ public interface AttributeValueDAO extends BaseDAO<AttributeValue,Long> {
 
     /**
      * 批量删除goodsAttr
-     * @param ids
-     * @param userId
-     * @return
+     * @param ids ids
+     * @param userId 用户id
+     * @return 删除的行数
      */
     @Modifying(clearAutomatically = true)
     @Query(value = "update attribute_value set enable_flag = 'N',last_update_date = now(),last_update_by = :userId where id in :ids and enable_flag = 'Y'",nativeQuery = true)

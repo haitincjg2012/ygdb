@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by wubi on 2017/9/22.
+ * @author hmy
  */
 @RestController
 @RequestMapping(value = "/esConfig")
@@ -30,9 +31,6 @@ public class EsConfigController extends MyBaseController {
 
     /**
      * 新增配置信息
-     *
-     * @param json
-     * @return
      */
     @RequestMapping(value = "/addEsConfigInfo", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
     public String addEsConfigInfo(@RequestBody String json) {
@@ -49,9 +47,6 @@ public class EsConfigController extends MyBaseController {
 
     /**
      * 更新配置信息 根据ID更新 mapping关系
-     *
-     * @param json
-     * @return
      */
     @RequestMapping(value = "/updateEsConfigInfo", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
     public String updateEsConfigInfo(@RequestBody String json) {
@@ -68,9 +63,6 @@ public class EsConfigController extends MyBaseController {
 
     /**
      * 删除配置 软删除
-     *
-     * @param json
-     * @return
      */
     @RequestMapping(value = "/deleteEsConfigInfo", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
     public String deleteEsConfigInfo(@RequestBody String json) {
@@ -87,9 +79,6 @@ public class EsConfigController extends MyBaseController {
 
     /**
      * 分页查询
-     *
-     * @param json
-     * @return
      */
     @RequestMapping(value = "/queryByPage", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
     public ResultData<PageDTO<EsConfigVO>> queryByPage(@RequestBody String json) {
@@ -97,7 +86,7 @@ public class EsConfigController extends MyBaseController {
             EsConfigDTO esConfigDTO = getFormJSON(json, EsConfigDTO.class);
             PageRequest pageRequest = super.genPageRequest(esConfigDTO);
             PageDTO<EsConfigVO> result = esConfigService.queryConfigByPage(pageRequest, esConfigDTO);
-            return getResultData(true, result, "", null);
+            return getResultData(true, result, "");
         } catch (Exception e) {
             logger.error("[EsConfigController] [queryByPage] Exception", e);
             return getResultData(false, null, Constants.SYS_ERROR);
@@ -107,9 +96,6 @@ public class EsConfigController extends MyBaseController {
 
     /**
      * 重建索引job
-     *
-     * @param json
-     * @return
      */
     @RequestMapping(value = "/reIndexJob", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
     public ResultData<String> reIndexJob(@RequestBody(required = false) String json) {
@@ -117,6 +103,7 @@ public class EsConfigController extends MyBaseController {
         setErrorResultDate(resultData, Constants.RETURN_SUCESS);
         try {
             esConfigService.reIndexJob();
+            resultData.setSucceed(true);
         } catch (Throwable e) {
             logger.error("[EsConfigController] [reIndexJob] run reIndexJob Exception", e);
             setErrorResultDate(resultData, Constants.SYS_ERROR);

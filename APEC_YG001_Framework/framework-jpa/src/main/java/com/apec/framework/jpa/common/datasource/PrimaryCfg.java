@@ -23,12 +23,13 @@ import java.util.Map;
  * 内容摘要：主数据源配置
  * 完成日期：2016-07-14
  * 编码作者：
+ * @author xx
+ *
  */
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactoryPrimary", transactionManagerRef = "transactionManagerPrimary", basePackages =
 {"com.apec.*"})
-// 设置DAO所在位置
 public class PrimaryCfg
 {
 
@@ -47,9 +48,9 @@ public class PrimaryCfg
     @Bean(name = "entityManagerFactoryPrimary")
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryPrimary(EntityManagerFactoryBuilder builder)
     {
-
+        // 设置实体类所在位置
         return builder.dataSource(primaryDataSource).properties(getVendorProperties(primaryDataSource))
-            .packages("com.apec.*") // 设置实体类所在位置
+            .packages("com.apec.*")
             .persistenceUnit("primaryPersistenceUnit").build();
     }
 

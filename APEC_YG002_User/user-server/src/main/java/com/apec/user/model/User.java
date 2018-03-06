@@ -6,7 +6,7 @@ import com.apec.framework.common.enums.Realm;
 import com.apec.framework.common.enums.Source;
 import com.apec.framework.common.enumtype.*;
 import com.apec.framework.common.util.SecurityUtils;
-import com.apec.framework.jpa.model.Authenticatable;
+import com.apec.framework.jpa.model.BaseAuthenticatable;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,7 +24,7 @@ import com.apec.framework.common.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @GenericGenerator(name = Constants.SYSTEM_GENERATOR, strategy = Constants.ASSIGNED)
-public class User extends Authenticatable {
+public class User extends BaseAuthenticatable {
 
     private static final long serialVersionUID = 6277891566852240269L;
 
@@ -61,6 +61,11 @@ public class User extends Authenticatable {
      * 头像地址
      */
     private String imgUrl;
+
+    /**
+     * 二维码图片地址
+     */
+    private String qrCodeUrl;
 
     /**
      * 用户身份
@@ -107,7 +112,7 @@ public class User extends Authenticatable {
     /**
      * 实体ID
      */
-    private String  referralId;//实体ID
+    private String  referralId;
 
     /**
      * 所在地区
@@ -168,8 +173,6 @@ public class User extends Authenticatable {
      */
     @Enumerated(EnumType.STRING)
     private UserAccountType userAccountType;
-
-
 
     @Transient
     public void password(final String mobile,final String password) {

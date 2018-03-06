@@ -29,7 +29,7 @@ const store = new Vuex.Store({
     skuName:'',
     skuId:'',
     check:'',//用于选择是否是完善资料还是实名认证 0表示初始化 1表示完善资料 2表示实名认证
-    xqInfo:0,
+    xqInfo:false,//悬浮的标志位
     xqInfoF:0,
     xqInfoS:0,
     address:0,//1表示发布供应信息 2表示求购信息 0表示初始话
@@ -44,6 +44,44 @@ const store = new Vuex.Store({
     },
     nameN:"",//昵称的缓存
     mainPz:"",//主营品种
+    commentBack:false,//评论返回的标志
+    fComment:"",//果圈的评论内容
+    fruitComment:false,//返回果圈评论的标志
+    fruitRouter:{   //果圈
+      comment:false,//是否有评论
+      commentFlag:{
+        succeed:false,//评论是否成功
+      },
+      detial:false,//是否有跳转到详情
+    },
+    fruitDetail:{
+      comment:false,//详情的评论
+      commentFlag:{
+        succeed:false,//评论是否成功
+      },
+      LZL:false,//楼中是否有评论
+      LzlFlag:{
+        succeed:false,//评论是否成功
+      },
+      commentDetail:false,//是否跳转到评论详情
+    },
+    fDLzlContent:"",//楼中楼的评论
+    detailComment:false,//返回帖子中评论楼中楼的标志位
+    detailPostComment:false,//帖子详情里面的帖子评论
+    lzlComment:"",//楼中楼的评论内容
+    newPosts:null,//新增加的帖子的内容
+
+    toRouter:false,//不是首页进入的路由
+    wx:false,//进入微信的入口
+
+    presonAddState:0,//个人中心的地址的状态
+    cityName:"",//区域中城市的选择
+
+    agencyScroll:undefined,//代办
+    coldScroll:undefined,//冷库
+    tradeScroll:undefined,//客商
+
+    homeProvince:'全国',//默认是全国
   },
   mutations: {
     incrementCheck(state,UT){
@@ -100,8 +138,10 @@ const store = new Vuex.Store({
     incrementAurKey(state,UT){
       state.userRealAuthKey = UT.userRealAuthKey
     },
+    incrementRoute(state,UT){
+      state.toRouter = UT.toRouter;
+    },
     incrementInit(state, UT){
-      console.log(UT, 123);
       let name = UT.name;
 
       if(UT.hasOwnProperty("flag")){

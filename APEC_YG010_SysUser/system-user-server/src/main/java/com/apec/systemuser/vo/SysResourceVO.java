@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * @author xxx
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,7 +21,7 @@ public class SysResourceVO extends BaseDTO
 	
     private String resource;
 	
-    private int sorts;
+    private Integer sorts;
 	
     private Long parent;
     

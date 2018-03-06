@@ -2,6 +2,7 @@ package com.apec.framework.common.enums;
 
 /**
  * 参数表key
+ * @author  xx
  * */
 public enum Params{
 	
@@ -28,7 +29,7 @@ public enum Params{
 
 	private String key;
 	
-	private Params(String key){
+	Params(String key){
 		this.key = key;
 	}
 	

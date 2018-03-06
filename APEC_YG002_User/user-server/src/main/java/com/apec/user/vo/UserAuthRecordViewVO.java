@@ -2,13 +2,18 @@ package com.apec.user.vo;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * Created by hmy on 2017/8/7.
+ * @author hmy
  */
 @Data
 public class UserAuthRecordViewVO {
 
     private Long id;
+
+    private Date createDate;
 
     /**
      * 用户真实姓名
@@ -44,6 +49,8 @@ public class UserAuthRecordViewVO {
      * 备注
      */
     private String remark;
+
+    private Date passDate;
 
 
 }

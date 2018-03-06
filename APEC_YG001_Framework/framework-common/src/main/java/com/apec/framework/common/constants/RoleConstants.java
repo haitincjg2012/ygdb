@@ -1,5 +1,8 @@
 package com.apec.framework.common.constants;
 
+/**
+ * @author xx
+ */
 public interface RoleConstants {
 	/**
 	 * 一级菜单

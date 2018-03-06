@@ -3,6 +3,8 @@ package com.apec.society.model;
 import com.apec.framework.common.enumtype.SocietyType;
 import com.apec.framework.mongodb.model.BaseModel;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -10,12 +12,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
  *
  * @author yirde  2017/10/19.
  */
-@Data
+@Getter
+@Setter
 @Document
 public class SocietyInfo extends BaseModel<Long> {
 
     private static final long serialVersionUID = -5993252743301819040L;
-
     /**
      *  圈子标题
      */

@@ -16,6 +16,7 @@ import javax.persistence.Enumerated;
  *
  * 用户标签
  * Created by yirpro on 2017/9/10.
+ * @author xxxx
  */
 
 @Entity

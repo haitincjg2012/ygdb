@@ -32,26 +32,26 @@ public class VoucherViewVO {
 	 * 用户id
 	 * */
 	private Long userId;
-	
+
+	/**
+	 * 上传人姓名
+	 */
+	private String userName;
+
+	/**
+	 * 上传人身份
+	 */
+	private UserType userType;
+
 	/**
 	 * 手机号
 	 * */
 	private String mobile;
 	
 	/**
-	 * 城市id
+	 * 地址
 	 * */
-	private String cityId;
-	
-	/**
-	 * 县id
-	 * */
-	private String countyId;
-	
-	/**
-	 * 镇id
-	 * */
-	private String townId;
+	private String address;
 
 	/**
 	 * 卖货方类型：果农，客商
@@ -82,6 +82,11 @@ public class VoucherViewVO {
 	 * 凭据图片路径
 	 * */
 	private String voucherUrl;
+
+	/**
+	 * 审核状态
+	 */
+	private String auditState;
 	
 	private List<VoucherGoodsViewVO> voucherGoodsVVO;
 }

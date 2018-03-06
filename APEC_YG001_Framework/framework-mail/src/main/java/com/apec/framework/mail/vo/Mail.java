@@ -8,22 +8,44 @@ import java.util.HashMap;
 
 /**
  * Created by wubi on 2017/8/4.
+ * @author xxx
  */
 public class Mail implements Serializable{
 
     /**
-     * 必填参数
+     * 必填参数 //主题
      */
-    private String subject; //主题
-    private String[] mailTo; //收件人
-    private String mailFrom; //发件人
-    private String content; //邮件内容
-    private MailType type;//邮件发送类型(text,html,freemarker,thymeleaf)
+    private String subject;
+
     /**
-     * 选填参数
+     * //收件人
      */
-    private String template; //邮件模板
-    private HashMap<String,String> kvMap; //自定义参数
+    private String[] mailTo;
+
+    /**
+     * //发件人
+     */
+    private String mailFrom;
+
+    /**
+     * //邮件内容
+     */
+    private String content;
+
+    /**
+     * //邮件发送类型(text,html,freemarker,thymeleaf)
+     */
+    private MailType type;
+
+    /**
+     * 选填参数//邮件模板
+     */
+    private String template;
+
+    /**
+     * //自定义参数
+     */
+    private HashMap<String,String> kvMap;
 
     public Mail(String subject, String content) {
         this.type = MailType.TEXT;

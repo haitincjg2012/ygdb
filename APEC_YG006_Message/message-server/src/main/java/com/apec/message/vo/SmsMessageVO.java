@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import com.apec.framework.common.enumtype.MessageTemplate;
@@ -14,6 +15,7 @@ import com.apec.framework.dto.BaseVO;
  * @author gunj
  * create by 3017-07-12
  * */
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class SmsMessageVO extends BaseVO<Long>{
@@ -46,7 +48,7 @@ public class SmsMessageVO extends BaseVO<Long>{
 	/**
 	 * 是否过滤重复号码
 	 * */
-	private boolean distinctFlag;
+	private Boolean distinctFlag;
 	
 	/**
 	 * 计划发送时间
@@ -71,12 +73,12 @@ public class SmsMessageVO extends BaseVO<Long>{
 	/**
 	 * 消息类型是否为短信默认短信：true:彩信,false:短信
 	 * */
-	private boolean msgTypeFlag;
+	private Boolean msgTypeFlag;
 	
 	/**
 	 * 发送类型是否群发，默认群发
 	 * */
-	private boolean sendTypeFlag;
+	private Boolean sendTypeFlag;
 	
 	/**
 	 * key为手机号，value为自定义内容
@@ -86,117 +88,7 @@ public class SmsMessageVO extends BaseVO<Long>{
 	/**
 	 * 是否使用动态模板
 	 * */
-	private boolean temlateFlag;
+	private Boolean temlateFlag;
 
-	public UUID getBatchID() {
-		return batchID;
-	}
 
-	public void setBatchID(UUID batchID) {
-		this.batchID = batchID;
-	}
-
-	public String getBatchName() {
-		return batchName;
-	}
-
-	public void setBatchName(String batchName) {
-		this.batchName = batchName;
-	}
-
-	public Map<String, Map<String, String>> getMsgsMap() {
-		return msgsMap;
-	}
-
-	public void setMsgsMap(Map<String, Map<String, String>> msgsMap) {
-		this.msgsMap = msgsMap;
-	}
-
-	public MessageTemplate getTemplateKey() {
-		return templateKey;
-	}
-
-	public void setTemplateKey(MessageTemplate templateKey) {
-		this.templateKey = templateKey;
-	}
-
-	public Integer getBizType() {
-		return bizType;
-	}
-
-	public void setBizType(Integer bizType) {
-		this.bizType = bizType;
-	}
-
-	public boolean isDistinctFlag() {
-		return distinctFlag;
-	}
-
-	public void setDistinctFlag(boolean distinctFlag) {
-		this.distinctFlag = distinctFlag;
-	}
-
-	public Integer getScheduleTime() {
-		return scheduleTime;
-	}
-
-	public void setScheduleTime(Integer scheduleTime) {
-		this.scheduleTime = scheduleTime;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public String getCustomNum() {
-		return customNum;
-	}
-
-	public void setCustomNum(String customNum) {
-		this.customNum = customNum;
-	}
-
-	public Long getDeadline() {
-		return deadline;
-	}
-
-	public void setDeadline(Long deadline) {
-		this.deadline = deadline;
-	}
-
-	public boolean isMsgTypeFlag() {
-		return msgTypeFlag;
-	}
-
-	public void setMsgTypeFlag(boolean msgTypeFlag) {
-		this.msgTypeFlag = msgTypeFlag;
-	}
-
-	public boolean isSendTypeFlag() {
-		return sendTypeFlag;
-	}
-
-	public void setSendTypeFlag(boolean sendTypeFlag) {
-		this.sendTypeFlag = sendTypeFlag;
-	}
-
-	public boolean isTemlateFlag() {
-		return temlateFlag;
-	}
-
-	public void setTemlateFlag(boolean temlateFlag) {
-		this.temlateFlag = temlateFlag;
-	}
-
-	public Map<String, String> getContentMap() {
-		return contentMap;
-	}
-
-	public void setContentMap(Map<String, String> contentMap) {
-		this.contentMap = contentMap;
-	}
 }

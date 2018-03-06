@@ -35,6 +35,12 @@
 .accountForm .el-form-item .el-form-item__content .el-input__inner {
   border: 0 none;
 }
+.memeberform .el-form-item__content {
+  line-height: 36px;
+}
+.memeberform .el-textarea__inner {
+  padding: 0px 15px 5px;
+}
 .orgSearch {
   margin: 20px 0 10px;
 }

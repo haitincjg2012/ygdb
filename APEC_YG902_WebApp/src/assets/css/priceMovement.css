@@ -1,0 +1,86 @@
+.c-price {
+  position: relative;
+}
+.c-price .c-price-head {
+  position: absolute;
+  top: 0;
+  z-index: 99;
+  width: 18.75rem;
+  height: 2.2rem;
+  text-align: center;
+  line-height: 2.2rem;
+  background: #fff;
+}
+.c-price .c-price-head .c-p-head-title {
+  font-size: 0.8rem;
+  color: #323232;
+}
+.c-price .c-price-head .c-p-head-title h3 {
+  font-size: 0.85rem;
+}
+.c-price .c-price-head .return {
+  position: absolute;
+  left: 0.625rem;
+  top: 0;
+}
+.c-price .c-price-head .return img {
+  width: 0.55rem;
+  height: 0.975rem;
+}
+.c-price .c-price-content {
+  position: fixed;
+  top: 2.2rem;
+  bottom: 2.5rem;
+}
+.c-price .c-p-c-blank {
+  width: 100%;
+  height: 0.5rem;
+  background: #f4f4f4;
+}
+.c-price .c-p-content-title {
+  padding-left: 0.5rem;
+  height: 2rem;
+  width: 18.25rem;
+  line-height: 2rem;
+  font-size: 0.75rem;
+  color: #323232;
+  background: #f4f4f4;
+}
+.c-price .c-price-footer {
+  position: fixed;
+  bottom: 0;
+  width: 18.75rem;
+  height: 2.5rem;
+  border-top: 0.05rem solid #f4f4f4;
+  line-height: 2.5rem;
+  font-size: 0.8rem;
+  color: #646464;
+  text-align: center;
+  background: #fff;
+}
+.c-price .c-p-footer-img {
+  width: 0.8rem;
+  height: 0.8rem;
+  vertical-align: middle;
+}
+.c-price .c-p-c-person {
+  margin-top: 0;
+}
+.c-price .c-p-c-contentText {
+  padding: 0 0.5rem;
+  font-size: 0.75rem;
+  color: #323232;
+  background-color: #FFFFFF;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+.c-price .c-g-c-c-line {
+  width: 18.75rem;
+  height: 0.05rem;
+  background-color: #f4f4f4;
+}
+.c-posts-c-msg {
+  width: 17.75rem;
+  padding: 0 0.5rem 0.35rem;
+  background-color: #fff;
+}

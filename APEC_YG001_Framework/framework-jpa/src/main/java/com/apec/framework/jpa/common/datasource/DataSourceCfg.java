@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Primary;
  * 内容摘要：多数据源配置
  * 完成日期：2016-07-14
  * 编码作者：
+ * @author xxx
  */
 @Configuration
 public class DataSourceCfg
@@ -34,16 +35,5 @@ public class DataSourceCfg
         return DataSourceBuilder.create().build();
     }
 
-    /**
-     * 次数据源
-     */
-//    @Bean(name = "secondaryDataSource")
-//    @Qualifier("secondaryDataSource")
-//    @ConfigurationProperties(prefix = "spring.datasource.secondary")
-//    @Primary
-//    public DataSource secondaryDataSource()
-//    {
-//        return DataSourceBuilder.create().build();
-//    }
 
 }

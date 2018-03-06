@@ -8,7 +8,6 @@ import com.apec.framework.log.InjectLogger;
 import com.apec.framework.springcloud.SpringCloudClient;
 import com.apec.goods.dao.AttributeNameDAO;
 import com.apec.goods.dao.AttributeValueDAO;
-import com.apec.goods.dao.GoodsAttrDAO;
 import com.apec.goods.model.*;
 import com.apec.goods.service.AttributeNameService;
 import com.apec.goods.util.SnowFlakeKeyGen;
@@ -27,18 +26,17 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by hmy on 2017/7/10.
+ * @author hmy
  */
 @Service
 public class AttributeNameServiceImpl implements AttributeNameService {
 
     @Autowired
     private AttributeNameDAO attributeNameDAO;
-
-    @Autowired
-    private GoodsAttrDAO goodsAttrDAO;
 
     @Autowired
     private AttributeValueDAO attributeValueDAO;
@@ -53,7 +51,7 @@ public class AttributeNameServiceImpl implements AttributeNameService {
     SpringCloudClient springCloudClient;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String saveAttributeName(AttributeNameVO attributeNameVO, String userID) {
         //新增属性名称
         AttributeName attributeName = new AttributeName();
@@ -66,8 +64,7 @@ public class AttributeNameServiceImpl implements AttributeNameService {
         //保存相应的属性值对象
         List<AttributeValueVO> attributeValueVOS = attributeNameVO.getAttributeValueVOS();
         if(attributeValueVOS != null && attributeValueVOS.size() > 0){
-            for(int i = 0;i < attributeValueVOS.size();i++){
-                AttributeValueVO attributeValueVO = attributeValueVOS.get(i);
+            for(AttributeValueVO attributeValueVO:attributeValueVOS){
                 if(attributeValueVO != null && StringUtils.isNotBlank(attributeValueVO.getAttrValue())){
                     AttributeValue attributeValue = new AttributeValue();
                     BeanUtil.copyPropertiesIgnoreNullFilds(attributeValueVO,attributeValue);
@@ -84,7 +81,7 @@ public class AttributeNameServiceImpl implements AttributeNameService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String updateAttributeName(AttributeNameVO attributeNameVO,String userId) {
         //修改属性名称对象
         AttributeName attributeName = attributeNameDAO.findOne(attributeNameVO.getId());
@@ -104,11 +101,13 @@ public class AttributeNameServiceImpl implements AttributeNameService {
                 AttributeValue value = new AttributeValue();
                 BeanUtil.copyPropertiesIgnoreNullFilds(attributeValue,value);
                 AttributeValueVO vo = new AttributeValueVO();
-                boolean flag = true;//不存在的对象
+                //不存在的对象
+                boolean flag = true;
                 if(attributeValueVOList != null && attributeValueVOList.size() > 0){
                     for(AttributeValueVO attributeValueVO:attributeValueVOList){
                         if(attributeValue != null && attributeValueVO != null && attributeValueVO.getId() != null && attributeValueVO.getId() != 0L && value.getId().equals(attributeValueVO.getId())){
-                            flag = false;//该对象存在
+                            //该对象存在
+                            flag = false;
                             BeanUtil.copyPropertiesIgnoreNullFilds(attributeValueVO,vo);
                         }
                     }
@@ -121,8 +120,9 @@ public class AttributeNameServiceImpl implements AttributeNameService {
                     attributeValueDAO.save(value);
                 }else{
                     //对存在的已改变的对象进行修改操作
-                    if(!StringUtils.equals(vo.getAttrValue(),value.getAttrValue())){
+                    if(!StringUtils.equals(vo.getAttrValue(),value.getAttrValue()) || !Objects.equals(value.getSort(),vo.getSort())){
                         value.setAttrValue(vo.getAttrValue());
+                        value.setSort(vo.getSort());
                         value.setLastUpdateDate(new Date());
                         value.setLastUpdateBy(userId);
                         attributeValueDAO.save(value);
@@ -153,7 +153,7 @@ public class AttributeNameServiceImpl implements AttributeNameService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String removeAttributeName(AttributeNameVO attributeNameVO,String userId) {
         AttributeName attributeName = attributeNameDAO.findOne(attributeNameVO.getId());
         if(attributeName == null){
@@ -161,8 +161,6 @@ public class AttributeNameServiceImpl implements AttributeNameService {
             return Constants.ENABLE_NOT_NULL;
         }
         attributeNameDAO.removeAttributeName(attributeNameVO.getId(),userId);
-        //删除相关的属性值对象
-        attributeValueDAO.updateByAttributeId(attributeNameVO.getId(),userId);
         return Constants.RETURN_SUCESS;
     }
 
@@ -170,14 +168,17 @@ public class AttributeNameServiceImpl implements AttributeNameService {
     public AttributeNameVO findAttributeName(AttributeNameVO attributeNameVO) {
         AttributeNameVO attributeNameVO1 = new AttributeNameVO();
         AttributeName attributeName = attributeNameDAO.findOne(attributeNameVO.getId());
+        if(attributeName == null){
+            return null;
+        }
         BeanUtil.copyPropertiesIgnoreNullFilds(attributeName,attributeNameVO1);
         List<AttributeValueVO> list = new ArrayList<>();
         List<AttributeValue> attributeValues = attributeValueDAO.findByAttributeNameIdAndEnableFlagOrderBySort(attributeName.getId(),EnableFlag.Y);
         if(attributeValues != null && attributeValues.size() > 0){
             for(AttributeValue attributeValue:attributeValues){
-                    AttributeValueVO attributeValueVO = new AttributeValueVO();
-                    BeanUtil.copyPropertiesIgnoreNullFilds(attributeValue,attributeValueVO);
-                    list.add(attributeValueVO);
+                AttributeValueVO attributeValueVO = new AttributeValueVO();
+                BeanUtil.copyPropertiesIgnoreNullFilds(attributeValue,attributeValueVO);
+                list.add(attributeValueVO);
             }
         }
         attributeNameVO1.setAttributeValueVOS(list);
@@ -189,22 +190,20 @@ public class AttributeNameServiceImpl implements AttributeNameService {
         Page<AttributeName> attributeNamePage = attributeNameDAO.findAll(getInputCondition(attributeNameVO),pageRequest);
         PageDTO<AttributeNameVO> pageDTO = new PageDTO<>();
         List<AttributeNameVO> list = new ArrayList<>();
-        if(attributeNamePage != null){
-            for(AttributeName attributeName:attributeNamePage){
-                AttributeNameVO attributeNameVO1 = new AttributeNameVO();
-                BeanUtil.copyPropertiesIgnoreNullFilds(attributeName,attributeNameVO1);
-                List<AttributeValueVO> list1 = new ArrayList<>();
-                if(attributeName != null){
-                    List<AttributeValue> attributeValues = attributeValueDAO.findByAttributeNameIdAndEnableFlagOrderBySort(attributeName.getId(),EnableFlag.Y);
-                    for(AttributeValue attributeValue:attributeValues){
-                            AttributeValueVO attributeValueVO = new AttributeValueVO();
-                            BeanUtil.copyPropertiesIgnoreNullFilds(attributeValue,attributeValueVO);
-                            list1.add(attributeValueVO);
-                    }
+        for(AttributeName attributeName:attributeNamePage){
+            AttributeNameVO attributeNameVO1 = new AttributeNameVO();
+            BeanUtil.copyPropertiesIgnoreNullFilds(attributeName,attributeNameVO1);
+            List<AttributeValueVO> list1 = new ArrayList<>();
+            if(attributeName != null){
+                List<AttributeValue> attributeValues = attributeValueDAO.findByAttributeNameIdAndEnableFlagOrderBySort(attributeName.getId(),EnableFlag.Y);
+                for(AttributeValue attributeValue:attributeValues){
+                        AttributeValueVO attributeValueVO = new AttributeValueVO();
+                        BeanUtil.copyPropertiesIgnoreNullFilds(attributeValue,attributeValueVO);
+                        list1.add(attributeValueVO);
                 }
-                attributeNameVO1.setAttributeValueVOS(list1);
-                list.add(attributeNameVO1);
             }
+            attributeNameVO1.setAttributeValueVOS(list1);
+            list.add(attributeNameVO1);
         }
         pageDTO.setTotalElements(attributeNamePage.getTotalElements());
         pageDTO.setTotalPages(attributeNamePage.getTotalPages());
@@ -217,8 +216,8 @@ public class AttributeNameServiceImpl implements AttributeNameService {
      * 多条件查询商品信息
      * 根据多种情况查询
      * 包括like:attrName,eq:showPreFix,showSuFix,remoteUrlParam
-     * @param vo
-     * @return
+     * @param vo 条件对象
+     * @return Predicate
      */
     private Predicate getInputCondition(AttributeNameVO vo)
     {
@@ -249,15 +248,13 @@ public class AttributeNameServiceImpl implements AttributeNameService {
 
     /**
      * 批量删除属性名称
-     * @param ids
-     * @param userId
-     * @return
+     * @param  ids ids
+     * @param userId userId
+     * @return String
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String deleteAttributeNameList(List<Long> ids, String userId){
-        //批量删除将要删除的属性名称的所有属性值
-        attributeValueDAO.deleteAttributeValueByAttrNameList(ids,userId);
         //批量删除属性名称
         attributeNameDAO.deleteAttributeNameList(ids,userId);
         return Constants.RETURN_SUCESS;

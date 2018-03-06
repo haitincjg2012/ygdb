@@ -3,9 +3,12 @@ package com.apec.framework.base;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author xxxx
+ */
 @Scope("prototype")
 @Service("dispatchJSONService")
-public class DispatchJSONService  extends BaseJSONService
+public class DispatchJsonService extends BaseJsonService
 {
 
 }

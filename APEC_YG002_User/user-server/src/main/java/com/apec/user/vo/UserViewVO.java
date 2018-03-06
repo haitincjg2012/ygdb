@@ -7,6 +7,7 @@ import java.util.Date;
 
 /**
  * Created by hmy on 2017/8/5.
+ * @author hmy
  */
 @Data
 public class UserViewVO {
@@ -65,6 +66,11 @@ public class UserViewVO {
     private UserStatus userStatus;
 
     private String userStatusKey;
+
+    /**
+     * 二维码图片地址
+     */
+    private String qrCodeUrl;
 
     /**
      * 用户实名认证状态

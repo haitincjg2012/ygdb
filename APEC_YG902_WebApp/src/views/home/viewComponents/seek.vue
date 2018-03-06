@@ -45,9 +45,9 @@
         <i class="z-star-O"></i>
         <label>求购价格:</label>
         <div class="z-f">
-          <input class="input-price" v-model="priceO" @input="handlep" maxlength="4" data-id="0" placeholder="请填写单价">
+          <input class="input-price" v-model="priceO" @input="handlep($event,1)" maxlength="4" data-id="0" placeholder="请填写单价">
           <span>-</span>
-          <input class="input-price" v-model="priceT" @input="handlep" maxlength="4" data-id="1" placeholder="请填写单价">
+          <input class="input-price"  v-model="priceT" @input="handlep($event,2)" maxlength="4" data-id="1" placeholder="请填写单价">
           <span class="sp-O">元/斤</span>
         </div>
 
@@ -61,7 +61,6 @@
         <div class="z-pos-o">
           <img src="../../../assets/img/more-1.png"/>
         </div>
-        <span class="z-f1 z-sp2">市/镇</span>
       </div>
     </div>
     <div class="com">
@@ -94,6 +93,7 @@
   @import "../../../assets/css/seek.css";
 </style>
 <script>
+  import WX from '../../../components/wx.vue'  //微信分享功能
   import API from '../../../api/api'
   import { Toast } from 'mint-ui';
   const api = new API();
@@ -110,6 +110,8 @@
           this.$store.state.skuName = "";
           this.$store.state.skuId = "";
           this.$store.state.addrData = null;
+          this.$store.state.addrSeekData = null;
+
           this.address = '';
            document.getElementById("z-des").value = "";
            var father = document.querySelector(".z-valid").children[0];
@@ -145,6 +147,7 @@
         this.$store.state.skuName = "";
         this.$store.state.skuId = "";
         this.$store.state.addrSeekData = null;
+
         this.address = '';
         document.getElementById("z-des").value = "";
         var father = document.querySelector(".z-valid").children[0];
@@ -161,9 +164,19 @@
         this.$router.push({name: 'goodinfo',query:{path:"pbuy"}});
       },
       zone(){
-        this.$store.state.address = 2;
-//        this.$router.push({name:'address'});
-        this.$router.push({name:'addrSeek'});
+        this.$router.push({name:'address',query:{type:'qg'}});
+      },
+      checkPrice(){
+          if(this.priceO || this.priceT){
+            if(this.priceO > this.priceT ){
+              this.priceO = "";
+              this.priceT = "";
+              Toast('请您填写正确的价格格式');
+              return false;
+            }
+          }
+          return true;
+
       },
       pickup(event){
         var evt = event || window.event;
@@ -226,7 +239,7 @@
         }
 
       },
-      handlep(event){
+      handlep(event, f){
         var evt = window.event || event;
         var target = evt.toElement || evt.srcElement;
         var idx = target.dataset.id;
@@ -247,20 +260,58 @@
         }
         if(!flag){
             if(idx == 0){
-//              this.priceO= value.slice(0, -1);
               this.priceO = "";
             }else{
-//              this.priceT= value.slice(0, -1);
               this.priceT = "";
             }
-        }
-      },
-      submit(){
+        }else{
 
-        if(this.skuName == '' || this.skuId == "" || this.number == "" || this.priceO == "" || this.time == "" || this.address == "" || this.priceT == ""){
-          Toast('请您填写所有必填参数...')
+            if(this.priceT&&this.priceO) {
+              var priceO = this.priceO + "";
+              var priceNext = this.priceT + "";
+              var len = priceNext.length;
+              if (idx != 0) {
+                if (priceNext < priceO.substring(0, len)) {
+                  this.priceT = "";
+                  return;
+                }
+              }else {
+                if(priceO > priceNext){
+                  this.priceO = "";
+                  return;
+                }
+              }
+            }
+
+            }
+
+
+        },
+      submit(){
+        if(!this.checkPrice()){
           return;
         }
+
+        if(!this.skuName){
+          Toast('请您填写商品信息')
+            return;
+        }else if(!this.skuId){
+          Toast('请您填写商品信息')
+            return;
+        }else if(!this.number){
+          Toast('请您填写商品数量')
+            return;
+        }else if(!this.priceO || !this.priceT){
+          Toast('请您填写商品价格')
+            return;
+        }else if(!this.address){
+          Toast('请您填写货源区域')
+            return;
+        }else if(!this.time){
+          Toast('请您填写商品上架有效时间')
+          return;
+        }
+
         var cityId ='',areaId ='',townId = '';
         var addrData = this.$store.state.addrSeekData;
         if(addrData){
@@ -329,14 +380,13 @@
         this.unit = text;
       }
     },
-    mounted(){
 
-    },
     activated(){
-
+      WX.wx("果来乐-求购");
       this.skuName = this.$store.state.skuName;
       this.skuId = this.$store.state.skuId;
       var addreObj = this.$store.state.addrSeekData;
+
       if(addreObj){
         this.address = addreObj.detailAddress;
       }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Created by wubi on 2017/8/1.
+ * @author wubi
  */
 @Service
 public class SysUserLoginRecordServiceImpl implements SysUserLoginRecordService {

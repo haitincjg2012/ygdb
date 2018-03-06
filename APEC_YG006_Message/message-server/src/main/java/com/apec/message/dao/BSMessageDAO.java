@@ -12,8 +12,8 @@ public interface BSMessageDAO {
 
 	/**
 	 * 获取后台系统通知站内信列表
-	 * @param MessageDTO
-	 * @return PageDTO<Object[]>
+	 * @param messageDTO MessageDTO
+	 * @return 分页结果
 	 * */
 	PageDTO<Object[]> listBSMessage(MessageDTO messageDTO);
 }

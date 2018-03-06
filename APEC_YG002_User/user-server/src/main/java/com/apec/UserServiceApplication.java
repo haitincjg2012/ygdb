@@ -10,8 +10,9 @@ import com.apec.framework.base.BaseApplication;
 import com.apec.framework.springcloud.SpringCloudConfig;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-import java.math.BigDecimal;
-
+/**
+ * @author xx
+ */
 @EnableDiscoveryClient
 @SpringBootApplication
 @EnableFeignClients

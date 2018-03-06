@@ -1,0 +1,142 @@
+.c-myTidings {
+  background-color: #f4f4f4;
+}
+.c-myTidings .c-myT-head {
+  position: fixed;
+  padding: 0 0.5rem;
+  width: 17.75rem;
+  height: 2.2rem;
+  line-height: 2.2rem;
+  background-color: #FFFFFF;
+  border-bottom: 0.05rem solid #f4f4f4;
+  z-index: 1;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-myTidings .c-myT-h-ends-com {
+  width: 1.1rem;
+  height: auto;
+}
+.c-myTidings .c-myT-h-back-img {
+  width: 0.5rem;
+  height: 0.975rem;
+}
+.c-myTidings .c-myT-h-title {
+  width: 15.55rem;
+  font-size: 0.9rem;
+  color: #323232;
+  text-align: center;
+}
+.c-myTidings .c-myT-h-publish-img {
+  width: 1.1rem;
+  height: 0.975rem;
+}
+.c-myTidings .c-myT-scroll {
+  position: fixed;
+  top: 2.2rem;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.c-myTidings .c-myT-c-person {
+  margin-top: 0;
+  padding-top: 0.5rem;
+}
+.c-myTidings .c-myT-c-imageText {
+  width: 17.75rem;
+  padding: 0 0.5rem;
+  background-color: #fff;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-myTidings .c-myT-c-image {
+  height: 3.75rem;
+  line-height: 3.75rem;
+  -webkit-flex: 1 1 3.75rem;
+  -ms-flex: 1 1 3.75rem;
+  flex: 1 1 3.75rem;
+}
+.c-myTidings .c-myT-c-image img {
+  width: 3.25rem;
+  height: 3.25rem;
+}
+.c-myTidings .c-myT-c-Text {
+  -webkit-flex: 1 1 14rem;
+  -ms-flex: 1 1 14rem;
+  flex: 1 1 14rem;
+}
+.c-myTidings .c-myT-c-textstring {
+  max-width: 17.75rem;
+  font-size: 0.9rem;
+  color: #323232;
+  line-height: 1.2rem;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+.c-myTidings .c-myT-c-data {
+  width: 17.75rem;
+  padding: 0 0.5rem;
+  height: 2rem;
+  background-color: #fff;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-myTidings .c-myT-c-d-read {
+  width: 5rem;
+  line-height: 2rem;
+  font-size: 0.75rem;
+  color: #969696;
+}
+.c-myTidings .c-myT-c-d-praise {
+  width: 11.25rem;
+  line-height: 2rem;
+  font-size: 0.75rem;
+  color: #969696;
+}
+.c-myTidings .c-myT-c-d-praiseImg {
+  width: 0.65rem;
+  height: 0.65rem;
+  vertical-align: -0.1rem;
+}
+.c-myTidings .c-myT-c-d-praiseText {
+  vertical-align: middle;
+}
+.c-myTidings .c-myT-c-d-more {
+  width: 1.5rem;
+  line-height: 2rem;
+}
+.c-myTidings .c-myT-c-d-more img {
+  width: 1.5rem;
+}
+.c-myTidings .c-myT-c-step {
+  width: 18.75rem;
+  height: 0.5rem;
+  background-color: #f4f4f4;
+}

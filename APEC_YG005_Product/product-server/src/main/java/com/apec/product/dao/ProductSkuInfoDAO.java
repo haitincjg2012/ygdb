@@ -15,9 +15,9 @@ public interface ProductSkuInfoDAO extends BaseDAO<ProductSkuInfo, Long> {
 
     /**
      * 根据用户ID和EnableFlag 查询最近的
-     * @param userId
-     * @param enableFlag
-     * @return
+     * @param userId 用户id
+     * @param enableFlag 状态码
+     * @return 商品属性和其id
      */
     @Query(value = "SELECT  id,sku_name FROM product_sku_info u WHERE  u.ENABLE_FLAG = ?2 AND u.user_id = ?1 " +
             "Order By u.CREATE_DATE DESC LIMIT 0,1 " ,nativeQuery = true  )

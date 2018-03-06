@@ -1,6 +1,6 @@
 package com.apec.systemconfig.service.impl;
 
-import com.apec.framework.common.ErrorCodeConst;
+import com.apec.framework.common.Constants;
 import com.apec.framework.common.PageDTO;
 import com.apec.framework.common.enumtype.EnableFlag;
 import com.apec.framework.common.util.BeanUtil;
@@ -16,14 +16,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
-import javax.swing.plaf.synth.Region;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 /**
  * Created by hmy on 2017/7/28.
+ * @author hmy
  */
 @Service
 public class RegionLevelServiceImpl implements RegionLevelService {
@@ -34,7 +35,7 @@ public class RegionLevelServiceImpl implements RegionLevelService {
     @Override
     public List<RegionLevelVO> selectAll(RegionLevelVO vo)
     {
-        List<RegionLevelVO> list = new ArrayList<RegionLevelVO>();
+        List<RegionLevelVO> list = new ArrayList<>();
         if(StringUtils.isBlank(vo.getParentId())){
             //查询最大等级的code
             RegionLevel regionLevel = dao.findFirstByEnableFlagOrderByLevel(EnableFlag.Y);
@@ -60,8 +61,8 @@ public class RegionLevelServiceImpl implements RegionLevelService {
     public List<RegionLevelVO> getNeedRegionLevel(List<String> regionCodes) {
         List<RegionLevelVO> list = new ArrayList<>();
         if(regionCodes != null && regionCodes.size() > 0){
-            for(int i = 0 ; i < regionCodes.size(); i++){
-                RegionLevel regionLevel = dao.findByCode(regionCodes.get(i));
+            for(String regionCode:regionCodes){
+                RegionLevel regionLevel = dao.findByCode(regionCode);
                 RegionLevelVO regionLevelVO = new RegionLevelVO();
                 regionLevelVO.setParentId(regionLevel.getCode());
                 List<RegionLevelVO> regionLevelVOS = this.selectAll(regionLevelVO);
@@ -77,8 +78,7 @@ public class RegionLevelServiceImpl implements RegionLevelService {
             for(RegionLevel regionLevel:regionLevels){
                 RegionLevelVO regionLevelVO = new RegionLevelVO();
                 regionLevelVO.setParentId(regionLevel.getCode());
-                List<RegionLevelVO> regionLevelVOS = new ArrayList<>();
-                regionLevelVOS =  selectAll(regionLevelVO);
+                List<RegionLevelVO> regionLevelVOS = selectAll(regionLevelVO);
                 //查询该地区下的所有直辖管理地区
                 BeanUtil.copyPropertiesIgnoreNullFilds(regionLevel,regionLevelVO);
                 regionLevelVO.setRegionLevelVOS(regionLevelVOS);
@@ -91,7 +91,7 @@ public class RegionLevelServiceImpl implements RegionLevelService {
     @Override
     public PageDTO<RegionLevelVO> pageRegionLevel(RegionLevelVO vo, PageRequest pageRequest) {
         Page<RegionLevel> page = dao.findAll(getInputCondition(vo),pageRequest);
-        PageDTO<RegionLevelVO> result = new PageDTO<RegionLevelVO>();
+        PageDTO<RegionLevelVO> result = new PageDTO<>();
         List<RegionLevelVO> list = new ArrayList<>();
         for(RegionLevel regionLevel:page){
             RegionLevelVO regionLevelVO = new RegionLevelVO();
@@ -107,13 +107,11 @@ public class RegionLevelServiceImpl implements RegionLevelService {
 
     /**
      * 查询数据库中存储的最顶级的地区分页信息
-     * @param pageRequest
-     * @return
      */
     @Override
     public PageDTO<RegionLevelVO> pagemaxRegionLevel(PageRequest pageRequest) {
         String highLevel = dao.findHighLevelFromRegionLevel();
-        PageDTO<RegionLevelVO> result = new PageDTO<RegionLevelVO>();
+        PageDTO<RegionLevelVO> result = new PageDTO<>();
         if(StringUtils.isBlank(highLevel)){
             return result;
         }
@@ -135,7 +133,7 @@ public class RegionLevelServiceImpl implements RegionLevelService {
     public String getAddressInfo(String addId) {
         StringBuffer address = new StringBuffer();
         List<String> list = new ArrayList<>();
-        while(!StringUtils.equals(addId,"0")){
+        while(!StringUtils.equals(addId, Constants.ZERO)){
             //查询地区信息，从低往高查
             RegionLevel regionLevel = dao.findByCode(addId);
             if(regionLevel == null){
@@ -144,7 +142,7 @@ public class RegionLevelServiceImpl implements RegionLevelService {
             list.add(regionLevel.getName());
             addId = regionLevel.getParentId();
         }
-        if(list != null && list.size() > 0){
+        if(!CollectionUtils.isEmpty(list)){
             for(int i = list.size() - 1 ; i >= 0; i--){
                 address.append(list.get(i));
                 address.append("|");

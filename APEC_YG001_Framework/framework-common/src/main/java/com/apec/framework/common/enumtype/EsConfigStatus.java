@@ -8,14 +8,20 @@ import com.apec.framework.common.enums.BaseEnum;
  */
 public enum EsConfigStatus implements BaseEnum {
 
+    /**
+     * 已使用
+     */
      USED("1","已使用"),
 
+    /**
+     * 未使用
+     */
      NOT_USED("0","未使用") ;
 
     private final String key;
     private final String desc;
 
-    private EsConfigStatus(String key, String desc) {
+    EsConfigStatus(String key, String desc) {
         this.key = key;
         this.desc = desc;
     }

@@ -1,6 +1,7 @@
 package com.apec.goods.service.impl;
 
 import com.apec.framework.common.Constants;
+import com.apec.framework.common.ErrorCodeConst;
 import com.apec.framework.common.enumtype.EnableFlag;
 import com.apec.framework.common.util.BeanUtil;
 import com.apec.framework.log.InjectLogger;
@@ -13,18 +14,18 @@ import com.apec.goods.model.GoodsAttr;
 import com.apec.goods.service.GoodsAttrService;
 import com.apec.goods.util.SnowFlakeKeyGen;
 import com.apec.goods.vo.GoodsAttrVO;
-import com.apec.goods.vo.GoodsVO;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by hmy on 2017/7/10.
+ * @author hmy
  */
 @Service
 public class GoodsAttrServiceImpl implements GoodsAttrService {
@@ -63,7 +64,7 @@ public class GoodsAttrServiceImpl implements GoodsAttrService {
         //配置商品属性中商品信息
         Goods goods = new Goods();
         goods.setId(goodsAttrVO.getGoodsId());
-        goodsAttr.setGoods(goods);
+        goodsAttr.setGoodsId(goods.getId());
         goodsAttr.setCreateBy(userId);
         goodsAttr.setCreateDate(new Date());
         goodsAttr.setId(idGen.nextId());
@@ -122,12 +123,61 @@ public class GoodsAttrServiceImpl implements GoodsAttrService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String deleteGoodsAttrList(List<Long> ids,String userId){
         goodsAttrDAO.deleteGoodsAttrList(ids,userId);
         return Constants.RETURN_SUCESS;
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String riseGoodsAttrSort(GoodsAttrVO goodsAttrVO,String userId){
+        GoodsAttr goodsAttr = goodsAttrDAO.findOne(goodsAttrVO.getId());
+        if(goodsAttr == null || goodsAttr.getEnableFlag() == EnableFlag.N){
+            logger.info("[GoodsAttrServiceImpl][riseGoodsAttrSort]can't find goodsAttr :id{}" ,goodsAttrVO.getId());
+            return Constants.ENABLE_NOT_NULL;
+        }
+        List<GoodsAttr> list = goodsAttrDAO.findByGoodsIdAndEnableFlagAndSortLessThanOrderBySortDesc(goodsAttr.getGoodsId(),EnableFlag.Y,goodsAttr.getSort());
+        if(CollectionUtils.isEmpty(list) || list.size() < 1){
+            return Constants.ENABLE_NOT_NULL;
+        }
+        GoodsAttr goodsAttr1 = list.get(0);
+        Integer sort = goodsAttr.getSort();
+        goodsAttr.setSort(goodsAttr1.getSort());
+        goodsAttr.setLastUpdateBy(userId);
+        goodsAttr.setLastUpdateDate(new Date());
+        goodsAttr1.setSort(sort);
+        goodsAttr1.setLastUpdateBy(userId);
+        goodsAttr1.setLastUpdateDate(new Date());
+        goodsAttrDAO.save(goodsAttr);
+        goodsAttrDAO.save(goodsAttr1);
+        return Constants.RETURN_SUCESS;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String downGoodsAttrSort(GoodsAttrVO goodsAttrVO,String userId){
+        GoodsAttr goodsAttr = goodsAttrDAO.findOne(goodsAttrVO.getId());
+        if(goodsAttr == null || goodsAttr.getEnableFlag() == EnableFlag.N){
+            logger.info("[GoodsAttrServiceImpl][downGoodsAttrSort]can't find goodsAttr :id{}" ,goodsAttrVO.getId());
+            return Constants.ENABLE_NOT_NULL;
+        }
+        List<GoodsAttr> list = goodsAttrDAO.findByGoodsIdAndEnableFlagAndSortGreaterThanOrderBySortAsc(goodsAttr.getGoodsId(),EnableFlag.Y,goodsAttr.getSort());
+        if(CollectionUtils.isEmpty(list) || list.size() < 1){
+            return Constants.ENABLE_NOT_NULL;
+        }
+        GoodsAttr goodsAttr1 = list.get(0);
+        Integer sort = goodsAttr.getSort();
+        goodsAttr.setSort(goodsAttr1.getSort());
+        goodsAttr.setLastUpdateBy(userId);
+        goodsAttr.setLastUpdateDate(new Date());
+        goodsAttr1.setSort(sort);
+        goodsAttr1.setLastUpdateBy(userId);
+        goodsAttr1.setLastUpdateDate(new Date());
+        goodsAttrDAO.save(goodsAttr);
+        goodsAttrDAO.save(goodsAttr1);
+        return Constants.RETURN_SUCESS;
+    }
 
 
 }

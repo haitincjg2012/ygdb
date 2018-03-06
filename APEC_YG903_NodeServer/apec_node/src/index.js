@@ -28,4 +28,5 @@ elasticsearch.ping({
 server.use(require('./product'));
 server.use(require('./user'));
 server.use(require('./user_org'));
+server.use(require('./quotation'));
 server.use(require('./ali_oss'));

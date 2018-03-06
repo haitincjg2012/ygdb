@@ -27,11 +27,23 @@ let format={
   timestampPattern:function(timestamp) {
     var time = this.timePattern(new Date(timestamp), 'yyyy-MM-dd');
     return time;
+  },
+  //将时间戳转为“yyyy-MM-dd hh:mm:ss”
+  datetampPattern:function(timestamp) {
+    var time = this.timePattern(new Date(timestamp), 'yyyy-MM-dd hh:mm:ss');
+    return time;
   }
+
 };
 
 //将时间戳转为yyyy-MM-dd
 Vue.filter('ymdFilter',function(val){
   val=val?format.timestampPattern(val):"";
+  return val;
+});
+
+//将时间戳转为yyyy-MM-dd
+Vue.filter('dateFilter',function(val){
+  val=val?format.datetampPattern(val):"";
   return val;
 });

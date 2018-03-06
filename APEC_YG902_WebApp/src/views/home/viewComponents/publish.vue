@@ -54,7 +54,7 @@
          <div class="z-pos-o">
              <img src="../../../assets/img/more-1.png"/>
          </div>
-         <span class="z-f1 z-sp2">市/镇</span>
+         <!--<span class="z-f1 z-sp2">市/镇</span>-->
        </div>
      </div>
      <div class="com">
@@ -80,7 +80,8 @@
         <div class="pic-show">
             <p class="z-up-text">上传图片(* 建议横屏拍照)</p>
             <ul class="clearfix z-list-pic" >
-                <li :is="item.SS" v-for="item in items" :item="item" v-on:selecttype="delItems" class="c-z-m"></li>
+                <!--<li :is="item.SS" v-for="item in items" :item="item" v-on:selecttype="delItems" class="c-z-m"></li>-->
+                <li :is="item.SS" v-for="(item,index) in items" :item="item" v-on:click="delItems(index)" class="c-z-m"></li>
                 <li>
                     <div class="z-add-one">
                       <img src="../../../assets/img/add-9.png"/>
@@ -100,6 +101,7 @@
 <script>
   import API from '../../../api/api'
   import DEL from '../../../components/del.vue'
+  import WX from '../../../components/wx.vue'  //微信分享功能
   import ALIYUN from "../../../components/aliyun.vue"//使用阿里云上传图片
 
   import { Toast,Indicator} from 'mint-ui';
@@ -151,6 +153,10 @@
       },
       sumbit:function (data) {
         if(!data.succeed){
+            Toast({
+              message:data.errorMsg,
+              duration:500
+            });
           return;
         }
         Indicator.close();
@@ -170,7 +176,6 @@
         eleArr[0].classList.add("active-li");
         eleArr[1].classList.remove("active-li");
         this.$router.go(- 1);
-//      this.$router.push({name:"home"})
     },
     test:function (data) {
        console.log(data);
@@ -203,7 +208,7 @@
                time:'',
               record:0,
               recordImg:{},
-               items:[],
+               items:null,//图片的内容
                 unit:'万斤',
                uploadImg:0, //0代表没有上传图片点击图片 1代表上传了图片 2代表上传完图片后点击提交
                submitRecord:0,//0代表未提交，1代表提交，2...代表未提交
@@ -214,7 +219,7 @@
     methods:{
       back(){
           this.reset();
-          this.items=[];
+          this.items=null;//
 //        Indicator.open();
         this.$store.state.skuName = "";
         this.$store.state.skuId = "";
@@ -235,7 +240,7 @@
       },
       zone(){
         this.$store.state.address = 1;
-        this.$router.push({name:'address'});
+        this.$router.push({name:'address',query:{type:'gy'}});
       },
       reset(){
         this.submitFlag = 0;
@@ -432,7 +437,6 @@
 //            that.items.push(obj);
 ////            that.uploadPicture(result.url);
 //          }).catch(function (err) {
-//
 //          });
 //        }
         var userId = this.$store.state.userId;
@@ -447,6 +451,8 @@
           srcT:url,
           index:t
         };
+
+        this.items = this.items?this.items:[];
         this.items.push(obj);
       },
       pickup(event){
@@ -502,32 +508,70 @@
           console.log(error)
         }
       },
-      delItems(timeTamp){
+      delItems(index){
           var items = this.items;
-          var index = timeTamp;
+//          var index = timeTamp;
+        items.splice(index,1);
+               if(items.length == 0){
+                      this.items = null;
+                  }
+//          for(var key in items){
+//              if(items[key].index == index){
+//                  items.splice(key,1);
 
-          for(var key in items){
-              if(items[key].index == index){
-                  items.splice(key,1);
-                  return;
-              }
-          }
+//                  return;
+//              }
+//          }
 
       },
       submit(){
-//        this.tSubmit();
           this.submitFlag ++;
-        if(this.skuName == '' || this.skuId == "" || this.number == "" || this.price == "" || this.time == "" || this.address == ""){
 
-          Toast({
-            message:"请您填写所有必填参数...",
-            duration:1000
-          })
-          this.submitFlag --;
-
-          return;
-        }
+          if(!this.skuName){
+            Toast({
+              message:"请您填写商品信息",
+              duration:1000
+            })
+            this.submitFlag --;
+            return;
+          }else if(!this.skuId){
+            Toast({
+              message:"请您填写所有必填参数",
+              duration:1000
+            })
+            this.submitFlag --;
+            return;
+          }else if(!this.number){
+            Toast({
+              message:"请您填写供应量的数量",
+              duration:1000
+            })
+            this.submitFlag --;
+            return;
+          }else if(!this.price){
+            Toast({
+              message:"请您填写供应价格",
+              duration:1000
+            })
+            this.submitFlag --;
+            return;
+          }else if(!this.time){
+            Toast({
+              message:"请您填写上架的有效期",
+              duration:1000
+            })
+            this.submitFlag --;
+            return;
+          }else if(!this.address){
+            Toast({
+              message:"请您填写货源区域",
+              duration:1000
+            })
+            this.submitFlag --;
+            return;
+          }
 //           优化
+
           if(this.submitFlag == 1){
 
             var upload = this.uploadImg;
@@ -538,14 +582,15 @@
       process(){
         this.uploadImg = 0;
         var imgArr = [];
-        this.items.forEach(function (current, index) {
-            console.log(current);
-          var o = {
-            imageUrl:current.srcT,
-            sort:index
-          }
-          imgArr.push(o);
-        });
+        if(this.items){
+          this.items.forEach(function (current, index) {
+            var o = {
+              imageUrl:current.srcT,
+              sort:index
+            }
+            imgArr.push(o);
+          });
+        }
         var cityId ='',areaId ='',townId = '';
         var addrData = this.$store.state.addrData;
         if(addrData){
@@ -555,7 +600,7 @@
         }
         var remark = document.getElementById("z-des").value;
         var src;
-        if(this.items[0]){
+        if(this.items){
             src = this.items[0].srcT;
         }else{
             src = "";
@@ -583,6 +628,7 @@
           api:"/yg-product-service/product/addNewProduct.apec",
           data:obj
         }
+
         var that = this;
         this.$store.state.skuName = "";
         this.$store.state.skuId = "";
@@ -631,17 +677,21 @@
       }
     },
     activated(){
+      WX.wx("果来乐-供应");
        this.reset();
-       this.checkUserId();
-      this.aliyunO = ALIYUN.aliyun();
+
+      this.items=null;
       this.skuName = this.$store.state.skuName;
       this.skuId = this.$store.state.skuId;
       var addreObj = this.$store.state.addrData;
 
       if(addreObj){
-//        this.address = addreObj.cityName + addreObj.countyName + addreObj.townName;
         this.address = addreObj.detailAddress;
       }
+    },
+    mounted(){
+      this.checkUserId();
+      this.aliyunO = ALIYUN.aliyun();
     },
     watched:{
         write:"wr"

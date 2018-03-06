@@ -7,11 +7,30 @@ package com.apec.framework.common.enums;
  */
 public enum Source implements  BaseEnum {
 
+    /**
+     * PC端
+     */
    PC("PC端"),
-   APP("APP端"),
-   MOBILE("移动端"),
-   WEIXIN("微信端"),
-   BACK("后台");
+
+    /**
+     * APP端
+     */
+    APP("APP端"),
+
+    /**
+     * 移动端
+     */
+    MOBILE("移动端"),
+
+    /**
+     * 微信端
+     */
+    WEIXIN("微信端"),
+
+    /**
+     * 后台
+     */
+    BACK("后台");
 
     private final String key;
 

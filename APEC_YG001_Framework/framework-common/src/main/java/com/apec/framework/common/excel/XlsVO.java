@@ -1,5 +1,8 @@
 package com.apec.framework.common.excel;
 
+/**
+ * @author xx
+ */
 public class XlsVO {
 
 	/**
@@ -21,6 +24,11 @@ public class XlsVO {
 	}
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+
+	@Override
+	public String toString(){
+		return url + fileName;
 	}
 	
 }

@@ -12,9 +12,9 @@ public interface MQMessageConsumerDao  extends BaseDAO<MQMessageConsumerLog,Stri
 
     /**
      * 统计
-     * @param keys
-     * @param tag
-     * @return
+     * @param keys keys
+     * @param tag tag
+     * @return Long
      */
     Long countByMsgKeyAndTag(String keys, String tag);
 

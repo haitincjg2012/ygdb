@@ -41,7 +41,7 @@ public class Channel extends BaseModel<Long>{
     /**
      * 描述
      */
-    @Column(nullable = true)
+    @Column
     private String description;
 
     /**

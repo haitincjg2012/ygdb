@@ -27,19 +27,5 @@ public class SmsCaptchaVO extends BaseVO<Long> {
      * */
     private MessageTemplate templateKey;
 
-	public String getMobile() {
-		return mobile;
-	}
 
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
-
-	public MessageTemplate getTemplateKey() {
-		return templateKey;
-	}
-
-	public void setTemplateKey(MessageTemplate templateKey) {
-		this.templateKey = templateKey;
-	}
 }

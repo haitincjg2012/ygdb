@@ -39,16 +39,23 @@
 }
 .z-frame .good-com label {
   margin-left: 0.5rem;
-  font-size: 0.65rem;
-  color: #666;
+  font-size: 0.8rem;
+  color: #646464;
   line-height: 2.25rem;
 }
 .z-frame .good-com .input-com {
   color: red;
   font-size: 0.65rem;
   line-height: 2.25rem;
-  width: 9rem;
+  width: 8.5rem;
   background: transparent;
+}
+.z-frame .good-com #g-info {
+  width: 11.25rem;
+}
+.z-frame .good-com #g-area {
+  width: 12.5rem;
+  text-align: right;
 }
 .z-frame .good-com .z-pos-o {
   float: right;
@@ -110,7 +117,7 @@
   line-height: 1.25rem;
 }
 .z-frame .good-com .z-f .sp-O {
-  font-size: 0.6rem;
+  font-size: 0.65rem;
   vertical-align: sub;
 }
 .z-frame .good-com .z-sp2 {

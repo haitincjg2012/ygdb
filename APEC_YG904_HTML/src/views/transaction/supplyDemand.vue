@@ -7,56 +7,104 @@
 		<my-header v-on:initialPage="initialPage" :firstTitle="firsTit" :secondTitle="secondTit" :thirdTitle="thirdTit" :breadFlag="breadflag"></my-header>
 		<!--搜索-->
 		<div class="mysearch" v-if="showFlag">
-			<el-form :inline="true" class="search">
-				<el-form-item label="关键词：">
-					<el-input v-model="s_keyWord" placeholder="请输入关键词"></el-input>
+			<el-form :inline="true" class="search" label-width="100px">
+				<el-form-item label="标题：">
+					<el-input v-model="s_skuName" placeholder="请输入标题"></el-input>
+				</el-form-item>
+				<el-form-item label="地址：">
+					<el-input v-model="s_address" placeholder="请输入地址"></el-input>
 				</el-form-item>
 				<el-form-item label="供求：">
 					<el-select v-model="s_orderType" placeholder="请选择供求类型" @change="getTableList">
-			      <el-option label="供应" value="GYTYPE"></el-option>
-			      <el-option label="求购" value="QGTYPE"></el-option>
-			    </el-select>
+				      <el-option label="供应" value="SALE"></el-option>
+				      <el-option label="求购" value="BUY"></el-option>
+				    </el-select>
+				</el-form-item>
+				<el-form-item label="发布人：">
+					<el-input v-model="s_userName" placeholder="请输入发布人"></el-input>
+				</el-form-item>
+				<el-form-item label="开始时间：">
+                    <el-date-picker type="date" placeholder="开始时间" format="yyyy-MM-dd" v-model="s_startDate"></el-date-picker>
+				</el-form-item>
+				<el-form-item label="结束时间：">
+                    <el-date-picker type="date" placeholder="结束时间" format="yyyy-MM-dd" v-model="s_endDate"></el-date-picker>
+				</el-form-item>
+				<el-form-item label="状态：">
+					<el-select v-model="s_underCarriage" placeholder="请选择供求类型" @change="getTableList">
+				      <el-option label="上架中" value="false"></el-option>
+				      <el-option label="已下架" value="true"></el-option>
+				    </el-select>
 				</el-form-item>
 				<el-button type="primary" @click="onSearch">搜索</el-button>
 				<el-button type="primary" @click="goAdd">发布</el-button>
+				<form id="form" method="post" style="display: none;" action="" enctype="multipart/form-data"></form>
+                <el-button type="primary" @click="goExport">导出</el-button>
 				<el-button @click="onReset">重置</el-button>
 			</el-form>
 		</div>
 		<!--表格列表-->
 		<div class="tableList" v-if="showFlag" style="margin-top: 20px;">
-			<el-table :data="dataList" border stripe v-loading.body="loadCircle" style="width:100%;">
+			<el-table :data="dataList" border stripe v-loading.body="loadCircle" header-row-class-name="headerRow"  style="width:100%;">
 				<el-table-column prop="productTypeName" label="供求"></el-table-column>
 				<el-table-column prop="id" label="编号"></el-table-column>
-				<el-table-column prop="skuName" label="标题">
-					<template scope="scope">
+				<!-- <el-table-column prop="skuName" label="标题"> -->
+				<el-table-column label="标题">
+					<template slot-scope="scope">
 						<a>{{scope.row.skuName}}</a>
 					</template>
 				</el-table-column>
 				<!--<el-table-column prop="showSecondInfo" label="详细规格">
-					<template scope="scope">
+					<template slot-scope="scope">
 						<span v-for="item in scope.row.showSecondInfo">{{item}} </span>
 					</template>
 				</el-table-column>-->
-				<el-table-column prop="weight" label="数量(斤)"></el-table-column>
-				<el-table-column prop="amount" label="单价(元/斤)"></el-table-column>
+				<el-table-column label="供应量">
+					<template slot-scope="scope">
+							<span>{{scope.row.weight}} {{scope.row.weightUnit}}</span>
+					</template>
+				</el-table-column>
+				<el-table-column prop="amount" label="单价(元/斤)">
+					<template slot-scope="scope">
+					  <span v-if="scope.row.productTypeName =='供应'">{{scope.row.amount}}</span>
+					  <span v-if="scope.row.productTypeName =='求购'">{{scope.row.startAmount}}~{{scope.row.endAmount}}</span>
+					</template>
+				</el-table-column>
 				<el-table-column prop="address" label="区域"></el-table-column>
-				<el-table-column prop="showUserName" label="发布人"></el-table-column>
 				<el-table-column prop="userTypeName" label="身份"></el-table-column>
 				<el-table-column prop="createDate" label="发布日期">
-					<template scope="scope">
+					<template slot-scope="scope">
 						{{scope.row.createDate|timeFilter}}
 					</template>
 				</el-table-column>
+                <el-table-column prop="productTags" label="标签" width="170">
+	                	<template slot-scope="scope">
+	                		  <button v-for="item in scope.row.productTags" class="tag">{{item.tagName}}</button>
+	                	</template>
+                </el-table-column>
 				<el-table-column prop="timeout" label="下架剩余天数"></el-table-column>
-				<el-table-column label="操作">
-					<template scope="scope">
-						<el-button type="text" @click="goDetail(scope.row.id)">详情</el-button>
-						<el-button type="text" @click="deleteRow(scope.row.id)">下架</el-button>
+				<el-table-column label="状态">
+					<template slot-scope="scope">
+							{{scope.row.timeout>0?"已上架":"已下架"}}
+					</template>
+				</el-table-column>
+				<el-table-column prop="mobile" label="手机号"></el-table-column>
+				<el-table-column prop="showUserName" label="发布人">
+					<template slot-scope="scope">
+            			<a style="text-decoration: underline; cursor: pointer;color: #20A0FF;" @click="goto(scope.row, 'supplyDemand')">{{scope.row.showUserName}}</a>
+					</template>
+				</el-table-column>
+				<el-table-column label="操作" fixed="right" width="250">
+					<template slot-scope="scope">
+						<el-button type="text" @click="goDetail(scope.row)">详情</el-button>
+						<el-button type="text" @click="openTag(scope.row)">设置标签</el-button>
+						<el-button type="text" v-if="scope.row.timeout>0" @click="deleteRow(scope.row.elasticId)">下架</el-button>
+						<el-button type="text" v-if="scope.row.orderWeight <= 0" @click="stickTop(scope.row)">置顶</el-button>
+						<el-button type="text" v-else @click="cancelStickTop(scope.row)">取消置顶</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
 			<!--分页-->
-			 <el-pagination class="pageNation" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="1"
+			 <el-pagination class="pageNation" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pNum"
                                :page-sizes="[10,15,20,25,30]" :page-size="pSize" layout="total,sizes,prev,pager,next,jumper"
                                :total="pageData.totalElements" v-show="pageData.totalElements>10"></el-pagination>
 		</div>
@@ -82,17 +130,20 @@
 				<el-form-item label="详细规格：">
 					<span v-for="item in supplyForm.productAttrs" class="attr-span">{{item.attrName+':'+item.attrValue}}</span>
 				</el-form-item>
-				<el-form-item label="数量(斤)：">
-					<el-input v-model="supplyForm.weight" :disabled="true"></el-input>
+				<el-form-item label="供应量：">
+					<!-- <el-input v-model="supplyForm.weight" :disabled="true"></el-input> -->
+					<span class="detailP">{{supplyForm.weight}} {{supplyForm.weightUnit}}</span>
 				</el-form-item>
 				<el-form-item label="单价(元/斤)：">
-					<el-input v-model="supplyForm.amount" :disabled="true"></el-input>
+					<el-input v-model="supplyForm.amount" :disabled="true" v-if="supplyForm.productTypeName =='供应'"></el-input>
+					<p class="detailP" v-if="supplyForm.productTypeName =='求购'">{{supplyForm.startAmount}}~{{supplyForm.endAmount}}</p>
 				</el-form-item>
 				<el-form-item label="区域：">
 					<el-input v-model="supplyForm.address" :disabled="true"></el-input>
 				</el-form-item>
 				<el-form-item label="发布日期：">
-					<el-input v-model="supplyForm.createDate" :disabled="true"></el-input>
+					<!-- <el-input v-model="supplyForm.createDate" :disabled="true"></el-input> -->
+					<p class="detailP" >{{supplyForm.createDate|timeFilter}}</p>
 				</el-form-item>
 				<el-form-item label="下架剩余天数：">
 					<el-input v-model="supplyForm.timeout" :disabled="true"></el-input>
@@ -101,13 +152,23 @@
 					<el-input v-model="supplyForm.remark" :disabled="true"></el-input>
 				</el-form-item>
 				<el-form-item label="图片：">
-					<img v-for="item in supplyForm.productImages" :src="item.imageUrl" class="org-img" />
+					<img v-for="item in supplyForm.productImages" style="margin: 5px;" :src="item.imageUrl+'?x-oss-process=style/_list'" />
 				</el-form-item>
 				<el-form-item class="btnGroup">
 					<el-button @click="backTablePage">返回</el-button>
 				</el-form-item>
 			</el-form>
 		</div>
+		
+            <el-dialog title="选择标签" :visible.sync="tagDialogVisible" class="template-dialog">
+            		<div>
+            			<button v-for="(item,index) in tagList" :class="[item.chosen ? 'tag' : 'tag-gry']" @click="toggleTag(index)">{{item.tagName}}</button>
+            		</div>
+				  <div slot="footer" class="dialog-footer">
+				  		<el-button type="primary" @click="setTag()">确 定</el-button>
+				    	<el-button @click="initialPage()">取 消</el-button>
+				  </div>
+			</el-dialog>
 		<!--新增页面-->
 		<div v-if="addFlag">
 			<el-form ref="addForm" class="myformDetail" :model="addForm">
@@ -118,7 +179,7 @@
 					</el-select>
 				</el-form-item>
 				<el-form-item label="客户：" prop="userId">
-					<el-select v-model="addForm.userId" placeholder="请选择代发客户">
+					<el-select v-model="addForm.userId" placeholder="请选择代发客户" filterable>
 						<el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"></el-option>
 					</el-select>
 				</el-form-item>
@@ -210,7 +271,7 @@
 						<div class="attr-title">{{attr.goodsAttrName}}<span v-if="attr.mustRequired">(必选项)</span></div>
 						<div>
 							<el-radio-group v-model="radioForm[attr.attrId]">
-								<el-radio-button v-for="value in attr.attributeValueVOS" :label="value.id">{{value.attrValue}}</el-radio-button>
+								<el-radio-button v-for="value in attr.attributeValueVOS" :key="value.id" :label="value.id">{{value.attrValue}}</el-radio-button>
 							</el-radio-group>
 						</div>
 					</li>
@@ -240,7 +301,13 @@
 				viewFlag: false, //详情
 				addFlag: false, //表单新增标识
 				showFlag: true, //true 显示table页; false 显示form页
-				s_keyWord: null,
+				productType: null,
+				s_skuName: null,
+				s_address: null,
+				s_underCarriage: null,
+				s_userName: null,
+				s_startDate: null,
+				s_endDate: null,
 				s_orderType:null,
 				s_phone:null,
 				loadCircle: false, //加载显示
@@ -288,7 +355,13 @@
 				attrList: [], //属性列表
 				radioForm: {}, //选中属性绑定
 				isSale:false,//是否为供应类型
-				isBuy:false
+				isBuy:false,
+				//设置标签
+                tagDialogVisible:false,//选择标签显示
+                tagList:[
+                	{id:null,tagName:'易果推荐',chosen:false,className:'YGTJ'}
+                ],
+                setTagId:'',
 			}
 		},
 		activated() {
@@ -298,6 +371,9 @@
 			vm.initUser();
 			vm.initAttr();
 			vm.getCityList();
+			setTimeout(function(){
+				vm.checkFromWhistleBlowing(vm,'goDetail','elasticId');//检查是否从交收单过来
+			},1)
 		},
 		deactivated() {
 			var vm = this;
@@ -324,21 +400,82 @@
 					vm.$message.error('上传图片失败!');
 					return false;
 				});
-
-				//上传图片yd
-				/*return encrypt.ossUpload(vm.storeAs,data.file,vm.accessKeyId,vm.accessKeySecret,vm.securityToken,function(result){
-				 console.log(result);
-				 vm.$message.success('上传图片成功!');
-				 vm.newsForm.url=vm.apiUrl.common.alyserverUrl+result.name;
-				 vm.imageUrl=vm.apiUrl.common.alyserverUrl+result.name;
-				 return true;
-				 },function(err){
-				 console.log("upload image  failed by oss,"+ err);
-				 vm.$message.success('上传图片失败!');
-				 return false;
-				 })*/
 			},
 
+            //弹出标签选择框
+            openTag(row){
+            		var vm = this;
+            		vm.tagList = [
+	                	{tagName:'易果推荐',chosen:false,className:'YGTJ'}
+	                ];
+            		for(let i in row.productTags){
+            			for(let j in vm.tagList){
+            				if(row.productTags[i].tagName==vm.tagList[j].tagName){
+            					vm.tagList[j].chosen = true;
+            				}
+                  /*  else{
+                      vm.tagList[j].chosen = false;
+            					vm.tagList[j].id = null;
+                    }*/
+            			}
+            		}
+            		vm.tagDialogVisible = true;
+            		vm.setTagId = row.elasticId;
+
+            },
+            toggleTag(index){
+            		var vm = this;
+            		vm.tagList[index].chosen = vm.tagList[index].chosen?false:true;
+            },
+            stickTop(row){
+				let vm = this;
+				let params = {
+					url: vm.apiUrl.supplyDemand.stickTop,
+					data: {
+						id: row.id
+					}
+				}
+				let callback = function(){
+					vm.$message.success("置顶成功")
+					vm.getTableList()
+				}
+				vm.ax.post(params, callback);
+            },
+            cancelStickTop(row){
+				let vm = this;
+				let params = {
+					url: vm.apiUrl.supplyDemand.cancelStickTop,
+					data: {
+						id: row.id
+					}
+				}
+				let callback = function(){
+					vm.$message.success("取消置顶成功")
+					vm.getTableList()
+				}
+				vm.ax.post(params, callback);
+            },
+            setTag(){
+        		var vm = this;
+        		var productTags = [];
+        		vm.tagList.forEach(function(e){
+        			if(e.chosen){
+        				productTags.push({tagName:e.tagName,className:e.className});
+        			}
+        		});
+        		let params={
+                    url:vm.apiUrl.supplyDemand.setTag,
+                    data:{
+                        elasticId:vm.setTagId,
+                        productTags:productTags
+                    }
+                }
+                vm.ax.post(params,vm.setTagOk);
+            },
+            setTagOk(){
+            		this.initialPage();
+            		this.getTableList();
+            },
 			//校验图片格式
 			beforeLoad(){
 				var vm=this;
@@ -362,23 +499,27 @@
 				return true;
 			},
 			//查看详情
-			goDetail(id) {
-				var vm = this;
+			goDetail(row) {
+				let vm = this;
 				vm.viewFlag = true;
 				vm.thirdTit = '详情';
 				vm.breadflag = true;
 				let params = {
 					url: vm.apiUrl.supplyDemand.tableDetailUrl,
 					data: {
-						elasticId: id
+						elasticId: row.elasticId
 					}
 				}
 				vm.ax.post(params, vm.tableDetailCb);
 			},
 			tableDetailCb(data) {
-				var vm = this;
-				vm.showFlag = false; //显示form 隐藏table
-				vm.supplyForm = data.data;
+				let vm = this;
+            	if(!data.data){
+            		vm.$message.error("数据不存在");
+            	}else{
+					vm.showFlag = false; //显示form 隐藏table
+					vm.supplyForm = data.data;
+				}
 			},
 			goAdd() {
 				var vm = this;
@@ -399,15 +540,15 @@
 						}
 					};
 					vm.ax.post(params, vm.deleteOk);
-				})
+				}).catch(() => {});
 			},
 			deleteOk() {
 				var vm = this;
 				vm.$message({
-					message: '下架成功，请稍后刷新查看！',
+					message: '下架成功！',
 					type: 'success'
 				});
-//				vm.getTableList();
+				vm.getTableList();
 			},
 			showAttrDialog(){//弹出选择规格
 				var vm = this;
@@ -539,6 +680,7 @@
 				vm.addFlag = false; //表单只读标识
 				vm.showFlag = true; //显示列表，隐藏表单
 				vm.breadflag = false;
+				vm.tagDialogVisible = false;
 				vm.title = '供求管理';
 			},
 			//页码改变
@@ -559,8 +701,13 @@
 				let params = {
 					url: vm.apiUrl.supplyDemand.tableUrl,
 					data: {
-						keyWord: vm.s_keyWord,
-						orderType: vm.s_orderType,
+						skuName: vm.s_skuName,
+						address: vm.s_address,
+						userName: vm.s_userName,
+						startDate: vm.s_startDate,
+						endDate: vm.s_endDate,
+						underCarriage: vm.s_underCarriage,
+						productType: vm.s_orderType,
 						pageNumber: vm.pNum, //页码
 						pageSize: vm.pSize
 					}
@@ -572,6 +719,30 @@
 				vm.pageData = data.data;
 				vm.dataList = data.data.rows;
 			},
+            //导出
+            goExport(){
+            	let vm = this;
+                var data = {
+						skuName: vm.s_skuName,
+						address: vm.s_address,
+						userName: vm.s_userName,
+						startDate: vm.moment(vm.s_startDate).format('YYYY-MM-DD'),
+						endDate: vm.moment(vm.s_endDate).format('YYYY-MM-DD'),
+						underCarriage: vm.s_underCarriage,
+						productType: vm.s_orderType
+                };
+                var form = document.getElementById("form");
+                var innerHtml = '';
+                for(var i in data){
+                	innerHtml += '<input name="' + i + '" class="forminput' + i + '"/>';
+                }
+                form.innerHTML = innerHtml;
+                for(var i in data){
+                	document.querySelector(".forminput"+i).value = data[i];
+                }
+                form.setAttribute("action", vm.apiUrl.supplyDemand.export);
+                form.submit();
+            },
 			initUser() {
 				var vm = this;
 				let params = {
@@ -673,7 +844,12 @@
 			//重置
 			onReset() {
 				var vm = this;
-				vm.s_keyWord = null;
+				vm.s_skuName = null;
+				vm.s_address = null;
+				vm.s_userName = null;
+				vm.s_startDate = null;
+				vm.s_endDate = null;
+				vm.s_underCarriage = null;
 				vm.s_orderType = null;
 				vm.getTableList();
 			}
@@ -684,26 +860,44 @@
 	}
 </script>
 <style scoped="scoped">
+    .tag {
+    	border: 1px solid rgba(32,160,255,.2);
+    	padding: 3px 5px;
+    	margin-bottom: 5px;
+    	border-radius: 4px;
+    	background-color: rgba(32,160,255,.1);
+    	color: #20a0ff;
+    	margin-right: 5px;
+    }
+    .tag-gry {
+    	border: 1px solid transparent;
+    	padding: 3px 5px;
+    	border-radius: 4px;
+    	margin-bottom: 5px;
+    	background-color: #D9D9D9;
+    	color: #888;
+    	margin-right: 5px;
+    }
 	.attr-span {
 		color: #000;
 		margin-left: 9px;
 		/*white-space:nowrap;*/
 	}
-	
+
 	.org-img {
 		max-width: 300px;
 		max-height: 300px;
 		margin-right: 10px;
 		vertical-align: top;
 	}
-	
+
 	.attr-title {
 		line-height: 30px;
 		margin: 10px 0;
 		font-size: 16px;
 		color: #000000;
 	}
-	
+
 	.title {
 		color: #000000;
 		margin-right: 20px;
@@ -714,9 +908,13 @@
 		position: absolute;
 		left: 0;
 	}
-	
+
 	.long-form .el-form-item .el-form-item__content {
 		position: relative;
 		width: calc(100% - 130px) !important;
+	}
+	.long-form .detailP{
+		padding:0 15px;
+		color:#000;
 	}
 </style>

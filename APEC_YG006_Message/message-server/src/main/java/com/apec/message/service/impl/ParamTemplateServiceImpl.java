@@ -20,6 +20,9 @@ import com.apec.message.service.ParamTemplateService;
 import com.apec.message.util.SnowFlakeKeyGen;
 import com.apec.message.vo.ParamTemplateVO;
 
+/**
+ * @author xxx
+ */
 @Service
 public class ParamTemplateServiceImpl implements ParamTemplateService{
 	
@@ -33,7 +36,7 @@ public class ParamTemplateServiceImpl implements ParamTemplateService{
 	private SnowFlakeKeyGen idGen;
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public boolean addParams(ParamTemplateVO paramsVO){
 		ParamTemplate params = new ParamTemplate();
 		params.setId(idGen.nextId());
@@ -50,8 +53,8 @@ public class ParamTemplateServiceImpl implements ParamTemplateService{
 	@Override
 	public PageDTO<ParamTemplateVO> findAll(PageRequest pageRequest) {
 		Page<ParamTemplate> paramsList = paramsDAO.findAll(pageRequest);
-		PageDTO<ParamTemplateVO> response = new PageDTO<ParamTemplateVO>();
-		List<ParamTemplateVO> paramsVOList = new LinkedList<ParamTemplateVO>();
+		PageDTO<ParamTemplateVO> response = new PageDTO<>();
+		List<ParamTemplateVO> paramsVOList = new LinkedList<>();
 		paramsList.forEach(baseInfo->{
 			ParamTemplateVO paramsVO = new ParamTemplateVO();
 			BeanUtil.copyProperties(baseInfo, paramsVO);

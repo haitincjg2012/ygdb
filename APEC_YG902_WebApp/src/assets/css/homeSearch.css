@@ -29,15 +29,20 @@ p {
   /* IE 10 */
   display: flex;
 }
-.z-header-T1 .z-write {
+.z-header-T1 .retT img {
+  width: 0.55rem;
+  height: 0.975rem;
+  vertical-align: text-top;
+}
+.z-write {
   width: 13rem;
   height: 1.5rem;
   line-height: 1.5rem;
   margin-left: 1rem;
-  border-radius: 0.75rem;
+  border-radius: 0.2rem;
   background-color: #fff;
 }
-.z-header-T1 .z-write input {
+.z-write input {
   width: 10.5rem;
   font-size: 0.75rem;
   color: #323232;
@@ -50,7 +55,7 @@ p {
   height: 1.5rem;
   vertical-align: top;
 }
-.z-header-T1 .z-write .x-del {
+.z-write .x-del {
   display: inline-block;
   height: 1.5rem;
   width: 0.7rem;
@@ -58,12 +63,7 @@ p {
   background-size: 0.7rem 0.7rem;
   vertical-align: top;
 }
-.z-header-T1 .retT img {
-  width: 0.55rem;
-  height: 0.975rem;
-  vertical-align: text-top;
-}
-.z-header-T1 .z-s {
+.z-s {
   width: 2.5rem;
   height: 1.5rem;
   font-size: 0.75rem;
@@ -75,7 +75,7 @@ p {
   text-align: center;
 }
 .z-column-com {
-  width: 17.5rem;
+  width: 17.75rem;
   padding: 0.5rem 0.5rem;
 }
 .z-column-com .z-text-com {
@@ -108,4 +108,79 @@ p {
   font-size: 0.75rem;
   border-radius: 0.25rem;
   background-color: #f4f4f4;
+}
+.c-history {
+  width: 18.75rem;
+}
+.c-history .z-text-com {
+  padding: 0.5rem;
+  font-size: 0.75rem;
+  color: #323232;
+  border-bottom: 0.05rem solid #f4f4f4;
+}
+.c-search {
+  padding-top: 0.35rem;
+  width: 17rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-s-blank {
+  width: 18.75rem;
+  height: 0.5rem;
+  background: #f4f4f4;
+}
+.c-history-item {
+  padding: 0 0.5rem;
+  width: 17.75rem;
+  height: 2.3rem;
+  line-height: 2.3rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  border-bottom: 0.05rem solid #f4f4f4;
+}
+.c-h-item-icon {
+  width: 1rem;
+}
+.c-h-item-icon img {
+  width: 0.85rem;
+}
+.c-h-item-text {
+  margin-left: 0.75rem;
+  width: 15.75rem;
+  font-size: 0.75rem;
+  color: #646464;
+}
+.c-h-item-del {
+  width: 1rem;
+}
+.c-h-item-del img {
+  width: 0.3rem;
+}
+.c-history-del {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #646464;
+  border-bottom: 0.05rem solid #f4f4f4;
+}
+.li-com-three {
+  height: 2.3rem;
+  line-height: 2.3rem;
 }

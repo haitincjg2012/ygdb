@@ -7,6 +7,7 @@ import com.dangdang.ddframe.job.lite.api.listener.AbstractDistributeOnceElasticJ
 
 /**
  * AbstractDistributeOnceElasticJobListener --> 在分布式作业中只执行一次的监听器.
+ * @author xxx
  */
 public class SimpleDistributeListener extends AbstractDistributeOnceElasticJobListener
 {
@@ -23,14 +24,20 @@ public class SimpleDistributeListener extends AbstractDistributeOnceElasticJobLi
         this.completedTimeoutMilliseconds = completedTimeoutMilliseconds;
     }
 
-    // 最后一个定时任务执行前
+    /**
+     * // 最后一个定时任务执行前
+     * @param shardingContexts shardingContexts
+     */
     @Override
     public void doBeforeJobExecutedAtLastStarted(final ShardingContexts shardingContexts)
     {
         logger.info("doBeforeJobExecutedAtLastStarted:" + shardingContexts);
     }
 
-    // 最后一个定时任务执行后
+    /**
+     * // 最后一个定时任务执行后
+     * @param shardingContexts shardingContexts
+     */
     @Override
     public void doAfterJobExecutedAtLastCompleted(final ShardingContexts shardingContexts)
     {

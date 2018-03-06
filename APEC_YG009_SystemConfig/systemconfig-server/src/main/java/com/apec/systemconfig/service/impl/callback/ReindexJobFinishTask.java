@@ -13,6 +13,7 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 
 /**
  * Created by wubi on 2017/8/14.
+ * @author wubi
  */
 @Component
 public class ReindexJobFinishTask implements ListenableFutureCallback<ResultData> {

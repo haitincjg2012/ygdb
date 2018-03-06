@@ -1,0 +1,17 @@
+.c-pictureOriginal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: black;
+}
+.c-picture-pos {
+  width: 100%;
+  height: 100%;
+  line-height: 33.35rem;
+}
+.c-pictureOriginal-img {
+  width: 18.75rem;
+  vertical-align: middle;
+}

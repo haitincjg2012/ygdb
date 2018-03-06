@@ -1,0 +1,100 @@
+.c-znw-goods {
+  padding: 0 0.5rem;
+  border-bottom: 0.05rem solid #f4f4f4;
+}
+.c-znw-goods .c-znw-goods-com {
+  width: 17.75rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-znw-goods .c-goods-title {
+  height: 1.8rem;
+  line-height: 1.8rem;
+}
+.c-znw-goods .c-goods-sku {
+  width: 10.25rem;
+  color: #323232;
+  font-size: 0.8rem;
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.c-znw-goods .c-goods-space {
+  width: 1rem;
+}
+.c-znw-goods .c-gmc-goods-source {
+  width: 2.75rem;
+}
+.c-znw-goods .c-gmc-goods-source span {
+  padding: 0 0.1rem;
+  color: #fff;
+  font-size: 0.6rem;
+  background-color: #FF4535;
+  border: 0.05rem solid #ff4535;
+  border-radius: 0.1rem;
+  vertical-align: 0.1rem;
+}
+.c-znw-goods .c-gmc-goods-pz {
+  width: 2.75rem;
+}
+.c-znw-goods .c-gmc-goods-pz span {
+  padding: 0 0.1rem;
+  color: #ff4535;
+  font-size: 0.6rem;
+  border-radius: 0.1rem;
+  border: 0.05rem solid #ff4535;
+  vertical-align: 0.1rem;
+}
+.c-znw-goods .c-gmc-goods-weight {
+  width: 11.25rem;
+  line-height: 1.2rem;
+  color: #ff4535;
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.c-znw-goods .c-goods-w-num {
+  font-size: 0.9rem;
+}
+.c-znw-goods .c-goods-w-unit {
+  font-size: 0.8rem;
+}
+.c-znw-goods .c-gmc-goods-price {
+  width: 6.5rem;
+  font-size: 0.8rem;
+  color: #ff4535;
+}
+.c-znw-goods .c-goods-xq {
+  padding: 0.25rem 0;
+}
+.c-znw-goods .c-goods-xq-com {
+  height: 1.45rem;
+  line-height: 1.45rem;
+}
+.c-znw-goods .c-goods-i-icon {
+  width: 1rem;
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 0.7rem;
+}
+.c-znw-goods .c-goods-name-icon {
+  background-image: url("../img/coldIcon.png");
+}
+.c-znw-goods .c-goods-address-icon {
+  background-image: url("../img/addressIcon.png");
+}
+.c-znw-goods .c-goods-xq-text {
+  font-size: 0.75rem;
+  color: #969696;
+}

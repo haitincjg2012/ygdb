@@ -15,6 +15,7 @@ import java.io.IOException;
  * 内容摘要：
  * 创建日期：2017-01-06 10:41
  * 编码作者：zhaolei
+ * @author xxx
  */
 public abstract class BaseClientHandler implements ChannelAwareMessageListener {
     private static Log log = LogFactory.getLog(BaseClientHandler.class);
@@ -55,6 +56,11 @@ public abstract class BaseClientHandler implements ChannelAwareMessageListener {
         }
     }
 
+    /**
+     * 发送消息
+     * @param message message
+     * @return MqHandlerResult 结果
+     */
     public abstract MqHandlerResult handleMessage(Message message);
 
     public MqHandlerResult reHandler(Message message){

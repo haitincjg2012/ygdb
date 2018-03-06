@@ -1,0 +1,38 @@
+.c-onePiece-content {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  width: 17.25rem;
+  height: 8rem;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  background: url("../img/warehouseBg.png") no-repeat center;
+  background-size: 100%;
+}
+.c-onePiece-content .c-subtitle {
+  padding: 0.9rem 0 0 1rem;
+  height: 2.1rem;
+  line-height: 2.1rem;
+  font-size: 0.9rem;
+  color: #fff;
+}
+.c-onePiece-content .c-text-com {
+  margin-left: 1rem;
+  height: 1.55rem;
+  line-height: 1.55rem;
+  font-size: 0.8rem;
+  color: #fff;
+}
+.c-onePiece-content .c-author {
+  margin-right: 1rem;
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.c-onePiece-content .c-address {
+  margin-right: 1rem;
+}

@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * 重建索引job
  * Created by wubi on 2017/9/29.
+ * @author wubi
  */
 @Configuration
 public class ReindexJobConfig extends ElasticJobConfig {

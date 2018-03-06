@@ -15,6 +15,9 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 import com.apec.framework.common.Constants;
 
+/**
+ * @author xxx
+ */
 @Configuration
 public class AppConfig
 {

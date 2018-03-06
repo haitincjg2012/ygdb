@@ -1,0 +1,85 @@
+.c-edit {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: #f4f4f4;
+}
+.c-header-edit {
+  width: 16rem;
+  font-size: 0.9rem;
+  color: #222;
+  text-align: center;
+}
+.c-edit-content-com {
+  padding: 0 0.5rem;
+  width: 17.75rem;
+  height: 2.2rem;
+  line-height: 2.2rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  -moz-flex-flow: row wrap;
+  flex-flow: row wrap;
+  background-color: #fff;
+}
+.c-edit-line {
+  width: 17.75rem;
+  height: 0.05rem;
+  background-color: #f4f4f4;
+}
+.c-edit-c-first-com {
+  width: 3.75rem;
+  font-size: 0.8rem;
+  color: #323232;
+}
+.c-edit-p-number {
+  width: 11.75rem;
+  color: #323232;
+  direction: rtl;
+}
+.c-edit-p-number input {
+  width: 5rem;
+  height: 1.35rem;
+  line-height: 1.35rem;
+  text-align: center;
+  vertical-align: 0.2rem;
+  direction: ltr;
+}
+.c-edit-w-number {
+  width: 11.75rem;
+  color: #323232;
+}
+.c-edit-w-number input {
+  margin-left: 6.75rem;
+  width: 5rem;
+  height: 1.35rem;
+  text-align: center;
+  vertical-align: 0.2rem;
+}
+.c-edit-c-second-com {
+  width: 2.25rem;
+  font-size: 0.8rem;
+  color: #323232;
+}
+.c-edit-ok {
+  position: fixed;
+  bottom: 0;
+  text-align: center;
+  width: 18.75rem;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  font-size: 0.8rem;
+  color: #fff;
+  background-color: #2FCAA7;
+}

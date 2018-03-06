@@ -2,6 +2,7 @@ package com.apec.framework.common.constants;
 
 /**
  * Login Constants
+ * @author xxx
  */
 public interface LoginConstants {
     

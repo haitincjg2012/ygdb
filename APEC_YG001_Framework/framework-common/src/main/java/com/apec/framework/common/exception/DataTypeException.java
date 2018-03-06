@@ -5,7 +5,8 @@ package com.apec.framework.common.exception;
  * 类 名 称： DataTypeException
  * 内容摘要: 数据类型异常
  * 完成日期： 2016-07-25
- * 编码作者： 
+ * 编码作者：
+ * @author xx
 */
 public class DataTypeException extends ApecRuntimeException
 {
@@ -27,6 +28,7 @@ public class DataTypeException extends ApecRuntimeException
         super(errorCode, message, e);
     }
 
+    @Override
     public String toString()
     {
         return super.toString();

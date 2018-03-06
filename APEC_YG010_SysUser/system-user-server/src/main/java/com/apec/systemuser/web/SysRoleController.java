@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * @author xx
+ */
 @RestController
 @RequestMapping(value = "sysRole")
 public class SysRoleController extends MyBaseController
@@ -29,19 +32,11 @@ public class SysRoleController extends MyBaseController
 
     /**
      * 多种情况列表分页查询（条件可为空）
-     * @param json
-     * {
-     *      (like)name，
-     *      (eq)mobile，
-     *      (eq)orgCode，
-     *      (like)loginName
-     * }
-     * @return
      */
     @RequestMapping(value = "searchList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultData<PageDTO<SysRoleVO>> searchList(@RequestBody String json)
     {
-        ResultData<PageDTO<SysRoleVO>> resultData = new ResultData<PageDTO<SysRoleVO>>();
+        ResultData<PageDTO<SysRoleVO>> resultData = new ResultData<>();
         try
         {
             SysRoleVO dto = getFormJSON(json, SysRoleVO.class);
@@ -60,13 +55,11 @@ public class SysRoleController extends MyBaseController
 
     /**
      * 根据条件查询
-     * @param json
-     * @return
      */
     @RequestMapping(value = "/selectAll", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultData<List<SysRoleVO>> selectAll(@RequestBody String json)
     {
-        ResultData<List<SysRoleVO>> resultData = new ResultData<List<SysRoleVO>>();
+        ResultData<List<SysRoleVO>> resultData = new ResultData<>();
         try
         {
             SysRoleVO dto = getFormJSON(json, SysRoleVO.class);
@@ -84,16 +77,11 @@ public class SysRoleController extends MyBaseController
 
     /**
      * 角色信息详情
-     * @param json
-     * {
-     *      id
-     * }
-     * @return
      */
     @RequestMapping(value = "/detail", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultData<SysRoleVO> detail(@RequestBody String json)
     {
-        ResultData<SysRoleVO> resultData = new ResultData<SysRoleVO>();
+        ResultData<SysRoleVO> resultData = new ResultData<>();
         try
         {
             SysRoleVO dto = getFormJSON(json, SysRoleVO.class);
@@ -118,20 +106,11 @@ public class SysRoleController extends MyBaseController
 
     /**
      * 新增角色
-     * @param json
-     * {
-     *      orgCode,
-     *      name,
-     *      mobile,
-     *      loginName,
-     *      password
-     * }
-     * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultData<SysRoleVO> add(@RequestBody String json)
     {
-        ResultData<SysRoleVO> resultData = new ResultData<SysRoleVO>();
+        ResultData<SysRoleVO> resultData = new ResultData<>();
         try
         {
             SysRoleVO dto = getFormJSON(json, SysRoleVO.class);
@@ -154,16 +133,11 @@ public class SysRoleController extends MyBaseController
 
     /**
      * 更新角色信息
-     * @param json
-     * {
-     *      id
-     * }
-     * @return
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultData<SysRoleVO> update(@RequestBody String json)
     {
-        ResultData<SysRoleVO> resultData = new ResultData<SysRoleVO>();
+        ResultData<SysRoleVO> resultData = new ResultData<>();
         try
         {
             SysRoleVO dto = getFormJSON(json, SysRoleVO.class);
@@ -186,16 +160,11 @@ public class SysRoleController extends MyBaseController
 
     /**
      * 软删除角色信息
-     * @param json
-     * {
-     *      id
-     * }
-     * @return
      */
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ResultData<SysRoleVO> delete(@RequestBody String json)
     {
-        ResultData<SysRoleVO> resultData = new ResultData<SysRoleVO>();
+        ResultData<SysRoleVO> resultData = new ResultData<>();
         try
         {
             SysRoleVO dto = getFormJSON(json, SysRoleVO.class);

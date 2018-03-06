@@ -10,16 +10,15 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Enums {
 
-    private static final ConcurrentHashMap<Class, HashMap<String, Enum>> enumCache = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Class, HashMap<String, Enum>> ENUM_CACHE = new ConcurrentHashMap<>();
 
-    private static final ConcurrentHashMap<Class, List<?>> listAllCache = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Class, List<?>> LIST_ALL_CACHE = new ConcurrentHashMap<>();
 
     /**
      * 根据任意Enum的Ordinal获取值
-     * @param <T>
-     * @param enumType
-     * @param ordinal
-     * @return
+     * @param enumType  enumType
+     * @param ordinal ordinal
+     * @return T T
      */
     public static <T extends Enum<T> & BaseEnum> T getEnumByOrdinal(Class<T> enumType, int ordinal) {
         if (enumType == null || ordinal < 0) {
@@ -47,11 +46,9 @@ public class Enums {
 
     /**
      * get enum by key
-     *
-     * @param <T>
-     * @param enumType
-     * @param key
-     * @return
+     * @param enumType enumType
+     * @param key key
+     * @return <T> <T>
      */
     public static <T extends Enum<T> & BaseEnum> T getEnumByKey(Class<T> enumType, String key) {
         if (enumType == null || key == null) {
@@ -69,10 +66,10 @@ public class Enums {
         }
 
         T result = null;
-        Map<String, Enum> cache = enumCache.get(enumType);
+        Map<String, Enum> cache = ENUM_CACHE.get(enumType);
         if (cache == null) {
             EnumSet set = EnumSet.allOf(enumType);
-            HashMap<String, Enum> newEnum = new HashMap<>();
+            HashMap<String, Enum> newEnum = new HashMap<>(16);
             for (Object object : set) {
                 T t = (T) object;
                 newEnum.put(t.getKey(), t);
@@ -80,7 +77,7 @@ public class Enums {
                     result = t;
                 }
             }
-            enumCache.putIfAbsent(enumType, newEnum);
+            ENUM_CACHE.putIfAbsent(enumType, newEnum);
         } else {
             result = (T) cache.get(key);
         }
@@ -102,10 +99,11 @@ public class Enums {
             throw new IllegalArgumentException("class " + enumType.getName() + " must be an implementation of BaseEnum.");
         }
 
-        T result = null;
+        T result;
         try {
             result = T.valueOf(enumType, name);
         } catch (IllegalArgumentException e) {
+            return null;
         }
         return result;
     }
@@ -127,7 +125,7 @@ public class Enums {
 //            throw new IllegalArgumentException("class " + enumType.getName() + " must be a subclass of Enum.");
 //        }
 //
-//        List<T> result = (List<T>) listAllCache.get(enumType);
+//        List<T> result = (List<T>) LIST_ALL_CACHE.get(enumType);
 //        if (result == null) {
 //            result = new ArrayList<>();
 //            EnumSet set = EnumSet.allOf(enumType);
@@ -136,7 +134,7 @@ public class Enums {
 //                result.add(t);
 //            }
 //            result = Collections.unmodifiableList(result);
-//              listAllCache.putIfAbsent(enumType, result);
+//              LIST_ALL_CACHE.putIfAbsent(enumType, result);
 //        }
 //
 //        return result;

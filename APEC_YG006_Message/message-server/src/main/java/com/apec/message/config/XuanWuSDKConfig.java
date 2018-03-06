@@ -7,6 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import com.esms.PostMsg;
 import com.esms.common.entity.Account;
 
+/**
+ * @author xxx
+ */
 @Configuration
 public class XuanWuSDKConfig {
 

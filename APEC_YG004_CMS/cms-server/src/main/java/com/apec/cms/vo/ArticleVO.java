@@ -22,6 +22,8 @@ public class ArticleVO extends BaseVO<Long> {
 
     private String channelCode;
 
+    private String channelName;
+
     /**
      * 新闻标题
      */
@@ -40,12 +42,12 @@ public class ArticleVO extends BaseVO<Long> {
     /**
      * 是否含有图片
      */
-    private boolean hasImage;
+    private Boolean hasImage;
 
     /**
      * 是否显示
      */
-    private boolean priority;
+    private Boolean priority;
 
     /**
      * 新闻id
@@ -80,42 +82,19 @@ public class ArticleVO extends BaseVO<Long> {
 
     /**
      * 地址信息
-     *
-     * @return
      */
     private String address;
 
     /**
      * 额外信息
-     *
-     * @return
      */
     private String priv;
 
     /**
-     * 是否为个人发布，默认为平台系统发布
+     * 备注
      */
-    private boolean personPub;
+    private String remark;
 
-    /**
-     * 审核状态
-     */
-    private String auditState;
-
-    /**
-     * 审核通过时间
-     */
-    private Date passDate;
-
-    /**
-     * 发布人头像地址
-     */
-    private String imgUrl;
-
-    /**
-     * 阅读数
-     */
-    private String readNum;
 
 
 }

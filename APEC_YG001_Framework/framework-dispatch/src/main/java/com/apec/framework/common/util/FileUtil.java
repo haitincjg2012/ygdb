@@ -21,13 +21,14 @@ public class FileUtil {
 	private final static Log log = LogFactory.getLog(FileUtil.class);
 	/**
 	 * 下载文件
-	 * @param res
-	 * @param fileName
-	 * @param fileUrl
-	 * @throws FileNotFoundException
+	 * @param res res
+	 * @param fileName 文件名
+	 * @param fileUrl 文件路径
+	 * @throws FileNotFoundException 文件找不到
 	 */
 	public static void downloadFile(HttpServletResponse res, String fileName, String fileUrl) throws FileNotFoundException {
-		InputStream inputStream = new FileInputStream(fileUrl);// 文件的存放路径
+		// 文件的存放路径
+		InputStream inputStream = new FileInputStream(fileUrl);
 		// 设置输出的格式
 		res.reset();
 		res.setContentType("bin");

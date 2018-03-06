@@ -1,0 +1,53 @@
+.c-square {
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  /*支持浏览器: IE11,  Chrome29+, FireFox 20+, Safari加前缀 -webkit-*/
+  -ms-flex-wrap: wrap;
+  -moz-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+.secondSq {
+  width: 11.75rem;
+}
+.threeSq {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+.first {
+  width: 10rem;
+  height: 10rem;
+  padding-top: 0.25rem;
+}
+.first img {
+  width: 100%;
+  height: 100%;
+}
+.three {
+  width: 5.75rem;
+  height: 5.75rem;
+  padding-top: 0.25rem;
+}
+.imgPicCom {
+  width: 5.75rem;
+  height: 5.75rem;
+  vertical-align: text-bottom;
+}
+.wxShare {
+  height: 2.1rem;
+  line-height: 2.1rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #323232;
+}

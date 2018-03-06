@@ -5,6 +5,6 @@ package com.apec.framework.rockmq.vo;
  *
  * @author yirde  2017/6/30.
  */
-public interface IMQBody {
+public interface IMqBody {
 
 }

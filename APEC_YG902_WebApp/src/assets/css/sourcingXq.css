@@ -1,0 +1,68 @@
+.c-sourcing-xq .c-sXq-header {
+  position: relative;
+  top: 0;
+  z-index: 9;
+}
+.c-sourcing-xq .c-sourcing-header {
+  width: 15.75rem;
+  line-height: 2.2rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #323232;
+}
+.c-sourcing-xq .c-pieces-one {
+  position: relative;
+  z-index: 99;
+  background-color: #fff;
+  width: 18.75rem;
+  height: 9rem;
+}
+.c-sourcing-xq .c-sxq-blank {
+  position: relative;
+  z-index: 99;
+  width: 18.75rem;
+  height: 0.5rem;
+  background-color: #f4f4f4;
+}
+.c-sourcing-xq .c-Secondary-title {
+  position: relative;
+  z-index: 99;
+  background-color: #fff;
+  height: 1.85rem;
+  line-height: 1.85rem;
+  font-size: 0.8rem;
+  color: #323232;
+  border-bottom: 0.05rem solid #f4f4f4;
+}
+.c-sourcing-xq .c-Secondary-title:before {
+  content: "";
+  display: inline-block;
+  margin-right: 0.75rem;
+  line-height: 1.85rem;
+  height: 1.1rem;
+  width: 0.35rem;
+  background-color: #02c4b0;
+  vertical-align: -0.25rem;
+}
+.c-sourcing-xq .c-pieces-two {
+  position: fixed;
+  top: 13.7rem;
+  bottom: 2.5rem;
+  right: 0;
+  left: 0;
+}
+.c-sourcing-xq .c-sXq-phone {
+  position: fixed;
+  bottom: 0;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}

@@ -9,6 +9,7 @@ import java.util.Map;
  * 内容摘要：封装页面过来的JSON
  * 完成日期：
  * 编码作者：
+ * @author xxx
  */
 public class PageJSON<T> implements Serializable
 {
@@ -16,9 +17,17 @@ public class PageJSON<T> implements Serializable
 
     private T formJSON = null;
 
-    private Map<String, String> requestParameterMap;// 请求参数
+    private T paramJSON = null;
 
-    private Map<String, Object> requestAttrMap;// 请求属性
+    /**
+     * // 请求参数
+     */
+    private Map<String, String> requestParameterMap;
+
+    /**
+     * // 请求属性
+     */
+    private Map<String, Object> requestAttrMap;
 
     public Map<String, String> getRequestParameterMap()
     {
@@ -48,6 +57,16 @@ public class PageJSON<T> implements Serializable
     public void setFormJSON(T formJSON)
     {
         this.formJSON = formJSON;
+    }
+
+    public T getParamJSON()
+    {
+        return paramJSON;
+    }
+
+    public void setParamJSON(T paramJSON)
+    {
+        this.paramJSON = paramJSON;
     }
 
 }

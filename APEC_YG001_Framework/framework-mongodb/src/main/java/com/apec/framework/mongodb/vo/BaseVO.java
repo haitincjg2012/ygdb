@@ -1,6 +1,7 @@
 package com.apec.framework.mongodb.vo;
 
 import com.apec.framework.common.enumtype.EnableFlag;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -10,6 +11,7 @@ import java.util.Date;
  *
  * @author yirde  2017/10/20.
  */
+@Data
 public class BaseVO<PK extends Serializable> {
 
     private static final long serialVersionUID = -2477722490139503211L;
@@ -34,35 +36,5 @@ public class BaseVO<PK extends Serializable> {
      */
     private Date lastUpdateDate;
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public EnableFlag getEnableFlag() {
-        return enableFlag;
-    }
-
-    public void setEnableFlag(EnableFlag enableFlag) {
-        this.enableFlag = enableFlag;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    public Date getLastUpdateDate() {
-        return lastUpdateDate;
-    }
-
-    public void setLastUpdateDate(Date lastUpdateDate) {
-        this.lastUpdateDate = lastUpdateDate;
-    }
 }

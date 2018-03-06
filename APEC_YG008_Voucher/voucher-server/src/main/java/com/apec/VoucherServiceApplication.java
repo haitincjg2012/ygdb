@@ -10,6 +10,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import com.apec.framework.base.BaseApplication;
 import com.apec.framework.springcloud.SpringCloudConfig;
 
+/**
+ * @author xx
+ */
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients

@@ -1,6 +1,6 @@
 package com.apec.framework.common.tools;
 
-import com.apec.framework.common.util.SpringUtil;
+import com.apec.framework.common.util.BaseSpringUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
  * 内容摘要：基本描述：SpringUtil注入applicationContext
  * 创建日期：2016/10/17
  * 编码作者：
+ * @author xxx
  */
 @Component
 public class ApplicationContextRegister implements ApplicationContextAware
@@ -24,6 +25,6 @@ public class ApplicationContextRegister implements ApplicationContextAware
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
     {
         log.debug( "ApplicationContextRegister.setApplicationContext:applicationContext" + applicationContext );
-        SpringUtil.setApplicationContext( applicationContext );
+        BaseSpringUtil.setApplicationContext( applicationContext );
     }
 }

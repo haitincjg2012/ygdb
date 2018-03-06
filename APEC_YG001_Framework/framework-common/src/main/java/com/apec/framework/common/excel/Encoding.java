@@ -1,7 +1,9 @@
 package com.apec.framework.common.excel;
 
 
-
+/**
+ * @author xxx
+ */
 public class Encoding {
 
 	// Supported Encoding Types
@@ -98,7 +100,8 @@ public class Encoding {
 
 		javaname[GB2312] = "GB2312";
 
-		javaname[HZ] = "ASCII"; // What to put here? Sun doesn't support HZ
+		// What to put here? Sun doesn't support HZ
+		javaname[HZ] = "ASCII";
 
 		javaname[GBK] = "GBK";
 

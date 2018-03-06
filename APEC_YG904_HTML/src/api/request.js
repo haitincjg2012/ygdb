@@ -32,12 +32,12 @@ const ax={
   },
   //post请求-demo
 /*  getPlaceList(){
-    var that = this;
+    var vm = this;
     let params = {
       url: cityUrl,
       data: {}
     }
-    api.post(params,that.sucCb);
+    api.post(params,vm.sucCb);
   },
  sucCb(data){
    this.provinceData = data.data;
@@ -65,7 +65,7 @@ const ax={
 
   }).catch((err)=>{
       //请求失败的回调函数
-      this.failCb(err);
+      this.failCb(err,vm);
     });
   },
 
@@ -78,15 +78,12 @@ const ax={
           if(reg.test(i))
             vm.$data[i]=false;
         }
-
       }
-
     if(data.succeed){
       sucCb(data);
     }
     else{
       if(data.errorCode=='600001'){//登录超时且不是登陆页就跳转到登陆页面
-        console.log(data.errorMsg);
         Message.error("您的登录信息已超时,请重新登录！");
         var reg=new RegExp(/login/);
         var a=reg.exec(router.currentRoute.fullPath);
@@ -96,18 +93,29 @@ const ax={
             query:{redirect:router.currentRoute.fullPath}
           })
         }
+
       }
       else{
         console.log("错误信息："+data.errorMsg);
         Message.error("错误信息："+data.errorMsg);
       }
+
     }
   },
 
   //请求失败的回调函数
-  failCb:function(err){
+  failCb:function(err,vm){
+  //将列表loading字段“loadCircl”置为false
+    var reg=/^loadCir[a-zA-Z0-9]+/;
+      if (vm) {
+        for(var i in vm.$data){
+          if(reg.test(i))
+            vm.$data[i]=false;
+        }
+      }
     console.log("请求失败："+err);
     Message.error("请求失败："+err);
+
   },
   //从一个字符串中解析出json对象
   parse:function(param) {
@@ -116,6 +124,17 @@ const ax={
   //用于从一个对象解析出字符串
   stringify:function(param) {
     return JSON.stringify(param);
+  },
+  
+  //发送图片
+  postImg: function(param) {
+    let config = {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    };
+    return axios.post(param.url, param.data, config);
+
   }
 }
 

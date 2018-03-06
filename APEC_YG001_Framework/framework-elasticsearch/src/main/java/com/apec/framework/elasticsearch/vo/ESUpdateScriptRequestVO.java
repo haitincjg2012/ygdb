@@ -5,9 +5,11 @@ package com.apec.framework.elasticsearch.vo;
  *
  * @author yirde  2017/7/11.
  */
-public class ESUpdateScriptRequestVO {
+public class EsUpdateScriptRequestVO {
 
-    //script
+    /**
+     * script
+     */
     private String script;
 
     public String getScript() {
@@ -18,11 +20,17 @@ public class ESUpdateScriptRequestVO {
         this.script = script;
     }
 
-    public ESUpdateScriptRequestVO(String script) {
+    public EsUpdateScriptRequestVO(String script) {
         this.script = script;
     }
 
-    public static ESUpdateScriptRequestVO  getInstnce(String script){
-        return new ESUpdateScriptRequestVO(script);
+    public static EsUpdateScriptRequestVO  getInstnce(String script){
+        return new EsUpdateScriptRequestVO(script);
     }
+
+    @Override
+    public String toString(){
+       return super.toString();
+    }
+
 }

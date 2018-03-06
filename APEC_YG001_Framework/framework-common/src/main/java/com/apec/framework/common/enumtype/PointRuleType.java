@@ -45,6 +45,10 @@ public enum PointRuleType  implements BaseEnum{
      */
     SINGLE_ONE_SIGN_IN("每天签到",RuleGroup.SIGN_IN),
 
+    /**
+     * 行情竞猜赢积分
+     */
+    SUCCESS_QUOTATION("行情竞猜赢积分",RuleGroup.GAME),
 
     /**
      * 推广
@@ -62,17 +66,17 @@ public enum PointRuleType  implements BaseEnum{
     /**
      * 兑换
      */
-//    EXCHANGE_PRODUCT("积分兑换商品",RuleGroup.EXCHANGE),
+    EXCHANGE_PRODUCT("积分兑换商品",RuleGroup.EXCHANGE),
 
     /**
      * 抽奖
      */
-//    LOTTERY_PRODUCT("抽奖兑换商品",RuleGroup.LOTTERY),
+    LOTTERY_PRODUCT("抽奖兑换商品",RuleGroup.LOTTERY),
 
     /**
      * 触发条件
      */
-//    TRIGGER_DISABLED("触发条件用户禁用",RuleGroup.TRIGGER),
+    TRIGGER_DISABLED("触发条件用户禁用",RuleGroup.TRIGGER),
 
     /**
      * 处罚用户，扣减积分
@@ -82,17 +86,22 @@ public enum PointRuleType  implements BaseEnum{
     DEFAME_OTHERS_GOODS("恶意诋毁他人货品",RuleGroup.PUNISHMENT),
     CUMULATIVE_ASSESSMENT("差评累积",RuleGroup.PUNISHMENT),
     USER_REPORT("举报",RuleGroup.PUNISHMENT),
-    PUBLISH_FALSE_INFORMATION("恶意发布无关信息、虚假信息、虚假单据等",RuleGroup.PUNISHMENT);
+    PUBLISH_FALSE_INFORMATION("恶意发布无关信息、虚假信息、虚假单据等",RuleGroup.PUNISHMENT),
+    REDUCE_VOCHER("您删减了交收单据，系统扣除相应的分数",RuleGroup.PUNISHMENT);
 
     private final String key;
     private final RuleGroup group;
 
-    //规则组+规则S 一次初始化 为常亮
-    private static final Map<RuleGroup, List<PointRuleType>> ruleMap = new HashMap<>();
-    //规则map
-    private static final Map<String, PointRuleType> keyMap = new HashMap<>();
+    /**
+     * 规则组+规则S 一次初始化 为常亮
+     */
+    private static final Map<RuleGroup, List<PointRuleType>> RULE_MAP = new HashMap<>();
+    /**
+     * 规则map
+     */
+    private static final Map<String, PointRuleType> KEY_MAP = new HashMap<>();
 
-    private PointRuleType(String key,RuleGroup group){
+    PointRuleType(String key,RuleGroup group){
         this.key = key;
         this.group = group;
     }
@@ -107,33 +116,33 @@ public enum PointRuleType  implements BaseEnum{
     }
     static {
         for (RuleGroup group : RuleGroup.values()) {
-            ruleMap.put(group, new ArrayList<PointRuleType>());
+            RULE_MAP.put(group, new ArrayList<>());
         }
 
         for (PointRuleType rule : PointRuleType.values()) {
-            ruleMap.get(rule.getGroup()).add(rule);
+            RULE_MAP.get(rule.getGroup()).add(rule);
 
             //key 和 rule 一一对应
-            keyMap.put(rule.getKey(), rule);
+            KEY_MAP.put(rule.getKey(), rule);
         }
     }
 
     /**
      * 根据规则名 获取所有的规则描述
-     * @param RuleGroup
-     * @return
+     * @param ruleGroup RuleGroup
+     * @return List<PointRuleType>
      */
-    public static List<PointRuleType> listByGroup(RuleGroup RuleGroup) {
-        return ruleMap.get(RuleGroup);
+    public static List<PointRuleType> listByGroup(RuleGroup ruleGroup) {
+        return RULE_MAP.get(ruleGroup);
     }
 
     /**
      * 根据规则描述的键获得规则描述
      *
-     * @param key
-     * @return
+     * @param key key
+     * @return PointRuleType
      */
     public static PointRuleType byKey(String key) {
-        return keyMap.get(key);
+        return KEY_MAP.get(key);
     }
 }

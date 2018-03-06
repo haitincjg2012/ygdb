@@ -22,12 +22,14 @@ import java.util.Hashtable;
  */
 
 
-
+/**
+ * @author xx
+ */
 public class EncodingTranslate extends Encoding {
 
 	// Simplfied/Traditional character equivalence hashes
 
-	static protected Hashtable<String, String> s2thash, t2shash;
+	protected static Hashtable<String, String> s2thash, t2shash;
 
 
 
@@ -39,9 +41,9 @@ public class EncodingTranslate extends Encoding {
 
 		// Initialize and load in the simplified/traditional character hashses
 
-		s2thash = new Hashtable<String, String>();
+		s2thash = new Hashtable<>();
 
-		t2shash = new Hashtable<String, String>();
+		t2shash = new Hashtable<>();
 
 
 
@@ -100,9 +102,9 @@ public class EncodingTranslate extends Encoding {
 
 
 
-	public static String convertString(String dataline, int source_encoding,
+	public static String convertString(String dataline, int sourceEncoding,
 
-			int target_encoding) {
+			int targetEncoding) {
 
 		StringBuffer outline = new StringBuffer();
 
@@ -110,7 +112,7 @@ public class EncodingTranslate extends Encoding {
 
 
 
-		if (source_encoding == HZ) {
+		if (sourceEncoding == HZ) {
 
 			dataline = hz2gb(dataline);
 
@@ -118,17 +120,31 @@ public class EncodingTranslate extends Encoding {
 
 		for (lineindex = 0; lineindex < dataline.length(); lineindex++) {
 
-			if ((source_encoding == GB2312 || source_encoding == GBK
+			boolean flag = (sourceEncoding == GB2312 || sourceEncoding == GBK
 
-					|| source_encoding == ISO2022CN_GB || source_encoding == HZ
+					|| sourceEncoding == ISO2022CN_GB || sourceEncoding == HZ
 
-					|| source_encoding == UNICODE
+					|| sourceEncoding == UNICODE
 
-					|| source_encoding == UNICODES || source_encoding == UTF8)
+					|| sourceEncoding == UNICODES || sourceEncoding == UTF8)
 
-					&& (target_encoding == BIG5 || target_encoding == CNS11643
+					&& (targetEncoding == BIG5 || targetEncoding == CNS11643
 
-							|| target_encoding == UNICODET || target_encoding == ISO2022CN_CNS)) {
+					|| targetEncoding == UNICODET || targetEncoding == ISO2022CN_CNS);
+			boolean flag1 = (sourceEncoding == BIG5 || sourceEncoding == CNS11643
+
+					|| sourceEncoding == UNICODET || sourceEncoding == UTF8
+
+					|| sourceEncoding == ISO2022CN_CNS
+
+					|| sourceEncoding == GBK || sourceEncoding == UNICODE)
+
+					&& (targetEncoding == GB2312
+
+					|| targetEncoding == UNICODES
+
+					|| targetEncoding == ISO2022CN_GB || targetEncoding == HZ);
+			if (flag) {
 
 				if (s2thash.containsKey(dataline.substring(lineindex,
 
@@ -148,19 +164,7 @@ public class EncodingTranslate extends Encoding {
 
 				}
 
-			} else if ((source_encoding == BIG5 || source_encoding == CNS11643
-
-					|| source_encoding == UNICODET || source_encoding == UTF8
-
-					|| source_encoding == ISO2022CN_CNS
-
-					|| source_encoding == GBK || source_encoding == UNICODE)
-
-					&& (target_encoding == GB2312
-
-							|| target_encoding == UNICODES
-
-							|| target_encoding == ISO2022CN_GB || target_encoding == HZ)) {
+			} else if (flag1) {
 
 				if (t2shash.containsKey(dataline.substring(lineindex,
 
@@ -190,7 +194,7 @@ public class EncodingTranslate extends Encoding {
 
 
 
-		if (target_encoding == HZ) {
+		if (targetEncoding == HZ) {
 
 			// Convert to look like HZ
 
@@ -280,7 +284,8 @@ public class EncodingTranslate extends Encoding {
 
 					}
 
-				} else if (hzbytes[byteindex + 1] == 0x7e) { // ~~ becomes ~
+				} else if (hzbytes[byteindex + 1] == 0x7e) {
+					// ~~ becomes ~
 
 					gbstring.append('~');
 
@@ -398,7 +403,7 @@ public class EncodingTranslate extends Encoding {
 
 	public static void convertFile(String sourcefile, String outfile,
 
-			int source_encoding, int target_encoding) {
+			int sourceEncoding, int targetEncoding) {
 
 		BufferedReader srcbuffer;
 
@@ -412,17 +417,17 @@ public class EncodingTranslate extends Encoding {
 
 			srcbuffer = new BufferedReader(new InputStreamReader(
 
-					new FileInputStream(sourcefile), javaname[source_encoding]));
+					new FileInputStream(sourcefile), javaname[sourceEncoding]));
 
 			outbuffer = new BufferedWriter(new OutputStreamWriter(
 
-					new FileOutputStream(outfile), javaname[target_encoding]));
+					new FileOutputStream(outfile), javaname[targetEncoding]));
 
 			while ((dataline = srcbuffer.readLine()) != null) {
 
-				outbuffer.write(convertString(dataline, source_encoding,
+				outbuffer.write(convertString(dataline, sourceEncoding,
 
-						target_encoding));
+						targetEncoding));
 
 				outbuffer.newLine();
 

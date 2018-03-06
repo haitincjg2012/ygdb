@@ -12,7 +12,6 @@ module.exports = {
     },
     "elasticsearch":{    //ES-node
        clusterNodes: [
-           "192.168.7.22:9200",
            "192.168.7.21:9200"
       ]
     }

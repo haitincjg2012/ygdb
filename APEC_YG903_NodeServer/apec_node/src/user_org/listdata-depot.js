@@ -58,7 +58,6 @@ exports = module.exports = function (elastic,total,err,done) {
     } catch (e) {
        console.log("============List Depot Error==============");
        console.log(e);
-       console.log("============List Depot Error==============");
        return done(returnData,total,err);
     }
 };

@@ -20,23 +20,41 @@ public interface VoucherGoodsDAO extends BaseDAO<VoucherGoods, Long>{
 	 * @param voucherId voucherId
 	 * @return Page<VoucherGoodsVO> voucherGoods分页对象
 	 * */
-	@Query(value = "select * from voucher_goods where voucher_id=:voucherId and enable_flag='Y' order by create_date desc", nativeQuery = true)
-	public List<VoucherGoods> listByVoucherId(@Param("voucherId") Long voucherId);
+	@Query(value = "select * from voucher_goods where voucher_id = ?1 and enable_flag='Y' order by create_date desc", nativeQuery = true)
+	List<VoucherGoods> listByVoucherId(Long voucherId);
 	
 	/**
 	 * 根据用户id查询用户交收单数量总数
 	 * @param userId 用户id
 	 * @return Double 交收单数量总数
 	 * */
-	@Query(value = "select sum(number) from voucher_goods where enable_flag='Y' and voucher_id in (select id from voucher v where v.enable_flag='Y'"
+	@Query(value = "select sum(number) from voucher_goods where enable_flag='Y'and voucher_id in (select id from voucher v where v.enable_flag='Y'"
 			+ " and v.user_id=:userId)",nativeQuery = true)
-	public Double findTotalNumberByUserId(@Param("userId")Long userId);
+	Double findTotalNumberByUserId(@Param("userId")Long userId);
+
+	/**
+	 * 查询有效的上传交收单总数
+	 * @param userId 用户id
+	 * @return 数量
+	 */
+	@Query(value = "select sum(number) from voucher_goods where enable_flag='Y'and voucher_id in (select id from voucher v where v.enable_flag='Y' and v.audit_state = 'Y'"
+			+ " and v.user_id=:userId)",nativeQuery = true)
+	Double findEffectiveTotalNumberByUserId(@Param("userId")Long userId);
 	
 	/**
 	 * 根据voucherId查询交收单数量
 	 * @param voucherId Long
 	 * @return double 交收单单次数量
 	 * */
-	@Query(value = "select sum(number) from voucher_goods where enable_flag='Y' and voucher_id=:voucherId", nativeQuery = true)
-	Double findNumberByVoucherId(@Param("voucherId") Long voucherId);
+	@Query(value = "select sum(number) from voucher_goods where voucher_id in ?1", nativeQuery = true)
+	Double findNumberByVoucherId(List<Long> voucherId);
+
+	/**
+	 * 根据voucherId查询交收单数量
+	 * @param voucherId Long
+	 * @return double 交收单单次数量
+	 * */
+	@Query(value = "select sum(total_amount) from voucher_goods where voucher_id in ?1", nativeQuery = true)
+	Double findAmountByVoucherId(List<Long> voucherId);
+
 }

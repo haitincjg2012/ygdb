@@ -23,17 +23,18 @@
         </div>
       </div>
     </div>
-    <my-scroll class="careScroll" :data="mainlistData" :pullup="pullup" @scrollToEnd="loadMore">
+    <div>
+      <my-scroll class="careScroll" :data="mainlistData" :pullup="pullup" @scrollToEnd="loadMore">
         <div class="z-ag-frame">
           <!--列表数据-->
-          <ul class="z-ag-list clearfix">
+          <ul class="z-ag-list clearfix" v-show="!blankFlag">
             <li class="gsy-agencylist" v-for="item in mainlistData" :key="item.id" @click="goDetail(item)">
               <div class="z-com-f">
                 <div class="primaryMain clearfix" >
                   <div class="pic-com">
-                    <img :src ="item.orgFirstBannerUrl+ '?x-oss-process=style/_detail'" v-if="item.orgFirstBannerUrl"/>
+                    <img :src ="item.orgFirstBannerUrl+ '?x-oss-process=style/_list'" v-if="item.orgFirstBannerUrl"/>
                     <img src="../../../assets/img/coldDefault.png" v-if="item.userType=='LK' && !item.orgFirstBannerUrl"/>
-                    <img src="../../../assets/img/DBKS.png" v-if="item.userType==('DB'||'KS'||'ZZH'||'HZS') && !item.orgFirstBannerUrl"/>
+                    <img src="../../../assets/img/DBKS.png" v-if="((item.userType=='DB')||(item.userType=='KS')||(item.userType=='ZZH')||(item.userType=='HZS')) && !item.orgFirstBannerUrl"/>
                   </div>
                   <div class="z-ag-info clearfix" >
                     <div class="z-ag-real-info">
@@ -65,14 +66,18 @@
                 </div>
               </div>
             </li>
+            <!--
             <li  class="loading-wrapper">
               <div>
                 <span v-if="!loadMflag">没有更多信息了</span>
                 <span v-if="nodata">暂无数据</span>
               </div>
-              <!--<div v-if="!loadMflag">没有更多信息了</div>-->
             </li>
+          -->
           </ul>
+
+          <my-scrolltip ref="loadMoreTip"></my-scrolltip>
+
           <!--查询遮罩层-->
            <div class="z-ag-shadow" v-if="shadowF">
              <!--身份-->
@@ -108,7 +113,9 @@
              <div class="shadow" @click="hideSearch"></div>
            </div>
         </div>
-    </my-scroll>
+      </my-scroll>
+    </div>
+    <my-blankimg :isShow="blankFlag"></my-blankimg>
   </div>
 </template>
 <style>
@@ -121,7 +128,8 @@
   import API from '../../../api/api'
   import header from '@/components/header/header.vue'
   import scroll from '@/components/scroll/scroll'
-
+  import scrollTip from '@/components/downLoadAnimal'
+  import blankimg from '@/components/blank' //默认图
   const api = new API();
   export default{
     data(){
@@ -132,10 +140,12 @@
         //分页参数
         pullup:true,
         loadMflag:true,//"没有更多信息了"文字
-        loadMopen:false,//上拉加载标识
-        nodata:false,//"暂无数据"标识
+        // loadMopen:false,//上拉加载标识
+        blankFlag:null,//无数据显示默认图
+        // nodata:false,//"暂无数据"标识
         pageNum:1,//页码
         pageSize:10,
+        // scrolltipFlag:false,//控制加载tip是否显示
         //查询参数
         sear_idCode:null,
         sear_addrname:"",
@@ -169,6 +179,11 @@
       var vm=this;
       vm.initPage();
       vm.getMainlist();
+      /*
+      vm.$nextTick(function(){
+        vm.$refs.loadMoreTip.hide();
+      });
+      */
     },
 
     created(){
@@ -194,9 +209,12 @@
               vm.shadowF=false;
               console.log("当前选中的是:"+vm.sear_idCode+" "+vm.usertypeData[i].name);
               vm.mainlistData=[];
+
+              vm.$refs.loadMoreTip.hide();//隐藏“没有更多”文字提示
               vm.getMainlist();
             }
             else{
+
               vm.usertypeData[i].flag=false;
             }
           }
@@ -219,6 +237,7 @@
                 vm.initAreaflag(vm.childA[3710]);
                 vm.initAreaflag(vm.childA[3706]);
                 vm.mainlistData=[];
+                vm.$refs.loadMoreTip.hide();//隐藏“没有更多”文字提示
                 vm.getMainlist();
                 vm.shadowF=false;
               }
@@ -245,6 +264,7 @@
                   console.log("二级区域:"+vm.addrSecond);
                   vm.sear_addrname=vm.addrFirst+vm.addrSecond;
                   vm.mainlistData=[];
+                  vm.$refs.loadMoreTip.hide();//隐藏“没有更多”文字提示
                   vm.getMainlist();
                   vm.shadowF=false;
                   console.log("搜索地址："+vm.sear_addrname);
@@ -261,6 +281,7 @@
           }
           vm.sear_addrname=vm.addrFirst+vm.addrSecond;
           vm.mainlistData=[];
+          vm.$refs.loadMoreTip.hide();//隐藏“没有更多”文字提示
           vm.getMainlist();
           vm.shadowF=false;
           console.log("搜索地址："+vm.sear_addrname);
@@ -277,7 +298,7 @@
       },*/
       //初始化区域（除“全部”外，其他flag置为false）
       initAreaflag(array){
-        console.log("初始化区域");
+        // console.log("初始化区域");
         var vm=this;
         for(var i in array){
           if(array[i].name=="全部" || array[i].keyword=="全部" || array[i].keyword=="一级全部" || array[i].keyword=="二级全部"){
@@ -339,9 +360,13 @@
           case 'ZZH':
               flag="ZZH";
               routeName="personXq";
+              userId=id;
+              id="";
+
               break;
           case 'HZS':
               flag="HZS";
+              userId = item.id;
               routeName="personXq";
               break;
         }
@@ -350,12 +375,12 @@
       //初始化页面
       initPage(){
         var vm=this;
-        console.log("invoke initPage method");
         vm.mainlistData=[];
         vm.pageNum=1;
         vm.loadMflag=true;//上拉加载标识 "没有更多信息了"文字
-        vm.loadMopen=false;//上拉加载标识
-        vm.nodata=false;
+        // vm.loadMopen=false;//上拉加载标识
+        vm.scrolltipFlag=false;
+        // vm.nodata=false;
         vm.shadowF=false;
         //初始化“身份/区域”
         vm.initAreaflag(vm.usertypeData);
@@ -377,20 +402,26 @@
       //上拉加载更多
       loadMore(){
         var vm=this;
-        vm.loadMopen=true;
+
         if(vm.loadMflag){
+          // vm.loadMopen=true;
           vm.pageNum++;
+          vm.$nextTick(function(){
+            vm.$refs.loadMoreTip.loading();
+          });
           vm.getMainlist();
-          console.log("上拉加载更多："+vm.pageNum);
+          // console.log("上拉加载更多："+vm.pageNum);
         }
       },
       /*获取主列表数据*/
       getMainlist(){
         var vm=this;
+        /*
         Indicator.open({
           text:"加载中...",
           spinnerType:'fading-circle'
         });
+        */
         let params={
           api:"/yg-user-service/user/findUserFocusOrg.apec",
           data:{
@@ -414,18 +445,29 @@
             vm.loadMflag=false;
           }*/
           //用户触发上拉加载时
-          if(vm.loadMopen){
-            if(data.data.rows.length<vm.pageSize){
-              console.log("没数据了");
+
+            if(data.data.totalElements == 0){//无数据
+              // vm.nodata=true;
+              vm.blankFlag=true;
               vm.loadMflag=false;
+              vm.$refs.loadMoreTip.hide()
             }
-            else if(data.data.rows.length==0){
-              vm.nodata=true;
+            else if(data.data.totalElements && data.data.currentNo==data.data.pageCount){//没有分页了
+            // else if(data.data.rows.length < vm.pageSize || data.data.currentNo == data.data.pageCount){//没有分页了
+              console.log("没数据了");
+              vm.blankFlag=false;
+              vm.loadMflag=false;
+              // if(vm.loadMopen){
+              vm.$refs.loadMoreTip.end("没有更多数据了");
+            // }
             }
-            else{
+            else{//还有分页
+
+              vm.blankFlag=false;
               vm.loadMflag=true;
+              // vm.$refs.loadMoreTip.hide();
             }
-          }
+          // }
             vm.mainlistData=vm.mainlistData.concat(data.data.rows);
         }
         else{
@@ -448,7 +490,9 @@
     },
     components:{
       'my-header':header,
-      'my-scroll':scroll
+      'my-scroll':scroll,
+      'my-scrolltip':scrollTip,
+      'my-blankimg':blankimg
     }
   }
 </script>

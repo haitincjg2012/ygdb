@@ -1,10 +1,10 @@
 package com.apec.goods.vo;
 
-import com.apec.framework.dto.BaseVO;
 import lombok.Data;
 
 /**
  * Created by hmy on 2017/7/10.
+ * @author hmy
  */
 @Data
 public class AttributeValueVO {

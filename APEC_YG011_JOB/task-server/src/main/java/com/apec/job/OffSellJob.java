@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 /**
  * Created by wubi on 2017/8/7.
  * 计算下架时间定时job
+ * @author wubi
  */
 @Component
 public class OffSellJob implements SimpleJob {

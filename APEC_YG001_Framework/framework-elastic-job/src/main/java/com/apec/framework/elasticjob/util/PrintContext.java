@@ -4,6 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author xxx
+ */
 public final class PrintContext {
     
     private static final String PROCESS_JOB_MESSAGE = "------ %s process: %s at %s ------";

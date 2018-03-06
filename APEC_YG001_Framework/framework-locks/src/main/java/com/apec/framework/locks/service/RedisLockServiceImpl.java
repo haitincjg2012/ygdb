@@ -19,6 +19,7 @@ import java.util.UUID;
  * 内容摘要：
  * 创建日期：2017-01-07 19:09
  * 编码作者：zhaolei
+ * @author xxx
  */
 @Component
 public class RedisLockServiceImpl implements LockService {
@@ -27,14 +28,18 @@ public class RedisLockServiceImpl implements LockService {
 
     private String prefix = DEFAULT_LOCK_PREFIX;
 
-    private int expiry = 15; // 15秒
+    /**
+     * 15秒
+     */
+    private int expiry = 15;
+
 
     @Autowired
     CacheService cacheService;
 
     public void setPrefix(String prefix) {
-        if (!prefix.endsWith(".")) {
-            prefix = prefix + ".";
+        if (!prefix.endsWith(Constants.DOT)) {
+            prefix = prefix + Constants.DOT;
         }
         this.prefix = prefix;
     }

@@ -9,19 +9,20 @@ import com.apec.message.vo.MessageVVO;
 
 /**
  *  消息相关服务
+ *  @author xxx
  */
 public interface MessageService {
 
     /**
      * 添加站内信
-     * @param MessageVO stockInVO
-     * 
+     * @param stockInVO stockInVO
+     * @return 结果码
      */
     String addMessageInfo(MessageVO stockInVO);
 
     /**
      * 根据发送人查询站内信列表
-     * @param MessageDTO
+     * @param messageDTO messageDTO
      * @return PageDTO<MessageVVO> 站内信消息列表
      * */
     PageDTO<MessageVVO> listMessageInfoBySender(MessageDTO messageDTO);
@@ -38,7 +39,7 @@ public interface MessageService {
      * 根据接收者和信息体id更新状态
      * @param receiver 接收者
      * @param bodyId 信息体主键
-     * 
+     * @return 结果码
      * */
     String updateStatus(Long receiver, Long bodyId);
     
@@ -48,4 +49,11 @@ public interface MessageService {
      * @return String 
      * */
     String deleteMessage(Long bodyId);
+
+    /**
+     * 清空消息
+     * @param messageVO messageVO
+     * @return 结果码
+     */
+    String clearMessage(MessageVO messageVO);
 }

@@ -31,6 +31,7 @@ router.post('/_node_user/_captcha' + config.urlSuffix , bodyParser, function(req
            return done(false,"验证码已失效!");
         }
         if(json === userCaptcha){
+            redis.del(config.userCaptchaPrefix + userMobile);
             return done(true,true);
         }
         return done(false,"验证码错误!");

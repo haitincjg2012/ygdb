@@ -1,10 +1,11 @@
 package com.apec.message.service.impl;
 
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.apec.framework.common.enumtype.EnableFlag;
+import com.mysema.query.types.Predicate;
+import com.mysema.query.types.expr.BooleanExpression;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ import com.apec.framework.common.RedisHashConstants;
 import com.apec.framework.common.ResultData;
 import com.apec.framework.common.enumtype.MessageStatus;
 import com.apec.framework.common.util.BeanUtil;
-import com.apec.framework.common.util.JsonUtil;
+import com.apec.framework.common.util.BaseJsonUtil;
 import com.apec.framework.log.InjectLogger;
 import com.apec.framework.springcloud.SpringCloudClient;
 import com.apec.message.dao.BSMessageDAO;
@@ -41,7 +42,9 @@ import com.apec.message.vo.MessageBodyVVO;
 import com.apec.message.vo.MessageVO;
 import com.apec.message.vo.MessageVVO;
 
-
+/**
+ * @author xxx
+ */
 @Service
 public class MessageServiceImpl implements MessageService {
 
@@ -74,7 +77,7 @@ public class MessageServiceImpl implements MessageService {
 
 	/**
 	 * 修改用户的系统通知的条目
-	 * @param userId
+	 * @param userId 用户id
 	 */
 	private void updateMessageCount(String userId){
 		cacheHashService.hinc(RedisHashConstants.HASH_USER_PREFIX + userId,RedisHashConstants.HASH_USER_MESSAGE_COUNT,1L);
@@ -89,16 +92,18 @@ public class MessageServiceImpl implements MessageService {
 	}
 	
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String addMessageInfo(MessageVO messageVO) {
     	
-    	/**
+    	/*
     	 * 新增站内信消息主体
-    	 * */
+    	 */
     	MessageBody messageBodyEntity = new MessageBody();
-    	messageBodyEntity.setTitle(messageVO.getBody().getTitle());//主题
-    	messageBodyEntity.setContent(messageVO.getBody().getContent());//正文,默认自定义
-    	if (messageVO.getBody().isTemplateFlag()){
+		//主题
+    	messageBodyEntity.setTitle(messageVO.getBody().getTitle());
+		//正文,默认自定义
+    	messageBodyEntity.setContent(messageVO.getBody().getContent());
+    	if (messageVO.getBody().getTemplateFlag()){
     		String template = paramTemplateDAO.findByParamKey(messageVO.getBody().getTemplateKey().getKey());
     		if (StringUtils.isEmpty(template)){
     			log.warn("can't find param_value by paramTemplateDAO.findByParamKey(param_key),[param_key:{}]",messageVO.getBody().getTemplateKey());
@@ -111,34 +116,40 @@ public class MessageServiceImpl implements MessageService {
     		}
     		messageBodyEntity.setContent(template);
     	}
-    	messageBodyEntity.setSendTime(new Date());//创建时间
-    	messageBodyEntity.setRealm(messageVO.getBody().getRealm());//所在实体域
-    	messageBodyEntity.setType(messageVO.getBody().getType());//消息类型：系统消息
-    	messageBodyEntity.setAllReceiver(messageVO.getBody().isAllReceiver());//是否全部通知
+		//创建时间
+    	messageBodyEntity.setSendTime(new Date());
+		//所在实体域
+    	messageBodyEntity.setRealm(messageVO.getBody().getRealm());
+		//消息类型：系统消息
+    	messageBodyEntity.setType(messageVO.getBody().getType());
+		//是否全部通知
+    	messageBodyEntity.setAllReceiver(messageVO.getBody().getAllReceiver());
     	messageBodyEntity.setId(idGen.nextId());
     	messageBodyDAO.save(messageBodyEntity);
     	
     	//是否全部通知
-    	List<Long> receivers = null;
-    	if (messageVO.getBody().isAllReceiver()){
+    	List<Long> receivers;
+    	if (messageVO.getBody().getAllReceiver()){
     		JSONObject param = new JSONObject();
     		String json = springCloudClient.post(listUserIdUrl, param.toString());
-    		ResultData<List<Long>> resultData = JsonUtil.parseObject(json, new TypeReference<ResultData<List<Long>>>(){});
+    		ResultData<List<Long>> resultData = BaseJsonUtil.parseObject(json, new TypeReference<ResultData<List<Long>>>(){});
     		receivers = resultData.getData();
     	} else{
     		receivers = messageVO.getReceivers();
     	}
 
-    	/**
+    	/*
     	 * 系统站内信记录
-    	 * */
-    	List<Message> mailMessageList = new LinkedList<Message>();
+    	 */
+    	List<Message> mailMessageList = new LinkedList<>();
     	String sender = StringUtils.isEmpty(messageVO.getSender())?Constants.MESSAGE_SENDER_SYSTEM : messageVO.getSender();
     	for(Long receiver : receivers){
     		Message mailMessage = new Message();
     		mailMessage.setBody(messageBodyEntity);
-    		mailMessage.setReceiver(receiver);//接收者
-    		mailMessage.setSender(sender);//发送者
+			//接收者
+    		mailMessage.setReceiver(receiver);
+			//发送者
+    		mailMessage.setSender(sender);
     		mailMessage.setMessageStatus(MessageStatus.NEW);
     		mailMessage.setId(idGen.nextId());
     		mailMessageList.add(mailMessage);
@@ -155,14 +166,14 @@ public class MessageServiceImpl implements MessageService {
     
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly = true,rollbackFor = Exception.class)
 	public PageDTO<MessageVVO> listMessageInfoBySender(MessageDTO messageDTO) {
 		
 		//获取站内信列表信息
 		PageDTO<Object[]> pageDTO = bsMessageDAO.listBSMessage(messageDTO);
 		List<Object[]> objs = pageDTO.getRows();
 		
-		List<MessageVVO> messageVVOList = new LinkedList<MessageVVO>();
+		List<MessageVVO> messageVVOList = new LinkedList<>();
 		for (Object[] obj : objs){
 			MessageVVO messageViewVO = new MessageVVO();
 			messageViewVO.setSender(String.valueOf(obj[0]));
@@ -176,7 +187,7 @@ public class MessageServiceImpl implements MessageService {
 			messageViewVO.setBody(messageBodyViewVO);
 			messageVVOList.add(messageViewVO);
 		}
-		PageDTO<MessageVVO> messageViewVOPage = new PageDTO<MessageVVO>();
+		PageDTO<MessageVVO> messageViewVOPage = new PageDTO<>();
 		messageViewVOPage.setNumber(pageDTO.getNumber());
 		messageViewVOPage.setRows(messageVVOList);
 		messageViewVOPage.setTotalElements(pageDTO.getTotalElements());
@@ -187,15 +198,15 @@ public class MessageServiceImpl implements MessageService {
 	@Override
 	public PageDTO<MessageVVO> listMessageInfoByReceiver(
 			Long receiver, PageRequest pageRequest) {
-		
-		if (receiver == null){
-			log.warn("receiver is null,[receiver:{}]",receiver);
-			return null;
+
+			if (receiver == null){
+				log.warn("receiver is null,[receiver:]");
+			return new PageDTO<>();
 		}
 		
 		Page<Message> messageList = messageDao.findAll(QMessage.message.receiver.eq(receiver), pageRequest);
-		PageDTO<MessageVVO> response = new PageDTO<MessageVVO>();
-		List<MessageVVO> messageVVOList = new LinkedList<MessageVVO>();
+		PageDTO<MessageVVO> response = new PageDTO<>();
+		List<MessageVVO> messageVVOList = new LinkedList<>();
 		for (Message message : messageList){
 			MessageVVO messageVVO = new MessageVVO();
 			messageVVO.setMessageStatus(message.getMessageStatus());
@@ -215,7 +226,7 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public String updateStatus(Long receiver, Long bodyId) {
 		if (receiver == null || bodyId == null){
 			log.warn("param is null,[receiver:{},bodyId:{}]", receiver, bodyId);
@@ -231,7 +242,7 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public String deleteMessage(Long bodyId) {
 		int number = messageDao.updateEnableFlagByBodyId(bodyId);
 		if (number == 0){
@@ -239,4 +250,50 @@ public class MessageServiceImpl implements MessageService {
 		}
 		return Constants.RETURN_SUCESS;
 	}
+
+	/**
+	 * 清空消息
+	 * @param messageVO messageVO
+	 * @return 结果码
+	 */
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public String clearMessage(MessageVO messageVO){
+		Iterable<Message> messages = messageDao.findAll(getInputCondition(messageVO));
+		Iterator<Message> iterator = messages.iterator();
+		while(iterator.hasNext()){
+			Message message = iterator.next();
+			MessageBody messageBody = message.getBody();
+			message.setEnableFlag(EnableFlag.N);
+			message.setLastUpdateDate(new Date());
+			messageBody.setEnableFlag(EnableFlag.N);
+			messageBody.setLastUpdateDate(new Date());
+			messageBodyDAO.save(messageBody);
+			messageDao.save(message);
+		}
+		return Constants.RETURN_SUCESS;
+	}
+
+	/**
+	 * 多条件查询帖子信息
+	 * 根据多种情况查询
+	 * 包括like:message,eq:sender,receiver,relativeId,articleMsgType
+	 * @param messageVO 查询条件对象
+	 * @return Predicate
+	 */
+	private Predicate getInputCondition(MessageVO messageVO)
+	{
+		List<BooleanExpression> predicates = new ArrayList<>();
+		if(null != messageVO)
+		{
+			if(!CollectionUtils.isEmpty(messageVO.getReceivers()) && messageVO.getReceivers().size() > 0)
+			{
+				predicates.add(QMessage.message.receiver.in(messageVO.getReceivers()));
+			}
+
+		}
+		predicates.add(QMessage.message.enableFlag.eq(EnableFlag.Y));
+		return BooleanExpression.allOf(predicates.toArray(new BooleanExpression[predicates.size()]));
+	}
+
 }

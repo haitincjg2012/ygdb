@@ -7,8 +7,9 @@
           <form onsubmit="return false">
             <div class="phone-input-t" :class="{rphone:showPFlag}">
               <!--<img src="../../assets/img/phone.png">-->
+              <!--placeholder="请输入手机号码" v-on:blur="phoneCheck()" v-on:focus="phoneClear()"-->
               <input id="input-phonenum-T" oninvalid="setCustomValidity(' ')" type="tel" v-model="phoneNum"
-                     placeholder="请输入手机号码" v-on:blur="phoneCheck()" v-on:focus="phoneClear()"
+                     placeholder="请输入手机号码" v-on:focus="phoneClear()"
                      oninput="setCustomValidity('')" required maxlength="11" pattern="^1(3|4|5|7|8)\d{9}$"/>
             </div>
             <div :class="rClass">该用户已注册~</div>
@@ -16,12 +17,15 @@
             </div>
             <div class="code-input-t c-z-code-t" :class="{rcode:showCodeFlag}">
               <!--<img src="../../assets/img/Verification.png">-->
-              <input oninvalid="setCustomValidity(' ')" id="input-code" type="tel" class="pure-input-1" v-model="code"
+              <!--<input oninvalid="setCustomValidity(' ')" id="input-code" type="tel" class="pure-input-1 c-input-code" v-model="code"-->
+              <input oninvalid="setCustomValidity(' ')" type="tel" class="pure-input-1 c-input-code" v-model="code"
                      oninput="setCustomValidity('')"
                      @focus="showFlag('code')"
                      @blur="showFlag('no')"
                      placeholder="请输入验证码" required maxlength="4" pattern="^\d{4}$">
-              <input type="button" @click.stop="sendMessage" id="btn-message" value="获取验证码">
+
+              <!--<input type="button" @click.stop="sendMessageO" id="btn-message" value="获取验证码">-->
+              <input type="button" @click.stop="phoneCheck" id="btn-message" value="获取验证码">
             </div>
             <div class="dash-line-v" :class="{line:showCodeFlag}">
             </div>
@@ -79,11 +83,14 @@
   import showImgSrc from '../../../src/assets/img/show.png'
   import hideImgSrc from '../../../src/assets/img/hide.png'
   const api = new API();
+
   export default {
     data(){
       return {
+        phoneFlag:false,//电话注册的标志位
         phoneNum: '',
         code: '',
+        smsRecord:0,//用于记录点击的次数
         imgSrc: hideImgSrc,
         password: '',
         aur: 'DB',//默认代办
@@ -134,10 +141,12 @@
       },
       code: function (newVal,oldVal) {
         const self =this;
-        if(newVal!=oldVal && newVal.length && self.password.length && self.phoneNum.length)
-          this.loginBtnClass = 'btn-login-c login-confirm';
-        else
-          this.loginBtnClass = 'btn-login-c';
+//        if(newVal!=oldVal && newVal.length && self.password.length && self.phoneNum.length)
+//          this.loginBtnClass = 'btn-login-c login-confirm';
+//        else
+//          this.loginBtnClass = 'btn-login-c';
+
+
       },
       phoneNum: function (newVal,oldVal) {
         const self =this;
@@ -151,6 +160,12 @@
         loginBtnCls(){
             return this.loginBtnClass;
         }
+    },
+    activated(){
+       this.phoneFlag = false;
+       this.phoneNum = "";
+       this.code = "";
+       this.password = "";
     },
     methods: {
       show () {
@@ -193,10 +208,17 @@
         return s;
       },
       phoneCheck(){//检查用户是否注册过
+        this.smsRecord ++;
+        if(this.smsRecord != 1){
+            return;
+        }
         var phoneNum = this.phoneNum;
+        var self = this;
         this.showFlag("no");
         if(!phoneNum.length)
             return;
+
+//        $("#btn-message").attr("disabled", true);
         /*验证手机号码是否为空*/
         if (!this.check([{
             handler: document.getElementById("input-phonenum-T"),
@@ -212,10 +234,11 @@
           api.post(params).then((res) => {
             var data = res.data;
             if(data.succeed && !data.data){//未注册用户
-
+              this.sendMessage();
             }else{
               this.rClass='vic'
               this.phoneNum = '';
+              $("#btn-message").attr("disabled", true);
             }
 //            else{
 //              Toast({
@@ -230,7 +253,17 @@
           console.log(error)
         }
       },
+      noPhone(){
+        //未注册手机号码
+        this.sendMessage();
+      },
+      hasPhone(){
+        //已注册手机号码
+        $("#btn-message").attr("disabled", true);
+      },
       phoneClear(){
+        this.smsRecord = 0;
+        $("#btn-message").removeAttr("disabled");
         this.showFlag("phone");
         this.rClass = 'r-val';
       },
@@ -265,7 +298,8 @@
             message: '手机号码格式错误(11位手机号码)'
           },
           {
-            handler: document.getElementById("input-code"),
+//            handler: document.getElementById("input-code"),
+            handler: document.querySelector(".c-input-code"),
             message: '验证码格式错误(4位数字)'
           },
           {
@@ -358,6 +392,9 @@
         }
 
       },
+      sendMessageO(){
+
+      },
       sendMessage(){
         if (!this.check_send_message())
           return;
@@ -365,6 +402,7 @@
       },
       //发送验证码
       sendCode(obj, phonenumObj) {
+
         var phonenum = phonenumObj.val();
         if (phonenum) {
           this.doPostBack();
@@ -401,7 +439,7 @@
       check_send_message(){
         var phone_ID = document.getElementById("input-phonenum-T");
         if (!phone_ID.checkValidity()) {
-          Toast("手机号码格式错误(11位手机号码)");
+          Toast("验证码格式错误");
           return false;
         }
         return true;
@@ -514,7 +552,7 @@
           top 50%
           transform translateY(-50%)
           position absolute
-        #input-code, #input-code-password
+      .c-input-code, #input-code-password
           margin-left (30 /_rem)
           height (16 /_rem)
           font-size (16 /_rem)
@@ -522,7 +560,7 @@
           vertical-align middle
       .dash-line-p
         margin 0 (15 /_rem)
-        height 2px
+        height 1px
         background-color #d7d7d7
         margin-top (16 /_rem)
       .login-btn

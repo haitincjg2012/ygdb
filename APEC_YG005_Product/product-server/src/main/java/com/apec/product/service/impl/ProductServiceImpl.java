@@ -9,47 +9,50 @@ import com.apec.framework.common.enums.MqTag;
 import com.apec.framework.common.enums.Realm;
 import com.apec.framework.common.enumtype.*;
 import com.apec.framework.common.util.BeanUtil;
-import com.apec.framework.common.util.JsonUtil;
+import com.apec.framework.common.util.BaseJsonUtil;
+import com.apec.framework.common.util.DateTimeUtils;
 import com.apec.framework.dto.UserInfoVO;
-import com.apec.framework.elasticsearch.producer.ApecESProducer;
-import com.apec.framework.elasticsearch.producer.ESProducerConstants;
-import com.apec.framework.elasticsearch.vo.ESGetSingleResponseVO;
-import com.apec.framework.elasticsearch.vo.ESPostResponseVO;
+import com.apec.framework.elasticsearch.producer.ApecEsProducer;
+import com.apec.framework.elasticsearch.producer.EsProducerConstants;
+import com.apec.framework.elasticsearch.vo.EsGetSingleResponseVO;
+import com.apec.framework.elasticsearch.vo.EsPostResponseVO;
 import com.apec.framework.log.InjectLogger;
-import com.apec.framework.rockmq.client.MQProducerClient;
+import com.apec.framework.rockmq.client.MqProducerClient;
 import com.apec.framework.rockmq.vo.MessageBodyVO;
 import com.apec.framework.rockmq.vo.MessageVO;
 import com.apec.framework.rockmq.vo.UserPointRecordVO;
 import com.apec.framework.springcloud.SpringCloudClient;
-import com.apec.product.dao.ProductAttrDAO;
-import com.apec.product.dao.ProductImageDAO;
-import com.apec.product.dao.ProductInfoDAO;
-import com.apec.product.dao.ProductSkuInfoDAO;
-import com.apec.product.model.ProductAttr;
-import com.apec.product.model.ProductImage;
-import com.apec.product.model.ProductInfo;
-import com.apec.product.model.ProductSkuInfo;
+import com.apec.product.dao.*;
+import com.apec.product.dto.ProductInfoDTO;
+import com.apec.product.model.*;
 import com.apec.product.service.ProductService;
 import com.apec.product.task.callback.OffSellJobFinishTask;
 import com.apec.product.util.ProductAttrCompare;
 import com.apec.product.util.SnowFlakeKeyGen;
 import com.apec.product.vo.*;
+import com.mysema.query.types.Predicate;
+import com.mysema.query.types.expr.BooleanExpression;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.groovy.runtime.typehandling.BigDecimalMath;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 
+/**
+ * @author yido
+ */
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -60,7 +63,7 @@ public class ProductServiceImpl implements ProductService {
     private Logger logger;
 
     @Autowired
-    private ApecESProducer apecESProducer;
+    private ApecEsProducer apecESProducer;
 
     @Autowired
     private CacheHashService cacheHashService;
@@ -69,7 +72,7 @@ public class ProductServiceImpl implements ProductService {
     private CacheService cacheService;
 
     @Autowired
-    private MQProducerClient mqProducerClient;
+    private MqProducerClient mqProducerClient;
 
     @Autowired
     private ProductInfoDAO productInfoDAO;
@@ -82,6 +85,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductImageDAO productImageDAO;
+
+    @Autowired
+    private ProductTagsDAO productTagsDAO;
 
     @Autowired
     private SpringCloudClient springCloudClient;
@@ -98,15 +104,21 @@ public class ProductServiceImpl implements ProductService {
     @Value("${dic_order_weight_code}")
     private String orderWeightCode;
 
-    @Override
-    public String testESInfo() {
-
-        return Constants.RETURN_SUCESS;
+    private UserInfoVO getUserInfo(Long userId){
+        String userInfoJson = cacheHashService.hget(RedisHashConstants.HASH_USER_PREFIX + userId,RedisHashConstants.HASH_OBJCONTENT_CACHE);
+        UserInfoVO userInfo ;
+        if(StringUtils.isBlank(userInfoJson)){
+            //获取不到数据,记录日志
+            logger.warn("[ProductServiceImpl][getUserInfo]Can't find user hash cache. userNo:{}",userId);
+            return null;
+        }else{
+            userInfo = BaseJsonUtil.parseObject(userInfoJson,UserInfoVO.class);
+        }
+        return userInfo;
     }
 
     /**
      * 获得随机的默认图片
-     * @return
      */
     private List<ProductImageVO> getRandomProductImage(){
         List<Object[]> list = productImageDAO.findCountByDefTypeAndEnableFlag(ImageDefType.DEFAULT.name(),EnableFlag.Y.name());
@@ -144,7 +156,7 @@ public class ProductServiceImpl implements ProductService {
             logger.warn("[ProductServiceImpl][addProductAttrByInstead]Can't find user hash cache. userNo:{}",userNo);
             return Constants.CUSTOMER_NOT_EXIST_BYUSERNO;
         }
-        userInfo = JsonUtil.parseObject(userInfoJson,UserInfoVO.class);
+        userInfo = BaseJsonUtil.parseObject(userInfoJson,UserInfoVO.class);
         return addProductAttr(userInfo,productSkuInfoVO,resultMap);
     }
     @Override
@@ -152,8 +164,8 @@ public class ProductServiceImpl implements ProductService {
         //未完善个人资料不能发布供求
         if(StringUtils.isBlank(userInfoVO.getName())) {
             logger.warn("[ProductServiceImpl][addProductAttr] Can't add New Product Attr , Imperfect personal information!");
-
-            return ErrorCodeConst.ERROR_USER_INFO_ISNULL; //完善个人资料
+        //完善个人资料
+            return ErrorCodeConst.ERROR_USER_INFO_ISNULL;
         }
         //参数验证
         if(productSkuInfoVO.getProductAttrs() == null ){
@@ -197,7 +209,7 @@ public class ProductServiceImpl implements ProductService {
         //查询最近的两条条记录
         Map<Long,String> productMap = new LinkedHashMap<>();
         productMap.put(productSkuInfo.getId(),productSkuInfo.getSkuName());
-        Map<String,String> resultMapOne = new HashMap<>();
+        Map<String,String> resultMapOne = new HashMap<>(16);
         resultMapOne.put("skuId",String.valueOf(productSkuInfo.getId()));
         resultMapOne.put("skuName",productSkuInfo.getSkuName());
         resultMap.add(resultMapOne);
@@ -219,7 +231,7 @@ public class ProductServiceImpl implements ProductService {
             logger.warn("[ProductServiceImpl][addProductAttr] Can not record history by userId:{}",userInfoVO.getUserId());
             logger.error("[ProductServiceImpl][addProductAttr] error!",e);
         }
-        String productHis = JsonUtil.toJSONString(productMap);
+        String productHis = BaseJsonUtil.toJSONString(productMap);
         cacheHashService.hset(RedisHashConstants.HASH_USER_PREFIX + userInfoVO.getUserId(),RedisHashConstants.HASH_USER_CREATEPRODUCT_HIS, productHis);
         productSkuInfoDAO.save(productSkuInfo);
         return Constants.RETURN_SUCESS;
@@ -234,7 +246,7 @@ public class ProductServiceImpl implements ProductService {
             logger.warn("[ProductServiceImpl][addNewProductByInstead]Can't find user hash cache. userNo:{}",userNo);
             return Constants.CUSTOMER_NOT_EXIST_BYUSERNO;
         }
-        userInfo = JsonUtil.parseObject(userInfoJson,UserInfoVO.class);
+        userInfo = BaseJsonUtil.parseObject(userInfoJson,UserInfoVO.class);
         return addNewProduct(userInfo,productInfoVO);
     }
 
@@ -243,7 +255,8 @@ public class ProductServiceImpl implements ProductService {
         //未完善个人资料不能发布供求
         if(StringUtils.isBlank(userInfoVO.getName())) {
             logger.warn("[ProductServiceImpl][addNewProduct] Can't add New Product , Imperfect personal information!");
-            return ErrorCodeConst.ERROR_USER_INFO_ISNULL; //完善个人资料
+            //完善个人资料
+            return ErrorCodeConst.ERROR_USER_INFO_ISNULL;
         }
         //未进行实名认证，只能发布5条供求信息,实名认证后，将该缓存释放
         String createProductNumKey = null ;
@@ -271,7 +284,8 @@ public class ProductServiceImpl implements ProductService {
         productInfoVO.setEnableFlag(EnableFlag.Y);
         productInfoVO.setMobile(userInfoVO.getMobile());
         productInfoVO.setUserName(userInfoVO.getName());
-        productInfoVO.setShowUserName(userInfoVO.getName()); //先生/
+        //先生/
+        productInfoVO.setShowUserName(userInfoVO.getName());
         productInfoVO.setUserType(userInfoVO.getUserType());
         //ES ProductInfoVO
         ESProductInfoVO esProductInfoVO = new ESProductInfoVO();
@@ -307,9 +321,9 @@ public class ProductServiceImpl implements ProductService {
         //验证ProductImage,如果用户没有上传图片，则选取系统默认的图片
         if(CollectionUtils.isEmpty(productInfoVO.getProductImages())){
             List<ProductImageVO> listImageVO = getRandomProductImage();
-            productInfoVO.setProductImages(listImageVO);
             if(listImageVO != null ) {
                 List<ESProductImageVO> listESImageVO = new ArrayList<>();
+                List<ProductImageVO> list = new ArrayList<>();
                 int flags = 0 ;
                 String [] ary;
                 for(ProductImageVO productImageVO : listImageVO){
@@ -318,12 +332,15 @@ public class ProductServiceImpl implements ProductService {
                         esProductInfoVO.setFirstImageUrl(ary[0]);
                         productInfoVO.setFirstImageUrl(ary[0]);
                         listESImageVO.add(new ESProductImageVO(ary[1], productImageVO.getSort()));
+                        list.add(new ProductImageVO(ary[1], productImageVO.getSort(),null));
                     }else {
                         listESImageVO.add(new ESProductImageVO(productImageVO.getImageUrl(), productImageVO.getSort()));
+                        list.add(new ProductImageVO(productImageVO.getImageUrl(), productImageVO.getSort(),null));
                     }
                     flags ++;
                 }
                 esProductInfoVO.setProductImages(listESImageVO);
+                productInfoVO.setProductImages(list);
             }
         }else {
             List<ESProductImageVO> listESImageVO = new ArrayList<>();
@@ -333,7 +350,7 @@ public class ProductServiceImpl implements ProductService {
             esProductInfoVO.setProductImages(listESImageVO);
         }
         //ES 落地
-        ESPostResponseVO esPostResponseVO = apecESProducer.postESInfo(ESProducerConstants.INDEX_URL_PRODUCT, JsonUtil.toJSONString(esProductInfoVO));
+        EsPostResponseVO esPostResponseVO = apecESProducer.postESInfo(EsProducerConstants.INDEX_URL_PRODUCT, BaseJsonUtil.toJSONString(esProductInfoVO));
         if(StringUtils.isBlank(esPostResponseVO.getId())){
             return  Constants.SYS_ERROR;
         }
@@ -352,7 +369,8 @@ public class ProductServiceImpl implements ProductService {
         }
         // 发布供求获取积分
         UserPointRecordVO userPointRecordVO = new UserPointRecordVO();
-        userPointRecordVO.setPointRuleType(PointRuleType.SINGLE_ONCE_SEND_REQUEST);//加积分的类型，实名认证成功
+        //加积分的类型，实名认证成功
+        userPointRecordVO.setPointRuleType(PointRuleType.SINGLE_ONCE_SEND_REQUEST);
         userPointRecordVO.setId(idGen.nextId());
         List<Long> userIds = new ArrayList<>();
         userIds.add(userInfoVO.getUserId());
@@ -369,15 +387,15 @@ public class ProductServiceImpl implements ProductService {
             cacheHashService.hset(userInfoRedisKey, RedisHashConstants.HASH_USER_CREATEPRODUCT_INFO, productRedis);
 
             String productNewRedisKey = RedisHashConstants.HASH_PRODUCT_PREFIX + esPostResponseVO.getId();
-            Map<String,String> map = new HashMap<>();
+            Map<String,String> map = new HashMap<>(16);
             map.put("userId",String.valueOf(userInfoVO.getUserId()));
-            cacheHashService.hset(productNewRedisKey, RedisHashConstants.HASH_OBJCONTENT_CACHE, JsonUtil.toJSONString(map));
+            cacheHashService.hset(productNewRedisKey, RedisHashConstants.HASH_OBJCONTENT_CACHE, BaseJsonUtil.toJSONString(map));
         }
         return Constants.RETURN_SUCESS;
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String saveProduct(ProductInfoVO productInfoVO) {
         //参数验证
         boolean flag = StringUtils.isBlank(productInfoVO.getSkuName()) ||   productInfoVO.getProductType() == null ||
@@ -421,12 +439,9 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * 立即下架 提供给前台
-     * @param userInfoVO
-     * @param productInfoVO
-     * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String offSellProduct(UserInfoVO userInfoVO, ProductInfoVO productInfoVO) {
         ProductInfo productInfo = productInfoDAO.findFirstByElasticIdAndUserId(productInfoVO.getElasticId(), userInfoVO.getUserId());
         if(productInfo == null) {
@@ -441,18 +456,16 @@ public class ProductServiceImpl implements ProductService {
         //更新数据库状态
         productInfo.setTimeout(0);
         //更新es id
-        productInfo.setElasticId(esProductInfoVO.getElasticId());
+        productInfo.setOffsellElasticId(esProductInfoVO.getElasticId());
         productInfoDAO.saveAndFlush(productInfo);
         return Constants.RETURN_SUCESS;
     }
 
     /**
      * 立即下架
-     * @param productInfoVO
-     * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String offSellProductByManager(ProductInfoVO productInfoVO){
         ProductInfo productInfo = productInfoDAO.findFirstByElasticIdAndEnableFlag(productInfoVO.getElasticId(), EnableFlag.Y);
         if(productInfo == null) {
@@ -467,13 +480,13 @@ public class ProductServiceImpl implements ProductService {
         //更新数据库状态
         productInfo.setTimeout(0);
         //更新es id
-        productInfo.setElasticId(esProductInfoVO.getElasticId());
+        productInfo.setOffsellElasticId(esProductInfoVO.getElasticId());
         productInfoDAO.saveAndFlush(productInfo);
         return Constants.RETURN_SUCESS;
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String updateProductByES(UserInfoVO userInfoVO, ProductInfoVO productInfoVO) {
 
         ProductInfo productInfo = productInfoDAO.findFirstByElasticIdAndUserId(productInfoVO.getElasticId(), userInfoVO.getUserId());
@@ -482,9 +495,9 @@ public class ProductServiceImpl implements ProductService {
             return ErrorCodeConst.ERROR_PRODUCT_NOT_FOUND;
         }
         //同步到ES库
-        ESGetSingleResponseVO esGetSingleResponseVO = apecESProducer.getSingleESInfoById(ESProducerConstants.INDEX_URL_PRODUCT, productInfoVO.getElasticId(), ESProductInfoVO.class);
+        EsGetSingleResponseVO esGetSingleResponseVO = apecESProducer.getSingleESInfoById(EsProducerConstants.INDEX_URL_PRODUCT, productInfoVO.getElasticId(), ESProductInfoVO.class);
         if(null != esGetSingleResponseVO && esGetSingleResponseVO.getFound()) {
-            Map<String,Object> productParam = new HashMap<>();
+            Map<String,Object> productParam = new HashMap<>(16);
             if(productInfoVO.getAmount() != null) {
                 productParam.put("amount", productInfoVO.getAmount());
             }
@@ -496,11 +509,11 @@ public class ProductServiceImpl implements ProductService {
                 productParam.put("endAmount", productInfoVO.getEndAmount());
             }
 
-            boolean result = apecESProducer.postESInfoForUpdateByDoc(ESProducerConstants.INDEX_URL_PRODUCT, productInfoVO.getElasticId(), productParam);
+            boolean result = apecESProducer.postESInfoForUpdateByDoc(EsProducerConstants.INDEX_URL_PRODUCT, productInfoVO.getElasticId(), productParam);
             if(result){
-                logger.info("[ProductServiceImpl]#[updateProduct] update weight and amount,startAmount,endAmount {} es id: {} update success", ESProducerConstants.INDEX_URL_PRODUCT, productInfoVO.getElasticId());
+                logger.info("[ProductServiceImpl]#[updateProduct] update weight and amount,startAmount,endAmount {} es id: {} update success", EsProducerConstants.INDEX_URL_PRODUCT, productInfoVO.getElasticId());
             }else {
-                logger.warn("[ProductServiceImpl]#[updateProduct] update weight and amount,startAmount,endAmount {} es id: {} update failed", ESProducerConstants.INDEX_URL_PRODUCT, productInfoVO.getElasticId());
+                logger.warn("[ProductServiceImpl]#[updateProduct] update weight and amount,startAmount,endAmount {} es id: {} update failed", EsProducerConstants.INDEX_URL_PRODUCT, productInfoVO.getElasticId());
             }
 
             //发送Mq消息进行落地
@@ -509,14 +522,14 @@ public class ProductServiceImpl implements ProductService {
             mqProducerClient.sendConcurrently(MqTag.PRODUCT_UPDATE.getKey(),String.valueOf(productInfoVO.getId()),productInfoVO);
 
         }else {
-            logger.warn("{} ES Not Found Id :{}", ESProducerConstants.INDEX_URL_PRODUCT, productInfoVO.getElasticId());
+            logger.warn("{} ES Not Found Id :{}", EsProducerConstants.INDEX_URL_PRODUCT, productInfoVO.getElasticId());
         }
 
         return Constants.RETURN_SUCESS;
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String updateProduct(ProductInfoVO productInfoVO) {
         ProductInfo productInfo = productInfoDAO.findOne(productInfoVO.getId());
         if(productInfoVO.getWeight() != null) {
@@ -536,22 +549,332 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public String pushProductToEs(String indexUrl) {
         List<ProductInfo> productInfos = productInfoDAO.findByEnableFlagAndTimeoutGreaterThan(EnableFlag.Y, 0);
-        return pushEsInfo(indexUrl, productInfos);
+        return pushEsInfo(indexUrl, productInfos,false);
     }
 
     @Override
     public String pushOffSellProductToEs(String indexUrl) {
         List<ProductInfo> productInfoPages = productInfoDAO.findByOffsellProduct();
-        return pushEsInfo(indexUrl, productInfoPages);
+        return pushEsInfo(indexUrl, productInfoPages,true);
+    }
+
+    @Override
+    public List<WeekBest> maxProduct() {
+        List<WeekBest> weekBests = null;
+        String str = cacheService.get(RedisConstants.WEEKBEST_PRODUCT);
+        if(StringUtils.isNotBlank(str)){
+            weekBests = BaseJsonUtil.parseObject(str,List.class);
+            if(!CollectionUtils.isEmpty(weekBests)){
+                return weekBests;
+            }
+        }
+        if(CollectionUtils.isEmpty(weekBests)){
+            weekBests = new ArrayList<>();
+        }
+        List<BigInteger[]> object = productInfoDAO.maxProduct(2);
+        if(object != null){
+            for(Object[] obj:object){
+                WeekBest weekBest = new WeekBest();
+                Long userId = ((BigInteger)obj[0]).longValue();
+                Integer time = ((BigInteger)obj[1]).intValue();
+                UserInfoVO userInfo = getUserInfo(userId);
+                weekBest.setUserId(userId);
+                weekBest.setCreateDate(new Date());
+                weekBest.setTime(time);
+                if(userInfo != null){
+                    weekBest.setImageUrl(userInfo.getImgUrl());
+                    weekBest.setName(userInfo.getName());
+                    if(userInfo.getUserType() != null){
+                        weekBest.setUserType(userInfo.getUserType().getKey());
+                    }
+                    weekBest.setUserOrgId(userInfo.getUserOrgId());
+                }
+                weekBests.add(weekBest);
+            }
+            int timeOut = DateTimeUtils.getDifferTime(DateTimeUtils.getNextMonday(),new Date(),DateTimeUtils.MINUTE);
+            cacheService.add(RedisConstants.WEEKBEST_PRODUCT,BaseJsonUtil.toJSONString(weekBests),timeOut);
+        }
+        return weekBests;
+    }
+
+    @Override
+    public List<Object[]> queryUserForRanking(int num, Date startTime, Date endTime) {
+        return productInfoDAO.queryUserForRanking(num, startTime, endTime);
+    }
+
+    @Override
+    public List<Object[]> queryUserInfoForRanking(List<Long> userIds) {
+        return productInfoDAO.queryUserInfoForRanking(userIds);
+    }
+
+    @Override
+    public PageDTO<ProductInfoVO> queryProductPage(ProductInfoDTO productInfoDTO, PageRequest pageRequest) {
+        PageDTO<ProductInfoVO> result = new PageDTO<>();
+        List<ProductInfoVO> list = new ArrayList<>();
+        Page<ProductInfo> page = productInfoDAO.findAll(getInputCondition(productInfoDTO),pageRequest);
+        page.forEach(productInfo -> {
+            ProductInfoVO productInfoVO = new ProductInfoVO();
+            BeanUtil.copyPropertiesIgnoreNullFilds(productInfo,productInfoVO);
+            productInfoVO.setProductTypeName(productInfo.getProductType().getKey());
+            productInfoVO.setProductTags(queryProductTags(productInfo.getElasticId()));
+            UserInfoVO userInfoVO = getUserInfo(productInfo.getUserId());
+            if(userInfoVO != null){
+                productInfoVO.setShowUserName(userInfoVO.getName());
+                productInfoVO.setMobile(userInfoVO.getMobile());
+                productInfoVO.setUserType(userInfoVO.getUserType());
+                productInfoVO.setUserTypeName(userInfoVO.getUserType().getKey());
+            }
+            list.add(productInfoVO);
+        });
+        result.setRows(list);
+        result.setTotalPages(page.getTotalPages());
+        result.setNumber(page.getNumber() + 1);
+        result.setTotalElements(page.getTotalElements());
+        return result;
+    }
+
+    public List<ProductTagsVO> queryProductTags(String esId){
+        List<ProductTagsVO> list = new ArrayList<>();
+        Iterable<ProductTags> iterable = productTagsDAO.findByEsIdAndEnableFlag(esId,EnableFlag.Y);
+        iterable.forEach(productTags -> {
+            ProductTagsVO productTagsVO = new ProductTagsVO();
+            BeanUtil.copyPropertiesIgnoreNullFilds(productTags,productTagsVO);
+            list.add(productTagsVO);
+        });
+        return list;
+    }
+
+    @Override
+    public List<Object[]> selectProductInfoForExcel(ProductInfoDTO dto) {
+        List<Object[]> list = new ArrayList<>();
+        Sort sort = new Sort(Sort.Direction.DESC, "createDate");
+        Iterable<ProductInfo> iterable = productInfoDAO.findAll(getInputCondition(dto),sort);
+        iterable.forEach(productInfo -> {
+            Object[] objects = new Object[12];
+            objects[0] = productInfo.getProductType().getKey();
+            objects[1] = String.valueOf(productInfo.getId());
+            objects[2] = productInfo.getSkuName();
+            objects[3] = String.valueOf(productInfo.getWeight()) + productInfo.getWeightUnit();
+            if(productInfo.getProductType() == ProductType.BUY){
+                objects[4] = String.valueOf(productInfo.getStartAmount()) + "-" + String.valueOf(productInfo.getEndAmount());
+            }else{
+                objects[4] = String.valueOf(productInfo.getAmount());
+            }
+            objects[5] = productInfo.getAddress();
+            objects[8] = DateTimeUtils.getTimeFormat(productInfo.getCreateDate());
+            Iterable<ProductTags> productTagss = productTagsDAO.findByEsIdAndEnableFlag(productInfo.getElasticId(),EnableFlag.Y);
+            StringBuffer sb = new StringBuffer();
+            productTagss.forEach(productTags -> {
+                sb.append(productTags.getTagName());
+                sb.append("|");
+            });
+            if(StringUtils.isNotBlank(sb)){
+                objects[9] = sb.substring(0,sb.lastIndexOf("|"));
+            }
+            objects[10] = String.valueOf(productInfo.getTimeout());
+            if(productInfo.getTimeout() > 0){
+                objects[11] = "上架中";
+            }else{
+                objects[11] = "已下架";
+            }
+            UserInfoVO userInfoVO = getUserInfo(productInfo.getUserId());
+            if(userInfoVO != null){
+                objects[6] = userInfoVO.getName();
+                objects[7] = userInfoVO.getUserType().getKey();
+            }
+            list.add(objects);
+        });
+        return list;
+    }
+
+    @Override
+    public ProductInfoVO queryProductInfoByEsId(ProductInfoVO productInfoVO) {
+        ProductInfo productInfo = productInfoDAO.findFirstByElasticIdAndEnableFlag(productInfoVO.getElasticId(),EnableFlag.Y);
+        if(productInfo == null){
+            return null;
+        }
+        BeanUtil.copyPropertiesIgnoreNullFilds(productInfo,productInfoVO);
+        productInfoVO.setProductTypeName(productInfo.getProductType().getKey());
+        productInfoVO.setProductTags(queryProductTags(productInfo.getElasticId()));
+
+        ProductSkuInfo productSkuInfo = new ProductSkuInfo();
+        productSkuInfo.setId(productInfo.getSkuId());
+        Iterable<ProductAttr> productAttrs = productAttrDAO.findByProductSkuInfoAndEnableFlagOrderBySort(productSkuInfo,EnableFlag.Y);
+        List<ProductAttrVO> productAttrVOS = new ArrayList<>();
+        productAttrs.forEach(productAttr -> {
+            ProductAttrVO productAttrVO = new ProductAttrVO();
+            BeanUtil.copyPropertiesIgnoreNullFilds(productAttr,productAttrVO);
+            productAttrVOS.add(productAttrVO);
+        });
+        productInfoVO.setProductAttrs(productAttrVOS);
+        Iterable<ProductImage> productImages = productImageDAO.findByProductIdAndEnableFlagOrderBySort(productInfo.getId(),EnableFlag.Y);
+        List<ProductImageVO> productImageVOS = new ArrayList<>();
+        productImages.forEach(productImage -> {
+            ProductImageVO productImageVO = new ProductImageVO();
+            BeanUtil.copyPropertiesIgnoreNullFilds(productImage,productImageVO);
+            productImageVOS.add(productImageVO);
+        });
+        productInfoVO.setProductImages(productImageVOS);
+        UserInfoVO userInfoVO = getUserInfo(productInfoVO.getUserId());
+        if(userInfoVO != null){
+            productInfoVO.setUserTypeName(userInfoVO.getUserType().getKey());
+            productInfoVO.setUserName(userInfoVO.getName());
+            productInfoVO.setMobile(userInfoVO.getMobile());
+        }else{
+            productInfoVO.setUserTypeName(productInfo.getUserType().getKey());
+        }
+        return productInfoVO;
+    }
+
+    /**
+     * 设置供求标签信息
+     * @param productInfoVO 组织信息
+     * @param userId 用户id
+     * @return 处理结果
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String setProductTags(ProductInfoVO productInfoVO, String userId){
+        //查询供求信息
+        ProductInfo productInfo = productInfoDAO.findFirstByElasticIdAndEnableFlag(productInfoVO.getElasticId(),EnableFlag.Y);
+        if(productInfo == null){
+            return Constants.ENABLE_NOT_NULL;
+        }
+        List<ProductTagsVO> productTagsVOS = productInfoVO.getProductTags();
+        Iterable<ProductTags> list = productTagsDAO.findByEsIdAndEnableFlag(productInfo.getElasticId(),EnableFlag.Y);
+        list.forEach(productTags1 -> {
+            productTags1.setEnableFlag(EnableFlag.N);
+            productTags1.setLastUpdateDate(new Date());
+            productTags1.setLastUpdateBy(userId);
+            productTagsDAO.saveAndFlush(productTags1);
+        });
+        if(!CollectionUtils.isEmpty(productTagsVOS)){
+            productTagsVOS.forEach(productTagsVO -> {
+                ProductTags productTags = new ProductTags();
+                BeanUtil.copyPropertiesIgnoreNullFilds(productTagsVO,productTags);
+                productTags.setEsId(productInfo.getElasticId());
+                productTags.setId(idGen.nextId());
+                productTags.setCreateDate(new Date());
+                productTags.setCreateBy(userId);
+                productTagsDAO.saveAndFlush(productTags);
+            });
+        }
+        //供求还在上架状态中时，修改es中该供求标签信息
+        if(productInfo.getTimeout() > 0){
+            List<ESProductTagsVO> list1 = new ArrayList<>();
+            if(!CollectionUtils.isEmpty(productTagsVOS)){
+                productTagsVOS.forEach(productTags -> {
+                    ESProductTagsVO esProductTagsVO = new ESProductTagsVO();
+                    BeanUtil.copyPropertiesIgnoreNullFilds(productTags,esProductTagsVO);
+                    list1.add(esProductTagsVO);
+                });
+            }
+            Map<String,Object> updateParam = new HashMap<>(16);
+            updateParam.put("productTags",list1);
+            boolean result = apecESProducer.postESInfoForUpdateByDoc(EsProducerConstants.INDEX_URL_PRODUCT, productInfo.getElasticId(), updateParam);
+            if(!result){
+                logger.warn("setProductTags {} es id: {} update failed", EsProducerConstants.INDEX_URL_PRODUCT, productInfo.getElasticId());
+            }
+        }
+        return Constants.RETURN_SUCESS;
+    }
+
+    @Override
+    public String stickProductInfo(ProductInfoVO productInfoVO, String userId) {
+        ProductInfo productInfo = productInfoDAO.findOne(productInfoVO.getId());
+        if (productInfo == null){
+            return Constants.ENABLE_NOT_NULL;
+        }
+        Long list = productInfoDAO.queryMaxOrderWeight();
+        if(list == null){
+            list = 0L;
+        }
+        productInfo.setOrderWeight(list + 1);
+        productInfo.setLastUpdateBy(userId);
+        productInfo.setLastUpdateDate(new Date());
+        productInfoDAO.save(productInfo);
+        if(productInfo.getTimeout() > 0){
+            //未下架的供求，更新es中供求信息
+            Map<String,Object> updateParam = new HashMap<>(16);
+            updateParam.put("orderWeight",productInfo.getOrderWeight());
+            boolean result = apecESProducer.postESInfoForUpdateByDoc(EsProducerConstants.INDEX_URL_PRODUCT, productInfo.getElasticId(), updateParam);
+            if(!result){
+                logger.warn("stickProductInfo {} es id: {} update failed,the order weight is {}", EsProducerConstants.INDEX_URL_PRODUCT, productInfo.getElasticId(),productInfo.getOrderWeight());
+            }
+        }
+        return Constants.RETURN_SUCESS;
+    }
+
+    @Override
+    public String closeStickProductInfo(ProductInfoVO productInfoVO, String userId) {
+        ProductInfo productInfo = productInfoDAO.findOne(productInfoVO.getId());
+        if (productInfo == null){
+            return Constants.ENABLE_NOT_NULL;
+        }
+        productInfo.setOrderWeight(null);
+        productInfo.setLastUpdateBy(userId);
+        productInfo.setLastUpdateDate(new Date());
+        productInfoDAO.save(productInfo);
+        if(productInfo.getTimeout() > 0){
+            //未下架的供求，更新es中供求信息
+            Map<String,Object> updateParam = new HashMap<>(16);
+            updateParam.put("orderWeight",0);
+            boolean result = apecESProducer.postESInfoForUpdateByDoc(EsProducerConstants.INDEX_URL_PRODUCT, productInfo.getElasticId(), updateParam);
+            if(!result){
+                logger.warn("closeStickProductInfo {} es id: {} update failed,the order weight is {}", EsProducerConstants.INDEX_URL_PRODUCT, productInfo.getElasticId(),productInfo.getOrderWeight());
+            }
+        }
+        return Constants.RETURN_SUCESS;
+    }
+
+    /**
+     * 根据多种情况查询活动信息
+     * 包括like：skuName,address  eq:productType,userId  in:userId
+     * @param  productInfoDTO vo
+     * @return  Predicate
+     */
+    private Predicate getInputCondition(ProductInfoDTO productInfoDTO)
+    {
+        List<BooleanExpression> predicates = new ArrayList<>();
+        if(null != productInfoDTO)
+        {
+            if (!StringUtils.isBlank(productInfoDTO.getSkuName())) {
+                predicates.add(QProductInfo.productInfo.skuName.like("%" + productInfoDTO.getSkuName() + "%"));
+            }
+            if (!StringUtils.isBlank(productInfoDTO.getAddress())) {
+                predicates.add(QProductInfo.productInfo.address.like("%" + productInfoDTO.getAddress() + "%"));
+            }
+            if (productInfoDTO.getProductType() != null) {
+                predicates.add(QProductInfo.productInfo.productType.eq(productInfoDTO.getProductType()));
+            }
+            if (productInfoDTO.getUserId() != null && productInfoDTO.getUserId() != 0L) {
+                predicates.add(QProductInfo.productInfo.userId.eq(productInfoDTO.getUserId()));
+            }
+            if (!CollectionUtils.isEmpty(productInfoDTO.getUserIds())) {
+                predicates.add(QProductInfo.productInfo.userId.in(productInfoDTO.getUserIds()));
+            }
+            if(productInfoDTO.getStartDate() != null){
+                predicates.add(QProductInfo.productInfo.createDate.goe(productInfoDTO.getStartDate()));
+            }
+            if(productInfoDTO.getEndDate() != null){
+                predicates.add(QProductInfo.productInfo.createDate.loe(productInfoDTO.getEndDate()));
+            }
+            if (productInfoDTO.getUnderCarriage() != null) {
+                if(productInfoDTO.getUnderCarriage()){
+                    predicates.add(QProductInfo.productInfo.timeout.eq(0));
+                }else{
+                    predicates.add(QProductInfo.productInfo.timeout.gt(0));
+                }
+            }
+        }
+        predicates.add(QProductInfo.productInfo.enableFlag.eq(EnableFlag.Y));
+        return BooleanExpression.allOf(predicates.toArray(new BooleanExpression[predicates.size()]));
     }
 
     /**
      * TODO 定时任务要在下架之后才能跑 或者要有下架时间
-     * @param indexUrl
-     * @param productInfoPages
-     * @return
      */
-    private String pushEsInfo(String indexUrl, List<ProductInfo> productInfoPages) {
+    private String pushEsInfo(String indexUrl, List<ProductInfo> productInfoPages,Boolean checkOffSell) {
         //index 开头加斜杠
         if(!indexUrl.startsWith(Constants.SINGLE_SLASH)) {
             indexUrl = Constants.SINGLE_SLASH + indexUrl;
@@ -570,8 +893,12 @@ public class ProductServiceImpl implements ProductService {
             esProductInfo = new ESProductInfoVO();
             BeanUtil.copyPropertiesIgnoreNullFilds(esHisProductInfoVO, esProductInfo);
             //es id还是用原来的 所以index需要加上es id
-            newIndex = indexUrl + productInfoPage.getElasticId();
-            ESPostResponseVO esPostResponseVO = apecESProducer.postESInfo(newIndex, JsonUtil.toJSONString(esProductInfo));
+            String esId = productInfoPage.getElasticId();
+            if(checkOffSell){
+                esId = productInfoPage.getOffsellElasticId();
+            }
+            newIndex = indexUrl + esId;
+            apecESProducer.postESInfo(newIndex, BaseJsonUtil.toJSONString(esProductInfo));
         }
         return Constants.RETURN_SUCESS;
     }
@@ -581,20 +908,20 @@ public class ProductServiceImpl implements ProductService {
     @Async
     public void offSellProductJob() {
         Long startTime = System.currentTimeMillis();
-        ResultData<String> jobResult = new ResultData<>();
-        jobResult.setErrorCode(Constants.RETURN_SUCESS);
         try {
             //获取收藏总量
-            String save_all_num_redis = cacheService.get(RedisConstants.PRO_ALL_SAVE_NUM);
-            long saveNumTotal = 1L; //如果没有总量则默认为1
-            if(StringUtils.isNotBlank(save_all_num_redis)){
-                saveNumTotal = Long.valueOf(save_all_num_redis);
+            String saveAllNumRedis = cacheService.get(RedisConstants.PRO_ALL_SAVE_NUM);
+            //如果没有总量则默认为1
+            long saveNumTotal = 1L;
+            if(StringUtils.isNotBlank(saveAllNumRedis)){
+                saveNumTotal = Long.valueOf(saveAllNumRedis);
             }
             //获取浏览总量
-            String view_all_num_redis = cacheService.get(RedisConstants.PRO_ALL_VIEW_NUM);
-            long viewNumTotal = 1L; //如果没有总量则默认为1
-            if(StringUtils.isNotBlank(view_all_num_redis)){
-                viewNumTotal = Long.valueOf(view_all_num_redis);
+            String viewAllNumRedis = cacheService.get(RedisConstants.PRO_ALL_VIEW_NUM);
+            //如果没有总量则默认为1
+            long viewNumTotal = 1L;
+            if(StringUtils.isNotBlank(viewAllNumRedis)){
+                viewNumTotal = Long.valueOf(viewAllNumRedis);
             }
             //获取推荐列表
             String productRecommend = cacheService.get(RedisConstants.PRO_RECOMMEND);
@@ -603,7 +930,8 @@ public class ProductServiceImpl implements ProductService {
 
             //获取timeout 总量
             List<Object> timeoutList = productInfoDAO.countTimeOut();
-            long timeOutTotal = 1; //如果没有总量则默认为1
+            //如果没有总量则默认为1
+            long timeOutTotal = 1;
             if(timeoutList.size() != 0){
                 BigDecimal timeOutDecimal = (BigDecimal) timeoutList.get(0);
                 if(timeOutDecimal != null) {
@@ -612,11 +940,11 @@ public class ProductServiceImpl implements ProductService {
             }
 
             //获取权重数据字典信息
-            Map<String, String> requestMap = new HashMap<>();
+            Map<String, String> requestMap = new HashMap<>(16);
             requestMap.put("code",orderWeightCode);
-            String responseStr = springCloudClient.post(dicServiceAddr, JsonUtil.toJSONString(requestMap));
-            ResultData resultData = JsonUtil.parseObject(responseStr, ResultData.class);
-            Map<OrderWeightType,Integer> orderWeightMap = new HashMap<>();
+            String responseStr = springCloudClient.post(dicServiceAddr, BaseJsonUtil.toJSONString(requestMap));
+            ResultData resultData = BaseJsonUtil.parseObject(responseStr, ResultData.class);
+            Map<OrderWeightType,Integer> orderWeightMap = new HashMap<>(16);
             if(resultData.isSucceed()){
                 List dicList = (List) resultData.getData();
                 dicList.forEach(dic->{
@@ -644,13 +972,9 @@ public class ProductServiceImpl implements ProductService {
                 page ++;
             }
 
-        }catch (Throwable e){
-            jobResult.setErrorCode(Constants.SYS_ERROR);
-            jobResult.setErrorMsg(e.getMessage());
-            AsyncResult<ResultData> result = new AsyncResult<>(jobResult);
-            //新增回调方法处理job执行结果
-            result.addCallback(offSellJobFinishTask);
-            throw e;//抛出异常保持事务一致性
+        }catch (Exception e){
+            //抛出异常保持事务一致性
+            throw e;
         }
         logger.info("======================off sell job execute success============================");
         logger.info("off sell job execute total time :{}", System.currentTimeMillis() - startTime);
@@ -669,7 +993,8 @@ public class ProductServiceImpl implements ProductService {
                 isOffSell = true;
             }
             //把供求信息中的time out减去1 如果数量为0时 则不减
-            timeOut = oldTimeOut-1<=0 ? 0: oldTimeOut-1; //如果为0则表示已下架
+            //如果为0则表示已下架
+            timeOut = oldTimeOut-1<=0 ? 0: oldTimeOut-1;
             productInfo.setTimeout(timeOut);
             esHisProductInfoVO = genEsProductInfoVO(productInfo);
             //如果供求已经下架则不执行下架和权重计算
@@ -685,7 +1010,7 @@ public class ProductServiceImpl implements ProductService {
                 esHisProductInfoVO.setOffsellDate(productInfo.getOffsellDate());
                 offSellProduct(esHisProductInfoVO);
                 //更新es id
-                productInfo.setElasticId(esHisProductInfoVO.getElasticId());
+                productInfo.setOffsellElasticId(esHisProductInfoVO.getElasticId());
                 logger.info("=============off sell product [esId:{}] [userId:{}]  end==================", esHisProductInfoVO.getElasticId(), esHisProductInfoVO.getUserId());
             }else {//没有下架的供求需要修改ES的权重值
                 logger.info("=============count product order weight [esId:{}] [userId:{}]  start==================", esHisProductInfoVO.getElasticId(), esHisProductInfoVO.getUserId());
@@ -700,14 +1025,6 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * 计算权重
-     * @param timeOut
-     * @param esHisProductInfoVO
-     * @param saveNumTotal
-     * @param viewNumTotal
-     * @param timeOutTotal
-     * @param recommendCount
-     * @param productRecommendRedis
-     * @param orderWeightMap
      */
     private void orderWeightCount(int timeOut, ESHisProductInfoVO esHisProductInfoVO, long saveNumTotal, long viewNumTotal,
                                   long timeOutTotal, long recommendCount, String productRecommendRedis,
@@ -728,7 +1045,8 @@ public class ProductServiceImpl implements ProductService {
             viewNumWeight = 20;
         }
         String productViewNumRedis = cacheHashService.hget(productRedisKey, RedisHashConstants.HASH_PRO_VIEW_NUM);
-        productViewNumRedis = StringUtils.isBlank(productViewNumRedis) ? "0" : productViewNumRedis;//如果redis取不到值则为0
+        //如果redis取不到值则为0
+        productViewNumRedis = StringUtils.isBlank(productViewNumRedis) ? "0" : productViewNumRedis;
         float viewNum = new BigDecimal(productViewNumRedis).divide(new BigDecimal(viewNumTotal), scale, BigDecimal.ROUND_HALF_UP).floatValue() * viewNumWeight;
         //收藏量权重 20
         Integer saveNumWeight = orderWeightMap.get(OrderWeightType.SAVE_NUM);
@@ -736,7 +1054,8 @@ public class ProductServiceImpl implements ProductService {
             saveNumWeight = 20;
         }
         String productSaveNumRedis = cacheHashService.hget(productRedisKey, RedisHashConstants.HASH_PRO_SAVE_NUM);
-        productSaveNumRedis = StringUtils.isBlank(productSaveNumRedis) ? "0" : productSaveNumRedis; //如果redis取不到值则为0
+        //如果redis取不到值则为0
+        productSaveNumRedis = StringUtils.isBlank(productSaveNumRedis) ? "0" : productSaveNumRedis;
         float saveNum = new BigDecimal(productSaveNumRedis).divide(new BigDecimal(saveNumTotal), scale, BigDecimal.ROUND_HALF_UP).floatValue() * saveNumWeight;
         //是否推荐权重 40 没有推荐则为0
         Integer recommendWeight = orderWeightMap.get(OrderWeightType.RRECOMMEND);
@@ -751,16 +1070,16 @@ public class ProductServiceImpl implements ProductService {
         //计算权重
         float orderWeight = offSell + viewNum + saveNum + recommend;
         //更新权重
-        ESGetSingleResponseVO esGetSingleResponseVO = apecESProducer.getSingleESInfoById(ESProducerConstants.INDEX_URL_PRODUCT, esId, ESProductInfoVO.class);
+        EsGetSingleResponseVO esGetSingleResponseVO = apecESProducer.getSingleESInfoById(EsProducerConstants.INDEX_URL_PRODUCT, esId, ESProductInfoVO.class);
         if(null != esGetSingleResponseVO && esGetSingleResponseVO.getFound()) {
-            Map<String,String> orderWeightParam = new HashMap<>();
+            Map<String,String> orderWeightParam = new HashMap<>(16);
             orderWeightParam.put("orderWeight", String.valueOf(orderWeight));
             orderWeightParam.put("timeout", String.valueOf(esHisProductInfoVO.getTimeout()));
-            boolean result = apecESProducer.postESInfoForUpdateByDoc(ESProducerConstants.INDEX_URL_PRODUCT, esId, orderWeightParam);
+            boolean result = apecESProducer.postESInfoForUpdateByDoc(EsProducerConstants.INDEX_URL_PRODUCT, esId, orderWeightParam);
             if(result){
-                logger.info("{} es id: {} update success", ESProducerConstants.INDEX_URL_PRODUCT, esId);
+                logger.info("{} es id: {} update success", EsProducerConstants.INDEX_URL_PRODUCT, esId);
             }else {
-                logger.warn("{} es id: {} update failed", ESProducerConstants.INDEX_URL_PRODUCT, esId);
+                logger.warn("{} es id: {} update failed", EsProducerConstants.INDEX_URL_PRODUCT, esId);
             }
         }
 
@@ -797,6 +1116,14 @@ public class ProductServiceImpl implements ProductService {
             BeanUtil.copyPropertiesIgnoreNullFilds(productAttr,productAttrVO);
             listAttrVO.add(productAttrVO);
         });
+        List<ESProductTagsVO> tagsVOList = new ArrayList<>();
+        Iterable<ProductTags> listProductTag = productTagsDAO.findByEsIdAndEnableFlag(productInfo.getElasticId(),EnableFlag.Y);
+        listProductTag.forEach(productTags -> {
+            ESProductTagsVO esProductTagsVO = new ESProductTagsVO();
+            BeanUtil.copyPropertiesIgnoreNullFilds(productTags,esProductTagsVO);
+            tagsVOList.add(esProductTagsVO);
+        });
+        esHisProductInfoVO.setProductTags(tagsVOList);
         esHisProductInfoVO.setProductAttrs(listAttrVO);
 
         //获取图片信息
@@ -816,14 +1143,14 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * 发送 供求下架的站内信
-     * @param sukName
-     * @param userId
      */
     private void sendMessageMqInfo(String sukName, Long userId){
         MessageBodyVO messageBodyVO = new MessageBodyVO();
-        messageBodyVO.setType(MessageType.NOTIFICATION);//系统通知
-        messageBodyVO.setTemplateFlag(true);//使用动态模板发送
-        Map<String, String> contentMap = new HashMap<>();
+        //系统通知
+        messageBodyVO.setType(MessageType.NOTIFICATION);
+        //使用动态模板发送
+        messageBodyVO.setTemplateFlag(true);
+        Map<String, String> contentMap = new HashMap<>(16);
         contentMap.put("sukName",sukName);
         messageBodyVO.setTemplateKey(MessageTemplate.PRODUCT_OFF_SELL_TEMPLATE);
         messageBodyVO.setRealm(Realm.MESSAGE);
@@ -834,8 +1161,10 @@ public class ProductServiceImpl implements ProductService {
         messageVO.setId(idGen.nextId());
         List<Long> receivers = new ArrayList<>();
         receivers.add(userId);
-        messageVO.setReceivers(receivers);//接收者
-        messageVO.setMessageStatus(MessageStatus.NEW);//用户状态
+        //接收者
+        messageVO.setReceivers(receivers);
+        //用户状态
+        messageVO.setMessageStatus(MessageStatus.NEW);
         mqProducerClient.sendConcurrently(MqTag.MESSAGE_TAG.getKey(),String.valueOf(messageVO.getId()),messageVO);
     }
 
@@ -843,17 +1172,17 @@ public class ProductServiceImpl implements ProductService {
         //落地ES
         ESProductInfoVO esProductInfo = new ESProductInfoVO();
         BeanUtil.copyPropertiesIgnoreNullFilds(esProductInfoVO, esProductInfo);
-        ESPostResponseVO esPostResponseVO = apecESProducer.postESInfo(ESProducerConstants.INDEX_URL_OFF_SELL, JsonUtil.toJSONString(esProductInfo));
-        boolean delResult = apecESProducer.deleteESInfo(ESProducerConstants.INDEX_URL_PRODUCT, esProductInfoVO.getElasticId());
+        EsPostResponseVO esPostResponseVO = apecESProducer.postESInfo(EsProducerConstants.INDEX_URL_OFF_SELL, BaseJsonUtil.toJSONString(esProductInfo));
+        boolean delResult = apecESProducer.deleteESInfo(EsProducerConstants.INDEX_URL_PRODUCT, esProductInfoVO.getElasticId());
         if(delResult) {
-            logger.info("{} delete es id {} success", ESProducerConstants.INDEX_URL_PRODUCT, esProductInfoVO.getElasticId());
+            logger.info("{} delete es id {} success", EsProducerConstants.INDEX_URL_PRODUCT, esProductInfoVO.getElasticId());
         }else {
-            logger.warn("{} delete es id {} failed", ESProducerConstants.INDEX_URL_PRODUCT, esProductInfoVO.getElasticId());
+            logger.warn("{} delete es id {} failed", EsProducerConstants.INDEX_URL_PRODUCT, esProductInfoVO.getElasticId());
         }
         //redis中新增下架的供求
         //Redis落地
         if(StringUtils.isNotBlank(esPostResponseVO.getId())) {
-            logger.info("{} add es id {} success", ESProducerConstants.INDEX_URL_OFF_SELL, esPostResponseVO.getId());
+            logger.info("{} add es id {} success", EsProducerConstants.INDEX_URL_OFF_SELL, esPostResponseVO.getId());
             String productRedisKey = RedisHashConstants.HASH_USER_PREFIX + esProductInfoVO.getUserId();
             String offSellProductRedis = cacheHashService.hget(productRedisKey, RedisHashConstants.HASH_PRODUCT_OFF_SELL_PREFIX);
             if (StringUtils.isBlank(offSellProductRedis)) {
@@ -891,7 +1220,7 @@ public class ProductServiceImpl implements ProductService {
             //设置新的ES id
             esProductInfoVO.setElasticId(esPostResponseVO.getId());
         }else {
-            logger.info("{} add es id {} failed", ESProducerConstants.INDEX_URL_OFF_SELL, esPostResponseVO.getId());
+            logger.info("{} add es id {} failed", EsProducerConstants.INDEX_URL_OFF_SELL, esPostResponseVO.getId());
         }
     }
 }

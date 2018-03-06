@@ -7,9 +7,13 @@
   height: 0;
   *zoom: 1;
 }
+.z-find-Add-sty {
+  position: fixed;
+  top: 0;
+  z-index: 88;
+}
 .z-header-com {
   padding: 0 0.625rem;
-  position: relative;
   width: 17.5rem;
   height: 2.2rem;
   color: #333;
@@ -65,6 +69,10 @@
   background-color: #fff;
 }
 .z-trader .z-t-select {
+  position: fixed;
+  top: 2.2rem;
+  z-index: 99;
+  background-color: #fff;
   border-bottom: 0.05rem solid #dcd7d7;
   display: -webkit-box;
   /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
@@ -126,21 +134,27 @@
   border-bottom-color: #28cba7;
 }
 .z-trader .z-t-frame {
-  position: relative;
+  position: fixed;
+  top: 4.2rem;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
 }
-.z-trader .z-t-frame .z-t-shadow {
-  position: absolute;
-  top: 0;
+.z-trader .z-t-shadow {
+  position: fixed;
+  top: 4.3rem;
+  right: 0;
+  bottom: 0;
   left: 0;
   z-index: 100;
-  height: 100%;
 }
-.z-trader .z-t-frame .z-t-listS {
+.z-trader .z-t-listS {
   padding: 0.5rem 0.625rem 0;
   width: 17.5rem;
   background-color: #fff;
 }
-.z-trader .z-t-frame .z-t-listS li {
+.z-trader .z-t-listS li {
   float: left;
   width: 5.75rem;
   height: 100%;
@@ -148,7 +162,7 @@
   margin-bottom: 0.5rem;
   text-align: center;
 }
-.z-trader .z-t-frame .z-t-listS li .pitch {
+.z-trader .z-t-listS li .pitch {
   height: 1.75rem;
   color: #333;
   width: 4rem;
@@ -158,27 +172,27 @@
   border-radius: 0.25rem;
   background-color: #f1f2f6;
 }
-.z-trader .z-t-frame .z-t-listS li .pitch span {
+.z-trader .z-t-listS li .pitch span {
   font-size: 0.75rem;
 }
-.z-trader .z-t-frame .z-t-listS li .pitch img {
+.z-trader .z-t-listS li .pitch img {
   width: 0.65rem;
   height: 0.5rem;
   display: none;
 }
-.z-trader .z-t-frame .z-t-listS li .on {
+.z-trader .z-t-listS li .on {
   color: #28cba7;
   border-color: #28CBA7;
 }
-.z-trader .z-t-frame .z-t-listS li .on img {
+.z-trader .z-t-listS li .on img {
   display: inline-block;
 }
-.z-trader .z-t-frame .z-t-listA {
+.z-trader .z-t-listA {
   padding: 0 0.625rem;
   width: 17.5rem;
   background-color: #fff;
 }
-.z-trader .z-t-frame .z-t-listA li {
+.z-trader .z-t-listA li {
   float: left;
   width: 5.75rem;
   height: 100%;
@@ -186,7 +200,7 @@
   margin-bottom: 0.5rem;
   text-align: center;
 }
-.z-trader .z-t-frame .z-t-listA li .pitch {
+.z-trader .z-t-listA li .pitch {
   height: 1.75rem;
   color: #333;
   width: 4rem;
@@ -196,22 +210,22 @@
   border-radius: 0.25rem;
   background-color: #f1f2f6;
 }
-.z-trader .z-t-frame .z-t-listA li .pitch span {
+.z-trader .z-t-listA li .pitch span {
   font-size: 0.75rem;
 }
-.z-trader .z-t-frame .z-t-listA li .pitch img {
+.z-trader .z-t-listA li .pitch img {
   width: 0.65rem;
   height: 0.5rem;
   display: none;
 }
-.z-trader .z-t-frame .z-t-listA li .on {
+.z-trader .z-t-listA li .on {
   color: #28cba7;
   border-color: #28CBA7;
 }
-.z-trader .z-t-frame .z-t-listA li .on img {
+.z-trader .z-t-listA li .on img {
   display: inline-block;
 }
-.z-trader .z-t-frame .shadow {
+.z-trader .shadow {
   min-height: 30rem;
   height: 100%;
   width: 18.75rem;
@@ -220,10 +234,10 @@
   filter: alpha(opacity=50);
   -moz-opacity: 0.5;
 }
-.z-trader .z-t-frame .c-z-tr-empty {
+.z-trader .c-z-tr-empty {
   z-index: -1;
 }
-.z-trader .z-t-frame .c-z-tr-empty img {
+.z-trader .c-z-tr-empty img {
   height: 5.5rem;
   display: block;
   position: relative;
@@ -235,7 +249,7 @@
   top: 5rem;
   left: 50%;
 }
-.z-trader .z-t-frame .c-z-tr-empty p {
+.z-trader .c-z-tr-empty p {
   font-size: 0.8rem;
   text-align: center;
   color: #333;

@@ -1,0 +1,176 @@
+.c-revise {
+  height: 100%;
+  width: 100%;
+}
+.c-revise .c-revise-title {
+  position: fixed;
+  top: 0;
+  z-index: 10;
+  width: 18.75rem;
+  height: 2.2rem;
+  line-height: 2.2rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #fff;
+  background-color: #B6353C;
+}
+.c-revise .c-revise-canvas {
+  position: fixed;
+  top: 2.2rem;
+  width: 18.75rem;
+  height: 11.05rem;
+  background-color: #fff;
+  overflow: hidden;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-revise .c-revise-picture {
+  width: 18.75rem;
+  height: auto;
+}
+.c-revise .c-revise-canvas-mask {
+  position: absolute;
+  width: 18.75rem;
+  height: 11.05rem;
+  pointer-events: none;
+}
+.c-revise .c-revise-btn {
+  position: fixed;
+  top: 13.25rem;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  background-color: #B6353C;
+}
+.c-revise .c-revise-btn-l {
+  margin-top: 1.4rem;
+  width: 10.05rem;
+}
+.c-revise .c-revise-btn-r {
+  margin-top: 1.4rem;
+}
+.c-revise .c-revise-btn-l-bg {
+  margin: auto;
+  display: block;
+  width: 7.55rem;
+  height: 2.3rem;
+  background: url("../../img/o_revise_l.png") no-repeat center;
+  background-size: 100% 100%;
+}
+.c-revise .c-revise-btn-r-bg {
+  width: 7.55rem;
+  height: 2.3rem;
+  background: url("../../img/o_revise_r.png") no-repeat center;
+  background-size: 100% 100%;
+}
+.c-revise .c-revise-canvas-clip {
+  position: absolute;
+  top: 0.25rem;
+  left: 4.1rem;
+  width: 10.55rem;
+  height: 10.55rem;
+  overflow: hidden;
+}
+.c-revise .photo-clip-view {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -5.275rem;
+  margin-left: -5.275rem;
+  width: 10.55rem;
+  height: 10.55rem;
+}
+.c-revise .photo-clip-mask-left {
+  position: absolute;
+  left: 0;
+  top: 0.25rem;
+  width: 4.1rem;
+  height: 10.55rem;
+  background-color: #969696;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  -moz-opacity: 0.5;
+}
+.c-revise .photo-clip-mask-right {
+  position: absolute;
+  right: 0;
+  top: 0.25rem;
+  width: 4.1rem;
+  height: 10.55rem;
+  background-color: #969696;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  -moz-opacity: 0.5;
+}
+.c-revise .photo-clip-mask-top {
+  position: absolute;
+  top: 0;
+  width: 18.75rem;
+  height: 0.25rem;
+  background-color: #969696;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  -moz-opacity: 0.5;
+}
+.c-revise .photo-clip-mask-bottom {
+  position: absolute;
+  bottom: 0rem;
+  width: 18.75rem;
+  height: 0.25rem;
+  background-color: #969696;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  -moz-opacity: 0.5;
+}
+.c-revise .photo-clip-mask-area {
+  position: absolute;
+  top: 0.25rem;
+  left: 4.1rem;
+  width: 10.45rem;
+  height: 10.45rem;
+  border: 0.05rem dashed #000000;
+}
+.c-revise .c-revise-btn-file {
+  position: absolute;
+  top: 10000px;
+}
+.c-revise .photo-clip-moveLayer {
+  transform-origin: 0px 0px 0px;
+  transition-timing-function: cubic-bezier(0.1, 0.57, 0.1, 1);
+  transition-duration: 0ms;
+  transform: translate(0px, 0px) scale(1) translateZ(0px);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+.c-revise .c-revise-compose {
+  position: fixed;
+  top: 50px;
+  z-index: -5;
+}
+.c-revise #myCanvas {
+  position: fixed;
+  top: 400px;
+  border: 1px solid red;
+}

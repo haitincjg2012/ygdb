@@ -51,15 +51,15 @@ public class BSMessageDAOImpl implements BSMessageDAO{
 
 	/**
 	 * 分页查询Object信息
-	 * @param messageDTO查询条件对象
+	 * @param messageDTO 查询条件对象
 	 * @param sql 查询object信息语句
-	 * @param countSql查询条数语句
-	 * @return PageDTO<Object[]>
+	 * @param countSql 查询条数语句
+	 * @return 分页结果
 	 * */
 	@SuppressWarnings("unchecked")
 	private PageDTO<Object[]> listObjectInfo(MessageDTO messageDTO,String sql,String countSql){
 		EntityManager em = null;
-		PageDTO<Object[]> pageDTO = new PageDTO<Object[]>();
+		PageDTO<Object[]> pageDTO = new PageDTO<>();
 		StringBuffer sb = new StringBuffer(sql);
 		
         //分页
@@ -86,11 +86,12 @@ public class BSMessageDAOImpl implements BSMessageDAO{
   	          if (obj != null) {
   	        	  count = Long.valueOf(obj.toString());
   	          }
-  	        
-              pageDTO.setNumber(pageNumber);//当前页数
+			  //当前页数
+              pageDTO.setNumber(pageNumber);
               pageDTO.setRows(list);
               pageDTO.setTotalElements(count);
-              double totalPages = Math.ceil((double)count/pageSize);//总页数
+			  //总页数
+              double totalPages = Math.ceil((double)count/pageSize);
               pageDTO.setTotalPages((int)totalPages);
 		} catch (Exception e){
             throw e;
@@ -104,8 +105,7 @@ public class BSMessageDAOImpl implements BSMessageDAO{
 	
 	/**
 	 * 后台系统通知多条件
-	 * @param messageDTO
-	 * @param StringBuffer
+	 * @param messageDTO messageDTO
 	 * @return String
 	 * */
 	private String getBSConditionQuery(MessageDTO messageDTO){

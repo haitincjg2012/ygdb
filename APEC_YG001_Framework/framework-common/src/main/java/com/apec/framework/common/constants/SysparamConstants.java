@@ -1,5 +1,8 @@
 package com.apec.framework.common.constants;
 
+/**
+ * @author xxx
+ */
 public interface SysparamConstants
 {
     /**

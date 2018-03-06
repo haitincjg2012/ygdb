@@ -22,6 +22,7 @@ import java.util.List;
 
 /**
  * Created by hmy on 2017/7/10.
+ * @author hmy
  */
 @Service
 public class AttributeValueServiceImpl implements AttributeValueService {
@@ -93,11 +94,12 @@ public class AttributeValueServiceImpl implements AttributeValueService {
 
     /**
      * 批量删除attributeValue
-     * @param ids
-     * @return
+     * @param ids 要删除的ids
+     * @param userId 操作人id
+     * @return String
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String deleteAttributeValueList(List<Long> ids, String userId){
         attributeValueDAO.deleteAttributeValueList(ids,userId);
         return Constants.RETURN_SUCESS;

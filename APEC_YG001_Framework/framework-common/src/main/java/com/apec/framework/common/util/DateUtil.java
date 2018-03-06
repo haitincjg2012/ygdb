@@ -17,14 +17,15 @@ public class DateUtil
     /**
      * 常用时间格式
      */
-    public static final String Format_Date = "yyyy-MM-dd";
+    public static final String FORMAT_DATE = "yyyy-MM-dd";
 
-    public static final String Format_Time = "HH:mm:ss";
+    public static final String FORMAT_TIME = "HH:mm:ss";
 
     public static Date string2Date(String str)
     {
-        if(Strings.isNullOrEmpty(str))
+        if(Strings.isNullOrEmpty(str)){
             return new Date();
+        }
         return java.sql.Date.valueOf(str);
     }
 
@@ -62,8 +63,8 @@ public class DateUtil
     
     /**
      * 获取前n天开始时间
-     * @param n
-     * @return
+     * @param n n
+     * @return Date
      */
     public static Date getStartPreDay(int n) {
         n = -n;

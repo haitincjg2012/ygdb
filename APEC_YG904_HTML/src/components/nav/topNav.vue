@@ -3,11 +3,11 @@
 * 上部导航栏
 */
 <template>
-<el-menu theme="dark" class="topNav" mode="horizontal" :router="true">
+<el-menu class="topNav" default-active="1" background-color="#4a5e84" text-color="#fff" active-text-color="#20a0ff" mode="horizontal" >
     <el-menu-item class="title" index="">易果代办管理系统</el-menu-item>
     <el-submenu class="loginInfo" index="1">
         <template slot="title">欢迎您：{{username}}</template>
-        <el-menu-item class="breadBlack" index="" @click="exit">退出</el-menu-item>
+        <el-menu-item index="1-1" @click="exit">退出</el-menu-item>
     </el-submenu>
 </el-menu>
 </template>

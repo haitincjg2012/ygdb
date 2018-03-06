@@ -9,13 +9,15 @@ import vueg from 'vueg'
 import 'vueg/css/transition-min.css'
 import './assets/js/dateFormat.js'
 import myfilter from './filters/filter.js'//过滤器
+// import './assets/js/scroll'//全局的初始化
+// import {Observer} from './assets/js/Observer'//全局的初始化
 
 
+import wxT from './views/js/index'
 //mint-ui
 import Mint from 'mint-ui'
 import 'mint-ui/lib/style.css'
 Vue.use(Mint);
-
 //滚东条
 Vue.use(VueScroller);
 
@@ -55,11 +57,12 @@ const options = {
   disable: false,               //禁用转场动画，默认为false，嵌套路由默认为true
 }
 Vue.use(vueg, router, options);
+Vue.use(wxT);
+// Vue.prototype.test = function () {
+//   console.log("测试vue");
+// };
 
-Vue.use(VueResource);
-
-
-new Vue({
+var vue = new Vue({
   store,
   router,
   render: h => h(app),
@@ -67,3 +70,4 @@ new Vue({
     eventHub: new Vue()
   }
 }).$mount('#app')
+

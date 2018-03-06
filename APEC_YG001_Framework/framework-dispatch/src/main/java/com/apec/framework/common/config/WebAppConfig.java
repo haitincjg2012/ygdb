@@ -15,6 +15,7 @@ import javax.servlet.MultipartConfigElement;
  * 内容摘要：
  * 完成日期：
  * 编码作者：
+ * @author xxx
  */
 @Configuration
 public class WebAppConfig
@@ -35,8 +36,6 @@ public class WebAppConfig
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(sessionTimeOutFilter());
         registration.addUrlPatterns(notAllowUrls);
-        // registration.addInitParameter("paramName", "paramValue");
-        // registration.setName("testFilter");
         registration.setOrder(1);
         return registration;
     }
@@ -45,11 +44,11 @@ public class WebAppConfig
     public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
         //// 设置文件大小限制 ,超了，页面会抛出异常信息，这时候就需要进行异常信息的处理了;
-        factory.setMaxFileSize("10MB"); //KB,MB
+        //KB,MB
+        factory.setMaxFileSize("10MB");
         /// 设置总上传数据总大小
         factory.setMaxRequestSize("50MB");
         //Sets the directory location where files will be stored.
-        //factory.setLocation("路径地址");
         return factory.createMultipartConfig();
     }
 }

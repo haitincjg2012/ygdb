@@ -9,7 +9,14 @@ import com.apec.framework.common.enums.BaseEnum;
  */
 public enum SocietyType implements BaseEnum {
 
+    /**
+     * 默认圈子
+     */
     DEFAULT("默认圈子"),
+
+    /**
+     * 热门话题
+     */
     HOT_TOPIC("热门话题");
 
     private final String key;

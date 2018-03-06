@@ -9,6 +9,9 @@ import com.apec.framework.base.BaseApplication;
 import com.apec.framework.springcloud.SpringCloudConfig;
 import org.springframework.scheduling.annotation.EnableAsync;
 
+/**
+ * @author xxx
+ */
 @EnableDiscoveryClient
 @SpringBootApplication
 @EnableAsync

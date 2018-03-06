@@ -1,7 +1,7 @@
 package com.apec.framework.controller;
 
 import com.apec.framework.base.BaseController;
-import com.apec.framework.base.IJSONService;
+import com.apec.framework.base.IJsonService;
 import com.apec.framework.common.Constants;
 import com.apec.framework.common.exception.ApecRuntimeException;
 import com.apec.framework.common.exception.DispatchException;
@@ -22,13 +22,14 @@ import java.util.Map;
  * 内容摘要：公海数据请求信息
  * 创建日期：2016/9/29
  * 编码作者：
+ * @author xxx
  */
 @RestController
 public class FileUploadController extends BaseController
 {
 
     @Autowired
-    private IJSONService dispatchJSONService;
+    private IJsonService dispatchJSONService;
 
     @Autowired
     private FileUploadService fileUploadService;
@@ -169,7 +170,7 @@ public class FileUploadController extends BaseController
 
     /**
      * 通用上传图片
-     * @return
+     * @return String
      */
     @RequestMapping(value = "/common/uploadImg.apec", produces = "application/json;charset=UTF-8")
     public String imageUpload(  HttpServletRequest request) {

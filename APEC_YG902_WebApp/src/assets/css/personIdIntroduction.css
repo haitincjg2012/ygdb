@@ -1,0 +1,84 @@
+.z-personIdIntroduction .z-p-path {
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.z-personIdIntroduction .z-p-path .z-p-part {
+  width: 5.875rem;
+  font-size: 0.6rem;
+}
+.z-personIdIntroduction .z-p-path .z-p-part .z-p-number {
+  font-weight: bold;
+  font-size: 0.8rem;
+}
+.z-personIdIntroduction .z-p-path .z-p-part p {
+  text-align: center;
+}
+.z-personIdIntroduction .z-p-path .z-p-part .z-p-style {
+  line-height: 1.25rem;
+}
+.z-personIdIntroduction .z-p-path-line {
+  margin: auto;
+  width: 17.75rem;
+  height: 0.05rem;
+  background-color: #f4f4f4;
+}
+.z-personIdIntroduction .c-p-introduce {
+  padding-left: 0.5rem;
+  width: 18.25rem;
+}
+.z-personIdIntroduction .c-p-intro-com {
+  width: 18.25rem;
+  height: 2.25rem;
+  line-height: 2.25rem;
+  font-size: 0.75rem;
+  border-bottom: 0.05rem solid #f4f4f4;
+  color: #646464;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.z-personIdIntroduction .c-p-intro-com:nth-last-child(1) {
+  border-bottom: none;
+}
+.z-personIdIntroduction .c-p-intro-label {
+  width: 3.75rem;
+}
+.z-personIdIntroduction .c-p-intro-text {
+  width: 14.5rem;
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.z-personIdIntroduction .z-p-name {
+  line-height: 0.75rem;
+  border-radius: 0.1rem;
+  font-size: 0.6rem;
+  color: #fff;
+  border: 0.05rem solid #fd9e24;
+  background-color: #FD9E24;
+}
+.z-personIdIntroduction .z-p-authentication {
+  line-height: 0.75rem;
+  border-radius: 0.1rem;
+  font-size: 0.6rem;
+  color: #40CDAC;
+  border: 0.05rem solid #40cdac;
+}

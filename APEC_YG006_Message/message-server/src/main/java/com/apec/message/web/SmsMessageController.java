@@ -12,7 +12,7 @@ import com.apec.framework.common.Constants;
 import com.apec.framework.common.ErrorCodeConst;
 import com.apec.framework.common.ResultData;
 import com.apec.framework.common.exception.BusinessException;
-import com.apec.framework.common.util.JsonUtil;
+import com.apec.framework.common.util.BaseJsonUtil;
 import com.apec.framework.common.util.ValidateUtil;
 import com.apec.framework.log.InjectLogger;
 import com.apec.message.service.SmsMessageService;
@@ -36,13 +36,11 @@ public class SmsMessageController extends MyBaseController{
 	
 	/**
 	 * 发送短信，彩信消息
-	 * @param smsMessageVO 请求体
-	 * @return ResultData<String>
 	 * */
 	@RequestMapping(value = "/sendSmsMessage", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	public ResultData<String> sendSmsMessage(@RequestBody String json){
-		SmsMessageVO smsMessageVO = JsonUtil.parseObject(json, SmsMessageVO.class);
-		if (smsMessageVO.isTemlateFlag()){
+		SmsMessageVO smsMessageVO = BaseJsonUtil.parseObject(json, SmsMessageVO.class);
+		if (smsMessageVO.getTemlateFlag()){
 			if (smsMessageVO.getMsgsMap() == null || smsMessageVO.getTemplateKey() == null){
 				log.warn("msgsMap is null[msgsMap:{}]",smsMessageVO.getMsgsMap());
 				return getResultData(false, null, Constants.ERROR_100003);

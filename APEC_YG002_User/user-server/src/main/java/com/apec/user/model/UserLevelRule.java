@@ -35,10 +35,30 @@ public class UserLevelRule extends BaseModel<Long> {
     private UserLevel userLevel;
 
     /**
+     * 等级头衔
+     */
+    private String userLevelName;
+
+    /**
      *  积分
      */
     @Column(nullable = false)
     private Integer point;
+
+    /**
+     * 等级图片url
+     */
+    private String url;
+
+    /**
+     * 备注
+     */
+    private String remark;
+
+    /**
+     * 是否为禁用状态
+     */
+    private boolean frezzing;
 
 
 }

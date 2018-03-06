@@ -9,7 +9,14 @@ import com.apec.framework.common.enums.BaseEnum;
  */
 public enum UserPushStatus implements BaseEnum {
 
+    /**
+     * PUSH
+     */
     PUSH("1"),
+
+    /**
+     * NO_PUSH
+     */
     NO_PUSH("0");
 
     private final String key;

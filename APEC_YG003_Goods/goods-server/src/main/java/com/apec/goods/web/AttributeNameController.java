@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by hmy on 2017/7/10.
+ * @author hmy
  */
 @RestController
 @RequestMapping("/attributeName")
@@ -108,13 +109,12 @@ public class AttributeNameController extends MyBaseController {
     @RequestMapping(value = "/findAttributeName",method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
     public String findAttributeName(@RequestBody String json){
         try{
-            AttributeNameVO attributeNameVO1 = new AttributeNameVO();
             //获取前端数据
             AttributeNameVO attributeNameVO = getFormJSON(json,AttributeNameVO.class);
             if(attributeNameVO == null || attributeNameVO.getId() == null){
                 return super.getResultJSONStr(false, null, Constants.ERROR_100003);
             }
-            attributeNameVO1 = attributeNameService.findAttributeName(attributeNameVO);
+            AttributeNameVO attributeNameVO1 = attributeNameService.findAttributeName(attributeNameVO);
             return super.getResultJSONStr(true, attributeNameVO1, "");
         }catch (Exception e){
             log.error("[attributeName][findAttributeName] exception:{}",e);
@@ -128,12 +128,11 @@ public class AttributeNameController extends MyBaseController {
     @RequestMapping(value = "/getAttributeNamePage",method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
     public String getAttributeNamePage(@RequestBody String json){
         try{
-            PageDTO<AttributeNameVO> page = new PageDTO<>();
             AttributeNameDTO dto = getFormJSON(json,AttributeNameDTO.class);
             PageRequest pageRequest = genPageRequest(dto);
             AttributeNameVO attributeNameVO = new AttributeNameVO();
             BeanUtil.copyPropertiesIgnoreNullFilds(dto,attributeNameVO);
-            page = attributeNameService.searchAttributeNamePage(attributeNameVO,pageRequest);
+            PageDTO<AttributeNameVO> page = attributeNameService.searchAttributeNamePage(attributeNameVO,pageRequest);
             return super.getResultJSONStr(true, page, "");
         }catch(Exception e){
             log.error("[attributeName][getAttributeNamePage] Exception:{}" , e);

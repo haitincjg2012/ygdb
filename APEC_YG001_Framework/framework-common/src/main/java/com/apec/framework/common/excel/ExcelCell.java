@@ -1,10 +1,13 @@
 package com.apec.framework.common.excel;
 
+/**
+ * @author xx
+ */
 public class ExcelCell {
 
-	private int row;
+	private Integer row;
 
-	private int col;
+	private Integer col;
 
 	public ExcelCell(int row, int col) {
 		super();
@@ -28,6 +31,7 @@ public class ExcelCell {
 		this.col = col;
 	}
 
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -36,18 +40,24 @@ public class ExcelCell {
 		return result;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj){
 			return true;
-		if (obj == null)
+		}
+		if (obj == null){
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()){
 			return false;
+		}
 		final ExcelCell other = (ExcelCell) obj;
-		if (this.col != other.col)
+		if (this.col.equals(other.col)){
 			return false;
-		if (this.row != other.row)
+		}
+		if (this.row.equals(other.row)){
 			return false;
+		}
 		return true;
 	}
 

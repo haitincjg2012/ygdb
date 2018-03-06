@@ -2,11 +2,11 @@ package com.apec.framework.common.exception;
 
 /**
  *
- * @Description:业务异常处理
+ * Description:业务异常处理
  *
  * @author huangcl
  *
- * @date 2016年8月17日
+ * date 2016年8月17日
  *
  */
 public class BusinessException extends ApecRuntimeException
@@ -33,6 +33,7 @@ public class BusinessException extends ApecRuntimeException
         super( errorCode, message, e, arguments );
     }
 
+    @Override
     public String toString()
     {
         return super.toString();

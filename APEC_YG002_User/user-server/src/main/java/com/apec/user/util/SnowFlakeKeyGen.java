@@ -5,13 +5,15 @@ import org.springframework.stereotype.Component;
 
 /**
  * Created by wjw on 2016/11/15.
+ * @author xxx
  */
 @Component
 public class SnowFlakeKeyGen {
 
     private final long workerIdBits = 6L;
 
-    private final long maxWorkerId = -1L ^ (-1L << workerIdBits);
+    private final long maxWorkerId =
+            -1L ^ (-1L << workerIdBits);
 
     private final long sequenceBits = 6L;
 
@@ -91,13 +93,5 @@ public class SnowFlakeKeyGen {
         return System.currentTimeMillis();
     }
 
-    public static void main2(String[] args)
-    {
-        SnowFlakeKeyGen idWorker = new SnowFlakeKeyGen(63);
-        for(int i = 0; i < 10; i++)
-        {
-            long id = idWorker.nextId();
-            System.out.println(id);
-        }
-    }
+
 }

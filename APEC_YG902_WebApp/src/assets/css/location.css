@@ -1,0 +1,33 @@
+.c-city-location .c-city-header-feature {
+  background-color: #fff;
+}
+.c-city-location .c-city-header {
+  width: 16.25rem;
+  line-height: 2.2rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+.c-city-location .c-subtitle-city {
+  padding-left: 0.5rem;
+  height: 2.2rem;
+  background-color: #f4f4f4;
+  font-size: 0.8rem;
+  line-height: 2.2rem;
+  color: #646464;
+}
+.c-city-location .c-location-scroll {
+  position: fixed;
+  top: 8.8rem;
+  bottom: 0;
+}
+.c-city-location .c-city-feature {
+  margin-left: 0.5rem;
+  width: 18.25rem;
+  height: 2.2rem;
+  font-size: 0.75rem;
+  line-height: 2.2rem;
+  color: #323232;
+}
+.c-city-location .c-city-charactics {
+  border-bottom: 0.05rem solid #f4f4f4;
+}

@@ -1,8 +1,6 @@
 package com.apec.framework.controller;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,17 +17,16 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.apec.framework.base.BaseController;
-import com.apec.framework.base.IJSONService;
+import com.apec.framework.base.IJsonService;
 import com.apec.framework.common.ResultData;
 import com.apec.framework.common.excel.CodeDealUtils;
 import com.apec.framework.common.excel.XlsVO;
 import com.apec.framework.common.exception.DispatchException;
 import com.apec.framework.common.util.FileUtil;
-import com.apec.framework.common.util.JsonUtil;
+import com.apec.framework.common.util.BaseJsonUtil;
 
 
 /**
@@ -39,12 +36,13 @@ import com.apec.framework.common.util.JsonUtil;
  * 请求信息 
  * 创建日期：2017/2/6 
  * 编码作者：
+ * @author xx
  */
 @RestController
 public class XLSController extends BaseController {
 
 	@Autowired
-	private IJSONService dispatchJSONService;
+	private IJsonService dispatchJSONService;
 	   
 	@RequestMapping(value = "/{serverName}/{methodName}.xls")
 	public void dispatchRequest(@PathVariable("serverName") String serverName,
@@ -53,11 +51,11 @@ public class XLSController extends BaseController {
 		if(StringUtils.isEmpty(ret)) {
 			return;
 		}
-		ResultData resultData = JsonUtil.parseObject(ret, ResultData.class);
+		ResultData resultData = BaseJsonUtil.parseObject(ret, ResultData.class);
 		if(!resultData.isSucceed() || null == resultData.getData()) {
 			return;
 		}
-		XlsVO object = JsonUtil.parseObject(resultData.getData().toString(), XlsVO.class);
+		XlsVO object = BaseJsonUtil.parseObject(resultData.getData().toString(), XlsVO.class);
 		if(null == object) {
 			return;
 		}
@@ -83,11 +81,11 @@ public class XLSController extends BaseController {
 		if(StringUtils.isEmpty(ret)) {
 			return   new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		ResultData resultData = JsonUtil.parseObject(ret, ResultData.class);
+		ResultData resultData = BaseJsonUtil.parseObject(ret, ResultData.class);
 		if(!resultData.isSucceed() || null == resultData.getData()) {
 			return   new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		XlsVO object = JsonUtil.parseObject(resultData.getData().toString(), XlsVO.class);
+		XlsVO object = BaseJsonUtil.parseObject(resultData.getData().toString(), XlsVO.class);
 		if(null == object) {
 			return   new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -95,7 +93,8 @@ public class XLSController extends BaseController {
 		String excelFileName = CodeDealUtils.encodeFilename(object.getFileName(), request);
 
 		Path path = Paths.get(url);
-		byte[] contents  = Files.readAllBytes(path);	// 文件的存放路径
+		// 文件的存放路径
+		byte[] contents  = Files.readAllBytes(path);
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.parseMediaType("application/vnd.ms-excel"));

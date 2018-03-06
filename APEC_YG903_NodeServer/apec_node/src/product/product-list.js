@@ -46,6 +46,9 @@ router.post('/_node_product/_all' + config.urlSuffix, bodyParser, function(req, 
          },
          "orderWeight": {
             "order": "desc"
+         },
+         "createDate": {
+            "order": "desc"
          }
       }
       break;

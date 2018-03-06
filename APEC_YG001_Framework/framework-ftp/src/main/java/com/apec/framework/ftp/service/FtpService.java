@@ -7,7 +7,7 @@ import java.io.InputStream;
 
 /**
  * 基本描述：FtpService
- *
+ * @author xxx
  */
 public interface FtpService
 {
@@ -16,6 +16,7 @@ public interface FtpService
      * 向FTP上傳文件
      * @param ftpFileName 文件名称
      * @param is 文件流
+     * @param filePath 文件路径
      * @throws BusinessException 业务异常
      */
     void uploadFile(String filePath, String ftpFileName, InputStream is) throws BusinessException;

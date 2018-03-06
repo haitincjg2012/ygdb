@@ -37,9 +37,9 @@
 
     data() {
       return {
-          addressTopList:[],//一级市
-          addressSecList:[],//二级市县
-          addressThirList:[],//三级镇
+          addressTopList:null,//一级市
+          addressSecList:null,//二级市县
+          addressThirList:null,//三级镇
           fircityaddrCode:'',//序号为0 的第一级地址数组的code 默认为烟台市
           fircountyaddrCode:'',//序号为0 的第一级地址数组的code 默认为烟台市
           province:'',//省
@@ -82,6 +82,7 @@
             var item = res.data;
             var flag = false;
           if (item.succeed) {
+            self.addressTopList = [];
             item.data.forEach((item,index) =>{
               self.addressTopList.push({
               "code": item.code,

@@ -4,6 +4,7 @@ import lombok.Data;
 
 /**
  * Created by hmy on 2017/8/2.
+ * @author hmy
  */
 @Data
 public class WordBookViewVO {

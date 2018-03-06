@@ -73,7 +73,7 @@ axios.interceptors.response.use(
       if (!status && errorCode === '600001' && router.currentRoute.name!=='home'&& router.currentRoute.name!=='search'&& router.currentRoute.name!=='buy') {
         router.replace({
           path: '/login',
-          query: {redirect: router.currentRoute.fullPath}
+          // query: {redirect: router.currentRoute.fullPath}
         });
       }
       // else if(!status && errorCode !== '600001')

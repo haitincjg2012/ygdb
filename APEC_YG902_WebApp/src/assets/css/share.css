@@ -1,0 +1,36 @@
+.c-wxMask .transparentLayer {
+  background-color: #000;
+  opacity: 0.4;
+  filter: alpha(opacity=40);
+  -moz-opacity: 0.4;
+}
+.c-wxShare {
+  position: fixed;
+  bottom: 0;
+  width: 18.75rem;
+  height: 7.85rem;
+  background-color: #fff;
+}
+.c-wxShare-img > div {
+  padding-top: 0.85rem;
+  width: 4.25rem;
+  height: 4.75rem;
+  text-align: center;
+}
+.c-wxShare-img > div img {
+  border-radius: 100%;
+  width: 2.65rem;
+  height: 2.65rem;
+}
+.c-wxShare-line {
+  width: 18.75rem;
+  height: 0.05rem;
+  background-color: #f4f4f4;
+}
+.c-wxShare-cancel {
+  height: 2.25rem;
+  line-height: 2.25rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #323232;
+}

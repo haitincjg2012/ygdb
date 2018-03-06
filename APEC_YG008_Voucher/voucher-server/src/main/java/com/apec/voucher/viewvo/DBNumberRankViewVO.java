@@ -19,7 +19,17 @@ public class DBNumberRankViewVO {
 	/**
 	 * 排名序号
 	 * */
-	private double rankNo;
+	private String rankNo;
+
+	/**
+	 * 用户id
+	 */
+	private Long userId;
+
+	/**
+	 * 用户所属组织id
+	 */
+	private Long orgId;
 	
 	/**
 	 * 姓名
@@ -34,7 +44,7 @@ public class DBNumberRankViewVO {
 	/**
 	 * 总数
 	 * */
-	private double totalNumber;
+	private Double totalNumber;
 	
 	/**
 	 * 重量单位

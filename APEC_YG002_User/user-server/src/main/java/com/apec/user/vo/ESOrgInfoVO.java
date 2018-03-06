@@ -32,7 +32,7 @@ public class ESOrgInfoVO {
      */
     private String  address;
 
-    /*
+    /**
      * 排序权重
      */
     private Long orderWeight;

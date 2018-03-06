@@ -6,6 +6,7 @@ package com.apec.framework.common.exception;
  * 内容摘要：REST服务异常
  * 完成日期：2016-07-23
  * 编码作者：
+ * @author xx
  */
 public class RestServiceException extends ApecRuntimeException
 {
@@ -26,6 +27,7 @@ public class RestServiceException extends ApecRuntimeException
         super(errorCode, message, e);
     }
 
+    @Override
     public String toString()
     {
         return super.toString();

@@ -5,8 +5,8 @@ import com.apec.framework.common.Constants;
 import com.apec.framework.common.PageJSON;
 import com.apec.framework.common.ResultData;
 import com.apec.framework.common.enumtype.Platform;
-import com.apec.framework.common.util.JsonUtil;
-import com.apec.framework.common.util.SpringUtil;
+import com.apec.framework.common.util.BaseJsonUtil;
+import com.apec.framework.common.util.BaseSpringUtil;
 import com.apec.framework.dto.BaseDTO;
 import com.apec.framework.dto.UserInfoVO;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +20,7 @@ import java.util.Map;
  * 所有服务controller须继承该抽象类
  *
  * @author zhaolei
- * @create 2016-09-08 19:41
+ * create date 2016-09-08 19:41
  */
 
 public abstract class BaseController
@@ -37,14 +37,14 @@ public abstract class BaseController
     protected <T> PageJSON<T> getPageJSON(String jsonStr, Class<T> clazz)
     {
 
-        PageJSON<T> pageJSON = JsonUtil.parseObject( jsonStr, new TypeReference<PageJSON<T>>()
+        PageJSON<T> pageJSON = BaseJsonUtil.parseObject( jsonStr, new TypeReference<PageJSON<T>>()
         {
         } );
         // 泛型类型调用parseObject的时候，使用parseObject可以转换Class，
         // 但是后边传TypeReference或者Type就解析不出泛型类型了，需要再转换一次
         if(null != pageJSON.getFormJSON() && StringUtils.isNotBlank( pageJSON.getFormJSON().toString() ))
         {
-            T data = JsonUtil.parseObject( pageJSON.getFormJSON().toString(), clazz );
+            T data = BaseJsonUtil.parseObject( pageJSON.getFormJSON().toString(), clazz );
             pageJSON.setFormJSON( data );
         }
         return pageJSON;
@@ -57,14 +57,14 @@ public abstract class BaseController
      */
     protected <T> PageJSON<List<T>> getPageJSONList(String jsonStr, Class clazz)
     { 
-        PageJSON<List<T>> pageJSON = JsonUtil.parseObject( jsonStr, new TypeReference<PageJSON<List<T>>>()
+        PageJSON<List<T>> pageJSON = BaseJsonUtil.parseObject( jsonStr, new TypeReference<PageJSON<List<T>>>()
         {
         } );
         // 泛型类型调用parseObject的时候，使用parseObject可以转换Class，
         // 但是后边传TypeReference或者Type就解析不出泛型类型了，需要再转换一次
         if(null != pageJSON.getFormJSON() && StringUtils.isNotBlank( pageJSON.getFormJSON().toString() ))
         {
-            List<T> data = JsonUtil.parseArray( pageJSON.getFormJSON().toString(), clazz );
+            List<T> data = BaseJsonUtil.parseArray( pageJSON.getFormJSON().toString(), clazz );
             pageJSON.setFormJSON( data );
         }
         return pageJSON;
@@ -77,7 +77,7 @@ public abstract class BaseController
      */
     protected <T> T parseObject(String text, Class<T> clazz)
     {
-        return JsonUtil.parseObject( text, clazz );
+        return BaseJsonUtil.parseObject( text, clazz );
     }
 
     /**
@@ -87,7 +87,7 @@ public abstract class BaseController
      */
     protected String toJSONString(Object obj)
     {
-        return JsonUtil.toJSONString( obj );
+        return BaseJsonUtil.toJSONString( obj );
     }
 
     /**
@@ -100,8 +100,8 @@ public abstract class BaseController
     protected <T> String getResultJSONStr(boolean succeed, T data, String errorCode)
     {
         ResultData<T> ret = getResultData( succeed, data, errorCode );
-        ret.setErrorMsg( SpringUtil.getMessage(errorCode));
-        String retJSONStr = JsonUtil.toJSONString(ret);
+        ret.setErrorMsg( BaseSpringUtil.getMessage(errorCode));
+        String retJSONStr = BaseJsonUtil.toJSONString(ret);
         ret = null;
         return retJSONStr;
     }
@@ -116,7 +116,7 @@ public abstract class BaseController
     protected <T> String getResultJSONStr(boolean succeed, T data, String errorCode, Object... args)
     {
         ResultData<T> ret = getResultData( succeed, data, errorCode, args );
-        String retJSONStr = JsonUtil.toJSONString( ret );
+        String retJSONStr = BaseJsonUtil.toJSONString( ret );
         ret = null;
         return retJSONStr;
     }
@@ -137,7 +137,7 @@ public abstract class BaseController
         ret.setErrorCode( errorCode );
         if(StringUtils.isNotBlank( errorCode ))
         {
-            ret.setErrorMsg( SpringUtil.getMessage( errorCode, args ) );
+            ret.setErrorMsg( BaseSpringUtil.getMessage( errorCode, args ) );
         }
         ret.setData( data );
         return ret;
@@ -151,13 +151,12 @@ public abstract class BaseController
     protected Platform getPlatform(PageJSON<?> pageJSON)
     {
         Map<String, Object> attrMap = pageJSON.getRequestAttrMap();
-        String _c = "";
+        String c = "";
         if(null != attrMap && null != attrMap.get( Constants.CLIENT_TYPE_PARAM ))
         {
-            _c = String.valueOf( attrMap.get( Constants.CLIENT_TYPE_PARAM ) );
+            c = String.valueOf( attrMap.get( Constants.CLIENT_TYPE_PARAM ) );
         }
-        Platform platform = Platform.getPlatform( _c.toUpperCase() );
-        return platform;
+        return Platform.getPlatform( c.toUpperCase() );
     }
 
     /**
@@ -198,7 +197,7 @@ public abstract class BaseController
             String userInfoJson = (String)pageJSON.getRequestAttrMap().get( Constants.USER_INFO );
             if(StringUtils.isNotBlank( userInfoJson ))
             {
-                userInfo = JsonUtil.parseObject( userInfoJson, UserInfoVO.class );
+                userInfo = BaseJsonUtil.parseObject( userInfoJson, UserInfoVO.class );
             }
 
         }
@@ -214,7 +213,7 @@ public abstract class BaseController
             String userInfoJson = (String)pageJSON.getRequestAttrMap().get( Constants.USER_INFO );
             if(StringUtils.isNotBlank( userInfoJson ))
             {
-                userInfo = JsonUtil.parseObject( userInfoJson, UserInfoVO.class );
+                userInfo = BaseJsonUtil.parseObject( userInfoJson, UserInfoVO.class );
             }
 
         }
@@ -324,15 +323,39 @@ public abstract class BaseController
 
     protected <T> T getFormJSON(String json, Class<T> clz)
     {
-        Object formJSOn = JsonUtil.getValueBykey( json, "formJSON" );
-        if(null == formJSOn) //服务调用
+        Object formJSOn = BaseJsonUtil.getValueBykey( json, "formJSON" );
+        //服务调用
+        if(null == formJSOn)
         {
-            return JsonUtil.parseObject( json, clz );
+            return BaseJsonUtil.parseObject( json, clz );
         }
-        else //面面调用
+        else
         {
+            //面面调用
             PageJSON<T> pageJSON = getPageJSON( json, clz );
             return pageJSON.getFormJSON();
         }
     }
+
+    /**
+     * @param jsonStr 页面JSON字符串
+     * @param clazz json所属类型
+     * @return 根据泛型返回所需结果
+     */
+    protected <T> PageJSON<T> getRequestParamJSON(String jsonStr, Class<T> clazz)
+    {
+
+        PageJSON<T> pageJSON = BaseJsonUtil.parseObject( jsonStr, new TypeReference<PageJSON<T>>()
+        {
+        } );
+        // 泛型类型调用parseObject的时候，使用parseObject可以转换Class，
+        // 但是后边传TypeReference或者Type就解析不出泛型类型了，需要再转换一次
+        if(null != pageJSON.getRequestParameterMap() && StringUtils.isNotBlank( pageJSON.getRequestParameterMap().toString() ))
+        {
+            T data = BaseJsonUtil.parseObject( BaseJsonUtil.toJSONString(pageJSON.getRequestParameterMap()), clazz );
+            pageJSON.setParamJSON( data );
+        }
+        return pageJSON;
+    }
+
 }

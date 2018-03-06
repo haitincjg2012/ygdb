@@ -7,12 +7,14 @@ import com.apec.framework.common.enums.Realm;
 import com.apec.framework.common.enumtype.MessageTemplate;
 import com.apec.framework.common.enumtype.MessageType;
 import com.apec.framework.dto.BaseVO;
+import lombok.Data;
 
 /**
  * Title: 消息体
  *
  * @author yirde  2017/7/3.
  */
+@Data
 public class MessageBodyVO extends BaseVO<Long> {
 
     /**
@@ -53,83 +55,13 @@ public class MessageBodyVO extends BaseVO<Long> {
     /**
      * 是否全部通知 Y 全部通知 ，N  指定用户ID 通知
      */
-    private boolean allReceiver;
-    
-    public boolean isTemplateFlag() {
-		return templateFlag;
-	}
-
-	public void setTemplateFlag(boolean templateFlag) {
-		this.templateFlag = templateFlag;
-	}
+    private Boolean allReceiver;
 
 	/**
      * 是否使用动态模板
      * */
-    public boolean templateFlag;
+    public Boolean templateFlag;
 
-	public String getTitle() {
-		return title;
-	}
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public Map<String, String> getContentMap() {
-		return contentMap;
-	}
-
-	public void setContentMap(Map<String, String> contentMap) {
-		this.contentMap = contentMap;
-	}
-
-	public MessageTemplate getTemplateKey() {
-		return templateKey;
-	}
-
-	public void setTemplateKey(MessageTemplate templateKey) {
-		this.templateKey = templateKey;
-	}
-
-	public Date getSendTime() {
-		return sendTime;
-	}
-
-	public void setSendTime(Date sendTime) {
-		this.sendTime = sendTime;
-	}
-
-	public Realm getRealm() {
-		return realm;
-	}
-
-	public void setRealm(Realm realm) {
-		this.realm = realm;
-	}
-
-	public MessageType getType() {
-		return type;
-	}
-
-	public void setType(MessageType type) {
-		this.type = type;
-	}
-
-	public boolean isAllReceiver() {
-		return allReceiver;
-	}
-
-	public void setAllReceiver(boolean allReceiver) {
-		this.allReceiver = allReceiver;
-	}
 
 }

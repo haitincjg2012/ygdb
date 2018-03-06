@@ -1,0 +1,120 @@
+.c-findSouce .c-findSource-header {
+  position: fixed;
+  top: 0;
+  padding: 0 0.5rem;
+  width: 17.75rem;
+  height: 2.3rem;
+  line-height: 2.3rem;
+  background-color: #f4f4f4;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  z-index: 3;
+}
+.c-findSouce .c-fdS-position {
+  width: 2.5rem;
+  font-size: 0.75rem;
+  color: #323232;
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.c-findSouce .c-fdS-p-iconFrame {
+  width: 0.75rem;
+}
+.c-findSouce .c-fdS-p-icon {
+  margin-left: 0.25rem;
+  vertical-align: 0.2rem;
+  width: 0.35rem;
+  height: 0.225rem;
+}
+.c-findSouce .c-fdS-Headlines {
+  width: 12.75rem;
+}
+.c-findSouce .c-fdS-Headlines h1 {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #323232;
+}
+.c-findSouce .c-fdS-tab {
+  position: fixed;
+  top: 2.3rem;
+  padding: 0 0.5rem;
+  height: 2.25rem;
+  line-height: 2.25rem;
+  width: 17.75rem;
+  border-bottom: 0.05rem solid #d2d2cf;
+  border-top: 0.05rem solid #d2d2cf;
+  background-color: #f4f4f4;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  z-index: 3;
+}
+.c-findSouce .c-fdS-goods {
+  position: fixed;
+  top: 4.65rem;
+  right: 0;
+  left: 0;
+  bottom: 2.5rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  flex-direction: column;
+  -webkit-flex-direction: column;
+  z-index: 10;
+  display: none;
+}
+.c-findSouce .c-fdS-goods-index {
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-findSouce .c-fdS-scroll {
+  position: fixed;
+  top: 4.65rem;
+  right: 0;
+  left: 0;
+  bottom: 2.5rem;
+}
+.c-fS-img {
+  padding: 50% 0;
+  text-align: center;
+}
+.c-fS-img img {
+  width: 9.225rem;
+  height: 13.95rem;
+}

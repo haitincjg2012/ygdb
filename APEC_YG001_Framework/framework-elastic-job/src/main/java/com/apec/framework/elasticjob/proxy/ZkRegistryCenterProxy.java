@@ -10,6 +10,9 @@ import com.apec.framework.elasticjob.listeners.MyConnectionStateListener;
 import com.dangdang.ddframe.job.reg.zookeeper.ZookeeperConfiguration;
 import com.dangdang.ddframe.job.reg.zookeeper.ZookeeperRegistryCenter;
 
+/**
+ * @author xxx
+ */
 public class ZkRegistryCenterProxy  extends ZookeeperRegistryCenter implements InitializingBean, DisposableBean{
     
     private static Logger logger = LoggerFactory.getLogger(ZkRegistryCenterProxy.class);

@@ -24,7 +24,7 @@ module.exports = {
   dev: {
     env: require('./dev.env'),
     // port: 8065,
-    port: 80,
+    port: 8065,
     autoOpenBrowser: true,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
@@ -90,6 +90,14 @@ module.exports = {
         changeOrigin: true
       },
       '/product':{
+        target: 'http://192.168.7.111',
+        changeOrigin: true
+      },
+      '/_node_article':{
+        target: 'http://192.168.7.111',
+        changeOrigin: true
+      },
+    '/yg-society-service':{
         target: 'http://192.168.7.111',
         changeOrigin: true
       }

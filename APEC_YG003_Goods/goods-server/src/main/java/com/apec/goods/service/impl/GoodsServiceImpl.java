@@ -28,6 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+/**
+ * @author hmy
+ */
 @Service
 public class GoodsServiceImpl implements GoodsService {
 
@@ -68,8 +71,7 @@ public class GoodsServiceImpl implements GoodsService {
         List<GoodsAttr> goodsAttrList = new ArrayList<>();
         //遍历验证数据的有效性及组装相关信息
         if(goodsAttrVOS != null && goodsAttrVOS.size() > 0){
-            for(int i = 0 ; i < goodsAttrVOS.size(); i++){
-                GoodsAttrVO goodsAttrVO = goodsAttrVOS.get(i);
+            for(GoodsAttrVO goodsAttrVO:goodsAttrVOS){
                 if(goodsAttrVO.getAttributeShowLevel() == null ){
                     logger.info("[GoodsServiceImpl][saveGoods] param of goodsAttr is empty");
                     return Constants.ERROR_100003;
@@ -91,7 +93,7 @@ public class GoodsServiceImpl implements GoodsService {
                 goodsAttr.setCreateDate(new Date());
                 goodsAttr.setCreateBy(userId);
                 goodsAttr.setEnableFlag(EnableFlag.Y);
-                goodsAttr.setGoods(goods);
+                goodsAttr.setGoodsId(goods.getId());
                 goodsAttrList.add(goodsAttr);
             }
         }
@@ -104,7 +106,7 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String updateGoods(GoodsVO goodsVO,String userId) {
         Goods goods  = goodsDAO.findOne(goodsVO.getId());
         if(goods == null){
@@ -116,7 +118,8 @@ public class GoodsServiceImpl implements GoodsService {
         }if(!StringUtils.isEmpty(goodsVO.getRemark())){
             goods.setRemark(goodsVO.getRemark());
         }
-        goods.setMainGoods(goodsVO.isMainGoods());//修改是否是主类信息
+        //修改是否是主类信息
+        goods.setMainGoods(goodsVO.getMainGoods());
         goods.setLastUpdateBy(userId);
         goods.setLastUpdateDate(new Date());
         List<GoodsAttr> goodsAttrList = goodsAttrDAO.findByGoodsIdAndEnableFlagOrderBySort(goods.getId(),EnableFlag.Y);
@@ -126,7 +129,8 @@ public class GoodsServiceImpl implements GoodsService {
         }else{
             if(goodsAttrList != null && goodsAttrList.size() > 0){
                 for(GoodsAttr goodsAttr:goodsAttrList){
-                    boolean isNotExist = true;//该属性在新修改的商品信息中不存在了
+                    //该属性在新修改的商品信息中不存在了
+                    boolean isNotExist = true;
                     GoodsAttrVO goodsAttrVO1 = new GoodsAttrVO();
                     for(GoodsAttrVO goodsAttrVO:goodsVO.getGoodsAttrVOList()){
                         if(goodsAttr.getId().equals(goodsAttrVO.getId())){
@@ -143,7 +147,7 @@ public class GoodsServiceImpl implements GoodsService {
                         goodsAttrDAO.save(goodsAttr);
                     }else{
                         //商品属性存在，若属性关系中属性名称id发生改变，则查询属性名称信息进行修改
-                        if(goodsAttr.getAttrId() != goodsAttrVO1.getAttrId()){
+                        if(!goodsAttr.getAttrId().equals(goodsAttrVO1.getAttrId())){
                             //根据商品属性配置关系中的属性名称id查询属性名称具体信息
                             AttributeName attributeName = attributeNameDAO.findOne(goodsAttrVO1.getAttrId());
                             if(attributeName == null || attributeName.getAttributeType() == null){
@@ -186,7 +190,7 @@ public class GoodsServiceImpl implements GoodsService {
                     goodsAttr.setCreateDate(new Date());
                     goodsAttr.setCreateBy(userId);
                     goodsAttr.setEnableFlag(EnableFlag.Y);
-                    goodsAttr.setGoods(goods);
+                    goodsAttr.setGoodsId(goods.getId());
                     goodsAttrDAO.save(goodsAttr);
                 }
             }
@@ -198,7 +202,7 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String removeGoods(GoodsVO goodsVO,String userId) {
         Goods goods = goodsDAO.findOne(goodsVO.getId());
         if(goods == null){
@@ -217,7 +221,7 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public GoodsVO getGoods(GoodsVO goodsVO) {
         //查询商品信息
-        Goods goods =  null;
+        Goods goods;
         if(goodsVO == null || goodsVO.getId() == null || goodsVO.getId() == 0L){
             //不存在则获取数据库中第一个主类信息
             goods = goodsDAO.findFirstByMainGoodsAndEnableFlagOrderByCreateDateDesc(true,EnableFlag.Y);
@@ -228,12 +232,11 @@ public class GoodsServiceImpl implements GoodsService {
             return goodsVO;
         }
         BeanUtil.copyPropertiesIgnoreNullFilds(goods,goodsVO);
-        List<GoodsAttrVO> goodsAttrVOList = new ArrayList<>();
         List<GoodsAttr> list = goodsAttrDAO.findByGoodsIdAndEnableFlagOrderBySort(goods.getId(),EnableFlag.Y);
         if(list == null || list.size() <= 0){
-            goodsVO.setGoodsAttrVOList(goodsAttrVOList);
             return goodsVO;
         }
+        List<GoodsAttrVO> goodsAttrVOList = new ArrayList<>();
         //遍历商品属性关系
         for(GoodsAttr goodsAttr:list){
             GoodsAttrVO goodsAttrVO = new GoodsAttrVO();
@@ -258,14 +261,12 @@ public class GoodsServiceImpl implements GoodsService {
 
     /**
      * 分页查询商品信息，可以多条件查询
-     * @param goodsVO
-     * @param pageRequest
-     * @return
+     * @param goodsVO 商品信息
+     * @param pageRequest 分页对象
+     * @return 商品分页结果
      */
     @Override
     public PageDTO<GoodsVO> searchGoodsPage(GoodsVO goodsVO, PageRequest pageRequest) {
-        Goods objects = goodsDAO.findGoodsInfo(201975988715584L);
-
         Page<Goods> goodsPage = goodsDAO.findAll(getInputCondition(goodsVO),pageRequest);
         PageDTO<GoodsVO> pageDTO = new PageDTO<>();
         List<GoodsVO> list = new ArrayList<>();
@@ -296,8 +297,8 @@ public class GoodsServiceImpl implements GoodsService {
      * 多条件查询商品信息
      * 根据多种情况查询
      * 包括like:goodsName,remark
-     * @param vo
-     * @return
+     * @param vo 查询条件对象
+     * @return Predicate
      */
     private Predicate getInputCondition(GoodsVO vo)
     {
@@ -320,16 +321,16 @@ public class GoodsServiceImpl implements GoodsService {
 
     /**
      * 批量删除goods
-     * @param ids
-     * @return
+     * @param ids 要删除的集合ids
+     * @return 处理结果
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String deleteGoodsList(List<Long> ids,String userId){
         //批量删除将要删除的goods下的goodsAttr
         goodsAttrDAO.deleteGoodsAttrByGoodsList(ids,userId);
         //批量删除goods
-        int num = goodsDAO.deleteGoodsList(ids,userId);
+        goodsDAO.deleteGoodsList(ids,userId);
         return Constants.RETURN_SUCESS;
     }
 

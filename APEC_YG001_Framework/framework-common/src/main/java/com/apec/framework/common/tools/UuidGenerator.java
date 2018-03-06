@@ -20,8 +20,7 @@ public class UuidGenerator
      * 生成唯一标示uuid 带中划线
      */
     public static String getUuidWithLine() {
-        String uuid = UUID.randomUUID().toString();
-        return uuid;
+        return UUID.randomUUID().toString();
     }
 
 }

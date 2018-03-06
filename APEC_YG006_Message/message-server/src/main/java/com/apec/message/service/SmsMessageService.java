@@ -16,24 +16,27 @@ public interface SmsMessageService {
 
 	/**
 	 * 短信下发
-	 * @throws Exception 
-	 * 
-	 * */
-	public String sendSmsMessageByPost(SmsMessageVO smsMessageVO)throws Exception;
+	 * @param smsMessageVO 消息体
+	 * @return 结果码
+	 * @throws  Exception Exception
+	 */
+	String sendSmsMessageByPost(SmsMessageVO smsMessageVO)throws Exception;
 	
 	/**
 	 * 获取账号信息
-	 * @throws Exception 
+	 * @return  SmsAccountInfoDTO
+	 * @throws Exception Exception
 	 * */
-	public SmsAccountInfoDTO getAccountInfo() throws Exception;
+	SmsAccountInfoDTO getAccountInfo() throws Exception;
 	
 	/**
 	 * 获取上行信息
 	 * @param number 读取的条数
-	 * @throws Exception 
+	 * @return  MOMsg[]
+	 * @throws Exception  Exception
 	 * 
 	 * */
-	public MOMsg[] getSmsMoMsgs(Integer number) throws Exception;
+	MOMsg[] getSmsMoMsgs(Integer number) throws Exception;
 	
 	/**
 	 * 查询提交报告
@@ -41,9 +44,10 @@ public interface SmsMessageService {
 	 * @param phone 手机号 批次id和手机号至少有一个必填
 	 * @param pageSize 页数
 	 * @param flag 是否精确查找
-	 * @throws Exception
+	 * @return  提交报告
+	 * @throws Exception Exception
 	 * */
-	public MTResponse[] getSmsReport(String batchId, String phone, Integer pageSize, boolean flag) throws Exception;
+	MTResponse[] getSmsReport(String batchId, String phone, Integer pageSize, boolean flag) throws Exception;
 	
 	/**
 	 * 查询状态报告
@@ -51,29 +55,32 @@ public interface SmsMessageService {
 	 * @param phone 手机号 批次id和手机号至少有一个必填
 	 * @param pageSize 页数
 	 * @param flag 是否精确查找
-	 * @throws Exception
+	 * @return  状态报告
+	 * @throws Exception Exception
 	 * */
-	public MTReport[] findSmsStatusReport(String batchId, String phone, Integer pageSize, boolean flag) throws Exception;
+	MTReport[] findSmsStatusReport(String batchId, String phone, Integer pageSize, boolean flag) throws Exception;
 	
 	/**
 	 * 获取状态报告
 	 * @param number 状态报告条数
-	 * @throws Exception
+	 * @return  MTReport[]
+	 * @throws Exception Exception
 	 * */
-	public MTReport[] getSmsStatusReport(Integer number) throws Exception;
+	MTReport[] getSmsStatusReport(Integer number) throws Exception;
 	
 	/**
 	 * 修改密码
 	 * @param password 要修改的密码
-	 * @throws Excetion
+	 * @throws Exception Exception
 	 * */
-	public void modifySmsPwd(String password) throws Exception;
+	void modifySmsPwd(String password) throws Exception;
 
 
 	/**
 	 * 发送手机验证码
-	 * @param mobile 手机号
+	 * @param smsCaptchaVO smsCaptchaVO
 	 * @return ReturnCode 返回码
+	 * @throws Exception Exception
 	 */
-	public String sendSmsCaptcha(SmsCaptchaVO smsCaptchaVO)throws Exception ;
+	String sendSmsCaptcha(SmsCaptchaVO smsCaptchaVO)throws Exception ;
 }

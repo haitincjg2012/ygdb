@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author yirde  2017/7/4.
  */
-public class UserPointRecordVO extends BaseVO<Long>  implements IMQBody{
+public class UserPointRecordVO extends BaseVO<Long>  implements IMqBody {
 
     /**
      * 用户 ID
@@ -78,4 +78,10 @@ public class UserPointRecordVO extends BaseVO<Long>  implements IMQBody{
     public void setRemark(String remark) {
         this.remark = remark;
     }
+
+    @Override
+    public String toString(){
+        return super.toString();
+    }
+
 }

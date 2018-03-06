@@ -5,7 +5,7 @@ package com.apec.framework.elasticsearch.vo;
  *
  * @author yirde  2017/7/10.
  */
-public class ESPostResponseVO extends  ESResponseVO{
+public class EsPostResponseVO extends  EsResponseVO{
 
     /**
      * 结果
@@ -15,7 +15,7 @@ public class ESPostResponseVO extends  ESResponseVO{
     /**
      * 是否创建
      */
-    private boolean created;
+    private Boolean created;
 
     public String getResult() {
         return result;
@@ -32,4 +32,10 @@ public class ESPostResponseVO extends  ESResponseVO{
     public void setCreated(boolean created) {
         this.created = created;
     }
+
+    @Override
+    public String toString(){
+        return super.toString();
+    }
+
 }

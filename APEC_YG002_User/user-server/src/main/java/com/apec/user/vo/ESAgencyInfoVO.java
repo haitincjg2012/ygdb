@@ -30,7 +30,7 @@ public class ESAgencyInfoVO  extends  ESOrgInfoVO {
     private Long userId;
 
 
-    public  ESAgencyInfoVO(ESOrgInfoVO esOrgInfoVO ,String slaeAddress,String mainOperating, Long userId){
+    public  ESAgencyInfoVO(ESOrgInfoVO esOrgInfoVO ,String saleAddress,String mainOperating, Long userId){
         this.userId = userId;
         this.saleAddress = saleAddress;
         this.mainOperating = mainOperating;

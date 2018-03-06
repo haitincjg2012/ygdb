@@ -24,20 +24,24 @@ public class HttpsRequestUtil {
 
 	private static class SecurityTrustManager implements X509TrustManager {
 
+		@Override
 		public void checkClientTrusted(X509Certificate[] chain, String authType)
 				throws CertificateException {
 		}
 
+		@Override
 		public void checkServerTrusted(X509Certificate[] chain, String authType)
 				throws CertificateException {
 		}
 
+		@Override
 		public X509Certificate[] getAcceptedIssuers() {
 			return new X509Certificate[] {};
 		}
 	}
 
 	private static class TrustyHostnameVerifier implements HostnameVerifier {
+		@Override
 		public boolean verify(String hostname, SSLSession session) {
 			return true;
 		}
@@ -46,8 +50,8 @@ public class HttpsRequestUtil {
 	/**
 	 * 使用https协议发送get请求
 	 * 
-	 * @param url
-	 * @return
+	 * @param url url
+	 * @return String
 	 */
 	public static String sendHttpsByGet(String url) {
 		String result = "";
@@ -62,7 +66,7 @@ public class HttpsRequestUtil {
 			httpsConn.connect();
 
 			BufferedReader in = new BufferedReader(new InputStreamReader(httpsConn.getInputStream(), "UTF-8"));
-			String line = null;
+			String line;
 			while ((line = in.readLine()) != null) {
 				result += line;
 			}
@@ -78,8 +82,8 @@ public class HttpsRequestUtil {
 	/**
 	 * 使用https协议发送post请求
 	 * 
-	 * @param url
-	 * @return
+	 * @param url url
+	 * @return String
 	 */
 	public static String sendHttpsByPost(String url, String param) throws Exception {
 		String result = "";
@@ -98,7 +102,7 @@ public class HttpsRequestUtil {
 			httpsConn.connect();
 
 			in = new BufferedReader(new InputStreamReader(httpsConn.getInputStream(), "UTF-8"));
-			String line = null;
+			String line;
 			while ((line = in.readLine()) != null) {
 				result += line;
 			}

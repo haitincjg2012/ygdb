@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 /**
  * Title: 登陆记录
- *
  * @author yirde  2017/7/12.
  */
 @Data
@@ -29,7 +28,7 @@ public class UserLoginRecordVO  extends BaseVO<Long>{
     /**
      * 是否成功登陆
      */
-    private boolean success;
+    private Boolean success;
 
     /**
      * 登陆凭证

@@ -7,7 +7,7 @@ import com.alibaba.rocketmq.client.producer.selector.SelectMessageQueueByHash;
 import com.alibaba.rocketmq.common.message.Message;
 import com.apec.framework.common.Constants;
 import com.apec.framework.common.enumtype.MQSendStatus;
-import com.apec.framework.rockmq.vo.IMQBody;
+import com.apec.framework.rockmq.vo.IMqBody;
 import com.apec.framework.vo.MQMessageLogVO;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -20,9 +20,9 @@ import java.lang.management.ManagementFactory;
  *
  * @author yirde  2017/6/30.
  */
-public class ApecMQProducer extends DefaultMQProducer {
+public class ApecMqProducer extends DefaultMQProducer {
 
-    private Logger logger = LoggerFactory.getLogger(ApecMQProducer.class);
+    private Logger logger = LoggerFactory.getLogger(ApecMqProducer.class);
 
     private static SelectMessageQueueByHash SELECT_MESSAGE_QUEUE_BY_HASH = new SelectMessageQueueByHash();
 
@@ -45,7 +45,7 @@ public class ApecMQProducer extends DefaultMQProducer {
      * @param body 消息体
      * @param orderKey 排序key
      */
-    public MQMessageLogVO sendConcurrentlyByKey(String tag, String key,  IMQBody body, String orderKey) {
+    public MQMessageLogVO sendConcurrentlyByKey(String tag, String key, IMqBody body, String orderKey) {
         MQMessageLogVO sendLog = new MQMessageLogVO(Constants.DEFAULT_ROCKETMQ_TOPIC,tag,key,JSON.toJSONString(body),orderKey);
         if (orderKey == null) {
             throw new IllegalArgumentException(String.format("[tag:%s][key:%s][body:%s]{orderKey can't be null!}",
@@ -79,7 +79,7 @@ public class ApecMQProducer extends DefaultMQProducer {
      * @param key hash key
      * @param body 消息体
      */
-    public MQMessageLogVO sendConcurrently(String tag, String key,  IMQBody body) {
+    public MQMessageLogVO sendConcurrently(String tag, String key,  IMqBody body) {
         MQMessageLogVO sendLog = new MQMessageLogVO(Constants.DEFAULT_ROCKETMQ_TOPIC,tag,key,JSON.toJSONString(body),null);
         return this.send(sendLog, tag, key,JSON.toJSONBytes(body), null);
     }
@@ -107,8 +107,10 @@ public class ApecMQProducer extends DefaultMQProducer {
             Message msg = new Message(Constants.DEFAULT_ROCKETMQ_TOPIC, tag, key, body);
             sendLog.setSendTime(System.currentTimeMillis());
             SendResult result;
-            if (orderlyKey == null) { // 并发发送
-                result = super.send(msg); // 发送
+            // 并发发送
+            if (orderlyKey == null) {
+                // 发送
+                result = super.send(msg);
             } else {
                 result = super.send(msg, SELECT_MESSAGE_QUEUE_BY_HASH, orderlyKey);
             }

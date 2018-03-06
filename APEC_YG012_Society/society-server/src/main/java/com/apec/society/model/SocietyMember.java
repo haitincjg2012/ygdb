@@ -1,7 +1,7 @@
 package com.apec.society.model;
 
 import com.apec.framework.mongodb.model.BaseModel;
-import lombok.Data;
+import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -9,7 +9,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
  *
  * @author yirde  2017/10/20.
  */
-@Data
+@Getter
+@Setter
 @Document
 public class SocietyMember extends BaseModel<Long> {
 

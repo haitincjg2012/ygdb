@@ -1,7 +1,7 @@
 .z-traderlist .z-com-f {
   width: 18.75rem;
   padding: 0 !important;
-  border-bottom: 0.05rem solid #d7d7d7;
+  border-bottom: 0.05rem solid #f4f4f4;
 }
 .z-traderlist .z-com-f .primaryMain {
   padding: 0 0.5rem;
@@ -21,22 +21,35 @@
   flex-flow: row wrap;
 }
 .z-traderlist .z-com-f .primaryMain .pic-com {
-  margin: 0.5rem 0;
-  width: 4.6rem;
+  margin: 0.5rem 0.5rem 0.5rem 0.25rem;
+  width: 2rem;
   position: relative;
+}
+.z-traderlist .z-com-f .primaryMain .pic-com .pic-com-picture {
+  line-height: 2rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 100%;
+}
+.z-traderlist .z-com-f .primaryMain .pic-com .pic-com-picture-bg {
+  text-align: center;
+  background-color: #44CCFE;
+  color: #fff;
+  font-size: 0.7rem;
 }
 .z-traderlist .z-com-f .primaryMain .pic-com img {
   display: block;
-  width: 4.5rem;
-  height: 4.5rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 100%;
 }
 .z-traderlist .z-com-f .primaryMain .z-t-info {
-  width: 12.5rem;
-  height: 4.5rem;
-  margin: 0.5rem 0 0.5rem 0.5rem;
+  margin: 0.25rem 0 0.5rem 0.25rem;
+  width: 14.75rem;
 }
 .z-traderlist .z-com-f .primaryMain .z-t-info .z-t-real-info {
-  height: 1.25rem;
+  height: 1.3rem;
+  line-height: 1.3rem;
   display: -webkit-box;
   /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
   display: -moz-box;
@@ -49,65 +62,121 @@
   /* IE 10 */
   display: flex;
 }
-.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-real-info .z-t-r-real {
-  width: 3.75rem;
+.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-real-info .z-t-r-f-partO {
+  width: 11rem;
+  height: 1.3rem;
 }
-.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-real-info .z-t-r-orgName {
+.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-real-info .z-t-r-f-partO .z-t-r-info-name {
   max-width: 7.5rem;
-  display: block;
+  font-size: 0.8rem;
+  font-weight: bold;
+  display: inline-block;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 }
-.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-real-info .ztrActive {
-  max-width: 11.25rem;
+.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-real-info .z-t-r-f-partO .z-t-r-info-auth {
+  display: inline-block;
+  overflow: hidden;
 }
-.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-real-info .z-t-r-icon {
-  width: 1rem;
-  text-align: center;
+.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-real-info .z-t-r-f-partO .z-t-r-info-auth-sty {
+  font-size: 0.6rem;
+  border: 0.05rem solid #ff0000;
+  color: #FF0000;
+  border-radius: 0.1rem;
 }
-.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-real-info .z-t-r-name {
-  font-size: 0.8rem;
-  color: #222328;
-  font-weight: bold;
-  vertical-align: top;
+.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-real-info .z-t-r-f-partO .z-t-level {
+  width: 0.75rem;
+  height: 0.75rem;
+  vertical-align: middle;
 }
-.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-real-info .z-t-r {
-  font-size: 0.75rem;
-  border-radius: 0.25rem;
-  border: 0.05rem solid #1960df;
-  color: #1960df;
-  border-radius: 0.125rem;
-  vertical-align: text-top;
+.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-real-info .z-t-r-f-partT {
+  width: 3.75rem;
+  line-height: 1.5rem;
+  text-align: right;
+  font-size: 0.6rem;
 }
-.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-real-info .z-t-level {
-  width: 0.8rem;
-  height: 0.8rem;
+.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-real-info .z-t-r-f-partT .z-t-r-text {
+  vertical-align: middle;
+}
+.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-real-info .z-t-r-f-partT .z-t-r-img {
+  width: 0.55rem;
+  height: 0.6rem;
+}
+.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-info-addr {
+  padding-bottom: 0.25rem;
+  height: 1.15rem;
+  line-height: 1.15rem;
+  font-size: 0.65rem;
+  color: #646464;
+  border-bottom: 0.05rem solid #f4f4f4;
 }
 .z-traderlist .z-com-f .primaryMain .z-t-info .z-t-address {
-  margin-top: 1.1rem;
   height: 1rem;
-  line-height: 1rem;
-  color: #646464;
 }
-.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-address .z-t-addr-T {
-  font-size: 0.65rem;
+.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-address .pos-pic {
+  width: 0.575rem;
+  height: 0.65rem;
+  vertical-align: middle;
 }
 .z-traderlist .z-com-f .primaryMain .z-t-info .z-t-address .z-t-addr {
   font-size: 0.65rem;
 }
-.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-main {
-  color: #646464;
+.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-result {
+  line-height: 0.75rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  -moz-flex-flow: row wrap;
+  flex-flow: row wrap;
 }
-.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-main .z-t-main-com-t {
+.z-traderlist .z-com-f .primaryMain .z-t-info .zTResultCompensate {
+  padding-top: 0.4rem;
+}
+.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-result-text {
   font-size: 0.65rem;
-  line-height: 1rem;
-  vertical-align: middle;
-  display: inline-block;
+  color: #969696;
 }
-.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-main .c-t-main-t {
-  max-width: 10rem;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
+.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-main {
+  position: relative;
+  line-height: 1.45rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  -moz-flex-flow: row wrap;
+  flex-flow: row wrap;
+}
+.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-main-l {
+  width: 0.6rem;
+}
+.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-main-r {
+  margin-left: 0.375rem;
+  width: 13.625rem;
+}
+.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-icon {
+  width: 0.6rem;
+  height: 0.6rem;
+  vertical-align: 0.1rem;
+}
+.z-traderlist .z-com-f .primaryMain .z-t-info .z-t-main-text {
+  font-size: 0.65rem;
+  color: #969696;
 }

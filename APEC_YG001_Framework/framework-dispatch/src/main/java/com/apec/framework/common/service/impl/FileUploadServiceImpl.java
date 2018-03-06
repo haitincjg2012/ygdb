@@ -4,10 +4,10 @@ import com.apec.framework.common.Constants;
 import com.apec.framework.common.ErrorCodeConst;
 import com.apec.framework.common.exception.BusinessException;
 import com.apec.framework.common.service.FileUploadService;
+import com.apec.framework.common.util.AbstractUploadFtpUtils;
 import com.apec.framework.common.util.DateUtil;
 import com.apec.framework.common.util.FileUtils;
-import com.apec.framework.common.util.ImageUtils;
-import com.apec.framework.common.util.UploadFTPUtils;
+import com.apec.framework.common.util.AbstractImageUtils;
 import com.apec.framework.dto.ImageUploadVO;
 import com.apec.framework.ftp.service.FtpService;
 import org.apache.commons.collections.CollectionUtils;
@@ -23,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -34,6 +33,7 @@ import java.util.*;
  * 内容摘要：文件上传业务逻辑处理
  * 创建日期：2016/10/10
  * 编码作者：
+ * @author xxx
  */
 @Service
 public class FileUploadServiceImpl implements FileUploadService
@@ -78,13 +78,16 @@ public class FileUploadServiceImpl implements FileUploadService
         List<List<ImageUploadVO>> imageItems = new ArrayList<>();
         if(CollectionUtils.isNotEmpty( multipartFileMap.keySet() ))
         {
-            for(Object key : multipartFileMap.keySet())
+            for(String key : multipartFileMap.keySet())
             {
                 MultipartFile multipartFile = multipartFileMap.get( key );
-                String imageName = multipartFile.getOriginalFilename();//获取图片的名字
-                String suffix = StringUtils.substringAfterLast( imageName, "." );//获取图片后缀名
-                String seq = DateUtil.formatDate( new Date(), "yyyyMMddHHmmssSSS" );//当前时间
-                if(UploadFTPUtils.validateIsPicture( suffix, imageSuffix ) && StringUtils.isEmpty( suffix ))
+                //获取图片的名字
+                String imageName = multipartFile.getOriginalFilename();
+                //获取图片后缀名
+                String suffix = StringUtils.substringAfterLast( imageName, "." );
+                //当前时间
+                String seq = DateUtil.formatDate( new Date(), "yyyyMMddHHmmssSSS" );
+                if(AbstractUploadFtpUtils.validateIsPicture( suffix, imageSuffix ) && StringUtils.isEmpty( suffix ))
                 {
                     throw new BusinessException( ErrorCodeConst.ERROR_600002 );
                 }
@@ -111,14 +114,12 @@ public class FileUploadServiceImpl implements FileUploadService
                             for (int i = 1; i <= thumbnailSizes.length; i++) {
                                 //缩略图文件夹
                                 String tinyPath =  i + "/";
-                                //创建缩略图文件夹
-//                            File tinyFile = UploadFTPUtils.createFolder( file.getAbsolutePath() + tinyPath );
                                 //上传缩略图名称
                                 String tinyUploadImageName = userNo + seq + "_" + i + "." + suffix;
                                 String tinyUploadPath = FileUtils.getFileRelativePath(imageUploadPath) + i;
-                                BufferedImage tinyImage = ImageUtils
+                                BufferedImage tinyImage = AbstractImageUtils
                                         .compressImage(bufferedImage,suffix, Integer.parseInt(thumbnailSizes[i - 1]),Integer.parseInt(thumbnailSizesHeight[i - 1]));
-                                InputStream is = UploadFTPUtils.getImageStream(tinyImage, suffix);
+                                InputStream is = AbstractUploadFtpUtils.getImageStream(tinyImage, suffix);
 
                                 ftpService.uploadFile(tinyUploadPath, tinyUploadImageName, is);
                                 ImageUploadVO tinyImageUploadVO = new ImageUploadVO();
@@ -147,17 +148,20 @@ public class FileUploadServiceImpl implements FileUploadService
     public void uploadFileByFTP(Map<String, MultipartFile> multipartFileMap, HttpServletRequest request)
     {
         String userNo = (String)request.getAttribute( Constants.USER_NO );
-        List<List<ImageUploadVO>> imageItems = new ArrayList();
+        List<List<ImageUploadVO>> imageItems = new ArrayList<>();
         if(CollectionUtils.isNotEmpty( multipartFileMap.keySet() ))
         {
-            for(Object key : multipartFileMap.keySet())
+            for(String key : multipartFileMap.keySet())
             {
                 MultipartFile multipartFile = multipartFileMap.get( key );
-                String fileName = multipartFile.getOriginalFilename();//获取文件的名字
-                String fileSuffix = StringUtils.substringAfterLast( fileName, "." );//获取文件后缀名
-                String seq = DateUtil.formatDate( new Date(), "yyyyMMddHHmmssSSS" );//当前时间
+                //获取文件的名字
+                String fileName = multipartFile.getOriginalFilename();
+                //获取文件后缀名
+                String fileSuffix = StringUtils.substringAfterLast( fileName, "." );
+                //当前时间
+                String seq = DateUtil.formatDate( new Date(), "yyyyMMddHHmmssSSS" );
                 //是否为上传图片名称
-                if(StringUtils.isNotBlank( fileSuffix ) && !UploadFTPUtils.validateIsPicture( fileSuffix, imageSuffix ))
+                if(StringUtils.isNotBlank( fileSuffix ) && !AbstractUploadFtpUtils.validateIsPicture( fileSuffix, imageSuffix ))
                 {
                     List<ImageUploadVO> imageUploadVOs = new ArrayList<>();
                     String upladImageName = userNo + seq + "." + fileSuffix;
@@ -186,10 +190,10 @@ public class FileUploadServiceImpl implements FileUploadService
                                     String tinyUploadImageName = userNo + seq + "_" + i + "." + fileSuffix;
                                     String tinyUploadPath = FileUtils.getFileRelativePath( imageUploadPath ) + i + "/";
                                     //压缩后的图片
-                                    BufferedImage tinyImage = ImageUtils
+                                    BufferedImage tinyImage = AbstractImageUtils
                                         .compressImage( bufferedImage, fileSuffix, Integer
                                             .parseInt( thumbnailSizes[i - 1] ) ,Integer.parseInt(thumbnailSizesHeight[i - 1]));
-                                    InputStream is = UploadFTPUtils.getImageStream( tinyImage, fileSuffix );
+                                    InputStream is = AbstractUploadFtpUtils.getImageStream( tinyImage, fileSuffix );
                                     ftpService.uploadFile( tinyUploadPath, tinyUploadImageName, is );
                                     log.info( "upload tiny file to FTP success!!!" );
                                     ImageUploadVO tinyImageUploadVO = new ImageUploadVO();

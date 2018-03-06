@@ -1,0 +1,143 @@
+.c-invite {
+  padding-top: .1rem;
+  background-color: #ec534d;
+}
+.c-invite .c-invite-firstPiece {
+  position: relative;
+  /*padding-bottom: 3.5rem;*/
+  width: 18.75rem;
+  height: 25.3rem;
+  background-color: #ec534d;
+  background-size: 100%;
+  background-image: url("../img/invite.png");
+  background-repeat: no-repeat;
+}
+.c-invite .c-invite-f-wrapper {
+  position: relative;
+  top: 6.5rem;
+}
+.c-invite .c-invite-f-style-com {
+  margin-left: 2.4rem;
+  margin-top: 0.85rem;
+}
+.c-invite .c-invite-f-input-com {
+  padding-left: 0.5rem;
+  width: 13.6rem;
+  height: 1.8rem;
+  line-height: 1.8rem;
+  font-size: 0.8rem;
+  color: #323232;
+  border-radius: 0.3rem;
+  background-color: #E2E2E2;
+}
+.c-invite .c-invite-s-input-com {
+  padding-left: 0.5rem;
+  width: 8.6rem;
+  height: 1.8rem;
+  line-height: 1.8rem;
+  font-size: 0.8rem;
+  color: #323232;
+  border-radius: 0.3rem;
+  background-color: #E2E2E2;
+}
+.c-invite .c-invite-t-input-com {
+  width: 4.6rem;
+  height: 1.8rem;
+  line-height: 1.8rem;
+  font-size: 0.8rem;
+  color: #fff;
+  border-radius: 0.3rem;
+  background-color: #EC534D;
+  text-align: center;
+}
+.c-invite .c-invite-identify-tips {
+  margin: 0.55rem 0 0 2.4rem;
+  font-size: 0.6rem;
+  color: #EC534D;
+}
+.c-invite .c-invite-identify-item {
+  margin: 0.5rem 2.4rem 1rem;
+  width: 13.9rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-invite .c-invite-id-item-content {
+  width: 2.625rem;
+  height: 1.8rem;
+}
+.c-invite .c-invite-id-item-content .c-invite-identify-active {
+  background-color: #58B0FF !important;
+  color: #fff !important;
+}
+.c-invite .c-invite-id-item-content:nth-child(5) {
+  width: 3.4rem;
+  height: 1.8rem;
+}
+.c-invite .c-invite-id-item-content:nth-child(5) .c-invite-id-item-child {
+  width: 3.4rem;
+  height: 100%;
+  line-height: 1.8rem;
+  text-align: center;
+  font-size: 0.7rem;
+  background-color: #f4f4f4;
+  border-radius: 0.25rem;
+  color: #646464;
+}
+.c-invite .c-invite-id-item-child {
+  width: 2.25rem;
+  height: 100%;
+  line-height: 1.8rem;
+  text-align: center;
+  font-size: 0.7rem;
+  background-color: #f4f4f4;
+  border-radius: 0.25rem;
+  color: #646464;
+}
+.c-invite .c-invite-regist {
+  margin: auto;
+  text-align: center;
+  width: 14.1rem;
+}
+.c-invite .c-invite-protocol {
+  height: 1.5rem;
+  line-height: 1.5rem;
+  font-size: 0.6rem;
+  text-align: center;
+}
+.c-invite .c-invite-protocol-first-sp {
+  color: #646464;
+}
+.c-invite .c-invite-protocol-second-sp {
+  color: #EC534D;
+}
+.c-invite .c-invite-guide {
+  width: 18.75rem;
+  background-color: #fff;
+}
+.c-invite .c-invite-guide-picture {
+  width: 100%;
+  display: block;
+}
+.c-invite .c-invite-submitBtn {
+  display: block;
+  width: 100%;
+  height: 2.1rem;
+  line-height: 2.1rem;
+  color: #fff;
+  font-size: 0.9rem;
+  border-radius: 0.3rem;
+  background-color: #EC534D ;
+}
+.c-invite .c-verfication-code-active {
+  background-color: #f4f4f4;
+  color: #323232;
+}

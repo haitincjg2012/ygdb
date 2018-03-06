@@ -1,5 +1,8 @@
 package com.apec.framework.cache;
 
+/**
+ * @author  xxx
+ */
 public class CacheException extends RuntimeException{
 
 	/**
@@ -31,6 +34,7 @@ public class CacheException extends RuntimeException{
         this.message = message;
     }
 
+    @Override
     public String toString()
     {
         return super.toString();

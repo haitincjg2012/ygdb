@@ -9,13 +9,19 @@ import com.apec.framework.common.enums.BaseEnum;
  */
 public enum MQConsumerStatus  implements BaseEnum {
 
+    /**
+     * 消费失败
+     */
     FAILURE("消费失败"),
 
+    /**
+     * 消费成功
+     */
     SUCCESS("消费成功") ;
 
     private final String key;
 
-    private MQConsumerStatus(String key) {
+    MQConsumerStatus(String key) {
         this.key = key;
     }
 

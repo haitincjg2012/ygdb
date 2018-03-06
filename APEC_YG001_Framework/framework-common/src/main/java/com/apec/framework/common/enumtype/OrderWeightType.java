@@ -4,6 +4,7 @@ import com.apec.framework.common.enums.BaseEnum;
 
 /**
  * Created by wubi on 2017/8/7.
+ * @author xxxx
  */
 public enum OrderWeightType implements BaseEnum{
     /**
@@ -28,7 +29,7 @@ public enum OrderWeightType implements BaseEnum{
 
     private final String key;
 
-    private OrderWeightType(String key) {
+    OrderWeightType(String key) {
         this.key = key;
     }
 

@@ -4,8 +4,11 @@ import com.apec.framework.common.enumtype.UserAccountType;
 import com.apec.framework.dto.BaseDTO;
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * Created by hmy on 2017/9/12.
+ *  * @author hmy
  */
 @Data
 public class UserOrgClientDTO extends BaseDTO {
@@ -32,20 +35,20 @@ public class UserOrgClientDTO extends BaseDTO {
      */
     private String orgStockCap;
 
-    /*
+    /**
      * 关注数
      */
-    private int attentionNum;
+    private Integer attentionNum;
 
     /**
      * 浏览数
      */
-    private int viewNum;
+    private Integer viewNum;
 
     /**
      * 供求数
      */
-    private int productNum;
+    private Integer productNum;
 
     /**
      * 所在地区
@@ -81,6 +84,16 @@ public class UserOrgClientDTO extends BaseDTO {
      * 账户类型
      */
     private UserAccountType userAccountType;
+
+    /**
+     * 开始时间
+     */
+    private Date startDate;
+
+    /**
+     * 结束时间
+     */
+    private Date endDate;
 
 
 }

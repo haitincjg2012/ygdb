@@ -25,6 +25,11 @@
 		</dependency>
 		<dependency>
 			<groupId>com.apec</groupId>
+			<artifactId>framework-ftp</artifactId>
+			<version>1.0.1-RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>com.apec</groupId>
 			<artifactId>framework-springcloud</artifactId>
 			<version>1.0.1-RELEASE</version>
 		</dependency>

@@ -1,0 +1,106 @@
+.c-activeP {
+  position: relative;
+  height: 100%;
+}
+.c-activeP .twoText {
+  width: 1.75rem;
+}
+.c-activePanimation {
+  transition: transform 10ms linear;
+  -moz-transition: transform 10ms linear;
+  -webkit-transition: transform 10ms linear;
+  -o-transition: transform 10ms linear;
+}
+.c-activePerson {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  width: 10.2rem;
+  height: 5.05rem;
+  background: #fff;
+  border-radius: 0.2rem;
+}
+.c-active-title {
+  height: 1.7rem;
+  line-height: 1.7rem;
+  width: 100%;
+}
+.c-active-title-img {
+  margin-left: 0.5rem;
+  width: 6.3rem;
+  height: 0.7rem;
+}
+.c-active-content {
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-active-c-head {
+  margin: 0.25rem 0 0 0.4rem;
+  width: 2.15rem;
+}
+.c-active-c-h-pic {
+  width: 2.15rem;
+  height: 2.15rem;
+  border-radius: 100%;
+}
+.c-active-c-Introduction {
+  padding-left: 0.5rem;
+  width: 7.15rem;
+}
+.c-active-c-I-p {
+  height: 1.6rem;
+  line-height: 1.6rem;
+  font-size: 0;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-active-c-I-p-styleL {
+  width: 4.5rem;
+}
+.twoR {
+  width: 4.9rem;
+}
+.c-active-c-I-p-styleR {
+  width: 2.7rem;
+}
+.c-active-c-I-p-name {
+  display: inline-block;
+  max-width: 100%;
+  font-size: 0.8rem;
+  color: #323232;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.c-active-c-I-p-identify {
+  font-size: 0.6rem;
+  color: #fff;
+  background: #FD9E24;
+  border-radius: 0.1rem;
+  vertical-align: 0.55rem;
+  padding: 0 0.1rem;
+}
+.c-active-c-signup {
+  height: 0.9rem;
+  line-height: 0.9rem;
+  font-size: 0.75rem;
+  color: #646464;
+}

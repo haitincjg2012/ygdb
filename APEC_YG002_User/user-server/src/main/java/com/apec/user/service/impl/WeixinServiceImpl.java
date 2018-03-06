@@ -8,7 +8,6 @@ import com.apec.user.util.WeixinUtil;
 import com.apec.user.vo.AccessToken;
 import com.apec.user.vo.JsapiTicket;
 import com.apec.user.vo.WeixinShareVO;
-import com.netflix.discovery.converters.Auto;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +19,7 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by wubi on 2017/10/9.
+ * @author wubi
  */
 @Service
 public class WeixinServiceImpl implements WeixinService{
@@ -42,7 +42,8 @@ public class WeixinServiceImpl implements WeixinService{
         //判断token是否过期 从缓存获取
         logger.info("##########get weixin token info start##########");
         String token = cacheService.get("weixin_token");
-        if(StringUtils.isBlank(token) || StringUtils.isEmpty(token)) { //如果为空重新获取token
+        //如果为空重新获取token
+        if(StringUtils.isBlank(token) || StringUtils.isEmpty(token)) {
             logger.info("##########weixin token cache expired call weixin api get token##############");
             AccessToken accessToken = WeixinUtil.getAccessToken(appId, appSecret);
             cacheService.add("weixin_token", accessToken.getToken(), accessToken.getExpiresIn()/60-10);
@@ -54,14 +55,14 @@ public class WeixinServiceImpl implements WeixinService{
         //判断ticket是否过期 从缓存获取
         logger.info("##########get weixin ticket info start##########");
         String ticket = cacheService.get("weixin_ticket");
-        if(StringUtils.isBlank(ticket) || StringUtils.isEmpty(ticket)) { //如果为空重新获取ticket
+        //如果为空重新获取ticket
+        if(StringUtils.isBlank(ticket) || StringUtils.isEmpty(ticket)) {
             logger.info("##########weixin ticket cache expired call weixin api get token##############");
             JsapiTicket jsapiTicket = WeixinUtil.getJsapiTicket(token);
             cacheService.add("weixin_ticket", jsapiTicket.getTicket(), jsapiTicket.getExpiresIn()/60-10);
             ticket = jsapiTicket.getTicket();
         }
         logger.info("##########get weixin ticket info end##########");
-
 
         logger.info("##########get weixin sign info start##########");
         WeixinShareVO weixinInfo = SignUtil.sign(ticket, weixinShareVO.getUrl());

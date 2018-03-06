@@ -1,122 +1,159 @@
 <template>
   <div class="pc-page">
-    <scroller ref="my_scroller" :style="styleCal">
-    <div ref="main_page" class="main-page">
-      <div class="p-info">
-        <div class="p-info-main">
-          <img @click.stop="routerInfo('pcInfo')" class="p-info-user" :src="imgUrl">
-          <div class="p-info-user-form">
-            <div class="p-info-user-l">
-              <span class="p-info-name">{{name}}</span>
-              <img :src="userTypeName" class="p-info-aur">
-            </div>
-            <div class="p-info-user-k">
-              <img :src="userLevelName">
-              <span>{{userLevelKey}}会员</span>
+    <!--<scroller ref="my_scroller" :style="styleCal">-->
+    <scrollbg :data="dataArr" :pullup="pullup" ref="pcWrapper"  class="c-my-main-page"c-my- @scrollToEnd="loadMore">
+      <div ref="main_page">
+        <div class="p-info">
+          <div class="p-info-main" @click.stop="personInfo">
+            <img class="p-info-user" :src="imgUrl" data-flag="src">
+            <div class="p-info-user-form">
+              <div class="p-info-user-l">
+                <span class="p-info-name">{{name}}</span>
+                <img :src="userTypeName" class="p-info-aur">
+              </div>
+              <div class="p-info-user-k">
+                <img :src="userLevelName">
+                <span>{{userLevelKey}}会员</span>
+              </div>
             </div>
           </div>
+          <!--<img src="../../assets/img/card.png" class="p-info-logo">-->
+          <div class="c-my-menu">
+            <div class="c-my-m-set c-my-m-com" @click.stop="routerInfo('setting')">
+              <img src="../../assets/img/mySet.png">
+            </div>
+            <div class="c-my-m-message c-my-m-com" @click.stop.prevent="messagePush">
+              <img src="../../assets/img/whiteMsg.png">
+              <!--<span v-show="messageCount"></span>-->
+              <div class="c-my-m-m-text" v-show="messageCount"><span></span></div>
+            </div>
+          </div>
+          <div class="c-my-edit" @click.stop="personInfo">
+            <span>编辑资料</span>
+            <img src="../../assets/img/Right_Arrow_Icon.png">
+          </div>
+          <!--<div @click="appleLogin">注册果来乐</div>-->
+          <!--<a @click.stop.prevent="messagePush" class="p-info-user-message-click">-->
+          <!--<img src="../../assets/img/xx.png" class="p-info-user-message">-->
+          <!--<span v-show="messageCount">{{messageCount}}</span>-->
+          <!--</a>-->
         </div>
-        <!--<img src="../../assets/img/card.png" class="p-info-logo">-->
-        <a @click.stop.prevent="messagePush" class="p-info-user-message-click">
-          <img src="../../assets/img/xx.png" class="p-info-user-message">
-          <span v-show="messageCount">{{messageCount}}</span>
+        <div class="c-p-line-top">
+          <div @click.stop="routerInfo('myP')" class="line-one">
+            <img src="../../assets/img/myPoint.png" class="p-l-img-com">
+            <div class="p-l-text-com">我的积分</div>
+            <!--<span>{{point}}</span>-->
+          </div>
+          <div @click.stop="routerInfo('viewUpload')" class="line-one">
+            <img src="../../assets/img/myMenu.png" class="p-l-img-com">
+            <div class="p-l-text-com">我的单据</div>
+            <!--<span>{{point}}</span>-->
+          </div>
+          <div @click.stop="routerInfo('mySP')" class="line-one">
+            <img src="../../assets/img/myQuotes.png" class="p-l-img-com">
+            <div class="p-l-text-com">我的供求</div>
+            <!--<span>{{point}}</span>-->
+          </div>
+          <!--<div @click.stop="routerInfo('pD')" class="line-two">-->
+          <!--<img src="../../assets/img/EarnPoints.png">-->
+          <!--<span>如何赚积分</span>-->
+          <!--</div>-->
+          <!--<div class="line-three">-->
+          <!--<img src="../../assets/img/Jurisdiction.png">-->
+          <!--<span>查看等级权限</span>-->
+          <!--</div>-->
+        </div>
+        <split></split>
+        <div @click.stop="routerInfo('person')" class="p-form-cli">
+          <img class="label" src="../../assets/img/Personal.png">
+          <span>个人主页</span>
+          <img class="arrow" src="../../assets/img/back.png">
+        </div>
+        <split></split>
+        <div @click.stop="routerInfo('quotes')" class="p-form-cli">
+          <img class="label" src="../../assets/img/my-supply.png">
+          <span>我的行情</span>
+          <img class="arrow" src="../../assets/img/back.png">
+        </div>
+        <div class="dash-line"></div>
+        <div @click.stop="routerInfo('myCo')" class="p-form-cli">
+          <img class="label" src="../../assets/img/myCollect.png">
+          <span>我的收藏</span>
+          <img class="arrow" src="../../assets/img/back.png">
+        </div>
+        <div class="dash-line"></div>
+        <div @click.stop="routerInfo('myAttention')" class="p-form-cli">
+          <img class="label" src="../../assets/img/myAttention.png">
+          <span>我的关注</span>
+          <img class="arrow" src="../../assets/img/back.png">
+        </div>
+        <split></split>
+        <div @click.stop="routerInfo('award')" class="p-form-cli">
+          <img class="label" src="../../assets/img/award.png">
+          <span>推荐有奖</span>
+          <img class="arrow" src="../../assets/img/back.png">
+        </div>
+        <split></split>
+        <div @click.stop="routerInfo('rnAur')" class="p-form-cli">
+          <img class="label" src="../../assets/img/myId.png">
+          <span>实名认证</span>
+          <span class="aur-is-not">{{userRealAuthKey}}</span>
+          <img class="arrow" src="../../assets/img/back.png">
+        </div>
+        <div class="dash-line"></div>
+        <a href="tel:0535-3143298" class="p-form-cli">
+          <img class="label" src="../../assets/img/kf.png">
+          <span>客服电话</span>
+          <img class="arrow" src="../../assets/img/back.png">
         </a>
-      </div>
-      <div class="p-line-top">
-        <div @click.stop="routerInfo('myP')" class="line-one">
-          <img src="../../assets/img/integral.png">
-          <span>积分</span>
-          <span>{{point}}</span>
-        </div>
-        <div @click.stop="routerInfo('pD')" class="line-two">
-          <img src="../../assets/img/EarnPoints.png">
-          <span>如何赚积分</span>
-        </div>
-        <div class="line-three">
-          <img src="../../assets/img/Jurisdiction.png">
-          <span>查看等级权限</span>
-        </div>
-      </div>
-      <split></split>
-      <div @click.stop="routerInfo('person')" class="p-form-cli">
-        <img class="label" src="../../assets/img/Personal.png">
-        <span>个人主页</span>
-        <img class="arrow" src="../../assets/img/back.png">
-      </div>
-      <div class="dash-line"></div>
-      <div @click.stop="routerInfo('upList')" class="p-form-cli">
-        <img class="label" src="../../assets/img/GoPro.png">
-        <span>上传单据</span>
-        <img class="arrow" src="../../assets/img/back.png">
-      </div>
-      <div class="dash-line"></div>
-      <div @click.stop="routerInfo('viewUpload')" class="p-form-cli">
-        <img class="label" src="../../assets/img/Bill.png">
-        <span>查看单据</span>
-        <img class="arrow" src="../../assets/img/back.png">
-      </div>
-      <div class="dash-line"></div>
-      <div @click.stop="routerInfo('ranking')" class="p-form-cli">
-        <img class="label" src="../../assets/img/rankG.png">
-        <span>调果排行榜</span>
-        <img class="arrow" src="../../assets/img/back.png">
-      </div>
-      <div class="dash-line"></div>
-       <div @click.stop="routerInfo('myAttention')" class="p-form-cli">
-        <img class="label" src="../../assets/img/Bill.png">
-        <span>我的关注</span>
-        <img class="arrow" src="../../assets/img/back.png">
-      </div>
-      <split></split>
-      <div @click.stop="routerInfo('myCo')" class="p-form-cli">
-        <img class="label" src="../../assets/img/Group0.png">
-        <span>我的收藏</span>
-        <img class="arrow" src="../../assets/img/back.png">
-      </div>
-      <div class="dash-line"></div>
-      <div @click.stop="routerInfo('mySP')" class="p-form-cli">
-        <img class="label" src="../../assets/img/gq.png">
-        <span>我的供求</span>
-        <img class="arrow" src="../../assets/img/back.png">
-      </div>
-      <div class="dash-line"></div>
-      <div @click.stop="routerInfo('rnAur')" class="p-form-cli">
-        <img class="label" src="../../assets/img/Visa_Card.png">
-        <span>实名认证</span>
-        <span class="aur-is-not">{{userRealAuthKey}}</span>
-        <img class="arrow" src="../../assets/img/back.png">
-      </div>
-      <div class="dash-line"></div>
-      <!--<div  class="p-form-cli">-->
+
+        <!--<div @click.stop="routerInfo('upList')" class="p-form-cli">-->
+        <!--<img class="label" src="../../assets/img/GoPro.png">-->
+        <!--<span>上传单据</span>-->
+        <!--<img class="arrow" src="../../assets/img/back.png">-->
+        <!--</div>-->
+        <!--<div class="dash-line"></div>-->
+        <!--<div @click.stop="routerInfo('viewUpload')" class="p-form-cli">-->
+        <!--<img class="label" src="../../assets/img/Bill.png">-->
+        <!--<span>查看单据</span>-->
+        <!--<img class="arrow" src="../../assets/img/back.png">-->
+        <!--</div>-->
+        <div class="dash-line"></div>
+        <!--<div @click.stop="routerInfo('ranking')" class="p-form-cli">-->
+        <!--<img class="label" src="../../assets/img/rankG.png">-->
+        <!--<span>调果排行榜</span>-->
+        <!--<img class="arrow" src="../../assets/img/back.png">-->
+        <!--</div>-->
+        <!--<div class="dash-line"></div>-->
+
+        <!--<div  class="p-form-cli">-->
         <!--<img class="label" src="../../assets/img/Visa_Card.png">-->
         <!--<span>投诉反馈</span>-->
         <!--<span class="aur-is-not">{{userRealAuthKey}}</span>-->
         <!--<img class="arrow" src="../../assets/img/back.png">-->
-      <!--</div>-->
-      <!--<div class="dash-line"></div>-->
+        <!--</div>-->
+        <!--<div class="dash-line"></div>-->
 
-      <a href="tel:0535-3143298" class="p-form-cli">
-        <img class="label" src="../../assets/img/kf.png">
-        <span>客服电话</span>
-        <img class="arrow" src="../../assets/img/back.png">
-      </a>
-      <div class="dash-line"></div>
-      <div @click.stop="routerInfo('upSecret')" class="p-form-cli">
-        <img class="label" src="../../assets/img/script.png">
-        <span>修改密码</span>
-        <img class="arrow" src="../../assets/img/back.png">
+        <!--<div class="dash-line"></div>-->
+        <!--<div @click.stop="routerInfo('upSecret')" class="p-form-cli">-->
+        <!--<img class="label" src="../../assets/img/script.png">-->
+        <!--<span>修改密码</span>-->
+        <!--<img class="arrow" src="../../assets/img/back.png">-->
+        <!--</div>-->
+        <!--<div class="dash-line"></div>-->
+        <!--<div class="login-btn">-->
+        <!--<input class="btn-login-c login-confirm" type="submit" id="btn-login-code" value="退出"-->
+        <!--@click="confirmBtn">-->
+        <!--&lt;!&ndash;</input>&ndash;&gt;-->
+        <!--</div>-->
       </div>
-      <div class="dash-line"></div>
-      <div class="login-btn">
-        <input class="btn-login-c login-confirm" type="submit" id="btn-login-code" value="退出"
-               @click="confirmBtn">
-        <!--</input>-->
-      </div>
-    </div>
-    </scroller>
+    </scrollbg>
+    <!--</scroller>-->
   </div>
 </template>
-
+<style>
+  @import "../../assets/css/my.css";
+</style>
 <script>
   import split from '../../components/split/split';
   import API from '../../api/api';
@@ -124,7 +161,7 @@
   import {MessageBox, Indicator, Toast} from 'mint-ui';
 
 
-
+  import scrollbg from '../../components/scroll/scrollbg.vue'
   import userImgUrl from '../../assets/img/icon.png'//用户默认图像
   import daiban from '../../assets/img/AgencyTips.png'//代办
   import zzHu from '../../assets/img/AgencyTipsG.png'//种植户
@@ -132,13 +169,6 @@
   import lengku from '../../assets/img/AgencyTipsL.png'//冷库
   import hezuoshang from  '../../assets/img/hezuoshang.png'//合作商
 
-
-  import QT from '../../assets/img/copper@3x.png'//铜牌
-  import BY from '../../assets/img/silver@3x.png'//银牌
-  import HJ from '../../assets/img/gold@3x.png'//金牌
-  import BJ from '../../assets/img/Pt@3x.png'//铂金
-  import ZS from '../../assets/img/Diamonds.png'//砖石
-  import DS from '../../assets/img/Ancrown@3x.png'//大师
 
   import IMG from '../../components/gqimg.vue'
   import backgroudImg from '../../assets/img/bj.png'
@@ -152,6 +182,7 @@
 
     data() {
       return {
+        dataArr:["1"],
         imgUrl: this.$store.state.imgUrl || c_js.getLocalValue('imgUrl') || userImgUrl,//用户头像
 //        name: this.$store.state.name || c_js.getLocalValue('name') || '',//用户名
         name: '',//用户名
@@ -162,25 +193,31 @@
         userLevelKey: '',//用户等级
         userLevelName: '',//
         messageCount:'',//未读消息条数,
-        styleCal:"0"
+        styleCal:"0",
+        originalSrc:null,//原图类型
 
+        pullup:true,
       }
     },
 
     methods: {
+      loadMore(){
+          console.log("pc");
+      },
+      appleLogin(){
+        this.$router.push({name:"invite"});
+      },
       messagePush(){
-        this.$router.push({name: 'messageList'});
+        // this.$router.push({name: 'messageList'});
+        this.$router.push({name: 'messageInfo'});
       },
       _initScroll(){
         const self = this;
         self.$nextTick(function () {
-//            console.dir();
+
             var el =this.$refs.main_page;
-//          var winHeight = window.innerHeight;
           var mainHeight = el.offsetHeight + 50;
-//          self.styleCal='top:42px;height:'+mainHeight+'px';
           this.$refs.main_page.style.height = mainHeight+'px';
-//                    self.styleCal=mainHeight+'px';
         })
       },
       routerInfo(e){
@@ -199,6 +236,9 @@
               break;
             case 'myAttention'://我的关注
               this.$router.push({name:'myAttention'});
+              break;
+              case 'award'://推荐有奖
+                this.$router.push({name:"Twocode"});
               break;
             case 'upSecret'://修改密码
               this.$router.push({name: 'updateSecret'});
@@ -224,36 +264,53 @@
             case 'person'://个人主页
               this.$router.push({ name: 'personH'});
               break;
+            case "quotes":
+                this.$router.push({name:'quotes'});
+                break;
+            case "setting":
+              this.$router.push({name: 'setting'});
+                break;
             default:
               this.$router.push({name: 'home'});
               break;
           }
       },
-      userLevelKeySwitch(key){//用户积分转换
-        switch (key) {
-          case 'QT':
-            return QT;
-            break;
-          case 'BY':
-            return BY;
-            break;
-          case 'HJ':
-            return HJ;
-            break;
-          case 'BJ':
-            return BJ;
-            break;
-          case 'ZS':
-            return ZS;
-            break;
-          case 'DS':
-            return DS;
-            break;
-          default:
-            return '';
-            break;
-        }
+      personInfo(e){
+          var el = e.target || e.srcElement;
+          var self = this;
+          var flag = el.dataset.flag;
+          if(flag == "src" && self.originalSrc){
+              this.$router.push({name:"pictureOriginal",query:{src:self.originalSrc}});
+          }else{
+            this.$router.push({name: 'pcInfo'});
+          }
+
       },
+//      userLevelKeySwitch(key){//用户积分转换
+//        switch (key) {
+//          case 'QT':
+//            return QT;
+//            break;
+//          case 'BY':
+//            return BY;
+//            break;
+//          case 'HJ':
+//            return HJ;
+//            break;
+//          case 'BJ':
+//            return BJ;
+//            break;
+//          case 'ZS':
+//            return ZS;
+//            break;
+//          case 'DS':
+//            return DS;
+//            break;
+//          default:
+//            return '';
+//            break;
+//        }
+//      },
       userTypeNameSwitch(key){//用户身份转换
         switch (key) {
           case 'DB':
@@ -306,10 +363,10 @@
               self.$store.commit("incrementAurKey", {'userRealAuthKey': data.userRealAuthKey || ''});//验证情况
               c_js.setLocalValue('userRealAuthKey',data.userRealAuthKey || '');
 
-            } else {
+            }else {
                 self.point = this.$store.state.point || c_js.getLocalValue('point');
                 self.userLevelKey = this.$store.state.userLevelKey || c_js.getLocalValue('userLevelKey');
-                self.userLevelName = self.userLevelKeySwitch(this.$store.state.userLevelName || c_js.getLocalValue('userLevelName'));
+                self.userLevelName = IMG.methods.userLevel(this.$store.state.userLevelName || c_js.getLocalValue('userLevelName'));
                 self.userRealAuthKey = this.$store.state.userRealAuthKey || c_js.getLocalValue('userRealAuthKey');
             }
           }).catch((error) => {
@@ -328,7 +385,7 @@
           api.post(params).then((res) => {
             var item = res.data;
             if (item.succeed && item.data) {
-              self.messageCount = item.data==='0'?'':item.data;
+              self.messageCount = item.data.messageCount > 0 || item.data.praiseCount > 0  || item.data.replyCount > 0 ?true:false;
             } else {
             }
           }).catch((error) => {
@@ -390,9 +447,7 @@
         }
       },
       identify(){
-
         const self = this;
-
         var params = {
           api:"/_node_user/_info.apno"
         }
@@ -407,8 +462,10 @@
 
                 this.name = dt.name;
                 window.localStorage.useId = dt.userOrgId;
+                localStorage.useTId = dt.userId;
                 this.userTypeName = IMG.methods.userTypeNameSwitch(dt.userTypeKey);
-              this.imgUrl = (dt.imgUrl || userImgUrl) + "?x-oss-process=style/_head";//用户头像
+                this.originalSrc = dt.imgUrl;
+               this.imgUrl = (dt.imgUrl || userImgUrl) + "?x-oss-process=style/_head";//用户头像
               this.userRealAuthName = dt.userRealAuth;
 
             } else {
@@ -420,7 +477,6 @@
         }
       },
       init(data){
-//          console.log(data);
 
       },
       post(params, fn){
@@ -441,13 +497,8 @@
       this.identify();
       this.GetUserLevel();
       this.GetMessageCount();
-      this._initScroll();
-//      var name =  window.sessionStorage.getItem("newName") || this.$store.state.name || c_js.getLocalValue('name') || '';
-//      var level = window.sessionStorage.getItem("level") || this.$store.state.userTypeName || c_js.getLocalValue('userTypeName');
-//      this.userTypeName=this.userTypeNameSwitch(this.$store.state.userTypeName || c_js.getLocalValue('userTypeName'));
-
-
-
+//      this._initScroll();
+      this.$refs.pcWrapper.init();
     },
 
     created() {
@@ -459,7 +510,8 @@
     },
 
     components: {
-      split
+      split,
+      scrollbg
     }
   }
 </script>
@@ -507,8 +559,8 @@
               vertical-align middle
           .p-info-user-k
             img
-              width (16 /_rem)
-              height (16 /_rem)
+              width (30 /_rem)
+              height (30 /_rem)
               vertical-align middle
             span
               font-size (10 /_rem)
@@ -550,8 +602,7 @@
     .p-line-top
       height (50 /_rem);
       display flex;
-      .line-three
-      .line-one, .line-two, .line-three
+      .line-three, .line-two, .line-three
         flex 1
         vertical-align middle
         line-height (40 /_rem)
@@ -599,7 +650,8 @@
       height 1px
       background-color #f4f4f4
     .login-btn
-      margin (35 /_rem) (15 /_rem) (15 /_rem) (15 /_rem)
+      padding  (35 /_rem) (15 /_rem) (15 /_rem) (15 /_rem)
+      background-color #f4f4f4
       .btn-login-c
         color #ffffff
         line-height (15 /_rem)

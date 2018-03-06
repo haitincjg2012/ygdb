@@ -8,13 +8,14 @@ import java.util.Date;
 
 /**
  * Created by hmy on 2017/7/18.
+ * @author hmy
  */
 @Data
 public class UserAuthRecordDTO extends BaseDTO {
     /**
-     * 用户
+     * 用户姓名
      */
-    private UserVO userVO;
+    private String realName;
 
     /**
      * 用户ID
@@ -50,4 +51,14 @@ public class UserAuthRecordDTO extends BaseDTO {
      * 备注
      */
     private String remark;
+
+    /**
+     * 开始时间
+     */
+    private Date startDate;
+
+    /**
+     * 结束时间
+     */
+    private Date endDate;
 }

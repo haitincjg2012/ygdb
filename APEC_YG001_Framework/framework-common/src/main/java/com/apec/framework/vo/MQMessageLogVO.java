@@ -185,4 +185,10 @@ public class MQMessageLogVO {
     public void setKeys(String keys) {
         this.keys = keys;
     }
+
+    @Override
+    public String toString(){
+        return super.toString();
+    }
+
 }

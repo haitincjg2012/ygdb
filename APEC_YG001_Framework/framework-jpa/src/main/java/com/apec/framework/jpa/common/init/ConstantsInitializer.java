@@ -1,6 +1,6 @@
 package com.apec.framework.jpa.common.init;
 
-import com.apec.framework.common.tools.IDGenerator;
+import com.apec.framework.common.tools.BaseIDGenerator;
 import com.apec.framework.jpa.common.DbDateTimeProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +15,7 @@ import javax.annotation.PostConstruct;
  * 内容摘要：初始化静态变量
  * 创建日期：2016/10/19
  * 编码作者：
+ * @author xx
  */
 @Configuration
 public class ConstantsInitializer
@@ -25,7 +26,7 @@ public class ConstantsInitializer
     @PostConstruct
     public void initConstants()
     {
-        IDGenerator.setWorkerId( workerId );
+        BaseIDGenerator.setWorkerId( workerId );
     }
 
     @Bean(name = "dateTimeProvider")

@@ -60,8 +60,9 @@ public class BeanUtil
 
         for(PropertyDescriptor targetPd : targetPds)
         {
-            if(targetPd.getWriteMethod() != null
-               && (ignoreFields == null || (!ignoreList.contains(targetPd.getName()))))
+            boolean flag = targetPd.getWriteMethod() != null
+                    && (ignoreFields == null || (!ignoreList.contains(targetPd.getName())));
+            if(flag)
             {
                 PropertyDescriptor sourcePd = org.springframework.beans.BeanUtils
                     .getPropertyDescriptor(source.getClass(), targetPd.getName());
@@ -81,8 +82,12 @@ public class BeanUtil
                             .getPropertyDescriptor(target.getClass(), targetPd.getName());
                         Class targetType = pd.getPropertyType();
 
-                        if(sourceType.isEnum() && (Integer.class.equals(targetType) || int.class.equals(targetType)))
-                        {// 源对象属性是枚举
+                        boolean sourceFlag = sourceType.isEnum() && (Integer.class.equals(targetType) || int.class.equals(targetType));
+                        boolean targetFlag = targetType.isEnum()
+                                && (Integer.class.equals(sourceType) || int.class.equals(sourceType));
+                        if(sourceFlag)
+                        {
+                            // 源对象属性是枚举
                             if(value == null)
                             {
                                 value = 0;
@@ -92,27 +97,20 @@ public class BeanUtil
                                 value = Enum.valueOf(sourceType, String.valueOf(value)).ordinal();
                             }
                         }
-                        else if(targetType.isEnum()
-                                && (Integer.class.equals(sourceType) || int.class.equals(sourceType)))
-                        {// 目标对象属性是枚举
-                            if(value == null)
-                            {
+                        else if(targetFlag) {
+                            // 目标对象属性是枚举
+                            if (value == null) {
                                 value = 0;
                             }
-                            int intValue = (Integer)value;
+                            int intValue = (Integer) value;
                             Method method = targetType.getMethod("values");
-                            Object[] enumValues = (Object[])method.invoke(targetType);
-                            if(intValue >= 0 && intValue < enumValues.length)
-                            {
+                            Object[] enumValues = (Object[]) method.invoke(targetType);
+                            if (intValue >= 0 && intValue < enumValues.length) {
                                 value = enumValues[intValue];
-                            }
-                            else
-                            {
+                            } else {
                                 continue;
                             }
-
                         }
-
                         if(String.class.equals(sourceType) && Number.class.isAssignableFrom(targetType))
                         {
                             Constructor constructor = targetType.getConstructor(String.class);
@@ -123,13 +121,15 @@ public class BeanUtil
                             value = String.valueOf(value);
                         }
 
-                        if((Boolean.class.equals(sourceType) || boolean.class.equals(sourceType))
-                           && (Integer.class.equals(targetType) || int.class.equals(targetType)))
+                        boolean sourceBooleanFlag = (Boolean.class.equals(sourceType) || boolean.class.equals(sourceType))
+                                && (Integer.class.equals(targetType) || int.class.equals(targetType));
+                        boolean targetBooleanFlag = (Boolean.class.equals(targetType) || boolean.class.equals(targetType))
+                                && (Integer.class.equals(sourceType) || int.class.equals(sourceType));
+                        if(sourceBooleanFlag)
                         {
                             value = (Boolean)value ? 1 : 0;
                         }
-                        else if((Boolean.class.equals(targetType) || boolean.class.equals(targetType))
-                                && (Integer.class.equals(sourceType) || int.class.equals(sourceType)))
+                        else if(targetBooleanFlag)
                         {
                             value = (Integer)value > 0 ? true : false;
                         }
@@ -174,8 +174,9 @@ public class BeanUtil
 
         for(PropertyDescriptor targetPd : targetPds)
         {
-            if(targetPd.getWriteMethod() != null
-                    && (ignoreFields == null || (!ignoreList.contains(targetPd.getName()))))
+            boolean flag = targetPd.getWriteMethod() != null
+                    && (ignoreFields == null || (!ignoreList.contains(targetPd.getName())));
+            if(flag)
             {
                 PropertyDescriptor sourcePd = org.springframework.beans.BeanUtils
                         .getPropertyDescriptor(source.getClass(), targetPd.getName());
@@ -195,8 +196,12 @@ public class BeanUtil
                                 .getPropertyDescriptor(target.getClass(), targetPd.getName());
                         Class targetType = pd.getPropertyType();
 
-                        if(sourceType.isEnum() && (Integer.class.equals(targetType) || int.class.equals(targetType)))
-                        {// 源对象属性是枚举
+                        boolean sourceFlag = sourceType.isEnum() && (Integer.class.equals(targetType) || int.class.equals(targetType));
+                        boolean targetFlag = targetType.isEnum()
+                                && (Integer.class.equals(sourceType) || int.class.equals(sourceType));
+                        if(sourceFlag)
+                        {
+                            // 源对象属性是枚举
                             if(value == null)
                             {
                                 value = 0;
@@ -206,9 +211,9 @@ public class BeanUtil
                                 value = Enum.valueOf(sourceType, String.valueOf(value)).ordinal();
                             }
                         }
-                        else if(targetType.isEnum()
-                                && (Integer.class.equals(sourceType) || int.class.equals(sourceType)))
-                        {// 目标对象属性是枚举
+                        else if(targetFlag)
+                        {
+                            // 目标对象属性是枚举
                             if(value == null)
                             {
                                 value = 0;
@@ -237,13 +242,15 @@ public class BeanUtil
                             value = String.valueOf(value);
                         }
 
-                        if((Boolean.class.equals(sourceType) || boolean.class.equals(sourceType))
-                                && (Integer.class.equals(targetType) || int.class.equals(targetType)))
+                        boolean sourceBooleanFlag = (Boolean.class.equals(sourceType) || boolean.class.equals(sourceType))
+                                && (Integer.class.equals(targetType) || int.class.equals(targetType));
+                        boolean targetBooleanFlag = (Boolean.class.equals(targetType) || boolean.class.equals(targetType))
+                                && (Integer.class.equals(sourceType) || int.class.equals(sourceType));
+                        if(sourceBooleanFlag)
                         {
                             value = (Boolean)value ? 1 : 0;
                         }
-                        else if((Boolean.class.equals(targetType) || boolean.class.equals(targetType))
-                                && (Integer.class.equals(sourceType) || int.class.equals(sourceType)))
+                        else if(targetBooleanFlag)
                         {
                             value = (Integer)value > 0 ? true : false;
                         }
@@ -270,8 +277,8 @@ public class BeanUtil
     /**
      * 克隆对象
      * 
-     * @param bean
-     * @return
+     * @param bean bean
+     * @return Object
      */
     public static Object cloneBean(Object bean)
     {
@@ -287,8 +294,7 @@ public class BeanUtil
 
     /**
      * 拷贝属性给对象(类型宽松)
-     * 
-     * @param bean
+     * @param bean bean
      * @param name
      *            属性名
      * @param value
@@ -303,7 +309,8 @@ public class BeanUtil
             Class propertyClazz = beanUtilsBean.getPropertyUtils().getPropertyType(bean, name);
 
             if(propertyClazz.isEnum() && value instanceof Integer)
-            {// 属性枚举型
+            {
+                // 属性枚举型
              // 目标值是整型
                 int intValue = (Integer)value;
                 Method method = propertyClazz.getMethod("values");
@@ -313,7 +320,8 @@ public class BeanUtil
                     value = enumValues[intValue];
                 }
                 else
-                {// 不合理的int值范围就不修改
+                {
+                    // 不合理的int值范围就不修改
                     return;
                 }
             }
@@ -332,8 +340,8 @@ public class BeanUtil
     /**
      * 将bean装换为一个map(不能将枚举转换为int)
      * 
-     * @param bean
-     * @return
+     * @param bean bean
+     * @return Map
      */
     @SuppressWarnings(
     {"rawtypes"})
@@ -352,8 +360,8 @@ public class BeanUtil
     /**
      * 将bean装换为一个map(能将枚举转换为int)
      * 
-     * @param bean
-     * @return
+     * @param bean bean
+     * @return Map
      */
     @SuppressWarnings(
     {"unchecked", "rawtypes"})
@@ -404,15 +412,15 @@ public class BeanUtil
     /**
      * 将bean列表转换成map的列表
      * 
-     * @param beanList
-     * @return
+     * @param beanList beanList
+     * @return List<Map>
      */
     @SuppressWarnings("rawtypes")
     public static List<Map> buildMapList(List beanList)
     {
         if(beanList != null && !beanList.isEmpty())
         {
-            List<Map> mapList = new ArrayList<Map>();
+            List<Map> mapList = new ArrayList<>();
             for(Object bean : beanList)
             {
                 mapList.add(buildMap(bean));
@@ -425,9 +433,9 @@ public class BeanUtil
     /**
      * 将map转Bean
      * 
-     * @param map
-     * @param clazz
-     * @return
+     * @param map map
+     * @param clazz clazz
+     * @return Object
      */
     @SuppressWarnings(
     {"unchecked", "rawtypes"})
@@ -437,7 +445,7 @@ public class BeanUtil
         {
             return null;
         }
-        Object bean = null;
+        Object bean;
         try
         {
             bean = clazz.newInstance();
@@ -458,7 +466,8 @@ public class BeanUtil
                             if(mapValue instanceof String)
                             {
                                 if(String.valueOf(mapValue).matches("\\d+"))
-                                {// 数字型
+                                {
+                                    // 数字型
                                     mapValue = Integer.parseInt(String.valueOf(mapValue));
                                     int intValue = (Integer)mapValue;
 
@@ -474,20 +483,23 @@ public class BeanUtil
                                     }
                                 }
                                 else
-                                {// 字符串标识的枚举值
+                                {
+                                    // 字符串标识的枚举值
                                     try
                                     {
                                         beanValue = Enum.valueOf(beanType, String.valueOf(mapValue));
                                     }
                                     catch (IllegalArgumentException e)
-                                    {// 是一个错误的值
+                                    {
+                                        // 是一个错误的值
                                         continue;
                                     }
                                 }
 
                             }
                             else if(mapValue instanceof Integer)
-                            {// 整型
+                            {
+                                // 整型
                                 int intValue = (Integer)mapValue;
                                 Method method = beanType.getMethod("values");
                                 Object[] enumValues = (Object[])method.invoke(beanType);
@@ -496,7 +508,8 @@ public class BeanUtil
                                     beanValue = enumValues[intValue];
                                 }
                                 else
-                                {// 超过了枚举的int值范围
+                                {
+                                    // 超过了枚举的int值范围
                                     continue;
                                 }
                             }
@@ -538,7 +551,7 @@ public class BeanUtil
     /**
      * 拷贝属性给对象(类型严格)
      * 
-     * @param bean
+     * @param  bean bean
      * @param name
      *            属性名
      * @param value
@@ -560,9 +573,9 @@ public class BeanUtil
     /**
      * 获取对象属性值
      * 
-     * @param bean
-     * @param name
-     * @return
+     * @param bean bean
+     * @param name name
+     * @return Object
      */
     public static Object getProperty(Object bean, String name)
     {
@@ -576,5 +589,8 @@ public class BeanUtil
         }
 
     }
+
+
+
 
 }

@@ -10,6 +10,10 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+
+/**
+ *@author xxx
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

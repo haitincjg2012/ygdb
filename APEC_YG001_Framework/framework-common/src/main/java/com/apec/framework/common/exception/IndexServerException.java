@@ -6,6 +6,7 @@ package com.apec.framework.common.exception;
  * 内容摘要：后台索引服务异常
  * 完成日期：2016-07-23
  * 编码作者：
+ * @author xxx
  */
 public class IndexServerException extends ServerException
 {
@@ -27,6 +28,7 @@ public class IndexServerException extends ServerException
         super(errorCode, message, e);
     }
 
+    @Override
     public String toString()
     {
         return super.toString();

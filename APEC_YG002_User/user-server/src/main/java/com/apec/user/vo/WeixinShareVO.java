@@ -6,22 +6,35 @@ import lombok.NoArgsConstructor;
 
 /**
  * Created by wubi on 2017/10/9.
+ * @author wubi
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class WeixinShareVO {
-    //需要调用js的接口url
+    /**
+     * 需要调用js的接口url
+     */
     private String url;
-    //JSAPI调用凭证
+    /**
+     * JSAPI调用凭证
+     */
     private String jsapiTicket;
-    //随机字符串
+    /**
+     * 随机字符串
+     */
     private String nonceStr;
-    //当前时间戳
+    /**
+     * 当前时间戳
+     */
     private String timestamp;
-    //签名
+    /**
+     * 签名
+     */
     private String signature;
-    //app Id
+    /**
+     * app Id
+     */
     private String appid;
 
 

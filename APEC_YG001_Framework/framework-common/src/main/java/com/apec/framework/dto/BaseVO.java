@@ -74,4 +74,9 @@ public class BaseVO<PK extends Serializable> {
     public void setLastUpdateDate(Date lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
     }
+
+    @Override
+    public String toString(){
+        return super.toString();
+    }
 }

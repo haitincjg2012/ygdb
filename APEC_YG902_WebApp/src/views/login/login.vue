@@ -5,7 +5,7 @@
       <div class="pure-g-l login-content">
         <div class="loggin-panel">
           <form onsubmit="return false">
-          	<div class="phone-input c-z-d-p-iconbg" :class="{ZTactiveO:show1}">
+          	<div class="phone-input-temp c-z-d-p-iconbg" :class="{ZTactiveO:show1}">
           		<!--<img src="../../../src/assets/img/phoneOn.png">-->
           		<input id="input-phonenum" oninvalid="setCustomValidity(' ')" type="tel" v-model="phoneNum" placeholder="请输入手机号码"
               oninput="setCustomValidity('')" required maxlength="11" pattern="^1(3|4|5|7|8)\d{9}$" @focus="focus($event,'0')" @blur="blur($event,'0')" />
@@ -13,16 +13,16 @@
           	</div>
             <!--<div class="dash-line">-->
             <!--</div>-->
-            <!--<div style="display: none;" class="language-phone-input">-->
+            <!--<div style="display: none;" class="language-phone-input-temp-temp">-->
               <!--<a @click="voiceVerifyBtn" class="mc" style="font-size: 14px; text-decoration: underline;color: #0bbe06;">收不到短信验证码，尝试语音验证码</a>-->
             <!--</div>-->
-          	<div class="code-input c-z-password-iconbg" :class="{ZTactiveT:show2}">
+          	<div class="code-input-temp c-z-password-iconbg" :class="{ZTactiveT:show2}">
               <!--<img src="../../../src/assets/img/Password.png">-->
           		<input oninvalid="setCustomValidity(' ')" id="input-code" type="password" class="pure-input-1" v-model="code" oninput="setCustomValidity('')"
               placeholder="请输入登录密码" required minlength="6" @focus="focus($event,'1')" @blur="blur($event,'1')">
               <img @click.stop="openText()" class="i-password-hide" :src="imgSrc">
           	</div>
-            <!--<div class="code-input-text" style="display: none;">-->
+            <!--<div class="code-input-temp-text" style="display: none;">-->
               <!--<img src="../../../src/assets/img/Password.png">-->
               <!--<input oninvalid="setCustomValidity(' ')" id="input-code-text" type="text" class="pure-input-1" v-model="code" oninput="setCustomValidity('')"-->
                      <!--placeholder="请输入登录密码" required maxlength="4" pattern="^\d{4}$">-->
@@ -87,6 +87,7 @@
     },
     activated(){
       this.code='';
+
     },
     created(){
       var phoneStorage = c_js.getValue("login.phone");
@@ -182,7 +183,6 @@
               if(data.userId){
                 self.$store.commit("incrementUserID", {'userId': data.userId});//用户ID
                 self.$store.state.userId = data.userId;
-                console.log(self.$store.state.userId, 88888);
                 storage.id = data.userId;
                 c_js.setLocalValue('userId',data.userId);
               }
@@ -268,7 +268,7 @@
     width 100%;
     .mainform
       margin-top (92/_rem);
-      .phone-input
+      .phone-input-temp
         margin  0 (15/_rem)
         img
           width (17/_rem)
@@ -284,7 +284,7 @@
         height 2px
         background-color #28cba7
         margin-top (16/_rem)
-      .code-input,.code-input-text
+      .code-input-temp,.code-input-temp-text
         padding 0 (15/_rem)
         margin-top: (15/_rem)
         position relative

@@ -10,13 +10,15 @@ import java.util.List;
 
 /**
  * Created by hmy on 2017/8/28.
+ * @author hmy
  */
 public interface FeedBackDAO extends BaseDAO<FeedBack,Long> {
 
     /**
      * 批量删除goods
-     * @param ids
-     * @return
+     * @param ids ids
+     * @param userId 用户id
+     * @return 删除的行数
      */
     @Modifying(clearAutomatically = true)
     @Query(value = "update feed_back set enable_flag = 'N',last_update_date = now(),last_update_by = :userId where id in :ids and enable_flag = 'Y'",nativeQuery = true)

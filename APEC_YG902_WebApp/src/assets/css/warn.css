@@ -1,0 +1,89 @@
+.c-warn {
+  background-color: #fff;
+}
+.c-warn .c-warn-header-title {
+  width: 16rem;
+  font-size: 0.8rem;
+  color: #222;
+  text-align: center;
+}
+.c-warn .c-warn-header {
+  background-color: #fff;
+}
+.c-warn .c-warn-blank {
+  width: 18.75rem;
+  height: 0.5rem;
+  background-color: #f4f4f4;
+}
+.c-warn .c-warn-subtitle {
+  padding: 0.8rem 0.5rem 0;
+  line-height: 1.4rem;
+  font-size: 0.8rem;
+  color: #323232;
+}
+.c-warn .c-warn-subtitle-content {
+  padding: 0rem 0.5rem 0.3rem;
+  width: 17.75rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  -moz-flex-flow: row wrap;
+  flex-flow: row wrap;
+}
+.c-warn .c-warn-classify-item {
+  width: 8.875rem;
+  height: 2.7rem;
+}
+.c-warn .c-warn-classify-text {
+  margin: 0.6rem 0;
+  width: 6.5rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  font-size: 0.8rem;
+  color: #646464;
+  background-color: #f4f4f4;
+  border-radius: 0.25rem;
+  text-align: center;
+}
+.c-warn .c-warn-classify-item:nth-child(2n) {
+  direction: rtl;
+}
+.c-warn .c-warn-active {
+  background-color: #EC534D;
+  color: #fff;
+}
+.c-warn .c-warn-reason {
+  margin: auto;
+  width: 17.25rem;
+}
+.c-warn .c-warn-reason textarea {
+  width: 16.25rem;
+  height: 2.5rem;
+  outline: none;
+  resize: none;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border-color: #f4f4f4;
+}
+.c-warn .c-submit-btn {
+  margin: 0.8rem auto;
+  font-size: 0.8rem;
+  color: #fff;
+  height: 2.3rem;
+  line-height: 2.3rem;
+  background-color: #EC534D ;
+  text-align: center;
+  border-radius: 0.25rem;
+  width: 17.25rem;
+}

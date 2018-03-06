@@ -7,7 +7,7 @@
       <div class="tab-outer">
         <ul class="tab-inner">
           <li v-for="item in myCollectList">
-            <div class="list" @click="xq" :data-id = "item.id">
+            <div class="list" @click="xq($event, item)" :data-id = "item.id">
               <div class="left-img" :data-id = "item.id">
                 <img :src="item.firstImageUrl" :data-id = "item.id">
                 <img class="imglabel" :src="item.imgLabel" :data-id = "item.id">
@@ -21,8 +21,8 @@
                 </div>
                 <div class="people" :data-id = "item.id">
                   <div class="p-flex">
-                    <div class="p-flex-com">{{item.showUserName}}</div>
-                    <div class="p-flex-com">{{item.upTime}}</div>
+                    <div class="p-flex-com" :data-id = "item.id">{{item.showUserName}}</div>
+                    <div class="p-flex-com" :data-id = "item.id">{{item.upTime}}</div>
                   </div>
                   <div @click.stop="cancleCollect($event,item.id)" class="r-click">
                     <span class="collect-sp">取消收藏</span>
@@ -214,11 +214,12 @@
           self.myCollectList.splice(i, 1);
         }
       },
-      xq(evt){
+      xq(evt,item){
         var e = evt || window.event;
         var target = e.toElement || e.srcElement;
-        var id = target.dataset.id;
-        this.$router.push({path: '/detail/' + id});
+        var id = item.id;
+//        this.$router.push({path: '/detail/' + id});
+        this.$router.push({path: 'detail',query:{id:id}});
       }
     },
 

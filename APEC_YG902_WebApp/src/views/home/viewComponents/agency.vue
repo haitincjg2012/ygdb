@@ -1,7 +1,6 @@
 <template>
     <div class="z-ag">
-      <div class="z-header-com">
-        <!--<h1>代办</h1>-->
+      <div class="z-header-com z-find-Add-sty">
         <div class="return" @click="back">
           <img src="../../../assets/img/ret.png">
         </div>
@@ -10,19 +9,18 @@
           <input type="text" placeholder="请输入查询内容" @change="search" v-model="ky"/>
         </div>
       </div>
-
       <div class="z-ag-select">
         <div class="z-ag-a" @click="dropdown" data-path = "0">
           <span class="sp-text-com">品种</span>
           <span class="triangle"></span>
-          <!--<span class="z-vertical-line"></span>-->
         </div>
         <div class="z-ag-s" @click="dropdown" data-path = "1">
           <span class="sp-text-com">区域</span>
           <span class="triangle"></span>
         </div>
       </div>
-      <div class="z-ag-frame">
+      <scrollbg  class="z-ag-frame" :data="itemC || []" :pullup="pullup" @scrollToEnd="loadMore" ref="AgWrapper">
+        <div>
           <ul class="z-ag-list clearfix">
             <li :is="item.ss"
                 v-for = "item in itemC"
@@ -30,27 +28,29 @@
             ></li>
           </ul>
           <scrollS ref="childScroll"></scrollS>
-          <div class="z-ag-shadow" v-if="shadowF">
-            <ul class="z-ag-listS clearfix">
-            <li :is = "item.ss"
-                v-for="item in itemS"
-                :item = "item"
-                v-on:rs="pzSearch">
-            </li>
-          </ul>
-            <ul class="z-ag-listA clearfix">
-              <li :is = "item.ss"
-                  v-for="item in itemA"
-                  :item = "item"
-                  v-on:rss="searchArea">
-              </li>
-            </ul>
-           <div class="shadow" @click="remove"></div>
-        </div>
           <div class="c-z-ag-empty" v-if="agemptyFlag">
-              <img src="../../../assets/img/noData.png">
-              <p>暂无数据</p>
+            <img src="../../../assets/img/noData.png">
+            <p>暂无数据</p>
           </div>
+        </div>
+      </scrollbg>
+
+      <div class="z-ag-shadow" v-if="shadowF">
+        <ul class="z-ag-listS clearfix">
+          <li :is = "item.ss"
+              v-for="item in itemS"
+              :item = "item"
+              v-on:rs="pzSearch">
+          </li>
+        </ul>
+        <ul class="z-ag-listA clearfix">
+          <li :is = "item.ss"
+              v-for="item in itemA"
+              :item = "item"
+              v-on:rss="searchArea">
+          </li>
+        </ul>
+        <div class="shadow" @click="remove"></div>
       </div>
     </div>
 </template>
@@ -65,7 +65,11 @@
   import Region from './region.vue'
   import API from '../../../api/api'
   import dataConfig from "../../../assets/data/search.json"
-  import scrollS from "../../../components/scrollSecond.vue"
+  import scrollS from "../../../components/loadingAnimation.vue"
+
+  import scrollbg from '../../../components/scroll/scrollbg.vue'//下拉刷新
+  import WX from '../../../components/wx.vue'  //微信分享功能
+  import TFIcon from '../../../assets/img/TFIcon.png'
   import {Toast} from 'mint-ui'
 
   const api = new API();
@@ -78,20 +82,6 @@
         rg:null,
     },
     agData:[],//具体地区的数据
-    init:function (data) {
-      var arr = [];
-      for(var i = 0; i < 3; i++){
-        var obj = {};
-        obj.path = 1;
-        obj.id = 1;
-        obj.ss = childT;
-        obj.imgLevel = IMG.methods.userLevel("钻石");
-        arr.push(obj);
-
-      }
-
-      this.itemC = arr;
-    },
     reset:function () {
       fn.achildD.code = -1;
       fn.achildD.rg = null;
@@ -157,44 +147,76 @@
         return;
       }
 
-      var arr = [];
-      var rows = data.data.rows;
-      this.pageCount = data.data.pageCount;
-      if(data.data.pageCount == 0){
-        this.$refs.childScroll.init(true);
-      }else if(data.data.pageCount == 1){
-        this.$refs.childScroll.init();
-      }else if(this.pageCount > this.pageNumber){
-        this.$refs.childScroll.start();
-      }
-      rows.forEach(function (current, index) {
-        var obj = {
-          showOrgTagsInfo:{}
-        };
-        obj.path =index;
-        obj.id = current.userId;//用户userId
-        obj.orgId = current.orgId ? current.orgId:"-999";
-        obj.userId = current.userId ? current.userId:"-1000";
-        obj.ss = childT;
-        obj.orgName = current.orgName;//用户名称
-        obj.address = current.address;//用户地址
-        obj.viewNum = current.viewNum;//浏览数量
-        obj.orgFirstBannerUrl = (current.orgFirstBannerUrl || agksD)+"?x-oss-process=style/_list";//左侧图片
-        obj.showOrgTagsInfo.tagName = current.showOrgTagsInfo.tagName;//企业认证
-        obj.userLevelName = IMG.methods.userLevel(current.userLevelName);//用户等级
-        obj.userRealAuthKey = current.userRealAuthKey == ""?false:true;//用户是否实名认证
-        obj.voucherNum = current.voucherNum;//用户调用量
-        obj.mainOperating = current.mainOperating;//用户主营品种
-        arr.push(obj);
-      });
-       fn.agData = fn.agData.concat(arr);
-      this.itemC = fn.agData
+      if(data.data.pageCount > 0){
+        var arr = [];
+        var rows = data.data.rows;
+        this.pageCount = data.data.pageCount;
+        rows.forEach(function (current, index) {
+          var obj = {
+            showOrgTagsInfo:{}
+          };
+          obj.path =index;
+          obj.id = current.userId;//用户userId
+          obj.orgId = current.orgId ? current.orgId:"-999";
+          obj.userId = current.userId ? current.userId:"-1000";
+          obj.ss = childT;
+//          obj.orgName = current.orgName;//用户名称
+          obj.orgNameHtml = '<div class="z-ag-r-f-partO"><div class="z-ag-r-info-name"> '
+            +current.orgName + '</div> <div class="z-ag-r-info-auth">'
+            +(current.userRealAuthKey == ""?"":'<span class="z-ag-r-info-auth-sty">实名认证</span>')
+            +'</div></div><div class="z-ag-r-f-partT">'
+            + (current.viewNum > 0?current.viewNum :"0")+ '人浏览</div>';
 
-      if(this.itemC.length == 0){
-          this.agemptyFlag = true;
-      }else{
+            if(current.mainOperating){
+              obj.mainOperatingHtml = '<div class="z-ag-main-l"><img src='+TFIcon +' class="z-ag-icon"></div>'
+                  + '<div class="z-ag-main-r"> <p class="z-ag-main-text">主营:&nbsp;'+current.mainOperating + '</p></div>';
+            }else{
+                obj.compensate = true;
+            }
+          if(current.voucherNum > 0){
+            obj.voucherNumHtml = ' <div class="z-ag-main-l"><img src='+TFIcon +' class="z-ag-icon"></div>'
+              + '<div class="z-ag-main-r"> <p class="z-ag-main-text">累计调果:&nbsp;'+current.voucherNum + '</p></div>';
+          }
+
+          if(current.orgFirstBannerUrl){
+              obj.portraitHtml ='<div class="pic-com-picture"><img src ="'+current.orgFirstBannerUrl + '?x-oss-process=style/_list'+ '"/></div>'
+          }else{
+              obj.portraitHtml ='<div class="pic-com-picture pic-com-picture-bg">代办</div>'
+          }
+
+
+          var tagNamesHtml = "";
+          current.showOrgTagsInfo.forEach(function (tag) {
+            tagNamesHtml +='<span class="z-ag-tagName-sp">'+ tag.tagName +'</span>';
+          });
+
+          obj.orgTagsHtml = tagNamesHtml;
+          var addressHtml = "";
+          if(current.address){
+            addressHtml = '<div class="z-ag-info-addr" >' + current.address + '</div>';
+          }
+          obj.orgAddressHtml = addressHtml;//用户地址
+//          obj.address = current.address;//用户地址
+          obj.viewNum = current.viewNum;//浏览数量
+//          obj.orgFirstBannerUrl = (current.orgFirstBannerUrl || agksD)+"?x-oss-process=style/_list";//左侧图片
+          obj.showOrgTagsInfo.tagName = current.showOrgTagsInfo.tagName;//企业认证
+          obj.userLevelName = IMG.methods.userLevel(current.userLevelName);//用户等级
+          obj.userRealAuthKey = current.userRealAuthKey == ""?false:true;//用户是否实名认证
+          obj.voucherNum = current.voucherNum;//用户调用量
+          obj.mainOperating = current.mainOperating;//用户主营品种
+          arr.push(obj);
+        });
+        fn.agData = fn.agData.concat(arr);
+        this.itemC = fn.agData;
+
         this.agemptyFlag = false;
+      }else{
+        this.$refs.childScroll.init();
+        this.itemC = null;
+        this.agemptyFlag = true;
       }
+
+
     }
   };
   export default{
@@ -206,15 +228,19 @@
           shadowF:false,
            recordIndex:0,//记录上一次点击的按钮
           searchType:"",
+          pullup:true,
           pageNumber:0,
           pageCount:1000,
           ky:"",
           agemptyFlag:false,//默认情况是有数据的
           bheight:0,//记录屏幕高度
+
+          scrollTop:undefined,//
         }
       },
     methods:{
       back(){
+        this.$store.state.agencyScroll = undefined;
         this.shadowF = false;
         fn.pzD = null;
         fn.aD = null;
@@ -392,8 +418,8 @@
         }
       },
       list(){
-        var pg = arguments[0] || this.pageNumber;
         var that = this;
+        var pg = arguments[0] || this.pageNumber;
         let params = {
           api: "/_node_user_org/_agency_list.apno",
           data: {
@@ -404,20 +430,30 @@
         }
         this.post(params, fn.list.bind(this));
       },
+      loadMore(){
+        if(this.pageCount > this.pageNumber){
+          this.pageNumber ++;
+          this.$refs.childScroll.start();
+          this.pageNum(this.pageNumber);
+        }else{
+          if(!this.agemptyFlag){
+            this.$refs.childScroll.end();
+          }
+        }
+      },
       menuList(e){
-
         var e = e || window.event;
-        var el = document.querySelector(".z-ag")
-
+        var el = document.querySelector(".z-ag");
         if(el){
           var target = e.target || e.srcElement;
           var offsetH = target.body.scrollTop;
           var sHeight = target.body.scrollHeight;
           var that = this;
-
+          that.scrollTop = offsetH;
           if(sHeight - offsetH - this.bheight == 0){
             if(this.pageCount > this.pageNumber){
               this.pageNumber ++;
+              this.$refs.childScroll.start();
               this.pageNum(this.pageNumber);
             }else{
               this.$refs.childScroll.end();
@@ -437,16 +473,38 @@
       }
     },
     activated(){
-      this.bheight = document.querySelector(".page").clientHeight;
-      this.initPagination();
-      this.list(1);
+      var self = this;
+      var el = this.$refs.AgWrapper;
+      el.init();
+
+      var scrollTop = this.$store.state.agencyScroll;
+      if(scrollTop != 1){
+        this.initPagination();
+        this.list(1);
+      }
+//      if(typeof scrollTop != "undefined" && self.scrollTop){
+//        window.scrollTo(0,self.scrollTop);//返回到悬浮的位置
+//      }else{
+//
+//      }
+
+      WX.wx("果来乐-找代办");
+    },
+    watch:{
+        'itemC':function () {
+            this.$nextTick(function () {
+              var el = this.$refs.AgWrapper;
+              el.init();
+            })
+        }
     },
     created(){
 //      window.addEventListener('scroll', this.menuList, false);
-      window.addEventListener('scroll', this.menuList, false);
+//      window.addEventListener('scroll', this.menuList, false);
     },
     components:{
-      scrollS
+      scrollS,
+      scrollbg
     }
   }
 </script>

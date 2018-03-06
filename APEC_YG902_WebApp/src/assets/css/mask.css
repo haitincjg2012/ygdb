@@ -1,0 +1,19 @@
+.mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 18.75rem;
+  height: 33.35rem;
+  z-index: 99;
+}
+.cmask {
+  z-index: -1;
+}
+.transparentLayer {
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  opacity: 0.95;
+  filter: alpha(opacity=95);
+  -moz-opacity: 0.95;
+}

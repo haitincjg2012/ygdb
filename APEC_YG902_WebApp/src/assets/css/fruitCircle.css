@@ -1,0 +1,169 @@
+.c-goods {
+  background-color: #f4f4f4;
+}
+.c-goods .c-g-head {
+  position: fixed;
+  z-index: 1;
+  padding: 0 0.5rem;
+  width: 17.75rem;
+  height: 2.2rem;
+  line-height: 2.2rem;
+  border-bottom: 0.05rem solid #f4f4f4;
+  background-color: #fff;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-goods .c-g-h-first {
+  width: 3.25rem;
+  font-size: 0.75rem;
+  color: #323232;
+}
+.c-goods .c-g-h-three {
+  width: 1.1rem;
+}
+.c-goods .c-g-h-three img {
+  width: 100%;
+  vertical-align: sub;
+}
+.c-goods .c-g-h-second {
+  width: 13.4rem;
+  color: #969696;
+  font-size: 0.9rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+.c-goods .c-g-h-second-com {
+  padding: 0 1.2rem;
+}
+.c-goods .cghtextactive {
+  color: #323232;
+}
+.c-goods .cghactive:after {
+  content: "";
+  width: 100%;
+  height: 0.2rem;
+  background-color: #28CBA7;
+  display: block;
+  position: relative;
+  top: -0.2rem;
+}
+.c-goods .c-g-content {
+  width: 18.75rem;
+  height: auto;
+  overflow: hidden;
+}
+.c-goods .c-g-c-picture {
+  padding: 0 0.5rem;
+  width: 17.75rem;
+  background-color: #fff;
+}
+.c-goods .c-g-c-p-layout {
+  width: 17.75rem;
+}
+.c-goods .c-g-c-p-text {
+  padding: 0;
+  color: #323232;
+  line-height: 1.2rem;
+  letter-spacing: 0.025rem;
+  font-size: 0.8rem;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+.c-goods .c-g-c-clientCommentN {
+  background-color: #FFFFFF;
+  width: 17.75rem;
+  height: 1.8rem;
+  line-height: 1.75rem;
+  padding: 0 0.5rem;
+  font-size: 0.65rem;
+  color: #969696;
+}
+.c-goods .c-g-c-c-sp-com {
+  display: inline-block;
+  margin: 0 0.4rem;
+  background: url("../img/dot.png") no-repeat center;
+  background-size: 0.25rem;
+  width: 0.25rem;
+  height: 0.25rem;
+  vertical-align: 0.1rem;
+}
+.c-goods .c-g-c-c-line {
+  width: 17.75rem;
+  height: 0.05rem;
+  background-color: #f4f4f4;
+}
+.c-goods .c-g-c-msg {
+  width: 17.75rem;
+  padding: 0 0.5rem;
+  background-color: #FFFFFF;
+}
+.c-goods .c-g-c-posts {
+  padding: 0.3rem 0 0;
+  line-height: 1.2rem;
+}
+.c-goods .c-g-c-m-more {
+  padding: 0 0 0.3rem;
+  font-size: 0.75rem;
+  color: #4E7CC9;
+}
+.c-goods .c-g-c-operation {
+  line-height: 2rem;
+}
+.c-goods .c-goods-scroll {
+  position: fixed;
+  top: 2.2rem;
+  left: 0;
+  right: 0;
+  bottom: 2.5rem;
+  overflow: hidden;
+}
+.c-goods .c-g-publish {
+  position: fixed;
+  right: 0.5rem;
+  bottom: 3.75rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  border-radius: 2.5rem;
+}
+.c-goods .c-g-c-publish-img {
+  width: 2.5rem;
+  height: 2.5rem;
+  vertical-align: text-bottom;
+}
+.c-goods .CGHThree:after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 100%;
+  background-color: red;
+}
+.c-goods .AddTempC {
+  padding-bottom: 0.3rem;
+}

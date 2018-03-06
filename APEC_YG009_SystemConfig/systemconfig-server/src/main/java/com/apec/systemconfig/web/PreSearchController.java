@@ -2,7 +2,6 @@ package com.apec.systemconfig.web;
 
 import com.apec.framework.common.Constants;
 import com.apec.framework.common.enumtype.SearchType;
-import com.apec.framework.common.util.JsonUtil;
 import com.apec.framework.log.InjectLogger;
 import com.apec.systemconfig.service.PreSearchService;
 import com.apec.systemconfig.vo.PreSearchVO;
@@ -14,13 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by hmy on 2017/8/1.
+ * @author hmy
  */
 @RestController
 @RequestMapping(value = "/preSearch")
@@ -32,6 +29,9 @@ public class PreSearchController extends MyBaseController {
     @Autowired
     private PreSearchService preSearchService;
 
+    /**
+     * 获取预制搜索数据
+     */
     @RequestMapping(value = "/getPreSearchInfo",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
     public String getPreSearchInfo(@RequestBody String json){
         PreSearchVO preSearchVO = getFormJSON(json,PreSearchVO.class);

@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Import;
 
 import com.apec.framework.base.BaseApplication;
 import com.apec.framework.springcloud.SpringCloudConfig;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 /**
  * 社交圈模块
@@ -14,6 +16,7 @@ import com.apec.framework.springcloud.SpringCloudConfig;
  */
 @EnableDiscoveryClient
 @SpringBootApplication
+@EnableMongoRepositories
 @Import(value = SpringCloudConfig.class)
 public class SocietyServiceApplication extends BaseApplication
 {

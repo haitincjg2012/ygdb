@@ -32,6 +32,11 @@ public class UserPointRule extends BaseModel<Long> {
     private PointRuleType pointRuleType;
 
     /**
+     * 积分规则名称
+     */
+    private String pointRuleName;
+
+    /**
      * 积分变化 得到积分:结算的时候需要关联到vip等级，为正 消费积分:用户兑换商品等。。。为负
      */
     @Column(nullable = false)
@@ -50,6 +55,15 @@ public class UserPointRule extends BaseModel<Long> {
     @Column(length = 2000)
     private String remark;
 
+    /**
+     * 每日上线次数
+     */
+    private Integer DailyNum;
+
+    /**
+     * 首次奖励
+     */
+    private Integer firstReward;
 
 
 }

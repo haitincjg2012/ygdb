@@ -17,6 +17,9 @@ import com.apec.framework.log.InjectLogger;
 import com.apec.voucher.dao.VoucherBSDAO;
 import com.apec.voucher.dto.VoucherDTO;
 
+/**
+ * @author xxx
+ */
 @Repository
 public class VoucherBSDAOImpl implements VoucherBSDAO{
 
@@ -28,13 +31,13 @@ public class VoucherBSDAOImpl implements VoucherBSDAO{
 	
 	@Override
 	public PageDTO<Object[]> listVoucherBS(VoucherDTO voucherDTO){
-		StringBuffer sb = new StringBuffer("SELECT v.create_date,SUM(number) AS totalNumber,SUM(total_amount) AS totalAmount,sale_market,ship_warehouse,delivery_time,voucher_url,v.id,v.user_id,u.`name`"
+		StringBuffer sb = new StringBuffer("SELECT v.create_date,SUM(number) AS totalNumber,SUM(total_amount) AS totalAmount,sale_market,ship_warehouse,delivery_time,voucher_url,v.id,v.user_id,u.`name` as userName,v.name as name,v.audit_state "
 				+ " FROM voucher_goods AS g INNER JOIN voucher AS v INNER JOIN `user` u on v.user_id=u.id and v.id=g.voucher_id where v.enable_flag='Y' and g.enable_flag='Y' and u.enable_flag='Y' ");
         
         //条件查询
         String condition = getBSConditionQuery(voucherDTO);
-        sb.append(condition);      
-		sb.append(" GROUP BY v.id ORDER BY v.create_date desc");		
+        sb.append(condition);
+		sb.append(" GROUP BY v.id ORDER BY v.create_date desc,v.id desc");
 		
 		//查询总条数
         StringBuffer countSql = new StringBuffer("SELECT COUNT(DISTINCT(v.id)) FROM voucher_goods AS g INNER JOIN voucher AS v INNER JOIN `user` u "
@@ -75,18 +78,21 @@ public class VoucherBSDAOImpl implements VoucherBSDAO{
 			String deliveryEndDate = sdf.format(voucherDTO.getDeliveryEndDate());
 			sb.append(" AND v.delivery_time<=").append("'").append(deliveryEndDate).append("'");
 		}
+		if (StringUtils.isNotEmpty(voucherDTO.getAuditState())){
+			sb.append(" AND v.audit_state = '").append(voucherDTO.getAuditState()).append("'");
+		}
 		return sb.toString();
 	}
 
 	@Override
 	public PageDTO<Object[]> listDBVoucherInfo(VoucherDTO voucherDTO) {
 		
-		StringBuffer sb = new StringBuffer("SELECT u.name,u.user_type,sum(g.number) as sumNuber,u.img_url FROM "
+		StringBuffer sb = new StringBuffer("SELECT u.name,u.user_type,sum(g.number) as sumNuber,u.img_url,u.id,u.user_org_id  FROM "
 				+ "voucher_goods g "
 				+ "inner join voucher v "
 				+ "inner join user u "
 				+ "on v.id = g.voucher_id and v.user_id = u.id and u.user_type = 'DB' "
-				+ "and g.enable_flag='Y' and v.enable_flag= 'Y' and u.enable_flag='Y'");
+				+ "and g.enable_flag='Y' and v.enable_flag= 'Y' and v.audit_state = 'Y' and u.enable_flag='Y'");
 		
 		//条件查询
 		String condition = getBSConditionQuery(voucherDTO);
@@ -109,12 +115,12 @@ public class VoucherBSDAOImpl implements VoucherBSDAO{
 	 * @param voucherDTO 查询条件对象
 	 * @param sql 查询object信息语句
 	 * @param countSql 查询条数语句
-	 * @return PageDTO<Object[]>
+	 * @return 分页结果
 	 * */
 	@SuppressWarnings("unchecked")
 	private PageDTO<Object[]> listObjectInfo(VoucherDTO voucherDTO,String sql,String countSql){
 		EntityManager em = null;
-		PageDTO<Object[]> pageDTO = new PageDTO<Object[]>();
+		PageDTO<Object[]> pageDTO = new PageDTO<>();
 		StringBuffer sb = new StringBuffer(sql);
 		
         //分页
@@ -126,7 +132,7 @@ public class VoucherBSDAOImpl implements VoucherBSDAO{
           if (voucherDTO.getPageSize() > 0 && voucherDTO.getPageSize() < 100) {
               pageSize = voucherDTO.getPageSize();
           }
-          sb.append(" limit ").append((pageNumber-1)*pageSize).append(",").append(pageNumber*pageSize);
+          sb.append(" limit ").append((pageNumber-1)*pageSize).append(",").append(pageSize);
           log.info(sb.toString());
           long count = 0;
           try {
@@ -141,11 +147,12 @@ public class VoucherBSDAOImpl implements VoucherBSDAO{
   	          if (obj != null) {
   	        	  count = Long.valueOf(obj.toString());
   	          }
-  	        
-              pageDTO.setNumber(pageNumber);//当前页数
+			  //当前页数
+              pageDTO.setNumber(pageNumber);
               pageDTO.setRows(list);
               pageDTO.setTotalElements(count);
-              double totalPages = Math.ceil((double)count/pageSize);//总页数
+			  //总页数
+              double totalPages = Math.ceil((double)count/pageSize);
               pageDTO.setTotalPages((int)totalPages);
 		} catch (Exception e){
             throw e;
@@ -173,7 +180,7 @@ public class VoucherBSDAOImpl implements VoucherBSDAO{
 		sb.append(" GROUP BY attrValue");	
 		log.info(sb.toString());
 		EntityManager em = null;
-		List<Object[]> list = null;
+		List<Object[]> list;
 		try {
 			em = emf.createEntityManager();
             Query query = em.createNativeQuery(sb.toString());
@@ -217,9 +224,10 @@ public class VoucherBSDAOImpl implements VoucherBSDAO{
 		return totalNumber;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Object[]> countVoucherOfUser() {
-		StringBuffer sb = new StringBuffer("select user_id,ifnull(sum(b.number),0) from voucher a inner join voucher_goods b on a.id = b.voucher_id where a.enable_flag= 'Y' and b.enable_flag= 'Y' group by a.user_id");
+		StringBuffer sb = new StringBuffer("select user_id,ifnull(sum(b.number),0) from voucher a inner join voucher_goods b on a.id = b.voucher_id where a.enable_flag= 'Y' and a.audit_state = 'Y' and b.enable_flag= 'Y' group by a.user_id");
 		log.info(sb.toString());
 		EntityManager em = null;
 		List<Object[]> list = null;
@@ -237,5 +245,26 @@ public class VoucherBSDAOImpl implements VoucherBSDAO{
 		return list;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object[]> maxVoucherOfUser() {
+		StringBuffer sb = new StringBuffer("select user_id,ifnull(sum(b.number),0) as sumweight,count(a.id) from voucher a inner join voucher_goods b on a.id = b.voucher_id where a.enable_flag= 'Y' and b.enable_flag= 'Y' group by a.user_id");
+		sb.append(" order by sumweight desc limit 2 ");
+		log.info(sb.toString());
+		EntityManager em = null;
+		List<Object[]> list = null;
+		try{
+			em = emf.createEntityManager();
+			Query query = em.createNativeQuery(sb.toString());
+			list = query.getResultList();
+		}catch(Exception e){
+			log.error("【voucher】[countVoucherOfUser]exception:{}",e);
+		}finally{
+			if(null != em){
+				em.close();
+			}
+		}
+		return list;
+	}
 
 }

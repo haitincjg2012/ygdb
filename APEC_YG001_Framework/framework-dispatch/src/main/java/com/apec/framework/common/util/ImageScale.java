@@ -5,31 +5,34 @@ import org.apache.commons.logging.LogFactory;
 
 import java.awt.image.BufferedImage;
 
+/**
+ * @author xx
+ */
 public class ImageScale
 {
     private static final Log log = LogFactory.getLog( ImageScale.class );
 
-    private int width;
+    private static final int LENGTH = 255;
 
-    private int height;
+    private Integer width;
 
-    private int scaleWidth;
+    private Integer height;
 
-    double support = (double)3.0;
+    private Integer scaleWidth;
 
-    double PI = (double)3.14159265358978;
+    private Double support = (double)3.0;
 
-    double[] contrib;
+    private Double pi = (double)3.14159265358978;
 
-    double[] normContrib;
+    private double[] contrib;
 
-    double[] tmpContrib;
+    private double[] normContrib;
 
-    int startContrib, stopContrib;
+    private double[] tmpContrib;
 
-    int nDots;
+    private Integer nDots;
 
-    int nHalfDots;
+    private Integer nHalfDots;
 
     public BufferedImage imageZoomOut(BufferedImage srcBufferImage, int w, int h)
     {
@@ -37,20 +40,19 @@ public class ImageScale
         height = srcBufferImage.getHeight();
         scaleWidth = w;
 
-        if(DetermineResultSize( w, h ) == 1)
+        if(determineResultSize( w, h ) == 1)
         {
             return srcBufferImage;
         }
-        CalContrib();
-        BufferedImage pbOut = HorizontalFiltering( srcBufferImage, w );
-        BufferedImage pbFinalOut = VerticalFiltering( pbOut, h );
-        return pbFinalOut;
+        calContrib();
+        BufferedImage pbOut = horizontalFiltering( srcBufferImage, w );
+        return verticalFiltering( pbOut, h );
     }
 
     /**
      * 决定图像尺寸
      */
-    private int DetermineResultSize(int w, int h)
+    private int determineResultSize(int w, int h)
     {
         double scaleH, scaleV;
         scaleH = (double)w / (double)width;
@@ -64,18 +66,18 @@ public class ImageScale
 
     }
 
-    private double Lanczos(int i, int inWidth, int outWidth, double Support)
+    private double lanczos(int i, int inWidth, int outWidth, double support)
     {
         double x;
 
         x = (double)i * (double)outWidth / (double)inWidth;
 
-        return Math.sin( x * PI ) / (x * PI) * Math.sin( x * PI / Support )
-               / (x * PI / Support);
+        return Math.sin( x * pi ) / (x * pi) * Math.sin( x * pi / support )
+               / (x * pi / support);
 
     } // end of Lanczos()
 
-    private void CalContrib()
+    private void calContrib()
     {
         nHalfDots = (int)((double)width * support / (double)scaleWidth);
         nDots = nHalfDots * 2 + 1;
@@ -97,7 +99,7 @@ public class ImageScale
         int i;
         for(i = 1; i <= center; i++)
         {
-            contrib[center + i] = Lanczos( i, width, scaleWidth, support );
+            contrib[center + i] = lanczos( i, width, scaleWidth, support );
             weight += contrib[center + i];
         }
 
@@ -119,8 +121,12 @@ public class ImageScale
         }
     } // end of CalContrib()
 
-    // 处理边缘
-    private void CalTempContrib(int start, int stop)
+    /**
+     * // 处理边缘
+     * @param start start
+     * @param stop stop
+     */
+    private void calTempContrib(int start, int stop)
     {
         double weight = 0;
 
@@ -137,31 +143,41 @@ public class ImageScale
 
     } // end of CalTempContrib()
 
-    private int GetRedValue(int rgbValue)
+    private int getRedValue(int rgbValue)
     {
         int temp = rgbValue & 0x00ff0000;
         return temp >> 16;
     }
 
-    private int GetGreenValue(int rgbValue)
+    private int getGreenValue(int rgbValue)
     {
         int temp = rgbValue & 0x0000ff00;
         return temp >> 8;
     }
 
-    private int GetBlueValue(int rgbValue)
+    private int getBlueValue(int rgbValue)
     {
         return rgbValue & 0x000000ff;
     }
 
-    private int ComRGB(int redValue, int greenValue, int blueValue)
+    private int comRGB(int redValue, int greenValue, int blueValue)
     {
 
         return (redValue << 16) + (greenValue << 8) + blueValue;
     }
 
-    // 行水平滤波
-    private int HorizontalFilter(BufferedImage bufImg, int startX, int stopX,
+    /**
+     * // 行水平滤波
+     * @param bufImg bufImg
+     * @param startX startX
+     * @param stopX stopX
+     * @param start start
+     * @param stop stop
+     * @param y y
+     * @param pContrib pContrib
+     * @return int
+     */
+    private int horizontalFilter(BufferedImage bufImg, int startX, int stopX,
         int start, int stop, int y, double[] pContrib)
     {
         double valueRed = 0.0;
@@ -174,19 +190,24 @@ public class ImageScale
         {
             valueRGB = bufImg.getRGB( i, y );
 
-            valueRed += GetRedValue( valueRGB ) * pContrib[j];
-            valueGreen += GetGreenValue( valueRGB ) * pContrib[j];
-            valueBlue += GetBlueValue( valueRGB ) * pContrib[j];
+            valueRed += getRedValue( valueRGB ) * pContrib[j];
+            valueGreen += getGreenValue( valueRGB ) * pContrib[j];
+            valueBlue += getBlueValue( valueRGB ) * pContrib[j];
         }
 
-        valueRGB = ComRGB( Clip( (int)valueRed ), Clip( (int)valueGreen ),
-                           Clip( (int)valueBlue ) );
+        valueRGB = comRGB( clip( (int)valueRed ), clip( (int)valueGreen ),
+                clip( (int)valueBlue ) );
         return valueRGB;
 
     }
 
-    // 图片水平滤波
-    private BufferedImage HorizontalFiltering(BufferedImage bufImage, int iOutW)
+    /**
+     * // 图片水平滤波
+     * @param bufImage bufImage
+     * @param iOutW OutW
+     * @return BufferedImage
+     */
+    private BufferedImage horizontalFiltering(BufferedImage bufImage, int iOutW)
     {
         int dwInW = bufImage.getWidth();
         int dwInH = bufImage.getHeight();
@@ -199,14 +220,14 @@ public class ImageScale
 
             int startX;
             int start;
-            int X = (int)(((double)x) * ((double)dwInW) / ((double)iOutW) + 0.5);
+            int xxX = (int)(((double)x) * ((double)dwInW) / ((double)iOutW) + 0.5);
             int y;
 
-            startX = X - nHalfDots;
+            startX = xxX- nHalfDots;
             if(startX < 0)
             {
                 startX = 0;
-                start = nHalfDots - X;
+                start = nHalfDots - xxX;
             }
             else
             {
@@ -214,11 +235,11 @@ public class ImageScale
             }
 
             int stop;
-            int stopX = X + nHalfDots;
+            int stopX = xxX + nHalfDots;
             if(stopX > (dwInW - 1))
             {
                 stopX = dwInW - 1;
-                stop = nHalfDots + (dwInW - 1 - X);
+                stop = nHalfDots + (dwInW - 1 - xxX);
             }
             else
             {
@@ -227,10 +248,10 @@ public class ImageScale
 
             if(start > 0 || stop < nDots - 1)
             {
-                CalTempContrib( start, stop );
+                calTempContrib( start, stop );
                 for(y = 0; y < dwInH; y++)
                 {
-                    value = HorizontalFilter( bufImage, startX, stopX, start,
+                    value = horizontalFilter( bufImage, startX, stopX, start,
                                               stop, y, tmpContrib );
                     pbOut.setRGB( x, y, value );
                 }
@@ -239,7 +260,7 @@ public class ImageScale
             {
                 for(y = 0; y < dwInH; y++)
                 {
-                    value = HorizontalFilter( bufImage, startX, stopX, start,
+                    value = horizontalFilter( bufImage, startX, stopX, start,
                                               stop, y, normContrib );
                     pbOut.setRGB( x, y, value );
                 }
@@ -250,7 +271,7 @@ public class ImageScale
 
     }
 
-    private int VerticalFilter(BufferedImage pbInImage, int startY, int stopY,
+    private int verticalFilter(BufferedImage pbInImage, int startY, int stopY,
         int start, int stop, int x, double[] pContrib)
     {
         double valueRed = 0.0d;
@@ -263,18 +284,18 @@ public class ImageScale
         {
             valueRGB = pbInImage.getRGB( x, i );
 
-            valueRed += GetRedValue( valueRGB ) * pContrib[j];
-            valueGreen += GetGreenValue( valueRGB ) * pContrib[j];
-            valueBlue += GetBlueValue( valueRGB ) * pContrib[j];
+            valueRed += getRedValue( valueRGB ) * pContrib[j];
+            valueGreen += getGreenValue( valueRGB ) * pContrib[j];
+            valueBlue += getBlueValue( valueRGB ) * pContrib[j];
         }
 
-        valueRGB = ComRGB( Clip( (int)valueRed ), Clip( (int)valueGreen ),
-                           Clip( (int)valueBlue ) );
+        valueRGB = comRGB( clip( (int)valueRed ), clip( (int)valueGreen ),
+                clip( (int)valueBlue ) );
         return valueRGB;
 
     }
 
-    private BufferedImage VerticalFiltering(BufferedImage pbImage, int iOutH)
+    private BufferedImage verticalFiltering(BufferedImage pbImage, int iOutH)
     {
         int iW = pbImage.getWidth();
         int iH = pbImage.getHeight();
@@ -287,13 +308,13 @@ public class ImageScale
 
             int startY;
             int start;
-            int Y = (int)(((double)y) * ((double)iH) / ((double)iOutH) + 0.5);
+            int xxY = (int)(((double)y) * ((double)iH) / ((double)iOutH) + 0.5);
 
-            startY = Y - nHalfDots;
+            startY = xxY - nHalfDots;
             if(startY < 0)
             {
                 startY = 0;
-                start = nHalfDots - Y;
+                start = nHalfDots - xxY;
             }
             else
             {
@@ -301,11 +322,11 @@ public class ImageScale
             }
 
             int stop;
-            int stopY = Y + nHalfDots;
+            int stopY = xxY + nHalfDots;
             if(stopY > (iH - 1))
             {
                 stopY = iH - 1;
-                stop = nHalfDots + (iH - 1 - Y);
+                stop = nHalfDots + (iH - 1 - xxY);
             }
             else
             {
@@ -314,10 +335,10 @@ public class ImageScale
 
             if(start > 0 || stop < nDots - 1)
             {
-                CalTempContrib( start, stop );
+                calTempContrib( start, stop );
                 for(int x = 0; x < iW; x++)
                 {
-                    value = VerticalFilter( pbImage, startY, stopY, start, stop,
+                    value = verticalFilter( pbImage, startY, stopY, start, stop,
                                             x, tmpContrib );
                     pbOut.setRGB( x, y, value );
                 }
@@ -326,7 +347,7 @@ public class ImageScale
             {
                 for(int x = 0; x < iW; x++)
                 {
-                    value = VerticalFilter( pbImage, startY, stopY, start, stop,
+                    value = verticalFilter( pbImage, startY, stopY, start, stop,
                                             x, normContrib );
                     pbOut.setRGB( x, y, value );
                 }
@@ -338,12 +359,14 @@ public class ImageScale
 
     }
 
-    int Clip(int x)
+    private int clip(int x)
     {
-        if(x < 0)
+        if(x < 0){
             return 0;
-        if(x > 255)
-            return 255;
+        }
+        if(x > LENGTH){
+            return LENGTH;
+        }
         return x;
     }
 

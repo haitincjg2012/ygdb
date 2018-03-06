@@ -5,6 +5,7 @@ import lombok.Data;
 
 /**
  * Created by hmy on 2017/8/1.
+ * @author hmy
  */
 @Data
 public class PreSearchVO {

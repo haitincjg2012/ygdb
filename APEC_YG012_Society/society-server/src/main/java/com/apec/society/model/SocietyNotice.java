@@ -1,15 +1,18 @@
 package com.apec.society.model;
 
 import com.apec.framework.mongodb.model.BaseModel;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 
 /**
  * Title: 圈子公告
  *
  * @author yirde  2017/10/20.
  */
-@Data
+@Getter
+@Setter
 @Document
 public class SocietyNotice extends BaseModel<Long> {
 

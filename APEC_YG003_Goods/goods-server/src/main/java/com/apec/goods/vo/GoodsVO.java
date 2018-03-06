@@ -1,10 +1,10 @@
 package com.apec.goods.vo;
 
-import com.apec.framework.dto.BaseVO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,6 +17,8 @@ import java.util.List;
 public class GoodsVO{
 
     private Long id;
+
+    private Date createDate;
 
     /**
      * 商品大类名称
@@ -36,7 +38,7 @@ public class GoodsVO{
     /**
      * 是否为主类
      */
-    private boolean mainGoods;
+    private Boolean mainGoods;
 
 
 

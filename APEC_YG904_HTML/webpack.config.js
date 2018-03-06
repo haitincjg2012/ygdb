@@ -1,8 +1,10 @@
 const resolve = require('path').resolve
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const url = require('url')
-const publicPath = ''
+const publicPath = '';
+const proxy=require('./devServer.config');
 
 module.exports = (options = {}) => ({
   entry: {
@@ -46,7 +48,14 @@ module.exports = (options = {}) => ({
     }),
     new HtmlWebpackPlugin({
       template: 'src/index.html'
-    })
+    }),
+	  new CopyWebpackPlugin([
+		  {
+			  from: resolve(__dirname, './static'),
+			  to: resolve(__dirname, './dist/static'),
+			  ignore: ['.*']
+		  }
+	  ])
   ],
   resolve: {
     alias: {
@@ -55,10 +64,10 @@ module.exports = (options = {}) => ({
     }
   },
   devServer: {
-    host: '192.168.7.141',
-    //host: '127.0.0.1',
+    host: '192.168.7.87',
     port: 8040,
-    proxy: {
+    proxy:proxy,
+  /*  proxy: {
       '/api/': {
         target: 'http://127.0.0.1:8080',
         changeOrigin: true,
@@ -110,7 +119,7 @@ module.exports = (options = {}) => ({
         target: 'http://192.168.7.111',
         changeOrigin: true
       }
-    },
+    },*/
     historyApiFallback: {
       index: url.parse(options.dev ? '/assets/' : publicPath).pathname
     }

@@ -9,9 +9,24 @@ import com.apec.framework.common.enums.BaseEnum;
  */
 public enum UserDetailType  implements BaseEnum {
 
+    /**
+     * 收果代办
+     */
     DB_SG("收果代办"),
+
+    /**
+     * 调果代办
+     */
     DB_DG("调果代办"),
+
+    /**
+     * 老板
+     */
     LK_LB("老板"),
+
+    /**
+     * 保管
+     */
     LK_BG("保管");
 
     private final String key;

@@ -1,7 +1,7 @@
 package com.apec.framework.controller;
 
 import com.apec.framework.base.BaseController;
-import com.apec.framework.base.IJSONService;
+import com.apec.framework.base.IJsonService;
 import com.apec.framework.common.Constants;
 
 import com.apec.framework.common.exception.DispatchException;
@@ -23,13 +23,14 @@ import javax.servlet.http.HttpServletRequest;
  * 内容摘要：请求分发控制器
  * 完成日期：
  * 编码作者：
+ * @author xxx
  */
 @RestController
 public class DispatchController extends BaseController
 {
 
     @Autowired
-    private IJSONService dispatchJSONService;
+    private IJsonService dispatchJSONService;
 
     @Autowired
     private MailService mailService;
@@ -58,6 +59,21 @@ public class DispatchController extends BaseController
     }
 
     /**
+     * 内部接口请求分发
+     * @param serverName 服务名称
+     * @param methodName 调用方法名
+     * @param request 请求信息
+     * @return 请求返回结果
+     */
+    @RequestMapping(value = "/{serverName}/{methodName}.apin", produces = "application/json;charset=UTF-8")
+    public String dispatchRequestIn(@PathVariable("serverName") String serverName,
+                                  @PathVariable("methodName") String methodName, HttpServletRequest request)
+    {
+        return sendRequest( request, serverName, methodName );
+    }
+
+
+    /**
      * 请求分发
      * @param serverName 服务名称
      * @param methodName 调用方法名
@@ -69,6 +85,22 @@ public class DispatchController extends BaseController
     public String dispatchRequest(@PathVariable("serverName") String serverName,
         @PathVariable("fileName") String fileName, @PathVariable("methodName") String methodName,
         HttpServletRequest request)
+    {
+        return sendRequest( request, serverName, fileName + Constants.SINGLE_SLASH + methodName );
+    }
+
+    /**
+     * 内部接口请求分发
+     * @param serverName 服务名称
+     * @param methodName 调用方法名
+     * @param fileName 文件名称
+     * @param request 请求信息
+     * @return 请求返回结果
+     */
+    @RequestMapping(value = "/{serverName}/{fileName}/{methodName}.apin", produces = "application/json;charset=UTF-8")
+    public String dispatchRequestIn(@PathVariable("serverName") String serverName,
+                                  @PathVariable("fileName") String fileName, @PathVariable("methodName") String methodName,
+                                  HttpServletRequest request)
     {
         return sendRequest( request, serverName, fileName + Constants.SINGLE_SLASH + methodName );
     }

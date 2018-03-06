@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by hmy on 2017/7/11.
+ * @author hmy
  */
 @RestController
 @RequestMapping("/attributeValue")
@@ -103,14 +104,13 @@ public class AttributeValueController extends MyBaseController {
      */
     @RequestMapping(value = "/findAttributeValue" ,method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
     public String findAttributeValue(@RequestBody String json){
-        AttributeValueVO attributeValueVO1 = new AttributeValueVO();
         try{
             //获取商品信息
             AttributeValueVO attributeValueVO = getFormJSON(json,AttributeValueVO.class);
             if(attributeValueVO == null || attributeValueVO.getId() == null){
                 return super.getResultJSONStr(false, null, Constants.ERROR_100003);
             }
-            attributeValueVO1 = attributeValueService.findAttributeValue(attributeValueVO);
+            AttributeValueVO attributeValueVO1 = attributeValueService.findAttributeValue(attributeValueVO);
             return super.getResultJSONStr(true, attributeValueVO1, "");
         }catch(Exception e){
             e.printStackTrace();

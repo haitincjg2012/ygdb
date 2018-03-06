@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * @author yirde  2017/7/10.
  */
 @Component
-public class ApecESResponseListener implements ResponseListener {
+public class ApecEsResponseListener implements ResponseListener {
 
 
     @Override

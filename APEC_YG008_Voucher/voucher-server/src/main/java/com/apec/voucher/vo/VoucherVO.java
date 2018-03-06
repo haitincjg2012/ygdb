@@ -78,4 +78,11 @@ public class VoucherVO extends BaseVO<Long>{
 	private String voucherUrl;
 	
 	private List<VoucherGoodsVO> voucherGoodsVO;
+
+	private Boolean isSystem;
+
+	/**
+	 * 审核状态
+	 */
+	private String auditState;
 }

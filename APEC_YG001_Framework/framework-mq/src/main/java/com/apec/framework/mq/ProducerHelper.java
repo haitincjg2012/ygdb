@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
  * 内容摘要：
  * 创建日期：2017-01-05 19:54
  * 编码作者：zhaolei
+ * @author xxx
  */
 @Component
 public class ProducerHelper implements RabbitTemplate.ConfirmCallback {
@@ -44,9 +45,9 @@ public class ProducerHelper implements RabbitTemplate.ConfirmCallback {
 
     /**
      * rabbit 服务器给发送者的确认，说明rabbit 收到发送者的消息了
-     * @param correlationData
-     * @param ack
-     * @param cause
+     * @param correlationData correlationData
+     * @param ack ack
+     * @param cause cause
      */
     @Override
     public void confirm(CorrelationData correlationData, boolean ack, String cause) {

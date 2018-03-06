@@ -25,6 +25,8 @@ public class LogInjector implements BeanPostProcessor {
     @Override
     public Object postProcessBeforeInitialization(final Object bean, String name) throws BeansException {
         ReflectionUtils.doWithFields(bean.getClass(), new ReflectionUtils.FieldCallback() {
+
+            @Override
             public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException { 
                 ReflectionUtils.makeAccessible(field);
                 if (field.getAnnotation(InjectLogger.class) != null) {

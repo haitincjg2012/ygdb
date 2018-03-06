@@ -13,7 +13,7 @@ import com.apec.framework.dto.BaseVO;
  *
  * @author yirde  2017/7/3.
  */
-public class MessageBodyVO extends BaseVO<Long> implements IMQBody{
+public class MessageBodyVO extends BaseVO<Long> implements IMqBody {
 
     /**
 	 * 标题
@@ -66,7 +66,7 @@ public class MessageBodyVO extends BaseVO<Long> implements IMQBody{
 	/**
      * 是否使用动态模板
      * */
-    public boolean templateFlag;
+    public Boolean templateFlag;
 
 	public String getTitle() {
 		return title;
@@ -130,6 +130,11 @@ public class MessageBodyVO extends BaseVO<Long> implements IMQBody{
 
 	public void setAllReceiver(boolean allReceiver) {
 		this.allReceiver = allReceiver;
+	}
+
+	@Override
+	public String toString(){
+		return super.toString();
 	}
 
 }

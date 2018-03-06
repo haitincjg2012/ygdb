@@ -39,6 +39,11 @@ public class ProductInfo extends BaseModel<Long> {
     private String elasticId;
 
     /**
+     * 下架esId
+     */
+    private String offsellElasticId;
+
+    /**
      * 发布人的姓名
      */
     private String userName;
@@ -169,7 +174,6 @@ public class ProductInfo extends BaseModel<Long> {
 
     /**
      * 经度
-     * @return
      */
     private BigDecimal getLongitude;
 
@@ -200,15 +204,6 @@ public class ProductInfo extends BaseModel<Long> {
      * 收藏数
      */
     private int favoriteCount;
-
-    /**
-     * 需求 属性
-     */
-    @OneToMany(mappedBy = "productInfo",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
-    private List<ProductAttr> productAttrs;
 
     /**
      * 下架时间

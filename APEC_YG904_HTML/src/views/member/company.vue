@@ -7,7 +7,7 @@
         <my-header v-on:initialPage="initialPage" :firstTitle="firsTit" :secondTitle="secondTit" :thirdTitle="thirdTit" :breadFlag="breadflag"></my-header>
         <!--搜索-->
         <div class="mysearch" v-if="showFlag">
-            <el-form :inline="true" class="search">
+            <el-form :inline="true" class="search" label-width="100px">
                 <el-form-item label="企业名称：">
                     <el-input v-model="name" placeholder="请输入企业名称"></el-input>
                 </el-form-item>
@@ -20,37 +20,45 @@
                 <el-form-item label="区域：">
                     <el-input v-model="sear_address" placeholder="请输入区域"></el-input>
                 </el-form-item>
+				<el-form-item label="开始时间：">
+                    <el-date-picker type="date" placeholder="开始时间" format="yyyy-MM-dd" v-model="s_startDate"></el-date-picker>
+				</el-form-item>
+				<el-form-item label="结束时间：">
+                    <el-date-picker type="date" placeholder="结束时间" format="yyyy-MM-dd" v-model="s_endDate"></el-date-picker>
+				</el-form-item>
                 <el-form-item label="主营品种：">
                     <el-input v-model="sear_mainOperating" placeholder="请输入主营品种"></el-input>
                 </el-form-item>
                 <el-button type="primary" @click="onSearch">搜索</el-button>
+				<form id="form" method="post" style="display: none;" action="" enctype="multipart/form-data"></form>
+                <el-button type="primary" @click="goExport">导出</el-button>
                 <el-button @click="onReset">重置</el-button>
             </el-form>
         </div>
         <!--表格列表-->
         <div class="tableList" v-if="showFlag" style="margin-top: 20px;">
-            <el-table :data="dataList" border stripe v-loading.body="loadCircle" style="width:100%;">
+            <el-table :data="dataList" border stripe v-loading.body="loadCircle" header-row-class-name="headerRow"  style="width:100%;">
                 <el-table-column prop="id" label="编号"></el-table-column>
                 <el-table-column prop="orgName" label="企业名称"></el-table-column>
                 <el-table-column prop="userAccountTypeKey" label="企业类型"></el-table-column>
                 <el-table-column prop="address" label="区域"></el-table-column>
                 <el-table-column prop="addressDetail" label="详细地址"></el-table-column>
-                <el-table-column prop="saleAddress" label="客户市场"></el-table-column>
-                <el-table-column prop="mainOperating" label="主营品种"></el-table-column>	
+                <el-table-column prop="saleAddress" label="销售区域"></el-table-column>
+                <el-table-column prop="mainOperating" label="主营品种"></el-table-column>
                 <el-table-column prop="orgClientUsers" label="拥有的用户"></el-table-column>
                 <el-table-column prop="userTagsVOS" label="标签" width="170">
-	                	<template scope="scope">
+	                	<template slot-scope="scope">
 	                		  <button v-for="item in scope.row.userTagsVOS" class="tag">{{item.tagName}}</button>
 	                	</template>
                 </el-table-column>
                 <el-table-column prop="remark" label="实力描述"></el-table-column>
                 <el-table-column prop="createDate" label="创建时间">
-                		<template scope="scope">
+                		<template slot-scope="scope">
 	                		 	{{scope.row.createDate|timeFilter}}
 	                	</template>
                 </el-table-column>
-                <el-table-column label="操作">
-                    <template scope="scope">
+                <el-table-column label="操作" fixed="right" width="140">
+                    <template slot-scope="scope">
                         <el-button type="text" @click="goDetail(scope.row.id)">详情</el-button>
                         <el-button type="text" @click="openTag(scope.row)">设置标签</el-button>
                     </template>
@@ -66,11 +74,11 @@
 							  </div>
 						</el-dialog>
             <!--分页-->
-            <el-pagination class="pageNation" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="1"
+            <el-pagination class="pageNation" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pNum"
             :page-sizes="[10,15,20,25,30]" :page-size="pSize" layout="total,sizes,prev,pager,next,jumper"
             :total="pageData.totalElements" v-show="pageData.totalElements>10"></el-pagination>
         </div>
-        
+
         <!--企业form Page-->
         <div id="formPage" v-if="!showFlag">
             <el-form ref="companyForm" class="myformDetail" :class="{formBorder:viewFlag}">
@@ -89,7 +97,7 @@
                 <el-form-item label="详细地址：">
                     <el-input v-model="companyForm.addressDetail" :disabled="viewFlag"></el-input>
                 </el-form-item>
-                <el-form-item label="客户市场：">
+                <el-form-item label="销售区域：">
                     <el-input v-model="companyForm.saleAddress" :disabled="viewFlag"></el-input>
                 </el-form-item>
                 <el-form-item label="主营品种：">
@@ -133,12 +141,17 @@
                 name:null,
                 sear_companyType:null,
                 sear_address:null,
+                s_startDate: null,
+                s_endDate: null,
                 sear_mainOperating:null,
                 loadCircle:false,//加载显示
                 tagDialogVisible:false,//选择标签显示
                 tagList:[
                 	{id:null,tagName:'企业认证',chosen:false,className:'QYRZ'},
-                	{id:null,tagName:'供应链金融合作库',chosen:false,className:'GYLJRHZK'}
+                	{id:null,tagName:'供应链金融合作库',chosen:false,className:'GYLJRHZK'},
+                	{id:null,tagName:'调果代办',chosen:false,className:'DGDB'},
+                	{id:null,tagName:'收果代办',chosen:false,className:'SGDB'},
+                	{id:null,tagName:'加盟代办',chosen:false,className:'JMDB'}
                 ],
                 setTagId:'',
                 dataList:[],
@@ -167,7 +180,7 @@
                 let params={
                     url:vm.apiUrl.company.tableDetailUrl,
                     data:{
-                        id:id 
+                        id:id
                     }
                 }
                 vm.ax.post(params,vm.tableDetailCb);
@@ -190,31 +203,46 @@
             //弹出标签选择框
             openTag(row){
             		var vm = this;
+            		vm.tagList = [
+	                	{id:null,tagName:'企业认证',chosen:false,className:'QYRZ'},
+	                	{id:null,tagName:'供应链金融合作库',chosen:false,className:'GYLJRHZK'},
+	                	{id:null,tagName:'调果代办',chosen:false,className:'DGDB'},
+	                	{id:null,tagName:'收果代办',chosen:false,className:'SGDB'},
+	                	{id:null,tagName:'加盟代办',chosen:false,className:'JMDB'}
+	                ];
             		for(let i in row.userTagsVOS){
             			for(let j in vm.tagList){
             				if(row.userTagsVOS[i].tagName==vm.tagList[j].tagName){
             					vm.tagList[j].chosen = true;
             					vm.tagList[j].id = row.userTagsVOS[i].id;
             				}
+                  /*  else{
+                      vm.tagList[j].chosen = false;
+            					vm.tagList[j].id = null;
+                    }*/
             			}
             		}
             		vm.tagDialogVisible = true;
             		vm.setTagId = row.id;
-            		
+
             },
             toggleTag(index){
             		var vm = this;
             		vm.tagList[index].chosen = vm.tagList[index].chosen?false:true;
             },
             setTag(){
-            		var vm = this;
-            		var userTagsVOS = [];
-            		vm.tagList.forEach(function(e){
-            			if(e.chosen){
-            				userTagsVOS.push({tagName:e.tagName,className:e.className,id:e.id});
-            			}
-            		});
-            		let params={
+        		var vm = this;
+        		var userTagsVOS = [];
+        		vm.tagList.forEach(function(e){
+        			if(e.chosen){
+        				userTagsVOS.push({tagName:e.tagName,className:e.className,id:e.id});
+        			}
+                  	else{
+                    	e.id=null;
+                  	}
+
+        		});
+        		let params={
                     url:vm.apiUrl.company.setTagUrl,
                     data:{
                         id:vm.setTagId,
@@ -268,12 +296,42 @@
                     		orgName:vm.name,
                     		userAccountType:vm.sear_companyType,
                     		address:vm.sear_address,
+                    		startDate:vm.s_startDate,
+                    		endDate:vm.s_endDate,
                     		mainOperating:vm.sear_mainOperating,
                         pageNumber:vm.pNum,//页码
                         pageSize:vm.pSize
                     }
                 }
                 vm.ax.post(params,vm.tableListCb,vm);
+            },
+            //导出
+            goExport(){
+            	let vm = this;
+				
+                var data = {
+            		orgName:vm.name,
+            		userAccountType:vm.sear_companyType,
+            		address:vm.sear_address,
+            		startDate: vm.moment(vm.s_startDate).format('YYYY-MM-DD'),
+            		endDate: vm.moment(vm.s_endDate).format('YYYY-MM-DD'),
+            		mainOperating:vm.sear_mainOperating
+                };
+                var form = document.getElementById("form");
+                var innerHtml = '';
+                for(var i in data){
+                	innerHtml += '<input name="' + i + '" class="forminput' + i + '"/>';
+                }
+                form.innerHTML = innerHtml;
+                for(var i in data){
+                	document.querySelector(".forminput"+i).value = data[i];
+                }
+                //特殊处理 没有值得时候 不传这个字段
+                if(!document.querySelector(".forminputuserAccountType").value){
+                	form.removeChild(document.querySelector(".forminputuserAccountType"));
+                }
+                form.setAttribute("action", vm.apiUrl.company.export);
+                form.submit();
             },
             tableListCb(data){
                 var vm=this;
@@ -292,7 +350,8 @@
                 vm.name=null;
                 vm.sear_companyType=null;
                 vm.sear_address=null;
-                vm.sear_companyType=null;
+                vm.s_startDate = null;
+                vm.s_endDate = null;
                 vm.sear_mainOperating=null;
                 vm.getTableList();
             }

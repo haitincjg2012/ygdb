@@ -1,0 +1,103 @@
+.c-circleFriend {
+  margin-top: 0.5rem;
+  background-color: #fff;
+  height: 1.75rem;
+  padding: 0.75rem 0.5rem 0.5rem;
+  overflow: hidden;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-circleFriend .c-cf-portrait {
+  width: 2rem;
+}
+.c-circleFriend .c-cf-portrait img {
+  width: 1.65rem;
+  height: 1.65rem;
+  border-radius: 100%;
+}
+.c-circleFriend .c-cf-string {
+  width: 12.25rem;
+}
+.c-circleFriend .c-cf-s-name {
+  height: 1rem;
+  line-height: 1rem;
+  font-size: 0.75rem;
+  color: #323232;
+}
+.c-circleFriend .c-cf-s-time {
+  height: 0.75rem;
+  line-height: 0.75rem;
+  font-size: 0.6rem;
+  color: #646464;
+}
+.c-circleFriend .c-cf-s-time .sp2 {
+  vertical-align: sub;
+}
+.c-circleFriend .c-cf-state {
+  padding-top: 0.25rem;
+  width: 3.5rem;
+  text-align: center;
+}
+.c-circleFriend .c-cf-s-text {
+  display: inline-block;
+  font-size: 0.65rem;
+  border: 0.05rem solid #2fcaa7;
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.2rem;
+  color: #2FCAA7;
+}
+.c-circleFriend .cAttentionActive {
+  color: #969696;
+  border-color: #969696;
+}
+.c-circleFriend .c-cf-picture {
+  width: 3.5rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  height: 1.75rem;
+  line-height: 1.75rem;
+}
+.c-circleFriend .c-cf-pic-comment {
+  width: 3rem;
+  height: 1.75rem;
+  line-height: 1.75rem;
+  text-align: right;
+}
+.c-circleFriend .c-cf-p-comment {
+  width: 1rem;
+}
+.c-circleFriend .c-cf-p-praise {
+  width: 2.5rem;
+  font-size: 0.6rem;
+  color: #646464;
+  text-align: center;
+}
+.c-circleFriend .c-cf-p-com {
+  width: 0.7rem;
+  height: 0.7rem;
+  vertical-align: middle;
+}
+.c-circleFriend .c-cf-p-t {
+  vertical-align: -0.05rem;
+}
+.c-circleFriend .c-cf-p-sp {
+  vertical-align: sub;
+}

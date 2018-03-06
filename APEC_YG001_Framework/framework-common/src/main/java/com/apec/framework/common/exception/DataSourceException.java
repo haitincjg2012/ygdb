@@ -5,7 +5,8 @@ package com.apec.framework.common.exception;
  * 类 名 称： DataSourceException
  * 内容摘要: 数据源异常
  * 完成日期： 2016-07-25
- * 编码作者： 
+ * 编码作者：
+ * @author xxx
 */
 public class DataSourceException extends ApecRuntimeException
 {
@@ -27,6 +28,7 @@ public class DataSourceException extends ApecRuntimeException
         super(errorCode, message, e);
     }
 
+    @Override
     public String toString()
     {
         return super.toString();

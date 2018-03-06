@@ -10,9 +10,12 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>framework-mongodb</artifactId>
     <properties>
-      <spring-data-mongodb.version>2.0.0.RELEASE</spring-data-mongodb.version>
+        <querydsl.apt-maven-plugin.version>1.1.3</querydsl.apt-maven-plugin.version>
+        <com.mysema.querydsl.version>3.7.3</com.mysema.querydsl.version>
     </properties>
+
     <dependencies>
+        <!-- framework  dependency -->
         <dependency>
             <groupId>com.apec</groupId>
             <artifactId>framework-common</artifactId>
@@ -31,61 +34,100 @@
             <version>1.0.1-RELEASE</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- spring boot dependency start -->
         <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-commons</artifactId>
-            <version>1.12.2.RELEASE</version>
-            <scope>provided</scope>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jetty</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-mongodb</artifactId>
-            <version>${spring-data-mongodb.version}</version>
+            <artifactId>spring-data-commons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+        <!-- 第三方依赖-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.12.2</version>
+            <type>jar</type>
+        </dependency>
+
+        <!-- QueryDsl -->
+        <dependency>
+            <groupId>com.mysema.querydsl</groupId>
+            <artifactId>querydsl-apt</artifactId>
+            <version>${com.mysema.querydsl.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mysema.querydsl</groupId>
+            <artifactId>querydsl-mongodb</artifactId>
+            <version>${com.mysema.querydsl.version}</version>
+            <scope>provided</scope>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-api</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>jcl-over-slf4j</artifactId>
-                </exclusion>
             </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>com.querydsl</groupId>
-            <artifactId>querydsl-jpa</artifactId>
-            <version>4.0.4</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.querydsl</groupId>
-            <artifactId>querydsl-apt</artifactId>
-            <version>4.0.4</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
     <build>
-        <!-- querydsl 插件 自动生成Qmodle，简化Criteria操作 -->
-        <plugins>
-            <plugin>
-                <groupId>com.mysema.maven</groupId>
-                <artifactId>apt-maven-plugin</artifactId>
-                <version>1.1.3</version>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>process</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>target/generated-sources/java</outputDirectory>
-                            <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
+            <!-- querydsl 插件 自动生成Qmodle，简化Criteria操作 -->
+            <plugins>
+                <plugin>
+                    <groupId>com.mysema.maven</groupId>
+                    <artifactId>apt-maven-plugin</artifactId>
+                    <version>${querydsl.apt-maven-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>process-common-model</id>
+                            <goals>
+                                <goal>process</goal>
+                            </goals>
+                            <configuration>
+                                <!--target folder with generated metamodels Qxxxx.java-->
+                                <outputDirectory>target/generated-sources/java</outputDirectory>
+                                <processors>
+                                    <processor>org.springframework.data.mongodb.repository.support.MongoAnnotationProcessor</processor>
+                                </processors>
+                            </configuration>
+                        </execution>
+                    </executions>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.mysema.querydsl</groupId>
+                            <artifactId>querydsl-apt</artifactId>
+                            <version>${com.mysema.querydsl.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+            </plugins>
     </build>
 </project>

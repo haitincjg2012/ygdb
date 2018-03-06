@@ -1,0 +1,219 @@
+.c-guess {
+  position: relative;
+}
+.c-g-subheading {
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  margin: 0 0.5rem;
+  height: 2.3rem;
+  line-height: 2.3rem;
+}
+.c-g-subheading-text {
+  width: 10.75rem;
+  font-size: 0.8rem;
+  color: #323232;
+}
+.c-g-subheading-number {
+  width: 2.5rem;
+  font-size: 0.8rem;
+  color: #323232;
+  text-align: right;
+}
+.c-g-subheading-content {
+  width: 4.5rem;
+  font-size: 0.8rem;
+  color: #969696;
+  text-align: right;
+}
+.c-g-pricefluctuation {
+  border-bottom: 0.05rem solid #f4f4f4;
+}
+.c-g-pricef-text {
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  width: 17.75rem;
+  margin: 0 0.5rem 0.5rem;
+  font-size: 0.8rem;
+}
+.c-g-pT-com {
+  padding: 0;
+  margin: 0;
+  line-height: 1rem;
+  width: 8.875rem;
+}
+.c-g-pT-r {
+  color: #FF4535;
+}
+.c-g-pT-l {
+  text-align: right;
+  color: #28CBA7;
+}
+.c-g-pricef-draw {
+  height: 1rem;
+  margin: 0 0.5rem;
+  width: 17.75rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-g-p-line {
+  height: 0.1rem;
+  width: 8.75rem;
+}
+.c-linebg-l {
+  background-color: #FF4535;
+}
+.c-linebg-r {
+  background-color: #28CBA7;
+}
+.c-g-p-center {
+  width: 0.25rem;
+}
+.c-g-operate {
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  height: 2.25rem;
+  line-height: 2.25rem;
+  margin: 0 0.5rem;
+  font-size: 0.8rem;
+  position: relative;
+}
+.c-g-o-com {
+  -webkit-flex: 1;
+  /* Chrome */
+  -ms-flex: 1;
+  /* IE 10 */
+  flex: 1;
+  /* NEW, Spec - Opera 12.1, Firefox 20+ */
+  -webkit-box-flex: 1;
+  /* OLD - iOS 6-, Safari 3.1-6 */
+  -moz-box-flex: 1;
+  /* OLD - Firefox 19- */
+  color: #969696;
+  text-align: center;
+}
+.c-g-o-center:before {
+  content: "";
+  height: 0.8rem;
+  width: 0.05rem;
+  background: #f4f4f4;
+  position: absolute;
+  top: 0.75rem;
+  margin-left: -1.25rem;
+}
+.c-g-o-center:after {
+  content: "";
+  height: 0.8rem;
+  width: 0.05rem;
+  background: #f4f4f4;
+  position: absolute;
+  top: 0.75rem;
+  margin-left: 1.5rem;
+}
+.c-g-o-img {
+  width: 0.65rem;
+  height: 0.65rem;
+  margin-left: 0.25rem;
+}
+.ractive {
+  color: #FF4535;
+}
+.factive {
+  color: #28CBA7;
+}
+.c-g-o-comment-img {
+  width: 0.8rem;
+  height: 0.8rem;
+  vertical-align: -0.15rem;
+}
+.c-performance-one {
+  position: relative;
+  margin: 0.75rem 0.5rem;
+  height: 1.25rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-performance-l {
+  background-color: #FF4535;
+  width: 8.5rem;
+}
+.c-performance-center {
+  height: 1.25rem;
+  width: 0.55rem;
+  background: url("../img/percentage.png") no-repeat center;
+}
+.c-performance-r {
+  background-color: #508cee;
+  width: 8.5rem;
+}
+.c-guess-data {
+  position: absolute;
+  left: 0.25rem;
+  top: 0;
+  height: 1.25rem;
+  width: 17rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-guess-data-com {
+  width: 8.5rem;
+  line-height: 1.25rem;
+  font-size: 0.75rem;
+  color: #fff;
+}
+.c-guess-data-r {
+  text-align: right;
+}

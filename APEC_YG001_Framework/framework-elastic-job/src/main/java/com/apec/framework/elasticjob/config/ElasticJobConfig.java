@@ -24,8 +24,6 @@ import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 
-//import com.apec.framework.elasticjob.listeners.SimpleDistributeListener;
-
 /**
  * Elastic-job作业配置类
  * 
@@ -49,12 +47,6 @@ public class ElasticJobConfig
 
     /**
      * 初始化elastic-job配置
-     * @param jobClassName 应用job类名
-     * @param jobConfigJsonStr 应用job配置参数
-     * @param objectMapper  json转换对象
-     * @param zkRegistryCenterProxy zk配置
-     * @return
-     * @throws Exception
      */
     public JobScheduler jobScheduler(ElasticJob jobObject, String jobConfigJsonStr, ObjectMapper objectMapper,
         ZkRegistryCenterProxy zkRegistryCenterProxy) throws Exception
@@ -65,9 +57,6 @@ public class ElasticJobConfig
                          + jobConfigJsonStr);
             return null;
         }
-//        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-//        Class<?> jobClass = classLoader.loadClass(jobClassName);
-//        ElasticJob jobObject = (ElasticJob)jobClass.newInstance();
         SimpleJobConfigItems simpleJobConfigItems = null;
         try
         {
@@ -89,21 +78,20 @@ public class ElasticJobConfig
             return null;
         }
         
-        ElasticJobListener listens[] = {new SimpleListener()};
-//        ElasticJobListener listens[] =
-//        {new SimpleListener(), new SimpleDistributeListener(1000L, 2000L)};
+        ElasticJobListener[] listens = {new SimpleListener()};
+        //新增失效转移参数设置//覆盖注册中心的配置
         LiteJobConfiguration liteJobConfiguration = LiteJobConfiguration.newBuilder(new SimpleJobConfiguration(
             JobCoreConfiguration
                 .newBuilder(simpleJobConfigItems.getJobName(), simpleJobConfigItems.getCron(),
                             simpleJobConfigItems.getShardingTotalCount())
                 .shardingItemParameters(simpleJobConfigItems.getShardingItemParameters())
-                .failover(simpleJobConfigItems.isFailover()).build(),//新增失效转移参数设置
-                jobObject.getClass().getCanonicalName())).overwrite(true).build(); //覆盖注册中心的配置
+                .failover(simpleJobConfigItems.isFailover()).build(),
+                jobObject.getClass().getCanonicalName())).overwrite(true).build();
         return new SpringJobScheduler(jobObject, zkRegistryCenterProxy, liteJobConfiguration, listens);
     }
 
     @Value("${ejzk.json}")
-    private String EjzkConfigJsonStr;
+    private String ejzkConfigJsonStr;
 
     // 连接zk的配置信息，可共用一个zk
     @Bean(name = "ejZookeeperConfig")
@@ -111,7 +99,7 @@ public class ElasticJobConfig
     {
         try
         {
-            return objectMapper.readValue(EjzkConfigJsonStr, EJZKconfigItem.class);
+            return objectMapper.readValue(ejzkConfigJsonStr, EJZKconfigItem.class);
         }
         catch (JsonParseException e)
         {

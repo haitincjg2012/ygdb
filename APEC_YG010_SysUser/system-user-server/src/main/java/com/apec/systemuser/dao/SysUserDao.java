@@ -6,6 +6,9 @@ import com.apec.systemuser.model.SysUser;
 
 import java.util.List;
 
+/**
+ * @author xxx
+ */
 public interface SysUserDao extends BaseDAO<SysUser, Long>
 {
 

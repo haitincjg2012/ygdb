@@ -4,12 +4,14 @@ import com.apec.framework.common.StringUtil;
 import com.apec.framework.common.enumtype.EnableFlag;
 import com.apec.systemuser.dao.SysRoleResouceDao;
 import com.apec.systemuser.model.QSysRoleResource;
+import com.apec.systemuser.model.SysRole;
 import com.apec.systemuser.model.SysRoleResource;
 import com.apec.systemuser.service.SysResourceService;
 import com.apec.systemuser.service.SysRoleResourceService;
 import com.apec.systemuser.util.SnowFlakeKeyGen;
 import com.apec.systemuser.vo.SysResourceVO;
 import com.apec.systemuser.vo.SysRoleResourceVO;
+import com.apec.systemuser.vo.SysRoleVO;
 import com.mysema.query.types.Predicate;
 import com.mysema.query.types.expr.BooleanExpression;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+/**
+ *@author xxx
+ */
 @Service
 public class SysRoleResourceServiceImpl implements SysRoleResourceService {
 
@@ -38,10 +43,10 @@ public class SysRoleResourceServiceImpl implements SysRoleResourceService {
 			dao.delete(it.next().getId());
 		}
 		String[] reids = vo.getReids().split(",");
-		for(int i=0;i<reids.length;i++){
+		for(String reid :reids){
 			SysRoleResource srr = new SysRoleResource();
 			srr.setRid(vo.getRid());
-			srr.setReid(reids[i]);
+			srr.setReid(reid);
 			srr.setId(inGen.nextId());
 			srr.setEnableFlag(EnableFlag.Y);
 			srr.setCreateBy(userId);
@@ -54,15 +59,14 @@ public class SysRoleResourceServiceImpl implements SysRoleResourceService {
     {
         Iterable<SysRoleResource> iterable = dao.findAll(getInputCondition(vo));
         Iterator<SysRoleResource> it = iterable.iterator();
-        Map<String,SysRoleResource> map = new HashMap<String,SysRoleResource>();
-        List<SysRoleResourceVO> list = new ArrayList<SysRoleResourceVO>();
+        Map<String,SysRoleResource> map = new HashMap<>(16);
+        List<SysRoleResourceVO> list = new ArrayList<>();
         while (it.hasNext()){
         	SysRoleResource entity = it.next();
         	map.put(entity.getReid(), entity);
         }
         List<SysResourceVO> rlist = sysResourceService.selectAll(null);
-        for(int i=0;i<rlist.size();i++){
-        	SysResourceVO tem = rlist.get(i);
+        for(SysResourceVO tem:rlist){
         	if(null!=map.get(tem.getId()+"")){
         		SysRoleResource temRr = map.get(tem.getId()+"");
         		SysRoleResourceVO ssr = new SysRoleResourceVO();
@@ -82,14 +86,13 @@ public class SysRoleResourceServiceImpl implements SysRoleResourceService {
     {
         Iterable<SysRoleResource> iterable = dao.findAll(getInputCondition(vo));
         Iterator<SysRoleResource> it = iterable.iterator();
-        Map<String,SysRoleResource> map = new HashMap<String,SysRoleResource>();
+        Map<String,SysRoleResource> map = new HashMap<>(16);
         while (it.hasNext()){
         	SysRoleResource entity = it.next();
         	map.put(entity.getReid(), entity);
         }
         List<SysResourceVO> rlist = sysResourceService.selectAll(null);
-        for(int i=0;i<rlist.size();i++){
-        	SysResourceVO tem = rlist.get(i);
+        for(SysResourceVO tem:rlist){
         	if(null!=map.get(tem.getId()+"")){
         		tem.setFlag("1");
         	}else{
@@ -101,7 +104,7 @@ public class SysRoleResourceServiceImpl implements SysRoleResourceService {
 	
 	private Predicate getInputCondition(SysRoleResourceVO vo)
     {
-        List<BooleanExpression> predicates = new ArrayList<BooleanExpression>();
+        List<BooleanExpression> predicates = new ArrayList<>();
         if(null != vo)
         {
             if(!StringUtil.isEmpty(vo.getRid()))

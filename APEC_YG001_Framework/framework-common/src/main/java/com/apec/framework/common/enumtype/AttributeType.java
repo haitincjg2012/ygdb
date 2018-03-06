@@ -9,19 +9,34 @@ import com.apec.framework.common.enums.BaseEnum;
  */
 public enum AttributeType  implements BaseEnum {
 
+    /**
+     * 单选
+     */
     RADIO("单选"),
 
+    /**
+     * 多选
+     */
     MULTI("多选"),
 
+    /**
+     * 下拉
+     */
     SELECT("下拉"),
 
+    /**
+     * 文本域输入
+     */
     TEXTAREA("文本域输入"),
 
-     REMOTE("远程访问"); //远程地址访问
+    /**
+     *  //远程地址访问
+     */
+     REMOTE("远程访问");
 
     private final String key;
 
-    private AttributeType(String key) {
+    AttributeType(String key) {
         this.key = key;
     }
 

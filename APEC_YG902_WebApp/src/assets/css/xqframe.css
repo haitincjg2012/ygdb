@@ -19,27 +19,56 @@
   vertical-align: middle;
 }
 .z-person .z-bannerImg {
-  width: 18.75rem;
-  height: auto;
   position: relative;
+  width: 18.75rem;
+  height: 8rem;
 }
-.z-person .z-bannerImg img {
-  width: 100%;
-  height: 8.125rem;
-  display: block;
-}
-.z-person .z-bannerImg .z-head-portrait {
+.z-person .z-bannerImg-mask {
   position: absolute;
-  bottom: -2rem;
-  right: 1.5rem;
-  display: block;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+.z-person .z-bannerImg-picture-mask {
+  width: 100%;
+  height: 8.5rem;
+  opacity: 0.2;
+  filter: alpha(opacity=20);
+  -moz-opacity: 0.2;
+  background-color: #323232;
+}
+.z-person .z-bannerImg-bg {
+  width: 18.75rem;
+  height: 8rem;
+  -webkit-filter: blur(0.4rem);
+  /* Chrome, Opera */
+  -moz-filter: blur(0.4rem);
+  -ms-filter: blur(0.4rem);
+  filter: blur(0.4rem);
+  vertical-align: text-bottom;
+}
+.z-person .z-bannerImg-personPicture {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 2rem;
+  text-align: center;
+}
+.z-person .z-bannerImg-img {
   width: 3.6rem;
   height: 3.6rem;
-  border: 0.05rem solid #969696;
   border-radius: 100%;
+  display: block;
+  margin: auto;
+}
+.z-person .z-bannerImg-text {
+  color: #ffffff;
+  font-size: 0.8rem;
+  padding: 0;
 }
 .z-person .z-p-info {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 .z-person .z-p-info .c-t-info {
   line-height: 2.75rem;
@@ -81,10 +110,33 @@
   padding-top: 1rem;
 }
 .z-person .z-p-info .z-p-name {
-  padding-left: 0.5rem;
-  font-size: 1rem;
-  font-weight: bold;
-  color: #242424;
+  line-height: 0.75rem;
+  border-radius: 0.1rem;
+  font-size: 0.6rem;
+  color: #fff;
+  border: 0.05rem solid #fd9e24;
+  background-color: #FD9E24;
+}
+.z-person .z-p-info .z-p-authentication {
+  line-height: 0.75rem;
+  border-radius: 0.1rem;
+  font-size: 0.6rem;
+  color: #40CDAC;
+  border: 0.05rem solid #40cdac;
+}
+.z-person .z-p-info .z-p-coor {
+  line-height: 0.75rem;
+  border-radius: 0.1rem;
+  font-size: 0.6rem;
+  color: #fd9e24;
+  border: 0.05rem solid #fd9e24;
+}
+.z-person .z-p-info .z-p-real {
+  line-height: 0.75rem;
+  font-size: 0.6rem;
+  border: 0.05rem solid #28cba5;
+  color: #28cba5;
+  border-radius: 0.1rem;
 }
 .z-person .z-p-info .z-cold-name {
   padding-left: 0.5rem;
@@ -103,12 +155,6 @@
   border: 0.05rem solid #fd9e24;
   border-radius: 0.1rem;
   vertical-align: top;
-}
-.z-person .z-p-info .z-p-real {
-  font-size: 0.7rem;
-  border: 0.05rem solid #28cba5;
-  color: #28cba5;
-  border-radius: 0.125rem;
 }
 .z-person .z-p-info .c-p-c-real {
   vertical-align: top;
@@ -135,6 +181,9 @@
   line-height: 2.5rem;
 }
 .z-person .z-p-info .z-p-path {
+  padding-top: 0.6rem;
+  height: 2.25rem;
+  padding-left: 0.5rem;
   display: -webkit-box;
   /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
   display: -moz-box;
@@ -148,37 +197,67 @@
   display: flex;
 }
 .z-person .z-p-info .z-p-path .z-p-part {
-  width: 3.75rem;
-  font-size: 0.7rem;
+  width: 5.875rem;
+  font-size: 0.6rem;
 }
 .z-person .z-p-info .z-p-path .z-p-part .z-p-number {
   font-weight: bold;
   font-size: 0.8rem;
 }
 .z-person .z-p-info .z-p-path .z-p-part p {
-  line-height: 1.5rem;
-  height: 1.5rem;
   text-align: center;
 }
-.z-person .z-p-info .z-p-path .z-p-part span {
-  vertical-align: 0.15rem;
-}
-.z-person .z-p-info .z-p-path .z-p-follow {
-  width: 7.5rem;
-  height: 3rem;
-  font-size: 0.7rem;
-  position: relative;
-}
-.z-person .z-p-info .z-p-path .z-p-follow .z-p-f {
-  width: 4.2rem;
-  margin: auto;
-  margin-top: 1.25rem;
-  border: 0.05rem solid #323232;
-  color: #323232;
+.z-person .z-p-info .z-p-path .z-p-part .z-p-style {
   line-height: 1.25rem;
+}
+.z-person .z-p-info .z-p-path-line {
+  margin: auto;
+  width: 17.75rem;
+  height: 0.05rem;
+  background-color: #f4f4f4;
+}
+.z-person .z-p-info .c-p-introduce {
+  padding-left: 0.5rem;
+  width: 18.25rem;
+}
+.z-person .z-p-info .c-p-intro-com {
+  width: 18.25rem;
+  height: 2.25rem;
+  line-height: 2.25rem;
   font-size: 0.75rem;
-  font-weight: bold;
-  text-align: center;
+  border-bottom: 0.05rem solid #f4f4f4;
+  color: #646464;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.z-person .z-p-info .c-p-intro-com:nth-last-child(1) {
+  border-bottom: none;
+}
+.z-person .z-p-info .c-p-intro-label {
+  width: 3.75rem;
+}
+.z-person .z-p-info .c-p-intro-text {
+  width: 14.5rem;
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.z-person .z-p-info .z-p-sign-text {
+  font-size: 0.6rem;
+  color: #646464;
+}
+.z-person .z-p-info .c-p-label-color {
+  color: #323232;
 }
 .z-person .z-p-des {
   margin-left: 0.5rem;
@@ -190,23 +269,33 @@
   vertical-align: sub;
 }
 .z-person .z-p-des .z-p-des-w {
-  font-size: 0.85rem;
-  height: 2.3rem;
   line-height: 2.3rem;
-  border-bottom: 0.05rem solid #d7d7d7;
+  border-bottom: 0.05rem solid #f4f4f4;
+  font-size: 0.75rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
 }
-.z-person .z-p-des .z-p-des-w .z-x-sp-com {
-  color: #323232;
+.z-person .z-p-des .z-p-des-w:nth-last-child(1) {
+  border-bottom: none;
 }
-.z-person .z-p-des .z-p-des-w input {
-  width: 12.5rem;
-  height: 1.05rem;
-  line-height: 0rem;
-  font-size: 0.85rem;
-  vertical-align: 0.05rem;
-  text-align: right;
+.z-person .z-p-des .z-p-des-com {
+  width: 3.75rem;
   color: #646464;
-  background-color: transparent;
+}
+.z-person .z-p-des .z-p-des-comText {
+  width: 14.5rem;
+  color: #323232;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 .z-person .z-p-des .z-p-des-content {
   padding: 0 1.6rem;
@@ -219,12 +308,12 @@
 .z-space {
   width: 18.75rem;
   height: 0.05rem;
-  background-color: #d7d7d7;
+  background-color: #f4f4f4;
 }
 .z-space-com {
   width: 18.75rem;
   height: 0.05rem;
-  background-color: #d7d7d7;
+  background-color: #f4f4f4;
 }
 .c-space-t {
   width: 100%;
@@ -332,18 +421,6 @@
   position: fixed;
   bottom: 0;
   border-bottom: 0;
-  background-color: #2fcaa7;
-  height: 2.5rem;
-  line-height: 2.5rem;
-  text-align: center;
-  z-index: 99;
-}
-.z-phone a {
-  color: #fff;
-  font-size: 0.8rem;
-  display: block;
-  width: 100%;
-  height: 100%;
 }
 .z-p-gy {
   position: relative;
@@ -353,7 +430,7 @@
   z-index: 0;
 }
 .z-p-gy .c-gy-v {
-  border-bottom: 0.05rem solid #d7d7d7;
+  border-bottom: 0.05rem solid #f4f4f4;
 }
 .z-p-gy .c-p-gy-x {
   height: 2rem;
@@ -375,9 +452,10 @@
   width: 18.75rem;
   overflow: auto;
   max-height: 15rem;
-  position: relative;
-  top: -8.15rem;
+  position: fixed;
+  bottom: 0;
   background-color: #fff;
+  text-align: center;
 }
 .z-cold-mobile .c-text {
   height: 2.3rem;
@@ -422,7 +500,7 @@
   border: none !important;
 }
 .c-gq-list {
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 .z-space-h {
   height: 0.5rem;
@@ -438,11 +516,66 @@
   width: 18.75rem;
   background-color: #fff;
 }
-.scrollWrapperT {
+.xq-c-sign {
   position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 50px;
-  overflow: hidden;
+  bottom: 0;
+  width: 18.75rem;
+  height: 2.5rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.z-p-follow {
+  width: 4.75rem;
+  height: 2.5rem;
+  font-size: 0.7rem;
+  background-color: #fff;
+  position: relative;
+}
+.z-p-follow .z-p-f {
+  margin: auto;
+  color: #646464;
+  line-height: 1rem;
+  font-size: 0.6rem;
+  font-weight: bold;
+  text-align: center;
+}
+.z-p-star {
+  width: 100%;
+  height: 1.5rem;
+  background: url("../img/hasAttention.png") no-repeat center;
+  background-size: 1.25rem 1.25rem;
+}
+.startActive {
+  background: url("../img/attentionN.png") no-repeat center;
+  background-size: 1.25rem 1.25rem;
+}
+.z-p-phone {
+  width: 14rem;
+  height: 2.5rem;
+  background-color: #2fcaa7;
+  line-height: 2.5rem;
+  text-align: center;
+  z-index: 99;
+}
+.z-p-phone a {
+  color: #fff;
+  font-size: 0.8rem;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.z-x-sp-com {
+  color: #646464;
+}
+.show {
+  display: none;
 }

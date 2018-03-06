@@ -108,11 +108,10 @@ public class GoodsController extends MyBaseController {
     @RequestMapping(value = "/getGoods" ,method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
     public String getGoods(@RequestBody String json){
         try{
-            GoodsVO goodsVO1 = new GoodsVO();
             //获取商品信息
             GoodsVO goodsVO = getFormJSON(json,GoodsVO.class);
-            goodsVO1 = goodsService.getGoods(goodsVO);
-            return super.getResultJSONStr(true, goodsVO1, "");
+            GoodsVO goodsVO1 = goodsService.getGoods(goodsVO);
+            return super.getResultJSONStr(true, goodsVO1, null);
         }catch(Exception e){
             log.error("[goods][getGoods] Exception:{}" , e);
             return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
@@ -125,13 +124,12 @@ public class GoodsController extends MyBaseController {
     @RequestMapping(value = "/getGoodsPage",method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
     public String getGoodsPage(@RequestBody String json){
         try{
-            PageDTO<GoodsVO> page = new PageDTO<>();
             GoodsDTO dto = getFormJSON(json,GoodsDTO.class);
             PageRequest pageRequest = genPageRequest(dto);
             //获取商品信息
             GoodsVO goodsVO = new GoodsVO();
             BeanUtil.copyPropertiesIgnoreNullFilds(dto,goodsVO);
-            page = goodsService.searchGoodsPage(goodsVO,pageRequest);
+            PageDTO<GoodsVO> page = goodsService.searchGoodsPage(goodsVO,pageRequest);
             return super.getResultJSONStr(true, page, "");
         }catch(Exception e){
             log.error("[goods][getGoodsPage] Exception:{}" , e);
@@ -157,18 +155,6 @@ public class GoodsController extends MyBaseController {
         }
     }
 
-    /**
-     * 批量删除商品信息
-     */
-    @RequestMapping(value = "/test",method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
-    public String test(@RequestBody String json){
-        try{
-            goodsService.searchGoodsPage(new GoodsVO(),null);
-            return super.getResultJSONStr(true, null, "");
-        }catch(Exception e){
-            log.error("[goods][test] Exception:{}" , e);
-            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
-        }
-    }
+
 
 }

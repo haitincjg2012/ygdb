@@ -17,4 +17,25 @@ public class UserOrgImageInfoVO {
      */
     private Integer sort;
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
+
+    @Override
+    public String toString(){
+        return super.toString();
+    }
+
 }

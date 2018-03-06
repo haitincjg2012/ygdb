@@ -2,10 +2,10 @@ package com.apec.framework.base;
 
 import com.alibaba.fastjson.JSONObject;
 import com.apec.framework.common.Constants;
-import com.apec.framework.common.util.HttpRequestUtil;
-import com.apec.framework.common.util.JsonUtil;
-import com.apec.framework.common.util.JssbUtil;
-import com.apec.framework.common.util.StringUtil;
+import com.apec.framework.common.util.AbstractHttpRequestUtil;
+import com.apec.framework.common.util.BaseJsonUtil;
+import com.apec.framework.common.util.AbstractJssbUtil;
+import com.apec.framework.common.util.BaseStringUtil;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,10 +21,13 @@ import java.util.Map;
  * 内容摘要：抽象请求类,用于处理页面传递过来的request
  * 完成日期：
  * 编码作者：
+ * @author xxx
  */
 public abstract class AbstractRequestService
 {
     private static Logger log = Logger.getLogger( AbstractRequestService.class );
+
+    private final String FIRST_ROLE_TYPE = "1";
 
     /**
      * 前置空方法,扩展类实现
@@ -49,7 +52,7 @@ public abstract class AbstractRequestService
     protected Map<String, Object> parseRequestAttribute(HttpServletRequest request)
     {
         // 取出所有参数
-        Map<String, Object> requestAttrMap = new HashMap<>();
+        Map<String, Object> requestAttrMap = new HashMap<>(16);
         try
         {
             Enumeration<String> paramNames = request.getAttributeNames();
@@ -122,8 +125,10 @@ public abstract class AbstractRequestService
     {
         //表单方式请求
         Map<String, String[]> parameterMap = request.getParameterMap();
-        Map<String, Object> uriMap = new HashMap<>();// uri后面的参数
-        String requestJson = null;// 流数据，此处数据格式是json
+        // uri后面的参数
+        Map<String, Object> uriMap = new HashMap<>(16);
+        // 流数据，此处数据格式是json
+        String requestJson = null;
         if(null != parameterMap && !parameterMap.isEmpty())
         {
             for(Map.Entry<String, String[]> entry : parameterMap.entrySet())
@@ -131,8 +136,9 @@ public abstract class AbstractRequestService
                 String key = entry.getKey();
                 String[] value = entry.getValue();
                 if(null == requestJson && null != key && key.startsWith( "{" ) && key
-                    .endsWith( "}" ))// 判断官方经过转换的流式json
+                    .endsWith( "}" ))
                 {
+                    // 判断官方经过转换的流式json
                     requestJson = key;
                 }
                 else
@@ -152,7 +158,8 @@ public abstract class AbstractRequestService
         // 纯json请求处理
         if(Constants.APPLICATION_JSON.equalsIgnoreCase( request.getContentType() ))
         {
-            requestJson = HttpRequestUtil.getPostJSONData( request );//获取流数据
+            //获取流数据
+            requestJson = AbstractHttpRequestUtil.getPostJSONData( request );
             log.info( "流数据JSON格式：" + requestJson );
         }
         Map<String, Object> attrMap = parseRequestAttribute( request );
@@ -161,31 +168,30 @@ public abstract class AbstractRequestService
         if(null!=attrMap){
         	Object obj = attrMap.get(Constants.USER_INFO);
         	if(null!=obj){
-        		JSONObject json = JsonUtil.parseObject(obj.toString());
+        		JSONObject json = BaseJsonUtil.parseObject(obj.toString());
         		String roleType = json.getString("roleType");
-        		if("1".equals(roleType)){
+        		if(FIRST_ROLE_TYPE.equals(roleType)){
         			if(null==requestJson||com.apec.framework.common.StringUtil.isEmpty(requestJson)){
-        				Map<String,String> orgMap = new HashMap<String,String>();
+        				Map<String,String> orgMap = new HashMap<>(16);
         				orgMap.put("orgCode", json.getString("orgCode"));
-        				requestJson = JsonUtil.toJSONString( orgMap );
+        				requestJson = BaseJsonUtil.toJSONString( orgMap );
         			}else{
-        				JSONObject tem = JsonUtil.parseObject(requestJson);
+        				JSONObject tem = BaseJsonUtil.parseObject(requestJson);
         				String orgCode = tem.getString("orgCode");
         				if(null==orgCode || com.apec.framework.common.StringUtil.isEmpty(orgCode)){
         					tem.put("orgCode", json.getString("orgCode"));
         				}
-        				requestJson = JsonUtil.toJSONString( tem );
+        				requestJson = BaseJsonUtil.toJSONString( tem );
         			}
         		}
         	}
         }
         
-        String pageJson = JssbUtil.assemblRequestJSON( requestJson, JsonUtil.toJSONString( uriMap ),
-                                                       JsonUtil.toJSONString( attrMap ) );
+        String pageJson = AbstractJssbUtil.assemblRequestJSON( requestJson, BaseJsonUtil.toJSONString( uriMap ),
+                                                       BaseJsonUtil.toJSONString( attrMap ) );
         attrMap = null;
         uriMap = null;
         parameterMap = null;
-        // log.info(pageJson);
         return pageJson;
     }
 
@@ -195,11 +201,11 @@ public abstract class AbstractRequestService
      * <pre>
      * 举例：
      * </pre>
-     * @param request
-     * @return
-     * @throws IOException
+     * @param request request
+     * @return byte[]
+     * @throws IOException io异常
      */
-    public static byte[] getRequestPostBytes(HttpServletRequest request)
+    private static byte[] getRequestPostBytes(HttpServletRequest request)
         throws IOException
     {
         int contentLength = request.getContentLength();
@@ -207,7 +213,7 @@ public abstract class AbstractRequestService
         {
             return null;
         }
-        byte buffer[] = new byte[contentLength];
+        byte[] buffer = new byte[contentLength];
         for(int i = 0; i < contentLength; )
         {
 
@@ -227,40 +233,38 @@ public abstract class AbstractRequestService
      * <pre>
      * 举例：
      * </pre>
-     * @param request
-     * @return
-     * @throws IOException
+     * @param request request
+     * @return String
      */
     public static String getRequestPostStr(HttpServletRequest request)
     {
         try
         {
-            byte buffer[] = getRequestPostBytes( request );
+            byte[] buffer = getRequestPostBytes( request );
             String charEncoding = request.getCharacterEncoding();
             if(charEncoding == null)
             {
                 charEncoding = "UTF-8";
             }
-            return new String( buffer, charEncoding );
+            if(buffer != null){
+                return new String( buffer, charEncoding );
+            }
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
-
         return null;
     }
 
     /**
      * 取出分页表起始页页码
-     * @return 起始页页码
+     * @return int 起始页页码
      */
     protected int getPageNum()
     {
-        String pageNum = null/*getParameter( Constants.PAGE_NUM )*/;
-        pageNum = Constants.DEFAULT_RANGESTART  ;// (StringUtil.isInvalidStr( pageNum ) || "".equals( pageNum )) ? Constants.DEFAULT_RANGESTART : pageNum;
-        int rangeStart = StringUtil.convertStringToInt( pageNum );
-        return rangeStart;
+        String pageNum = Constants.DEFAULT_RANGESTART  ;
+        return BaseStringUtil.convertStringToInt( pageNum );
     }
 
     /**
@@ -269,10 +273,8 @@ public abstract class AbstractRequestService
      */
     protected int getPageSize()
     {
-        String pageSize = null/*getParameter( Constants.PAGE_SIZE )*/;
-        pageSize = Constants.DEFAULT_FETCHSIZE;
-        int fetchSize = StringUtil.convertStringToInt( pageSize );
-        return fetchSize;
+        String pageSize = Constants.DEFAULT_FETCHSIZE;
+        return BaseStringUtil.convertStringToInt( pageSize );
     }
 
     
@@ -285,7 +287,8 @@ public abstract class AbstractRequestService
    {
        //表单方式请求
        Map<String, String[]> parameterMap = request.getParameterMap();
-       Map<String, Object> uriMap = new HashMap<String, Object>();// uri后面的参数
+       // uri后面的参数
+       Map<String, Object> uriMap = new HashMap<>(16);
        if(null != parameterMap && !parameterMap.isEmpty())
        {
            for(Map.Entry<String, String[]> entry : parameterMap.entrySet())

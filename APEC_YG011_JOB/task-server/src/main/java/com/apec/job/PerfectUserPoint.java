@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * Created by hmy on 2017/9/28.
+ * @author hmy
  */
 @Component
 public class PerfectUserPoint implements SimpleJob {

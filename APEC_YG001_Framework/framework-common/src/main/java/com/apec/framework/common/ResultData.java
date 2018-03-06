@@ -1,16 +1,3 @@
-/**
- * 版权所有：版权所有(C) 2016，中农网 
- * 文件编号：BL_PU6030301_ResultData
- * 文件名称：ResultData.java 
- * 系统编号：
- * 系统名称：
- * 组件编号：
- * 组件名称：
- * 设计作者：
- * 完成日期：2016-07-14
- * 设计文档：
- * 内容摘要：json服务后台返回实体
- */
 package com.apec.framework.common;
 
 import java.io.Serializable;
@@ -21,20 +8,36 @@ import java.io.Serializable;
  * 内容摘要：json服务返回实体
  * 完成日期：2016-07-14
  * 编码作者：
+ * @author xxx
  */
 public class ResultData<T> implements Serializable
 {
     private static final long serialVersionUID = 8450400755456555766L;
 
-    private boolean succeed = true;// 结果: 成功或失败(true,false)
+    /**
+     * // 结果: 成功或失败(true,false)
+     */
+    private boolean succeed = true;
 
-    private String errorCode = "";// 错误码
+    /**
+     * // 错误码
+     */
+    private String errorCode = "";
 
-    private String errorMsg = "";// 错误信息
+    /**
+     * // 错误信息
+     */
+    private String errorMsg = "";
 
-    private T data = null;// 业务数据实体
+    /**
+     * // 业务数据实体
+     */
+    private T data = null;
 
-    private String repeatAct; //返回前端生成的防止重复提交唯一值
+    /**
+     * //返回前端生成的防止重复提交唯一值
+     */
+    private String repeatAct;
 
     public String getErrorCode()
     {
@@ -48,7 +51,7 @@ public class ResultData<T> implements Serializable
 
     /**
      * 获取错误信息
-     * @return
+     * @return errorMsg 错误信息
      */
     public String getErrorMsg()
     {
@@ -66,7 +69,7 @@ public class ResultData<T> implements Serializable
 
     /**
      * 获取业务处理结果:成功或失败
-     * @return
+     * @return boolean
      */
     public boolean isSucceed()
     {
@@ -75,7 +78,6 @@ public class ResultData<T> implements Serializable
 
     /**
      * 设置业务处理结果:成功或失败
-     * @return
      */
     public void setSucceed(boolean succeed)
     {
@@ -84,7 +86,7 @@ public class ResultData<T> implements Serializable
 
     /**
      * 获取业务数据实体
-     * @return
+     * @return T
      */
     public T getData()
     {
@@ -93,7 +95,6 @@ public class ResultData<T> implements Serializable
 
     /**
      * 设置业务数据实体
-     * @return
      */
     public void setData(T data)
     {

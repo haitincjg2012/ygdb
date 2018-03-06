@@ -7,18 +7,18 @@
   opacity: 0.6;
   position: fixed;
   top: 0;
-  bottom: 50px;
+  bottom: 0;
   left: 0;
   right: 0;
   z-index: 990;
 }
 .lotteryWin {
-  width: 15rem;
-  height: 22.05rem;
-  background: url("../img/scorebg.png") no-repeat top center;
+  width: 15.55rem;
+  height: 24.675rem;
+  background:url("../img/scorebg.png") no-repeat top center;
   background-size: contain;
   position: fixed;
-  top: 50%;
+  top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 995;
@@ -28,20 +28,19 @@
   font-style: normal;
   background: url("../img/closeIcon.png") no-repeat;
   background-size: contain;
-  float: right;
   width: 1.925rem;
   height: 1.925rem;
   text-align: center;
   position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  top:0;
+  right: 0;
 }
 .lotteryWin .lotteryTit {
   text-align: center;
   font-size: 0.8rem;
-  color: #ECAB37;
-  margin-top: 3.4rem;
+  color: #fff;
+  margin-top: 9rem;
+  margin-bottom: 2rem;
   letter-spacing: 0.075rem;
   line-height: 0.8rem;
 }
@@ -102,5 +101,10 @@
   transform: rotate3d(0, 1, 0, -180deg);
 }
 .lotteryWin .lotterMain .card.flipped > .face.back {
+  transform: rotate3d(0, 1, 0, 0deg);
+  box-shadow: 0px 0px 4px 4px #ffcc41;
+}
+
+.lotteryWin .lotterMain .card.flip > .face.back {
   transform: rotate3d(0, 1, 0, 0deg);
 }

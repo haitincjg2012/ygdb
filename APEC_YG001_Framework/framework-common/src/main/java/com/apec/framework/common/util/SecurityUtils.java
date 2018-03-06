@@ -17,23 +17,14 @@ import org.slf4j.LoggerFactory;
  */
 public final class SecurityUtils {
 
-    static Logger logger = LoggerFactory.getLogger(SecurityUtils.class);
-
-    private static final DateFormat df = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.SHORT);
-
-    private static final Base64 b64 = new Base64();
-
-    /**
-     * 没有字母i和o，防止混淆
-     */
-    private static final String randomChars = "abcdefghjklmnpqrstuvwxyz";
+    private static Logger logger = LoggerFactory.getLogger(SecurityUtils.class);
 
     /**
      *  Home读取salt文件内容，没有则返回默认值.
      *
      * 读取后与Default Salt进行blend操作进一步混淆
      *
-     * @return
+     * @return String
      */
     public static String readSaltFile() {
         String salt = "YiGuoRock!";
@@ -57,7 +48,7 @@ public final class SecurityUtils {
      * Identity can be null, will generate a random alphanumeric instead.
      *
      * @param identity can be null
-     * @return
+     * @return String
      */
     public static String getSalt(String identity) {
         DateFormat dfnew = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.SHORT);
@@ -71,9 +62,9 @@ public final class SecurityUtils {
     /**
      * Stored passphrase
      *
-     * @param salt
-     * @param userPassword
-     * @return
+     * @param salt salt
+     * @param userPassword userPassword
+     * @return String
      */
     public static String getPassphrase(String salt, String userPassword) {
         return DigestUtils.sha1Hex(blend(salt.getBytes(), userPassword.getBytes()));
@@ -94,13 +85,13 @@ public final class SecurityUtils {
         int ai = 0;
         int bi = 0;
         for (int i = 0; i < result.length; i++) {
-            if (ai == a.length || bi < ai && bi < b.length) {
+            boolean flag = ai == a.length || bi < ai && bi < b.length;
+            if (flag) {
                 result[i] = b[bi++];
                 continue;
             }
             if (bi == b.length || ai <= bi) {
                 result[i] = a[ai++];
-                continue;
             }
         }
         return result;

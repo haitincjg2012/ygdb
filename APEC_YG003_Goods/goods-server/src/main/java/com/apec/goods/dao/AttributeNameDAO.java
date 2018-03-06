@@ -10,21 +10,24 @@ import java.util.List;
 
 /**
  * Created by hmy on 2017/7/10.
+ * @author hmy
  */
 public interface AttributeNameDAO extends BaseDAO<AttributeName,Long> {
 
     /**
      * 删除对象
-     * @param attributeId
+     * @param attributeId attributeId
+     * @param  userId userId
      */
     @Modifying(clearAutomatically = true)
     @Query(value = " update attribute_name set enable_flag = 'N',last_update_date = now(),last_update_by = :userId where id = :attributeId and  enable_flag = 'Y'",nativeQuery = true)
     void removeAttributeName(@Param("attributeId") Long attributeId,@Param("userId") String userId);
 
     /**
-     * 批量删除attributeName
-     * @param ids
-     * @return
+     * * 批量删除attributeName
+     * @param  ids ids
+     * @param userId userId
+     * @return int
      */
     @Modifying(clearAutomatically = true)
     @Query(value = "update attribute_name set enable_flag = 'N',last_update_date = now(),last_update_by = :userId where id in :ids and enable_flag = 'Y'",nativeQuery = true)

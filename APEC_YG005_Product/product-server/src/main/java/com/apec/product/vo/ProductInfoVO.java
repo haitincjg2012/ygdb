@@ -3,7 +3,7 @@ package com.apec.product.vo;
 import com.apec.framework.common.enumtype.ProductType;
 import com.apec.framework.common.enumtype.UserType;
 import com.apec.framework.dto.BaseVO;
-import com.apec.framework.rockmq.vo.IMQBody;
+import com.apec.framework.rockmq.vo.IMqBody;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +19,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductInfoVO extends BaseVO<Long> implements IMQBody {
+public class ProductInfoVO extends BaseVO<Long> implements IMqBody {
 
     /**
      * 用户ID
@@ -57,9 +57,19 @@ public class ProductInfoVO extends BaseVO<Long> implements IMQBody {
     private UserType userType;
 
     /**
+     * 用户类型 冗余
+     */
+    private String userTypeName;
+
+    /**
      * 产品类型
      */
     private ProductType productType;
+
+    /**
+     * 产品类型
+     */
+    private String productTypeName;
 
     private Long skuId;
 
@@ -123,7 +133,7 @@ public class ProductInfoVO extends BaseVO<Long> implements IMQBody {
      * 7天 15天 30 天， 每晚凌晨三点 进行有效期变更
      * 权重 2
      */
-    private int timeout;
+    private Integer timeout;
 
     /**
      * 所在地区
@@ -157,7 +167,6 @@ public class ProductInfoVO extends BaseVO<Long> implements IMQBody {
 
     /**
      * 经度
-     * @return
      */
     private BigDecimal getLongitude;
 
@@ -175,18 +184,18 @@ public class ProductInfoVO extends BaseVO<Long> implements IMQBody {
      * 浏览人数
      * 权重 1
      */
-    private int viewNum;
+    private Integer viewNum;
 
     /**
      * 联系人数
      * 权重 1
      */
-    private int telNum;
+    private Integer telNum;
 
     /**
      * 收藏数
      */
-    private int favoriteCount;
+    private Integer favoriteCount;
 
     /**
      * 需求 属性
@@ -197,5 +206,10 @@ public class ProductInfoVO extends BaseVO<Long> implements IMQBody {
      * 需求 属性
      */
     private List<ProductImageVO> productImages;
+
+    /**
+     * 标签信息
+     */
+    private List<ProductTagsVO> productTags;
 
 }

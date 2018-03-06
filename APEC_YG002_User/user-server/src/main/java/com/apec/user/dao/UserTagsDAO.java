@@ -15,7 +15,9 @@ public interface UserTagsDAO  extends BaseDAO<UserTags, Long> {
 
     /**
      * 查找组织账户标签
-     * @return List
+     * @param userOrgId 组织id
+     * @param enableFlag 状态码
+     * @return 标签
      */
      List<UserTags> findByUserOrgIdAndEnableFlagOrderBySort(Long userOrgId,EnableFlag enableFlag);
 }

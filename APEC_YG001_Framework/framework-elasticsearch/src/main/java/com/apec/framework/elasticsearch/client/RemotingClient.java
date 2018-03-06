@@ -20,7 +20,7 @@ public class RemotingClient   {
      public static void main(String [] args) throws  Exception{
 
          RestClient restClient = RestClient.builder(
-                 new HttpHost("192.168.7.22", 9200),
+
                  new HttpHost("192.168.7.21", 9200)).build();
 
          Response response = restClient.performRequest("GET", "/",
@@ -41,41 +41,7 @@ public class RemotingClient   {
 
          System.out.println(Runtime.getRuntime().availableProcessors());
 //
-//         int numRequests = 25;
-//         final CountDownLatch latch = new CountDownLatch(numRequests);
 //
-//         for (int i = 0; i < numRequests; i++) {
-//             HttpEntity entitys = new NStringEntity(
-//                     "{\n" +
-//                             "    \"user\" : \"kim\",\n" +
-//                             "    \"post_date\" : \"2009-11-15T14:12:12\",\n" +
-//                             "    \"message\" : \"trying out Elasticsearch \"\n" +
-//                             "}", ContentType.APPLICATION_JSON);
-//             restClient.performRequestAsync(
-//                     "PUT",
-//                     "/blog/post/" + i,
-//                     Collections.<String, String>emptyMap(),
-//                     //assume that the documents are stored in an entities array
-//                     entitys,
-//                     new ResponseListener() {
-//                         @Override
-//                         public void onSuccess(eslistener response) {
-//                             System.out.println("===========================");
-//                             System.out.println(response);
-//                             latch.countDown();
-//                         }
-//
-//                         @Override
-//                         public void onFailure(Exception exception) {
-//                             System.out.println("=========*********======");
-//                             System.out.println(response);
-//                             latch.countDown();
-//                         }
-//                     }
-//             );
-//         }
-//
-//         latch.await();
          restClient.close();
          System.out.println("END");
      }

@@ -5,41 +5,63 @@ package com.apec.framework.elasticsearch.producer;
  *
  * @author yirde  2017/7/10.
  */
-public interface ESProducerConstants {
+public interface EsProducerConstants {
 
-    //Client 操作类型
+    /**
+     * //Client 操作类型
+     */
     String OPREATION_GET = "GET";
 
-    // Post
+    /**
+     * // Post
+     */
     String OPREATION_POST = "POST";
 
-    // Put
+    /**
+     * // Put
+     */
     String OPREATION_PUT = "PUT";
 
-    //Post update
+    /**
+     * //Post update
+     */
     String OPREATION_POST_UPDATE = "/_update";
 
-    //mapping
+    /**
+     * //mapping
+     */
     String OPREATION_MAPPING = "/_mapping";
 
-    //alias
+    /**
+     * //alias
+     */
     String OPREATION_ALIAS = "/_alias";
 
     String OPREATION_ALIASES = "/_aliases";
 
-    //Delete
+    /**
+     * //Delete
+     */
     String OPREATION_DELETE = "DELETE";
 
-    //HEAD 检索文档是否存在
+    /**
+     * //HEAD 检索文档是否存在
+     */
     String OPREATION_HEAD = "HEAD";
 
-    //Null
+    /**
+     * //Null
+     */
     String JSON_NULL = "{}";
 
-    // 响应的状态码
+    /**
+     * // 响应的状态码
+     */
     int  RESPONSE_CODE = 200;
 
-    //Buffer Size 1KB
+    /**
+     * //Buffer Size 1KB
+     */
     int  BUFFER_SIZE = 1024;
 
     /**

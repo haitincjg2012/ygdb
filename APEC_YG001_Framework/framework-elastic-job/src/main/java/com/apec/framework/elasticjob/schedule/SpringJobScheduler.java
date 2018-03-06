@@ -9,6 +9,9 @@ import com.dangdang.ddframe.job.reg.base.CoordinatorRegistryCenter;
 import com.google.common.base.Optional;
 import com.apec.framework.elasticjob.util.AopTargetUtils;
 
+/**
+ * @author xxx
+ */
 public class SpringJobScheduler  extends JobScheduler{
    
    private final ElasticJob elasticJob;

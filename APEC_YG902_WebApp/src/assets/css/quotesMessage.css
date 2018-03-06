@@ -1,0 +1,194 @@
+.c-quotes-message .c-q-m-head {
+  width: 17.5rem;
+  height: 2.2rem;
+  position: relative;
+  z-index: 99;
+  line-height: 2.2rem;
+  padding: 0 0.625rem;
+  background-color: #f4f4f4;
+  margin: 0 auto;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-quotes-message .c-q-m-h-back {
+  width: 1rem;
+  height: 100%;
+}
+.c-quotes-message .c-q-m-h-back img {
+  width: 0.55rem;
+  height: 0.975rem;
+}
+.c-quotes-message .c-q-m-h-title {
+  width: 15.5rem;
+  font-size: 0.85rem;
+  color: #222222;
+  text-align: center;
+}
+.c-quotes-message .c-q-m-h-delete {
+  position: relative;
+  width: 1rem;
+  height: 100%;
+}
+.c-quotes-message .c-q-m-h-delete img {
+  width: 0.95rem;
+  height: 1.1rem;
+}
+.c-quotes-message .c-q-m-style {
+  width: 17.5rem;
+  height: 4.1rem;
+  padding: 0 0.625rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-quotes-message .c-q-m-c-portrait {
+  width: 2.95rem;
+  padding-top: 0.75rem;
+  height: 3.35rem;
+}
+.c-quotes-message .c-q-m-c-portrait img {
+  width: 2.35rem;
+  height: 2.35rem;
+}
+.c-quotes-message .c-q-m-c-operation {
+  width: 11.3rem;
+  padding: 0.75rem 0 0.5rem;
+  height: 2.85rem;
+}
+.c-quotes-message .c-q-m-c-o-Info {
+  width: 11.3rem;
+  height: 2.85rem;
+}
+.c-quotes-message .c-q-m-c-o-i-name {
+  height: 0.9rem;
+  line-height: 0.9rem;
+  font-size: 0.75rem;
+  color: #323232;
+}
+.c-quotes-message .c-q-m-c-o-i-text {
+  height: 0.9rem;
+  line-height: 0.9rem;
+  font-size: 0.75rem;
+  color: #646464;
+}
+.c-quotes-message .c-q-m-c-o-i-time {
+  height: 0.9rem;
+  line-height: 0.9rem;
+  font-size: 0.6rem;
+  color: #646464;
+}
+.c-quotes-message .c-q-m-c-title {
+  width: 3.25rem;
+  height: 4.1rem;
+  line-height: 4.1rem;
+  font-size: 0.75rem;
+  color: #323232;
+}
+.c-quotes-message .c-q-m-c-title img {
+  width: 3.25rem;
+  height: 3.25rem;
+  vertical-align: middle;
+}
+.c-quotes-message .c-q-m-c-line {
+  margin-left: 3.575rem;
+  height: 0.05rem;
+  width: 15.175rem;
+  background-color: #f4f4f4;
+}
+.c-quotes-message .button-tip {
+  height: 2rem;
+  line-height: 2rem;
+  padding-bottom: 2.5rem;
+  font-size: 0.75rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-quotes-message .c-z-pullup {
+  height: 2rem;
+  width: 7rem;
+  background: url("../img/pull-icon.png") 50% 0 no-repeat;
+  background-size: 2rem 4rem;
+  -webkit-transition-property: -webkit-transform;
+  -webkit-transition-duration: 250ms;
+}
+.c-quotes-message .flip .c-z-pullup {
+  -webkit-transform: rotate(-180deg) translateZ(0);
+}
+.c-quotes-message .loading .c-z-pullup {
+  background-position: 50% 100%;
+  -webkit-transform: rotate(0deg) translateZ(0);
+  -webkit-transition-duration: 0ms;
+  animation: loading;
+  -webkit-animation: loading;
+  /* Safari 和 Chrome */
+  -webkit-animation-duration: 2s;
+  animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+  /* Safari 和 Chrome */
+  -webkit-animation-timing-function: linear;
+}
+@keyframes loading {
+  from {
+    transform: rotate(0deg) translateZ(0);
+  }
+  to {
+    transform: rotate(360deg) translateZ(0);
+  }
+}
+@-moz-keyframes loading {
+  /* Firefox */
+  from {
+    -moz-transform: rotate(0deg) translateZ(0);
+  }
+  to {
+    -moz-transform: rotate(360deg) translateZ(0);
+  }
+}
+@-webkit-keyframes loading {
+  /* Safari and Chrome */
+  from {
+    -webkit-transform: rotate(0deg) translateZ(0);
+  }
+  to {
+    -webkit-transform: rotate(360deg) translateZ(0);
+  }
+}
+.c-quotes-message .showVisable {
+  visibility: hidden;
+}
+.c-quotes-message .c-q-m-content:nth-last-child(2) .c-q-m-c-line {
+  display: none;
+}
+.c-quotes-message .q-m-Scroll {
+  position: fixed;
+  top: 2.2rem;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}

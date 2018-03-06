@@ -4,10 +4,9 @@ import com.apec.framework.common.enums.Realm;
 import com.apec.framework.common.enums.Source;
 import com.apec.framework.common.enumtype.*;
 import com.apec.framework.dto.BaseDTO;
-import com.apec.user.model.UserAuthRecord;
-import com.apec.user.model.UserLoginRecord;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,6 +16,16 @@ import java.util.List;
  */
 @Data
 public class UserDTO extends BaseDTO {
+
+    /**
+     * 开始时间
+     */
+    private Date startDate;
+
+    /**
+     * 结束时间
+     */
+    private Date endDate;
 
     /**
      * 用户Id
@@ -86,17 +95,17 @@ public class UserDTO extends BaseDTO {
     /**
      * 实体ID
      */
-    private String  referralId;//实体ID
+    private String  referralId;
 
     /**
      * 是否已经注册奖励
      */
-    private boolean registryRewarded;
+    private Boolean registryRewarded;
 
     /**
      * 是否已经推荐奖励
      */
-    private boolean referralRewarded;
+    private Boolean referralRewarded;
 
     /**
      * 所在地区
@@ -117,21 +126,6 @@ public class UserDTO extends BaseDTO {
      * 工作年限
      */
     private String workOfYear;
-
-    /**
-     * 用户登录记录
-     */
-    private List<UserLoginRecord> loginRecords;
-
-    /**
-     * 用户积分记录
-    private List<UserPointRecord> userPointRecords;
-
-
-    /**
-     * 用户审核记录记录
-     */
-    private List<UserAuthRecord> userAuthRecords;
 
     /**
      * 省
@@ -168,6 +162,11 @@ public class UserDTO extends BaseDTO {
      * 开关，筛选条件，开为Y
      */
     private String pushFlag;
+
+    /**
+     * 用户id
+     */
+    private List<Long> userIds;
 
 
 }

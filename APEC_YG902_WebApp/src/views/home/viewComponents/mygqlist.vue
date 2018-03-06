@@ -4,7 +4,7 @@
     <div class="my-bread-com-f"
          :data-path = "item.path"
          :data-id = "item.id"
-         @click="xq">
+         @click="xq(item.id)">
       <div class="primaryMain clearfix" :data-id = "item.id">
         <div class="pic-com" :data-id = "item.id">
           <img :src ="item.img" :data-id = "item.id"/>
@@ -91,12 +91,13 @@
       item:""
     },
     methods:{
-      xq(event){
+      xq(id){
           var flag = this.item.Flag;
           var orgId = this.item.orgId;
         var userId = this.item.userId;
         var id = this.item.id;
-        this.$router.push({path: '/detail/' + id});
+        this.$router.push({path: 'detail',query:{id:id}});
+//        this.$router.push({path: '/detail/' + id});
 //        this.$router.push({name:"xqframe",query:{flag:flag,id:id,orgId:orgId,userId:userId}})
 //        var evt = event || window.event;
 //        var target = evt.toElement || evt.srcElement;

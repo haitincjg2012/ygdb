@@ -19,7 +19,7 @@ public interface ParamTemplateDAO extends BaseDAO<ParamTemplate, Long>{
 	 * @return String
 	 * */
 	@Query(value = "select param_value from param_template where param_key=:paramKey", nativeQuery = true)
-	public String findByParamKey(@Param("paramKey") String paramKey);
+	String findByParamKey(@Param("paramKey") String paramKey);
 	
 	/**
 	 * 根据id更新参数
@@ -30,6 +30,6 @@ public interface ParamTemplateDAO extends BaseDAO<ParamTemplate, Long>{
 	 * */
 	@Modifying
 	@Query(value = "update param_template set param_key=:paramKey,paramValue=:paramValue,remark=:remark where id=:id", nativeQuery = true)
-	public void updateById(@Param("paramKey")String paramKey, @Param("paramValue")String paramValue, 
+	void updateById(@Param("paramKey")String paramKey, @Param("paramValue")String paramValue,
 			@Param("remark")String remark, @Param("id")Long id);
 }

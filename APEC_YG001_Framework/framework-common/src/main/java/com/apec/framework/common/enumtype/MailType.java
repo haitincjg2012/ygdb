@@ -2,11 +2,28 @@ package com.apec.framework.common.enumtype;
 
 /**
  * Created by wubi on 2017/8/4.
+ * @author wubi
  */
 public enum MailType {
-    TEXT,//文本方式
-    HTML,//html方式
-    FREEMARKER,//freemarker方式
-    THYMELEAF;//yml方式
+
+    /**
+     * //文本方式
+     */
+    TEXT,
+
+    /**
+     * //html方式
+     */
+    HTML,
+
+    /**
+     * //freemarker方式
+     */
+    FREEMARKER,
+
+    /**
+     * //yml方式
+     */
+    THYMELEAF
 
 }

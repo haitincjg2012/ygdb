@@ -1,34 +1,52 @@
 package com.apec.user.web;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.apec.framework.cache.CacheHashService;
 import com.apec.framework.cache.CacheService;
-import com.apec.framework.common.*;
+import com.apec.framework.common.Constants;
+import com.apec.framework.common.ErrorCodeConst;
+import com.apec.framework.common.PageDTO;
+import com.apec.framework.common.PageJSON;
+import com.apec.framework.common.ResultData;
 import com.apec.framework.common.enums.Enums;
 import com.apec.framework.common.enums.Source;
+import com.apec.framework.common.excel.ExcelExportUtils;
+import com.apec.framework.common.excel.XlsVO;
 import com.apec.framework.common.exception.BusinessException;
+import com.apec.framework.common.util.BaseJsonUtil;
 import com.apec.framework.common.util.BeanUtil;
-import com.apec.framework.common.util.JsonUtil;
+import com.apec.framework.common.util.FileUtils;
 import com.apec.framework.common.util.ValidateUtil;
-import com.apec.framework.dto.ImageUploadVO;
+import com.apec.framework.ftp.service.FtpService;
+import com.apec.framework.log.InjectLogger;
+import com.apec.user.dto.UserAuthRecordDTO;
 import com.apec.user.dto.UserDTO;
-import com.apec.user.model.UserTags;
 import com.apec.user.service.UserService;
-import com.apec.user.vo.*;
-import org.apache.commons.lang.math.NumberUtils;
+import com.apec.user.vo.QuotationUser;
+import com.apec.user.vo.UserAllInfo;
+import com.apec.user.vo.UserAuthRecordVO;
+import com.apec.user.vo.UserAuthRecordViewVO;
+import com.apec.user.vo.UserLoginVO;
+import com.apec.user.vo.UserOrgClientDTO;
+import com.apec.user.vo.UserOrgClientVO;
+import com.apec.user.vo.UserVO;
+import com.apec.user.vo.UserViewVO;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.*;
-import com.apec.framework.log.InjectLogger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 
 /**
@@ -50,7 +68,16 @@ public class UserController extends MyBaseController {
     private CacheService redisCacheService;
 
     @Autowired
-    private CacheHashService cacheHashService;
+    private FtpService ftpService;
+
+    @Value("${EXCELFILEPATH}")
+    String excelPath = "";
+
+    @Value("${ORG_EXCELFILEPATH}")
+    String orgExcelPath = "";
+
+    @Value("${EXCELFILE_URL}")
+    String excelUrl = "";
 
     /**
      * token超时时间
@@ -76,7 +103,7 @@ public class UserController extends MyBaseController {
             if(flag) { return super.getResultJSONStr(false, null, Constants.COMMON_MISSING_PARAMS); }
 
             //密码长度不小于6位
-            if(userVO.getPassword().length() < 6){
+            if(userVO.getPassword().length() < Integer.valueOf(Constants.PASSWORD_MIN_LENGTH)){
                 return super.getResultJSONStr(false,null, ErrorCodeConst.ERROR_PASSWORD);
             }
             //Captcha校验,一次性校验,无需两次
@@ -89,7 +116,8 @@ public class UserController extends MyBaseController {
             if(!StringUtils.equals(yzm,userVO.getVaildCode())){
                 return super.getResultJSONStr(false,null,ErrorCodeConst.ERROR_VAILDCODE);
             }
-            redisCacheService.remove(key);//去除缓存中该用户的验证码信息，更新信息
+            redisCacheService.remove(key);
+            //去除缓存中该用户的验证码信息，更新信息
 
             //Source判定
             String source = (String) pageJSON.getRequestAttrMap().get(Constants.SOURCE);
@@ -102,7 +130,7 @@ public class UserController extends MyBaseController {
             String result = userService.addNewUser(userVO,String.valueOf(getUserId(json)));
             if(StringUtils.equals(result,Constants.RETURN_SUCESS)){
                 //注册成功，自动登录
-                Map<String,String> resultMap = new HashMap<>();
+                Map<String,String> resultMap = new HashMap<>(16);
                 UserLoginVO userLoginVO = new UserLoginVO();
                 userLoginVO.setMobile(userVO.getMobile());
                 userLoginVO.setPassword(userVO.getPassword());
@@ -127,12 +155,12 @@ public class UserController extends MyBaseController {
     @RequestMapping(value = "/uploadImage", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String uploadImage(@RequestBody String json) {
         String result = Constants.SYS_ERROR;
-        Map<String,String> data = new HashMap<>();
+        Map<String,String> data = new HashMap<>(16);
         try{
             UserVO userVO = getFormJSON(json,UserVO.class);
             //判断用户是否重新上传了图片，是则保存新上传的图片路径
             if(userVO == null || StringUtils.isBlank(userVO.getImgUrl())){
-                return ErrorCodeConst.NOT_IMG;
+                return super.getResultJSONStr(true, data, ErrorCodeConst.NOT_IMG);
             }
             userVO.setId(getUserId(json));
             result = userService.updateImage(userVO,String.valueOf(getUserId(json)),data);
@@ -152,19 +180,20 @@ public class UserController extends MyBaseController {
     @RequestMapping(value = "/uploadBanner", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String uploadBanner(@RequestBody String json) {
         String result = Constants.SYS_ERROR;
-        Map<String,String> data = new HashMap<>();
+        Map<String,String> data = new HashMap<>(16);
         try{
             UserVO userVO = getFormJSON(json,UserVO.class);
             //判断用户是否重新上传了图片，是则保存新上传的图片路径
             if(userVO == null || StringUtils.isBlank(userVO.getImgUrl())){
-                return ErrorCodeConst.NOT_IMG;
+                return super.getResultJSONStr(true, data, ErrorCodeConst.NOT_IMG);
             }
             userVO.setId(getUserId(json));
             //判断用户是否重新上传了图片，是则保存新上传的图片路径
             UserOrgClientVO userOrgClientVO = new UserOrgClientVO();
             userOrgClientVO.setOrgFirstBannerUrl(userVO.getImgUrl());
             userOrgClientVO.setOrgBannerUrl(userVO.getImgUrl());
-            userVO.setUserOrgClientVO(userOrgClientVO);//用户上传banner图
+            userVO.setUserOrgClientVO(userOrgClientVO);
+            //用户上传banner图
             result = userService.updateBanner(userVO,String.valueOf(getUserId(json)),data);
 
         } catch (Exception e) {
@@ -178,13 +207,37 @@ public class UserController extends MyBaseController {
     }
 
     /**
+     * 设置二维码图片地址
+     */
+    @RequestMapping(value = "/setQrCodeUrl", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String setQrCodeUrl(@RequestBody String json) {
+        String result = Constants.SYS_ERROR;
+        Map<String,String> data = new HashMap<>(16);
+        try{
+            UserVO userVO = getFormJSON(json,UserVO.class);
+            //判断用户是否重新上传了图片，是则保存新上传的图片路径
+            if(userVO == null || StringUtils.isBlank(userVO.getQrCodeUrl())){
+                return super.getResultJSONStr(true, data, Constants.ERROR_100003);
+            }
+            userVO.setId(getUserId(json));
+            result = userService.setQrCodeUrl(userVO,String.valueOf(getUserId(json)),data);
+
+        } catch (Exception e) {
+            log.error("[User][UploadBanner] Exception：{}", e);
+        }
+        if(StringUtils.equals(result,Constants.RETURN_SUCESS)){
+            return super.getResultJSONStr(true, data, null);
+        }else{
+            return super.getResultJSONStr(false, null, result);
+        }
+    }
+
+    /**
      * 修改用户信息
-     * @param json
-     * @return
      */
     @RequestMapping(value = "/updateUserInfo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String updateUserInfo(@RequestBody String json) {
-        Map<String,String> data = new HashMap<>();
+        Map<String,String> data = new HashMap<>(16);
         try {
             //获取前端用户传来的需修改的信息
             UserVO userVO = getFormJSON(json,UserVO.class);
@@ -234,7 +287,7 @@ public class UserController extends MyBaseController {
             //参数不能为空,必须上传两张身份证证件照
             return super.getResultJSONStr(false,null,ErrorCodeConst.NOT_IMG);
         }
-        Map<String,String> data = new HashMap<>();
+        Map<String,String> data = new HashMap<>(16);
         try {
             //请求实名认证用户信息
             result = userService.userRealNameApply(authRecordVO,String.valueOf(getUserId(json)),data);
@@ -254,9 +307,8 @@ public class UserController extends MyBaseController {
      */
     @RequestMapping(value = "/pageUserRealNameRecord", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String pageUserRealNameRecord(@RequestBody String json){
-        PageDTO<UserAuthRecordViewVO> page = new PageDTO<>();
         //获取前端用户传来的实名验证相关信息
-        UserDTO dto = getFormJSON(json,UserDTO.class);
+        UserAuthRecordDTO dto = getFormJSON(json,UserAuthRecordDTO.class);
         List<Sort.Order> orders = new ArrayList<>();
         orders.add(new Sort.Order(Sort.Direction.ASC, "success"));
         orders.add(new Sort.Order(Sort.Direction.DESC, "createDate"));
@@ -265,12 +317,12 @@ public class UserController extends MyBaseController {
         if (dto.getPageNumber() > 0) {
             pageNumber = dto.getPageNumber();
         }
-        if (dto.getPageSize() > 0 && dto.getPageSize() < 1000) {
+        if (dto.getPageSize() > 0 && dto.getPageSize() < Integer.valueOf(Constants.MAX_FETCHSIZE)) {
             pageSize = dto.getPageSize();
         }
         PageRequest pageRequest = new PageRequest(pageNumber - 1, pageSize, new Sort(orders));
         try {
-            page = userService.pageUserRealNameRecord(dto,pageRequest);
+            PageDTO<UserAuthRecordViewVO> page = userService.pageUserRealNameRecord(dto,pageRequest);
             return super.getResultJSONStr(true, page, "");
         } catch (Exception e) {
             log.error("[user][pageUserRealNameRecord] Exception：{}", e);
@@ -295,7 +347,7 @@ public class UserController extends MyBaseController {
             //审批结果不为Y也不为N，有误，不能是其他结果，参数有误
             return super.getResultJSONStr(false,null,Constants.COMMON_ERROR_PARAMS);
         }
-        Map<String,String> data = new HashMap<>();
+        Map<String,String> data = new HashMap<>(16);
         try {
             result = userService.userRealNameEntrue(authRecordVO,String.valueOf(getUserId(json)),data);
         } catch (Exception e) {
@@ -320,18 +372,14 @@ public class UserController extends MyBaseController {
         if(userVO == null){
             return super.getResultJSONStr(true,null,Constants.ERROR_100003);
         }
-        //如果为前台传来的信息，form中没有用户id，将RequestAttrMap中的用户id赋予用户对象
-//        if(userVO.getId() == null || userVO.getId() == 0L){
-//            Long userId = getUserId(json);
-//            userVO.setId(userId);
-//        }
-        boolean flag = StringUtils.isBlank(userVO.getPassword()) || StringUtils.isBlank(userVO.getEntruePassword()) || StringUtils.isBlank(userVO.getVaildCode()) || StringUtils.isBlank(userVO.getMobile());
+
+        boolean flag = StringUtils.isBlank(userVO.getPassword()) || StringUtils.isBlank(userVO.getEntruePassword()) || StringUtils.isBlank(userVO.getMobile());
         if(flag){
-            //输入密码或确认密码为空，不允许通过,手机号和验证码不能为空
+            //输入密码或确认密码为空，不允许通过,手机号不能为空
             return super.getResultJSONStr(false,null,Constants.ERROR_100003);
         }
         //密码长度不小于6位
-        if(userVO.getPassword().length() < 6){
+        if(userVO.getPassword().length() < Integer.valueOf(Constants.PASSWORD_MIN_LENGTH)){
             return super.getResultJSONStr(false,null, ErrorCodeConst.ERROR_PASSWORD);
         }
         if(!StringUtils.equals(userVO.getPassword(),userVO.getEntruePassword())){
@@ -373,7 +421,7 @@ public class UserController extends MyBaseController {
             return super.getResultJSONStr(false,null,Constants.ERROR_100003);
         }
         //密码长度不小于6位
-        if(userVO.getPassword().length() < 6){
+        if(userVO.getPassword().length() < Integer.valueOf(Constants.PASSWORD_MIN_LENGTH)){
             return super.getResultJSONStr(false,null, ErrorCodeConst.ERROR_PASSWORD);
         }
         if(!StringUtils.equals(userVO.getPassword(),userVO.getEntruePassword())){
@@ -415,7 +463,7 @@ public class UserController extends MyBaseController {
             //输入手机号为空或输入验证码为空则不允许
             return super.getResultJSONStr(false,null,Constants.ERROR_100003);
         }
-        Map<String,String> resultMap = new HashMap<>();
+        Map<String,String> resultMap = new HashMap<>(16);
         try {
             String key = Constants.CACHE_CAPTCHA_PREFIX + userVO.getMobile();
             String yzm = redisCacheService.get(key);
@@ -425,7 +473,8 @@ public class UserController extends MyBaseController {
             if(!StringUtils.equals(yzm,userVO.getVaildCode())){
                 return super.getResultJSONStr(false,null,ErrorCodeConst.ERROR_VAILDCODE);
             }
-            redisCacheService.remove(key);//去除缓存中该用户的验证码信息，更新信息
+            //去除缓存中该用户的验证码信息，更新信息
+            redisCacheService.remove(key);
             ///验证码通过则修改保存的该用户的手机号
             result = userService.updateUserMobile(userVO,String.valueOf(getUserId(json)),resultMap);
         } catch (Exception e) {
@@ -477,12 +526,11 @@ public class UserController extends MyBaseController {
      */
     @RequestMapping(value = "/pageUserInfo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String pageUserInfo(@RequestBody String json){
-        PageDTO<UserAllInfo> page = new PageDTO<>();
         //获取前端用户传来的实名验证相关信息
         UserDTO dto = getFormJSON(json,UserDTO.class);
         PageRequest pageRequest = genPageRequest(dto);
         try {
-            page = userService.pageUserInfo(dto,pageRequest);
+            PageDTO<UserAllInfo> page = userService.pageUserInfo(dto,pageRequest);
             return super.getResultJSONStr(true, page, "");
         } catch (Exception e) {
             log.error("[user][pageUserInfo] Exception：{}", e);
@@ -492,12 +540,10 @@ public class UserController extends MyBaseController {
 
     /**
      * 删除用户信息
-     * @param json
-     * @return
      */
     @RequestMapping(value = "/deleteUserInfo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String deleteUserInfo(@RequestBody String json) {
-        Map<String,String> data = new HashMap<>();
+        Map<String,String> data = new HashMap<>(16);
         try {
             UserVO userVO = getFormJSON(json,UserVO.class);
             if(userVO == null || userVO.getId() == null || userVO.getId() == 0L){
@@ -519,8 +565,6 @@ public class UserController extends MyBaseController {
 
     /**
      * 批量删除用户信息
-     * @param json
-     * @return
      */
     @RequestMapping(value = "/deleteUserInfoList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String deleteUserInfoList(@RequestBody String json) {
@@ -539,8 +583,6 @@ public class UserController extends MyBaseController {
 
     /**
      * 查询用户信息
-     * @param json
-     * @return
      */
     @RequestMapping(value = "/findUserInfo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String findUserInfo(@RequestBody String json) {
@@ -562,20 +604,34 @@ public class UserController extends MyBaseController {
     }
 
     /**
+     * 查询用户信息
+     */
+    @RequestMapping(value = "/queryUserInfoByMobile", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String queryUserInfoByMobile(@RequestBody String json) {
+        try {
+            UserVO userVO = getFormJSON(json, UserVO.class);
+            if (userVO == null || StringUtils.isBlank(userVO.getMobile())) {
+                return super.getResultJSONStr(false, null, Constants.ERROR_100003);
+            }
+            return super.getResultJSONStr(true, userService.queryUserInfoByMobile(userVO), null);
+
+        } catch (Exception e) {
+            log.error("[user][queryUserInfoByMobile]  Exception：{}", e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
+    /**
      * 查询用户自己的信息
-     * @param json
-     * @return
      */
     @RequestMapping(value = "/findSelfInfo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String findSelfInfo(@RequestBody String json) {
         try {
-            UserVO userVO = getFormJSON(json, UserVO.class);
-            if(userVO == null)  { userVO = new UserVO(); }
-
-            if (userVO.getId() == null || userVO.getId() == 0L)  { userVO.setId(getUserId(json)); }
+            UserVO userVO = new UserVO();
+            userVO.setId(getUserId(json));
 
             UserViewVO viewVO = userService.findUserInfo(userVO);
-            return super.getResultJSONStr(true, viewVO, "");
+            return super.getResultJSONStr(true, viewVO, null);
 
         } catch (Exception e) {
             log.error("[user][findSelfInfo]  Exception：{}", e);
@@ -585,8 +641,6 @@ public class UserController extends MyBaseController {
 
     /**
      * 查询用户信息id
-     * @param json
-     * @return
      */
     @RequestMapping(value = "/listUserId", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String listUserId(@RequestBody String json) {
@@ -620,10 +674,10 @@ public class UserController extends MyBaseController {
      * 所有组织账号信息查询
      */
     @RequestMapping(value = "/findOrgList", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public String findOrgList(@RequestBody String json){
+    public String findOrgList(){
         try {
             List<UserOrgClientVO> userOrgClientVOS  = userService.findOrgList();
-            return super.getResultJSONStr(true, userOrgClientVOS, "");
+            return super.getResultJSONStr(true, userOrgClientVOS, null);
         } catch (Exception e) {
             log.error("[user][findOrgList] Exception：{}", e);
             return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
@@ -635,14 +689,11 @@ public class UserController extends MyBaseController {
      */
     @RequestMapping(value = "/pageUserOrg", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String pageUserOrg(@RequestBody String json){
-        PageDTO<UserOrgClientVO> page = new PageDTO<>();
         //获取前端用户传来的实名验证相关信息
         UserOrgClientDTO dto = getFormJSON(json,UserOrgClientDTO.class);
         PageRequest pageRequest = genPageRequest(dto);
         try {
-            UserOrgClientVO userOrgClientVO = new UserOrgClientVO();
-            BeanUtil.copyPropertiesIgnoreNullFilds(dto, userOrgClientVO);
-            page = userService.findOrgPage(pageRequest, userOrgClientVO);
+            PageDTO<UserOrgClientVO> page = userService.findOrgPage(pageRequest, dto);
             return super.getResultJSONStr(true, page, "");
         } catch (Exception e) {
             log.error("[user][pageUserOrg] Exception：{}", e);
@@ -821,6 +872,26 @@ public class UserController extends MyBaseController {
             return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
         }
     }
+    /**
+     * 查询用户组织具体信息
+     */
+    @RequestMapping(value = "/findUserOrgName", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String findUserOrgName(@RequestBody String json){
+        try {
+            UserOrgClientVO userOrgClientVO = getFormJSON(json,UserOrgClientVO.class);
+            boolean flag = userOrgClientVO == null || userOrgClientVO.getId() == null || userOrgClientVO.getId() == 0L;
+            if(flag) {
+                return super.getResultJSONStr(false, null, Constants.COMMON_MISSING_PARAMS);
+            }
+            String orgName = userService.findUserOrgName(userOrgClientVO.getId());
+            return super.getResultJSONStr(true,orgName, null);
+
+        } catch (Exception e) {
+            log.error("[user][findUserOrgInfo] Exception：{}", e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
 
     /**
      * 根据index重建索引 冷库
@@ -830,8 +901,8 @@ public class UserController extends MyBaseController {
         ResultData<String> resultData = getResultData(true, null, Constants.RETURN_SUCESS);
         try{
             PageJSON<String> pageJSON = super.getPageJSON(json, String.class);
-            JSONObject formObj = JsonUtil.parseObject(pageJSON.getFormJSON(), JSONObject.class);
-            String indexUrl = (String)JsonUtil.getValueBykey(json,"indexUrl");
+            JSONObject formObj = BaseJsonUtil.parseObject(pageJSON.getFormJSON(), JSONObject.class);
+            String indexUrl = (String) BaseJsonUtil.getValueBykey(json,"indexUrl");
             if(formObj!= null) {
                 indexUrl = (String)formObj.get("indexUrl");
             }
@@ -854,8 +925,8 @@ public class UserController extends MyBaseController {
         ResultData<String> resultData = getResultData(true, null, Constants.RETURN_SUCESS);
         try{
             PageJSON<String> pageJSON = super.getPageJSON(json, String.class);
-            JSONObject formObj = JsonUtil.parseObject(pageJSON.getFormJSON(), JSONObject.class);
-            String indexUrl = (String)JsonUtil.getValueBykey(json,"indexUrl");
+            JSONObject formObj = BaseJsonUtil.parseObject(pageJSON.getFormJSON(), JSONObject.class);
+            String indexUrl = (String) BaseJsonUtil.getValueBykey(json,"indexUrl");
             if(formObj!= null) {
                 indexUrl = (String)formObj.get("indexUrl");
             }
@@ -878,8 +949,8 @@ public class UserController extends MyBaseController {
         ResultData<String> resultData = getResultData(true, null, Constants.RETURN_SUCESS);
         try{
             PageJSON<String> pageJSON = super.getPageJSON(json, String.class);
-            JSONObject formObj = JsonUtil.parseObject(pageJSON.getFormJSON(), JSONObject.class);
-            String indexUrl = (String)JsonUtil.getValueBykey(json,"indexUrl");
+            JSONObject formObj = BaseJsonUtil.parseObject(pageJSON.getFormJSON(), JSONObject.class);
+            String indexUrl = (String) BaseJsonUtil.getValueBykey(json,"indexUrl");
             if(formObj!= null) {
                 indexUrl = (String)formObj.get("indexUrl");
             }
@@ -906,7 +977,7 @@ public class UserController extends MyBaseController {
             }
             String result = userService.closeOrgPushFlag(userVO,String.valueOf(getUserId(json)));
             if(StringUtils.equals(Constants.RETURN_SUCESS,result)){
-                return super.getResultJSONStr(true,null, null, null);
+                return super.getResultJSONStr(true,null, null);
             }else{
                 return super.getResultJSONStr(false,null, result);
             }
@@ -929,14 +1000,17 @@ public class UserController extends MyBaseController {
             //获取数据并验证数据的有效性
             UserVO userVO = getFormJSON(json,UserVO.class);
             //参数验证
-            boolean flag = userVO == null || StringUtils.isBlank(userVO.getMobile()) || StringUtils.isBlank(userVO.getPassword())
+            boolean flag = userVO == null || StringUtils.isBlank(userVO.getMobile())
                     || userVO.getUserType() == null;
             if(flag) {
                 return super.getResultJSONStr(false, null, Constants.COMMON_MISSING_PARAMS);
             }
-
+            if(StringUtils.isBlank(userVO.getPassword())){
+                //设置默认密码
+                userVO.setPassword(Constants.DEFAULT_PASSWORD);
+            }
             //密码长度不小于6位
-            if(userVO.getPassword().length() < 6){
+            if(userVO.getPassword().length() < Integer.valueOf(Constants.PASSWORD_MIN_LENGTH)){
                 return super.getResultJSONStr(false,null, ErrorCodeConst.ERROR_PASSWORD);
             }
             Source sourceType = Source.WEIXIN;
@@ -987,5 +1061,154 @@ public class UserController extends MyBaseController {
         }
 
     }
+
+    /**
+     * 批量认证
+     */
+    @RequestMapping(value = "/queryQuotationUser", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String queryQuotationUser(@RequestBody String json) {
+        try {
+            //获取数据并验证数据的有效性
+            UserDTO userDTO = getFormJSON(json, UserDTO.class);
+            PageRequest pageRequest = genPageRequest(userDTO);
+            QuotationUser quotationUser = getFormJSON(json,QuotationUser.class);
+            return super.getResultJSONStr(true, userService.quotationUser(quotationUser,pageRequest), null);
+        } catch (BusinessException e) {
+            log.error("[user][queryQuotationUser] BusinessException : queryQuotationUser exception ,the caused is {}", e.getMessage());
+            return super.getResultJSONStr(false, null, e.getMessage());
+        } catch (Exception e) {
+            log.error("[user][queryQuotationUser] Exception : {}", e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+
+    }
+
+    /**
+     * 处理果满仓用户信息
+     */
+    @RequestMapping(value = "/userOfWmsDeal", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String userOfWmsDeal(@RequestBody String json) {
+        try {
+            //获取数据并验证数据的有效性
+            UserVO userVO = getFormJSON(json, UserVO.class);
+            String result = userService.userOfWmsDeal(userVO.getList());
+            if(StringUtils.equals(Constants.RETURN_SUCESS,result)){
+                return super.getResultJSONStr(true,userVO.getList() , null);
+            }else{
+                return super.getResultJSONStr(false, null, result);
+            }
+
+        } catch (BusinessException e) {
+            log.error("[user][userOfWmsDeal] BusinessException : userOfWmsDeal exception ,the caused is {}", e.getMessage());
+            return super.getResultJSONStr(false, null, e.getMessage());
+        } catch (Exception e) {
+            log.error("[user][userOfWmsDeal] Exception : {}", e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+
+    }
+
+    /**
+     * 导出用户信息
+     */
+    @RequestMapping(value = "/exportExcel", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String exportExcelUserInfo(@RequestBody String json) {
+        UserDTO dto = getParamJSON(json,UserDTO.class);
+        try {
+            String[] excelHeader = new String[] { "编号", "昵称","电话", "身份", "企业名称","客户类型","账户类型","认证标识","等级","积分","创建时间","账号状态"};
+            String fileName = ExcelExportUtils.getExcelFileName("user");
+            List<Object[]> results = userService.selectUserInfoForExcel(dto);
+            String filePath = FileUtils.getFileRelativePath(excelPath);
+            ByteArrayOutputStream os = ExcelExportUtils.exportExcel(excelHeader, results, false);
+            byte[] b = os.toByteArray();
+            ByteArrayInputStream in = new ByteArrayInputStream(b);
+		    ftpService.uploadFile(filePath, fileName, in);
+            XlsVO xlsVO = new XlsVO();
+            xlsVO.setFileName(fileName);
+            xlsVO.setUrl(excelUrl +filePath + fileName);
+            return super.getResultJSONStr(true, xlsVO, null);
+        } catch (Exception e) {
+            log.error("[user][exportExcel] Exception：{}", e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+
+    }
+
+    /**
+     * 导出企业信息
+     */
+    @RequestMapping(value = "/exportExcelOrg", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String exportExcelOrg(@RequestBody String json) {
+        UserOrgClientDTO dto = getParamJSON(json,UserOrgClientDTO.class);
+        try {
+            String[] excelHeader = new String[] { "编号", "企业名称","企业类型","区域","详细地址","销售区域","主营品种","拥有的客户","标签","实力描述","创建时间"};
+            List<Object[]> results = userService.selectUserOrgForExcel(dto);
+            String fileName = ExcelExportUtils.getExcelFileName("userOrg");
+            String filePath = FileUtils.getFileRelativePath(orgExcelPath);
+            ByteArrayOutputStream os = ExcelExportUtils.exportExcel(excelHeader, results, false);
+            byte[] b = os.toByteArray();
+            ByteArrayInputStream in = new ByteArrayInputStream(b);
+            ftpService.uploadFile(filePath, fileName, in);
+            XlsVO xlsVO = new XlsVO();
+            xlsVO.setFileName(fileName);
+            xlsVO.setUrl(excelUrl +filePath + fileName);
+            return super.getResultJSONStr(true, xlsVO, null);
+        } catch (Exception e) {
+            log.error("[user][exportExcelOrg] Exception：{}", e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
+    /**
+     * 是否完善用户信息，提醒三次
+     */
+    @RequestMapping(value = "/checkFullUserInfo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String checkFullUserInfo(@RequestBody String json) {
+        try {
+            Boolean result = userService.checkFullUserInfo(getUserId(json));
+            if(result != null && result){
+                return super.getResultJSONStr(true, true, null);
+            }else{
+                return super.getResultJSONStr(true, false, null);
+            }
+
+        } catch (Exception e) {
+            log.error("[user][checkFullUserInfo] Exception：{}", e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
+    /**
+     * 查询我邀请的用户信息（分页）
+     */
+    @RequestMapping(value = "/queryMyInviteUserInfo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String queryMyInviteUserInfo(@RequestBody String json) {
+        UserDTO userDTO = getFormJSON(json,UserDTO.class);
+        try {
+            PageRequest pageRequest = genPageRequest(userDTO);
+            return super.getResultJSONStr(true, userService.queryInviteUserInfo(pageRequest,getUserId(json)), null);
+
+        } catch (Exception e) {
+            log.error("[user][queryMyInviteUserInfo] Exception：{}", e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
+    /**
+     * 查询某用户邀请的用户信息（分页）
+     */
+    @RequestMapping(value = "/queryInviteUserInfo", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String queryInviteUserInfo(@RequestBody String json) {
+        UserDTO userDTO = getFormJSON(json,UserDTO.class);
+        try {
+            PageRequest pageRequest = genPageRequest(userDTO);
+            return super.getResultJSONStr(true, userService.queryInviteUserInfo(pageRequest,userDTO.getId()), null);
+
+        } catch (Exception e) {
+            log.error("[user][queryInviteUserInfo] Exception：{}", e);
+            return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
 
 }

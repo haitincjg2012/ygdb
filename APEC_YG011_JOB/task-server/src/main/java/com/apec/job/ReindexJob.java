@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Created by wubi on 2017/9/25.
+ * @author wubi
  */
 public class ReindexJob implements SimpleJob {
     @InjectLogger

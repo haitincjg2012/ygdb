@@ -17,19 +17,24 @@
         </div>
         <!--表格列表-->
         <div class="tableList" style="margin-top: 20px;">
-            <el-table :data="dataList" border stripe v-loading.body="loadCircle" style="width:100%;">
-                <el-table-column type="selection"></el-table-column>
+            <el-table :data="dataList" border stripe v-loading.body="loadCircle" header-row-class-name="headerRow"  style="width:100%;">
+                <el-table-column type="selection" width="35"></el-table-column>
                 <el-table-column prop="realName" label="客户姓名" >
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <div>{{scope.row.realName}}</div>
                     </template>
                 </el-table-column>
                 <el-table-column prop="mobile" label="手机号"></el-table-column>
                 <el-table-column prop="idNumber" label="身份证号"></el-table-column>
+                <el-table-column prop="passDate" label="审批时间">
+                    <template slot-scope="scope">
+                		{{filters.formatDatetime(scope.row.passDate)}}
+                    </template>
+                </el-table-column>
                 <el-table-column label="照片" width="250">
-                    <template scope="scope">
-                        <img :src="scope.row.imgOneURL" class="photoImg img1" @click="viewImg(scope.row.imgOneURL)" v-if="scope.row.imgOneURL && !dialogFormVisible"/>
-                        <img :src="scope.row.imgTwoURL" class="photoImg" @click="viewImg(scope.row.imgTwoURL)" v-if="scope.row.imgTwoURL && !dialogFormVisible"/>
+                    <template slot-scope="scope">
+                        <img :src="scope.row.imgOneURL+'?x-oss-process=style/_list_hq'" class="photoImg img1" @click="viewImg(scope.row.imgOneURL)" v-if="scope.row.imgOneURL && !dialogFormVisible"/>
+                        <img :src="scope.row.imgTwoURL+'?x-oss-process=style/_list_hq'" class="photoImg" @click="viewImg(scope.row.imgTwoURL)" v-if="scope.row.imgTwoURL && !dialogFormVisible"/>
                         <el-dialog :visible.sync="dialogFormVisible" class="photoBox">
                             <img :src="imgUrl" class="photoBig"/>
                         </el-dialog>
@@ -37,12 +42,12 @@
                 </el-table-column>
                 <!--<el-table-column prop="success" label="状态" :formatter="formatStatus"></el-table-column>-->
                 <el-table-column prop="success" label="状态" >
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <span :class="{red:scope.row.success=='N',green:scope.row.success=='Y'}">{{scope.row.success|statusFilter}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button type="text" v-if="scope.row.success==''" @click="pass(scope.row.id)">通过</el-button>
                         <el-button type="text" v-if="scope.row.success==''" @click="refuse(scope.row.id)">驳回</el-button>
                         <el-dialog title="驳回意见" :visible.sync="dialogRmark">

@@ -18,6 +18,7 @@ public enum RuleGroup implements BaseEnum {
     SEND_REQUEST("04", "发布供求"),
     SIGN_IN("05", "签到"),
     PROMOTION("06", "推广"),
+    GAME("07", "运营"),
 
     /**
      * 积分消耗规则
@@ -30,7 +31,7 @@ public enum RuleGroup implements BaseEnum {
     private final String key;
     private final String type;
 
-    private RuleGroup(String key, String code) {
+    RuleGroup(String key, String code) {
         this.key = key;
         this.type = code;
     }

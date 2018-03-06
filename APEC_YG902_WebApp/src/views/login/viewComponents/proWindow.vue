@@ -7,7 +7,7 @@
     <transition name="rodal">
       <div>
         <div class="rodal-fade-enter" v-show="show" id="buyWindow" style="animation-duration:300ms;">
-          <div class="minerWindow" @click="hideWindow"></div>
+          <div class="minerWindow" ref="proWindow" @click="hideWindow"></div>
           <div class="minerWinContent rodal-zoom-enter" style="animation-duration:300ms;">
             <div v-html="content" style="font-size: 14px;padding:5px;line-height: 25px">
 
@@ -31,6 +31,7 @@
       });
     },
     mounted(){
+
     },
     data(){
       return {
@@ -41,6 +42,11 @@
     },
     mounted(){
       this.getAur();
+      var that = this;
+      var el = that.$refs.proWindow;
+      el.addEventListener("touchmove",function (e) {
+        e.preventDefault();
+      }, false)
     },
     computed: {
 

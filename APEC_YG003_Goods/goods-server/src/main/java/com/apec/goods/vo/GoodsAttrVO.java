@@ -2,8 +2,6 @@ package com.apec.goods.vo;
 
 import com.apec.framework.common.enumtype.AttributeShowLevel;
 import com.apec.framework.common.enumtype.AttributeType;
-import com.apec.framework.dto.BaseVO;
-import com.apec.goods.model.Goods;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +10,7 @@ import java.util.List;
 
 /**
  * Created by hmy on 2017/7/10.
+ * @author hmy
  */
 @Data
 @AllArgsConstructor
@@ -37,27 +36,27 @@ public class GoodsAttrVO {
     /**
      * 商品属性前缀 冗余
      */
-//    private String showPreFix;
+    private String showPreFix;
 
     /**
      * 商品属性的后缀 冗余
      */
-//    private String showSuFix;
+    private String showSuFix;
 
     /**
      * 远程请求地址 冗余
      */
-//    private String remoteUrlParam;
+    private String remoteUrlParam;
 
     /**
      * 是否必填
      */
-    private boolean mustRequired;
+    private Boolean mustRequired;
 
     /**
      * 商品属性类型 冗余
      */
-    private AttributeType attributeType = AttributeType.RADIO;
+    private AttributeType attributeTyp;
 
     /**
      * 属性显示等级
@@ -72,7 +71,7 @@ public class GoodsAttrVO {
     /**
      * 该属性是否追加到SKU简称中
      */
-    private boolean showSimpleName;
+    private Boolean showSimpleName;
 
     /**
      * 该商品属性值

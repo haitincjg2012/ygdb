@@ -1,13 +1,12 @@
 package com.apec.user.vo;
 
-import com.apec.framework.common.enumtype.PointRuleType;
-import com.apec.framework.common.enumtype.PointsChangedType;
 import lombok.Data;
 
 import java.util.Date;
 
 /**
  * Created by hmy on 2017/8/3.
+ * @author hmy
  */
 @Data
 public class UserPointRecordViewVO {

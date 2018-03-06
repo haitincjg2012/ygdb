@@ -5,6 +5,7 @@ package com.apec.framework.common.exception;
  * 内容摘要：NOSUCHLOCK服务异常
  * 完成日期：2016-07-23
  * 编码作者：
+ * @author xx
  */
 public class LockNotHeldException extends ApecRuntimeException
 {
@@ -24,6 +25,7 @@ public class LockNotHeldException extends ApecRuntimeException
         super(errorCode, message, e);
     }
 
+    @Override
     public String toString()
     {
         return super.toString();

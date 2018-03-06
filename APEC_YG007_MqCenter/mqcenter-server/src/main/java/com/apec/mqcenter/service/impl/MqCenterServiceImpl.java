@@ -14,6 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
+/**
+ * @author xxx
+ */
 @Service
 public class MqCenterServiceImpl implements MqCenterService {
 
@@ -35,7 +38,7 @@ public class MqCenterServiceImpl implements MqCenterService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String addMessageConsumer(MQMessageConsumerLogVO mqMessageConsumerLogVO) {
         if(StringUtils.isBlank(mqMessageConsumerLogVO.getTopic()) || StringUtils.isBlank(mqMessageConsumerLogVO.getTag()) ||
                 StringUtils.isBlank(mqMessageConsumerLogVO.getKeys()) || StringUtils.isBlank(mqMessageConsumerLogVO.getMsgId()) ){

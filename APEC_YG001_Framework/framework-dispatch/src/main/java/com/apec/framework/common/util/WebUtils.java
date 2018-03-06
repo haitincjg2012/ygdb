@@ -21,13 +21,13 @@ public class WebUtils {
             + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
             + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
 
-    private static final Pattern pattern = Pattern.compile(IPADDRESS_PATTERN);
+    private static final Pattern PATTERN = Pattern.compile(IPADDRESS_PATTERN);
 
     /**
      * 检验输入的captcha是否与Session中的一致
      *
-     * @param request
-     * @param captcha
+     * @param request request
+     * @param captcha captcha
      * @return true代表一致
      */
 //    public static boolean checkCaptcha(HttpServletRequest request, String captcha) {
@@ -43,23 +43,42 @@ public class WebUtils {
     /**
      * 获取IP地址
      *
-     * @param request
-     * @return
+     * @param  request request
+     * @return String
      */
     public static String getIP(HttpServletRequest request) {
-        String IP = request.getRemoteAddr();
+        String ip = request.getRemoteAddr();
         String forwarded = request.getHeader("x-forwarded-for");
         if (forwarded != null) {
             forwarded = forwarded.split(",", 2)[0];
-            if (pattern.matcher(forwarded).matches()) {
+            if (PATTERN.matcher(forwarded).matches()) {
                 return forwarded;
             }
         }
-        if (pattern.matcher(IP).matches()) {
-            return IP;
+        if (PATTERN.matcher(ip).matches()) {
+            return ip;
         } else {
-            log.warn("IP is not valid.[IP={}]", IP);
-            return "";
+            if (!checkIp(ip)) {
+                ip = request.getHeader("Proxy-Client-IP");
+            }
+            if (!checkIp(ip)) {
+                ip = request.getHeader("WL-Proxy-Client-IP");
+            }
+            if (!checkIp(ip)) {
+                ip = request.getHeader("X-Real-IP");
+            }
+
+            if (!checkIp(ip)) {
+                ip = request.getRemoteAddr();
+            }
+            return ip;
         }
+    }
+
+    private static boolean checkIp(String ip) {
+        if (ip == null || ip.length() == 0 || "unkown".equalsIgnoreCase(ip) ) {
+            return false;
+        }
+        return true;
     }
 }

@@ -17,11 +17,10 @@ import org.springframework.data.repository.NoRepositoryBean;
  * 内容摘要：基础JpaRepository类
  * 完成日期：2016-07-14
  * 编码作者：
+ * @author xx
  */
 @NoRepositoryBean
 public interface BaseDAO<T, ID extends Serializable> extends JpaRepository<T, ID>,QueryDslPredicateExecutor<T>
 {
 
-    @Query(value ="SELECT ?1 FROM ?2 WHERE 1=1 ",nativeQuery = true)
-    List<T> findAllByRole();
 }

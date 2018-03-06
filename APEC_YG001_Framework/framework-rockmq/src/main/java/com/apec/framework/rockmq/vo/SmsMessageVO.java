@@ -10,7 +10,7 @@ import com.apec.framework.dto.BaseVO;
  * @author gunj
  * create by 3017-07-12
  * */
-public class SmsMessageVO extends BaseVO<Long> implements IMQBody{
+public class SmsMessageVO extends BaseVO<Long> implements IMqBody {
 
 	/**
 	 * 信息批次唯一序号
@@ -40,7 +40,7 @@ public class SmsMessageVO extends BaseVO<Long> implements IMQBody{
 	/**
 	 * 是否过滤重复号码
 	 * */
-	private boolean distinctFlag;
+	private Boolean distinctFlag;
 	
 	/**
 	 * 计划发送时间
@@ -65,12 +65,12 @@ public class SmsMessageVO extends BaseVO<Long> implements IMQBody{
 	/**
 	 * 消息类型是否为短信默认短信：true:彩信,false:短信
 	 * */
-	private boolean msgTypeFlag;
+	private Boolean msgTypeFlag;
 	
 	/**
 	 * 发送类型是否群发，默认群发
 	 * */
-	private boolean sendTypeFlag;
+	private Boolean sendTypeFlag;
 	
 	/**
 	 * key为手机号，value为自定义内容
@@ -80,7 +80,7 @@ public class SmsMessageVO extends BaseVO<Long> implements IMQBody{
 	/**
 	 * 是否使用动态模板
 	 * */
-	private boolean temlateFlag;
+	private Boolean temlateFlag;
 
 	public UUID getBatchID() {
 		return batchID;
@@ -170,7 +170,7 @@ public class SmsMessageVO extends BaseVO<Long> implements IMQBody{
 		this.msgTypeFlag = msgTypeFlag;
 	}
 
-	public boolean isSendTypeFlag() {
+	public boolean getSendTypeFlag() {
 		return sendTypeFlag;
 	}
 
@@ -193,4 +193,10 @@ public class SmsMessageVO extends BaseVO<Long> implements IMQBody{
 	public void setContentMap(Map<String, String> contentMap) {
 		this.contentMap = contentMap;
 	}
+
+	@Override
+	public String toString(){
+		return super.toString();
+	}
+
 }

@@ -6,8 +6,14 @@
 
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll'
-
+//  var timeId = 0;
+  var freshTimeId = 0;
   export default {
+      data(){
+          return {
+//              freshTimeId:0,
+          }
+      },
     props: {
       /**
        * 1 滚动的时候会派发scroll事件，会截流。
@@ -77,11 +83,23 @@
     },
     mounted() {
       // 保证在DOM渲染完毕后初始化better-scroll
-      setTimeout(() => {
-        this._initScroll()
-      }, 20)
+//      this.init();
+      this._initScroll();
     },
     methods: {
+        init(){
+          var self = this;
+          var timeId= 0;
+          timeId = setInterval(function () {
+              if(document.readyState == "complete"){
+                clearInterval(timeId)
+                setTimeout(() => {
+                  self._initScroll()
+                }, 500)
+              }
+            }, 500)
+
+        },
       _initScroll() {
         if (!this.$refs.wrapper) {
           return
@@ -90,7 +108,7 @@
         this.scroll = new BScroll(this.$refs.wrapper, {
           probeType: this.probeType,
           click: this.click,
-          scrollX: this.scrollX
+          scrollX: this.scrollX,
         })
 
         // 是否派发滚动事件

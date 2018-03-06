@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.apec.framework.common.exception.DispatchException;
 import com.apec.framework.common.exception.ExceptionInfo;
 
+/**
+ * @author xxx
+ */
 @ControllerAdvice
 public class DispatchExceptionHandler
 {

@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Import;
 
 /**
  * Created by wubi on 2017/8/2.
+ * @author wubi
  */
 @EnableDiscoveryClient
 @SpringBootApplication

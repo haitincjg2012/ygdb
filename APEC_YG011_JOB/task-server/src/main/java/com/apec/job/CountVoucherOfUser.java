@@ -1,7 +1,6 @@
 package com.apec.job;
 
 import com.apec.client.VoucherClient;
-import com.apec.framework.common.Constants;
 import com.apec.framework.common.ResultData;
 import com.apec.framework.common.enumtype.MailType;
 import com.apec.framework.log.InjectLogger;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Component;
 /**
  * Created by hmy on 2017/9/27.
  * 统计用户上传的交收单总数
+ * @author hmy
  */
 @Component
 public class CountVoucherOfUser  implements SimpleJob {

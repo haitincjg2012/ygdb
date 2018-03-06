@@ -5,7 +5,7 @@ package com.apec.framework.elasticsearch.vo;
  *
  * @author yirde  2017/7/10.
  */
-public class ESResponseVO {
+public class EsResponseVO {
 
     /**
      * 索引
@@ -25,7 +25,7 @@ public class ESResponseVO {
     /**
      * 版本
      */
-    private int version;
+    private Integer version;
 
     public String getIndex() {
         return index;
@@ -58,4 +58,10 @@ public class ESResponseVO {
     public void setVersion(int version) {
         this.version = version;
     }
+
+    @Override
+    public String toString(){
+        return super.toString();
+    }
+
 }

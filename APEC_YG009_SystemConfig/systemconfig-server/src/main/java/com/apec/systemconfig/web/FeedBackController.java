@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by hmy on 2017/8/28.
+ * @author hmy
  */
 @RestController
 @RequestMapping(value = "/feedBack")
@@ -32,6 +33,9 @@ public class FeedBackController extends MyBaseController {
     @Autowired
     private FeedBackService feedBackService;
 
+    /**
+     * 增加用户反馈信息
+     */
     @RequestMapping(value = "/saveFeedBackInfo",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
     public String saveFeedBackInfo(@RequestBody String json){
         try{
@@ -55,7 +59,7 @@ public class FeedBackController extends MyBaseController {
                 feedBackVO.setInformantUser(userInfo.getName());
             }
             if(feedBackVO.getInformantUserId() == null || feedBackVO.getInformantUserId() == 0L){
-                feedBackVO.setInformantUserId(new Long(getUserId(json)));
+                feedBackVO.setInformantUserId(getUserId(json));
             }
             feedBackService.addFeedBackInfo(feedBackVO,String.valueOf(getUserId(json)));
             return super.getResultJSONStr(true,null, null);
@@ -66,6 +70,9 @@ public class FeedBackController extends MyBaseController {
 
     }
 
+    /**
+     * 分页查询用户反馈信息
+     */
     @RequestMapping(value = "/queryFeedBackPage",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
     public String queryFeedBackPage(@RequestBody String json){
         try{
@@ -80,6 +87,9 @@ public class FeedBackController extends MyBaseController {
 
     }
 
+    /**
+     * 查询用户反馈信息
+     */
     @RequestMapping(value = "/queryFeedBackInfo",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
     public String queryFeedBackInfo(@RequestBody String json){
         try{
@@ -96,6 +106,9 @@ public class FeedBackController extends MyBaseController {
 
     }
 
+    /**
+     * 删除用户反馈信息
+     */
     @RequestMapping(value = "/deleteFeedBackInfo",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
     public String deleteFeedBackInfo(@RequestBody String json){
         try{
@@ -112,6 +125,9 @@ public class FeedBackController extends MyBaseController {
 
     }
 
+    /**
+     * 批量删除用户反馈信息
+     */
     @RequestMapping(value = "/deleteFeedBackList",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
     public String deleteFeedBackList(@RequestBody String json){
         try{

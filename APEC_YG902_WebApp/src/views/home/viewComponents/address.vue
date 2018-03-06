@@ -1,468 +1,339 @@
 <template>
-  <div class="address-info-page-F">
-    <top-bar title="选择地区"></top-bar>
-    <scroller ref="my_scroller" :style="styleCal">
-      <div class="main-page">
-        <div class="z-history-address">
-          <p class="z-history-r">历史浏览记录</p>
-          <div v-for="item in historyArr" class="z-history-text" @click = "historyRecord" :cityId="item.cityId" :areaId="item.areaId" :townId="item.townId" :detailAddress = "item.detailAddress">
-            <div class="z-history-name" :cityId="item.cityId" :areaId="item.areaId" :townId="item.townId" :detailAddress = "item.detailAddress">
-              <p :cityId="item.cityId" :areaId="item.areaId" :townId="item.townId" :detailAddress = "item.detailAddress">{{item.detailAddress}}</p>
-            </div>
+  <div class="c-addressS">
+     <!--<my-head >-->
+     <div class="c-addr-header">
+         <div class="c-addr-back" @click="back"></div>
+         <h1 slot="pack" class="c-addr-h-text">选择地区</h1>
+     </div>
+     <!--</my-head>-->
+     <div v-html="history" @click="historyAddr($event)"></div>
+     <div class="c-address-blank"></div>
+     <div class="c-address-content">
+       <h6 class="c-address-title" v-html="h6HTML"></h6>
+     </div>
+    <my-scroll :data="tmpArr || []" :pullup="pullup" ref="addressWrapper" class="c-addr-c-main">
+        <div >
+          <div  v-for="(item,index) in tmpArr"
+                class="c-addr-c-item"
+                :class="{'c-addr-c-active':item.activeFlag}"
+                @click="checked(item,index)"
+          >
+            {{item.keyWord}}
           </div>
         </div>
-        <div class="p-ad-form-cli">
-          <div class="addLabel"><span>请选择市</span></div>
-          <div @click.stop="selTopAddr($event,item)" v-for="item in addressTopList" :class="item.activeCls"><span>{{item.name}}</span></div>
-        </div>
-        <div class="p-ad-form-cli">
-          <div class="addLabel"><span>请选择县区</span></div>
-          <div @click.stop="selSecAddr($event,item)" v-for="item in addressSecList" :class="item.activeCls"><span>{{item.name}}</span></div>
-        </div>
-        <div class="p-ad-form-cli">
-          <div class="addLabel"><span>请选择镇/街道</span></div>
-          <div @click.stop="selThirAddr($event,item)" v-for="item in addressThirList" :class="item.activeCls"><span>{{item.name}}</span></div>
-        </div>
-        <div class="login-btn">
-          <input class="btn-login-c login-confirm" type="submit" id="btn-login-code" value="保存地址" @click="saveBtn"></input>
-        </div>
-      </div>
-    </scroller>
+    </my-scroll>
+
   </div>
 </template>
-
+<style>
+  @import "../../../assets/css/addressSecond.css";
+</style>
 <script>
-  import topBar from '../../../components/topBar/topBar'
-  import API from '../../../api/api'
-  import c_js from '../../../assets/js/common'
-  import keyBoard from '../../../components/keyboard/keyboard'
-  import {Indicator,Toast} from 'mint-ui';
+  import header from '../../../components/header/headerTwo.vue'
+//  import charactierAddr from "../../../assets/data/characteristicAddress.json"
+  import p from "../../../components/post.vue"
+  import scroll from '../../../components/scroll/scrollbg.vue'
+  import {Toast} from 'mint-ui'
+  export default{
+      data(){
+          return {
+              tmpArr:null,
+              provinceArr:null,
+              cityArr:null,
+              countyArr:null,
+              townArr:null,
+              h6HTML:"请选择",
+              address:{
+                  province:"",
+                  city:"",
+                  county:"",
+                  town:"",
+                  municipal:"",//市辖区
+              },
 
+            history:"",
+            recordIndex:{
+              province:-1,
+              city:-1,
+              county:-1,
+              town:-1,
+            },
+            recordBack:[],
 
-  const api = new API();
+            //滑动
+            pullup:true,
+          }
+      },
+      methods:{
+        back(){
+            //模拟返回的按钮
+          var that = this;
+           if(that.recordBack.length > 0){
+               var v = that.recordBack.pop();
+               console.log(v);
+               switch (v){
+                 case "province":
+                   that.h6HTML = "请选择";
+                   that.tmpArr = that.provinceArr;
+                   break;
+                 case "city":
+                   that.h6HTML =that.address.province;
+                   that.tmpArr = that.cityArr;
+                     break;
+                 case "town":
+                   that.h6HTML =that.address.province +" "+ that.address.city +" "+  that.address.county;
+                   that.tmpArr = that.townArr;
+                     break;
+                 case "county":
+                   that.h6HTML =that.address.province +" "+ that.address.city;
+                   that.tmpArr = that.countyArr;
+                     break;
+               }
+           }else{
+             that.cityArr = null;
+             that.countyArr = null;
+             that.townArr = null;
+             that.tmpArr = null;
+             that.recordIndex.p = -1;
+             that.recordIndex.c = -1;
+             that.recordIndex.t = -1;
+             that.recordIndex.county = -1;
+             that.$router.go(-1);
+           }
+        },
+        checked(item,index){
+            var that = this;
+            if(item.style == "province"){
+              var mark = selectArea("province", index);
+              if(mark){
+                return;
+              }
+              that.address.province = item.keyWord;
+              that.h6HTML =that.address.province;
+              if(window.tree[that.address.province].hasOwnProperty("市辖区")){
+                that.address.city = "";
+                that.address.municipal = "市辖区";
+                that.getCounty(that.address.province, "市辖区");
+              }else{
+                that.getCity();
+              }
+            }else if(item.style == "city"){
+              var mark = selectArea("city", index);
+              if(mark){
+                  return;
+              }
+              that.address.city = item.keyWord;
+              that.h6HTML =that.address.province +" "+ that.address.city;
 
-  export default {
+              that.getCounty(that.address.province, that.address.city);
+          }else if(item.style == "county"){
+            var mark = selectArea("county", index);
+            if(mark){
+              return;
+            }
+            that.address.county = item.keyWord;
+            if(that.address.city == item.keyWord){
+              that.address.county = "";
+              that.h6HTML =that.address.province +" "+ that.address.city +  that.address.county;
+            }else{
+              that.h6HTML =that.address.province +" "+ that.address.city +" "+  that.address.county;
+            }
+              that.getTown();
+          }else if(item.style == "town"){
+            var mark = selectArea("town", index);
+            if(mark){
+              return;
+            }
+            that.address.town = item.keyWord;
+            that.h6HTML =that.address.province +" "+  that.address.city +" "+that.address.county + " "+  that.address.town;
+             var type = this.$route.query.type;
+              if(type == "gy"){
+//      供应初始化
+                this.$store.state.addrData = {detailAddress: that.h6HTML};
+              }else if(type == "qg"){
+//      求购初始化
+                this.$store.state.addrSeekData = {detailAddress: that.h6HTML};
+              }
+             that.$router.go(-1);
+              //保存选择的区域
+              that.saveBtn();
+          }
+          that.$refs.addressWrapper.scrollTo(0, 0);
+          that.$refs.addressWrapper.refresh();
 
-    data() {
-      return {
-        addressTopList:[],//一级市
-        addressSecList:[],//二级市县
-        addressThirList:[],//三级镇
-        fircityaddrCode:'',//序号为0 的第一级地址数组的code 默认为烟台市
-        fircountyaddrCode:'',//序号为0 的第一级地址数组的code 默认为烟台市
-        province:'',//省
-        county:'', //县
-        city:'',//市
-        country:'',//镇
-        countyName:'',
-        cityName:'',
-        countryName:'',
-        styleCal:'',
-        historyArr:null
+          function selectArea(type, index) {
+            if(that.recordBack.indexOf(type) > -1){
+              return true;
+            }else{
+              that.recordBack.push(type);
+            }
 
-      }
+            var oldIndex = that.recordIndex[type];
+            that.recordIndex[type] = index;
+          }
+        },
+        getProvince(){
+            var that = this,
+                 provincArr = [];
+          if(!window.tree){
+            var timeId = setInterval(function () {
+              if(window.tree){
+                clearInterval(timeId);
+                for(var key in window.tree){
+                  var obj = {};
+                  obj.keyWord= key;
+                  obj.style= "province";
+                  obj.activeFlag = false;
+                  provincArr.push(obj)
+                }
+                that.provinceArr = provincArr;
+                that.tmpArr = provincArr;
+              }
+            }, 100);
+          }else{
+              for(var key in window.tree){
+                var obj = {};
+                obj.keyWord= key;
+                obj.style= "province";
+                obj.activeFlag = false;
+                provincArr.push(obj)
+               }
+              that.provinceArr = provincArr;
+              that.tmpArr = provincArr;
+          }
+        },
+        getCity(){
+            var that = this,
+                arr = [],
+              province = that.address.province;
+          for(var key in window.tree[province]){
+            var obj = {};
+            obj.keyWord= key;
+            obj.style= "city";
+            obj.activeFlag = false;
+            arr.push(obj)
+          }
+
+          that.cityArr = arr;
+          that.tmpArr = arr;
+        },
+        getTown(){
+          var that = this,
+            province = that.address.province,
+            city = that.address.city,
+            county = that.address.county,
+            townArr = [];
+            if(city == ""){
+               city = that.address.municipal;
+            }
+            if(county == ""){
+              county = city;
+            }
+           var townArray = window.tree[province][city][county];
+           for(var key in townArray){
+             var obj = {};
+                 obj.keyWord= townArray[key];
+                 obj.style= "town";
+                 obj.activeFlag = false;
+                 townArr.push(obj)
+           }
+          that.townArr = townArr;
+          that.tmpArr = townArr;
+        },
+        getCounty(province, city){
+            var that = this,
+                countyArr = [];
+
+             for(var key in window.tree[province][city]){
+              var obj = {};
+              obj.keyWord= key;
+              obj.style= "county";
+              obj.activeFlag = false;
+              countyArr.push(obj)
+            }
+            that.countyArr = countyArr;
+            that.tmpArr = countyArr;
+        },
+        getHistory(type){
+            var that = this;
+            var params = {
+              api:"_node_user/_address_his.apno",
+                data:{
+                }
+            }
+
+            p.post(params, function (data) {
+                if(data.succeed){
+                  var html = "";
+                  if(data.data.address.detailAddress){
+                    html = '<div class="c-address-history"><h6 class="c-history-title">历史货源区域</h6><div class="c-history-text"><span data-mark="detail">' + data.data.address.detailAddress + "</span></div></div>";
+                  }
+                  that.history = html
+                }
+
+            },function (error) {
+              Toast(error);
+            })
+        },
+        historyAddr(event){
+          var that = this,
+            el = event.target || event.srcElement,
+            mark = el.dataset.mark;
+            if(mark){
+                var type = this.$route.query.type;
+              if(type == "gy"){
+//      供应初始化
+                this.$store.state.addrData = {detailAddress: el.innerHTML};
+              }else if(type == "qg"){
+//      求购初始化
+                this.$store.state.addrSeekData = {detailAddress: el.innerHTML};
+              }
+              this.$router.go(-1);
+            }
+        },
+        saveBtn(){
+          var that = this;
+
+          var param = that.address.province +" " + that.address.city +" " +that.address.county+" " +that.address.town;
+          var obj = {
+            detailAddress:param
+          }
+
+          let params = {
+            api:"/_node_user/_save_address.apno",
+            data:{
+              "detailAddress":obj
+            }
+          }
+
+          p.post(params, function (data) {
+            if(!data.succeed){
+                Toast(data.errorMsg);
+            }
+          },function (error) {
+            Toast(error);
+          })
+        },
+      },
+      activated(){
+          var that = this,type = that.$route.query.type;
+          that.recordBack = [];
+        if(!that.provinceArr){
+          that.getProvince();
+        }else{
+          that.tmpArr = that.provinceArr;
+        }
+
+         that.h6HTML = "请选择";
+         that.getHistory();
     },
     mounted(){
-//      this.gettopAddressList();
+      var el = this.$refs.addressWrapper;
+      el.init();
     },
-
-    methods: {
-      _initScroll(){
-        const self = this;
-        self.$nextTick(function () {
-          var winHeight = window.innerHeight;
-          var mainHeight = winHeight;
-          self.styleCal='top:42px;height:'+mainHeight+'px';
-        })
-      },
-      reset(){
-        this.addressTopList = [];
-        this.addressSecList = [];
-        this.addressThirList = [];
-      },
-      gettopAddressList(){//获取一级市
-        const self = this;
-        Indicator.open({
-          text: '加载中...',
-          spinnerType: 'fading-circle'
-        });
-        let params = {
-          api: "/yg-systemConfig-service/regionLevel/listRegionLevel.apec",
-          data: {
-          }
-        }
-        try {
-          api.post(params).then((res) =>{
-            var item = res.data;
-            var flag = false;
-            if (item.succeed) {
-              item.data.forEach((item,index) =>{
-                self.addressTopList.push({
-                  "code": item.code,
-                  "name": item.name,
-                  "parentId":item.parentId,
-                  "activeCls": index ==0 ? "m-v-tz active" : 'm-v-tz',
-                  "id": item.id
-                });
-                if(index == 0){
-                  self.fircityaddrCode = item.code;
-                  self.city = item.code;//缓存市code
-                  self.cityName = item.name;
-                  self.province = item.parentId; //缓存省code
-                }
-              });
-              flag = true;
-            } else {
-            }
-            return {"flag":flag,"code":self.fircityaddrCode};
-          }).then((res)=>{
-            if(res.flag){
-              self.getsecAddrList(res.code)
-            }else{
-              Indicator.close();
-              Toast("请求失败:地区选择失败，请稍后重试");
-            }
-          }).catch((error) =>{
-              console.log(error)
-              Indicator.close();
-            }
-          )
-        } catch (error) {
-          console.log(error)
-          Indicator.close();
-        }
-      },
-      getsecAddrList(code){
-        if(!code)
-        {
-          Indicator.close();
-          return;
-        }
-        const self = this;
-        let params = {
-          api: "/yg-systemConfig-service/regionLevel/listRegionLevel.apec",
-          data: {
-            parentId:code
-          }
-        }
-        try {
-          api.post(params).then((res) =>{
-            var item = res.data;
-            var flag = false;
-            if (item.succeed) {
-              self.addressSecList = [];
-              item.data.forEach((item,index) =>{
-                self.addressSecList.push({
-                  "code": item.code,
-                  "name": item.name,
-                  "parentId":item.parentId,
-                  "activeCls": index ==0 ? "m-v-tz active" : 'm-v-tz',
-                  "id": item.id
-                });
-                if(index == 0){
-                  self.county = item.code;//缓存县code
-                  self.countyName = item.name;
-                  self.fircountyaddrCode = item.code;
-                }
-              });
-              flag = true;
-            } else {
-            }
-            return {"flag":flag,"code":self.fircountyaddrCode};
-          }).then((res)=>{
-            if(res.flag){
-              self.getthirAddrList(res.code)
-            }else{
-              Indicator.close();
-              Toast("请求失败:县选择失败，请稍后重试");
-            }
-          }).catch((error) =>{
-              console.log(error);
-              Indicator.close();
-            }
-          )
-        } catch (error) {
-          console.log(error);
-          Indicator.close();
-        }
-      },
-      getthirAddrList(code){
-        if(!code){
-          Indicator.close();
-          return;
-        }
-        const self = this;
-        self.countryName = '';
-        self.country = '';
-        let params = {
-          api: "/yg-systemConfig-service/regionLevel/listRegionLevel.apec",
-          data: {
-            parentId:code
-          }
-        }
-        try {
-          api.post(params).then((res) =>{
-            var item = res.data;
-            if (item.succeed) {
-              self.addressThirList=[];
-              item.data.forEach((item,index) =>{
-                self.addressThirList.push({
-                  "code": item.code,
-                  "name": item.name,
-                  "parentId":item.parentId,
-                  "activeCls": index ==0 ? "m-v-tz active" : 'm-v-tz',
-                  "id": item.id
-                })
-                if(index ==0){
-                  self.countryName = item.name;
-                  self.country = item.code;
-                }
-
-              });
-            } else {
-            }
-            self._initScroll();
-            Indicator.close();
-          }).catch((error) =>{
-              console.log(error)
-              Indicator.close();
-            }
-          )
-        } catch (error) {
-          console.log(error)
-          Indicator.close();
-        }
-      },
-      selTopAddr(e,item){
-        const self = this;
-        self.addressTopList.forEach((i) => {
-          if (item.id === i.id) {
-            i.activeCls = 'm-v-tz active';
-            self.aur = item.aur;
-          }
-          else
-            i.activeCls = 'm-v-tz'
-        });
-        self.city = item.code;
-        self.cityName = item.name;
-        self.getsecAddrList(item.code);
-      },
-      selSecAddr(e,item){
-        const self = this;
-        self.addressSecList.forEach((i) => {
-          if (item.id === i.id) {
-            i.activeCls = 'm-v-tz active';
-            self.aur = item.aur;
-          }
-          else
-            i.activeCls = 'm-v-tz'
-        });
-        self.county = item.code;
-        self.countyName = item.name;
-        self.getthirAddrList(item.code);
-      },
-      selThirAddr(e,item){
-        const self = this;
-        self.addressThirList.forEach((i) => {
-          if (item.id === i.id) {
-            i.activeCls = 'm-v-tz active';
-            self.aur = item.aur;
-          }
-          else
-            i.activeCls = 'm-v-tz'
-        });
-        self.country = item.code;
-        self.countryName = item.name;
-      },
-      saveBtn(){
-        const self = this;
-        var data={
-          cityId:self.city,
-          countyId:self.county,
-          townId:self.country,
-          countyName:self.countyName,
-          cityName:self.cityName,
-          townName:self.countryName
-        };
-        var param = self.cityName +self.countyName+self.countryName;
-        var obj = {
-          cityId:self.city,
-          areaId:self.county,
-          townId:self.country,
-          detailAddress:param
-        }
-        try {
-          var flag = this.$store.state.address;
-          if(flag == 1){
-            //发布供应的消息
-            this.$store.state.address = 0;
-            this.$store.state.addrData = obj;
-          }else if(flag == 2){
-            //发布求购的消息
-            this.$store.state.addrData = obj;
-            this.$store.state.address = 0;
-          }else{
-            self.$store.commit("incrementUploadAddr", {'uploadAddr': data});
-          }
-
-
-          let params = {
-              api:"/_node_user/_save_address.apno",
-              data:{
-                "detailAddress":obj
-              }
-          }
-
-          try {
-            api.post(params).then((res) =>{
-              var dt = res.data;
-               console.log(dt);
-            }).catch((error) =>{
-                console.log(error)
-                Indicator.close();
-              }
-            )
-          } catch (error) {
-            console.log(error)
-            Indicator.close();
-          }
-
-
-          Toast({
-            message:"地址保存成功~",
-            duration:1000
-          })
-          this.$router.go(-1);
-        } catch (error) {
-          Toast();
-          Toast({
-            message:"地址保存失败~",
-            duration:1000
-          })
-          this.$router.go(-1);
-          console.log(error)
-        }
-      },
-      historyAdd(){
-          var self = this;
-          let params = {
-              api:"_node_user/_address_his.apno",
-              data:{}
-          }
-        try {
-          api.post(params).then((res) =>{
-            var dt = res.data;
-            var address = dt.data.address;
-            var obj = {
-              cityId:address.cityId,
-              areaId:address.areaId,
-              townId:address.townId,
-              detailAddress:address.detailAddress
-            }
-            var arr = [];
-            arr.push(obj);
-            self.historyArr = arr;
-          }).catch((error) =>{
-              console.log(error)
-              Indicator.close();
-            }
-          )
-        } catch (error) {
-          console.log(error)
-          Indicator.close();
-        }
-
-      },
-      historyRecord(evt){
-          var e = evt || window.event;
-          var target = e.toElement || e.srcElement;
-          var cityId = "", countyId = '', townId = '',detailAddress = '';
-          cityId = target.getAttribute("cityId");
-        countyId= target.getAttribute("countyId");
-        townId= target.getAttribute("townId");
-        detailAddress= target.getAttribute("detailAddress");
-        var self = this;
-        var data={
-          cityId:cityId,
-          countyId:countyId,
-          townId:townId,
-          detailAddress:detailAddress
-        };
-        this.$store.state.addrData = data;
-        this.$router.go(-1);
+      components:{
+        "my-head":header,
+        'my-scroll':scroll
       }
-    },
-    activated(){
-        var self = this;
-        self.reset();
-      this.historyAdd();
-      setTimeout(function () {
-        self.gettopAddressList();
-      }, 0)
-   },
-    created() {
-    },
-
-    components: {
-      topBar
-    }
   }
 </script>
-<style scoped>
-  @import "../../../assets/css/address.css";
-</style>
-<style lang="stylus" rel="stylesheet/stylus">
-  _rem = 20rem;
-  .address-info-page-F
-    position: fixed;
-    top: 0;
-    left: 0;
-    height 100%;
-    width 100%;
-    .p-ad-form-cli
-      padding (15 /_rem)
-      position relative
-      .addLabel
-        height (25/_rem)
-        line-height (25/_rem)
-        /*text-align center*/
-        margin-bottom (10/_rem)
-        span
-          font-size (18/_rem)
-      .m-v-tz:not(:first-child)
-        margin-left (15/_rem)
-        margin-bottom (10/_rem)
-      .m-v-tz
-        min-width (70 /_rem)
-        background-color #f4f4f4
-        border-radius 4px
-        text-align center
-        display inline-block
-        cursor pointer
-        height (25 /_rem)
-        line-height (25 /_rem)
-        font-size 0
-        color #323232
-        span
-          font-size (14 /_rem)
-      .active
-        background-color #28cba7!important
-        color #fff !important
-      span
-        font-size (14 /_rem)
-    .login-btn
-      margin (25 /_rem) (15 /_rem) 0 (15 /_rem)
-      .btn-login-c
-        color #ffffff
-        line-height (15 /_rem)
-        height (40 /_rem)
-        font-size (15 /_rem)
-
-        border-radius: (5/_rem);
-        display: inline-block;
-        width: 100%;
-
-      .login-confirm
-        background-color: #28CBA7;
-        color #FFFFFF;
-</style>

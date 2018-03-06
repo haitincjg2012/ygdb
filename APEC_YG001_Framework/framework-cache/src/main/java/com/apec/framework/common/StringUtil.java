@@ -35,9 +35,9 @@ public final class StringUtil
 
     /**
      * 如果字符串太长了 则截取某一段 后面是省略号replaceStr(...)
-     * @param str
-     * @param length
-     * @param replaceStr
+     * @param str str
+     * @param length length
+     * @param replaceStr replaceStr
      * @return
      */
     public static  String  ellipsisStrByLength(String str,int length,String replaceStr){
@@ -50,8 +50,8 @@ public final class StringUtil
     /**
      * 将字符串转为WML编码,用于wml页面显示 根据unicode编码规则Blocks.txt：E000..F8FF; Private Use Area
      * 
-     * @param str
-     * @return String
+     * @param str str
+     * @return String String
      */
     public static String encodeWML(String str)
     {
@@ -67,8 +67,10 @@ public final class StringUtil
             switch (c)
             {
             case '\u00FF':
-            case '\u200B':// ZERO WIDTH SPACE
-            case '\uFEFF':// ZERO WIDTH NO-BREAK SPACE
+            case '\u200B':
+                // ZERO WIDTH SPACE
+            case '\uFEFF':
+                // ZERO WIDTH NO-BREAK SPACE
             case '\u0024':
                 break;
             case '&':
@@ -181,8 +183,10 @@ public final class StringUtil
             case '\"':
                 sb.append("\\\"");
                 break;
-            case '\u200B':// ZERO WIDTH SPACE
-            case '\uFEFF':// ZERO WIDTH NO-BREAK SPACE
+            case '\u200B':
+                // ZERO WIDTH SPACE
+            case '\uFEFF':
+                // ZERO WIDTH NO-BREAK SPACE
                 break;
             default:
                 sb.append(c);
@@ -224,8 +228,10 @@ public final class StringUtil
             switch (c)
             {
             case '\u00FF':
-            case '\u200B':// ZERO WIDTH SPACE
-            case '\uFEFF':// ZERO WIDTH NO-BREAK SPACE
+            case '\u200B':
+                // ZERO WIDTH SPACE
+            case '\uFEFF':
+                // ZERO WIDTH NO-BREAK SPACE
             case '\u0024':
                 break;
             case '&':
@@ -289,7 +295,6 @@ public final class StringUtil
      * @param removePrivateUseArea
      *        是否移除虽然是xml合法字符但却是在unicode里私有保留区里的字符
      * @return 如果字符串中有已经转义的实体字符串，则跳过，否则转义避免amp;amp;这样的情形出现
-     * @see
      * @author quickli
      */
     public static String safeRemoveInvalidWML(String str, boolean removePrivateUseArea)
@@ -303,22 +308,25 @@ public final class StringUtil
         {
             char c = str.charAt(i);
             if (Character.isHighSurrogate(c))
-            {// 如果已经是高代理字符，则可能是超过\uFFFF的unicode了
-                int codePoint = str.codePointAt(i);// 进行代码点解析
+            {
+                // 如果已经是高代理字符，则可能是超过\uFFFF的unicode了
+                int codePoint = str.codePointAt(i);
+                boolean privateUserAreaFlag = removePrivateUseArea
+                        && ((codePoint >= 0xF0000 && codePoint <= 0xFFFFD) || (codePoint >= 0x100000 && codePoint <= 0x10FFFD));
+
+                // 进行代码点解析
                 if (codePoint == c)
-                {// 解析后的值与单个字符想通，说明只有单个高代理字符，则编码有问题，需要过滤该字符
+                {
+                    // 解析后的值与单个字符想通，说明只有单个高代理字符，则编码有问题，需要过滤该字符
                     continue;
                 }
                 else if (!StringUtil.isXMLCharacter(codePoint))
-                {// 非法xml字符滤掉
-                 // System.err.println(codePoint + "|"
-                 // + Integer.toHexString(codePoint)
-                 // + " is not xml char a,i=" + i + ",len=" + len);
+                {
+                    // 非法xml字符滤掉
                     i++;
                     continue;
                 }
-                else if (removePrivateUseArea
-                        && ((codePoint >= 0xF0000 && codePoint <= 0xFFFFD) || (codePoint >= 0x100000 && codePoint <= 0x10FFFD)))
+                else if (privateUserAreaFlag)
                 {
                     // 过滤高代理的PrivateUseArea区的字符,
                     // Supplementary Private Use Area-A Range: F0000–FFFFD
@@ -414,22 +422,22 @@ public final class StringUtil
                             break;
                         }
                     }
-                    // System.out.println("index=" + index + ",i==" + i);
                     if (index > i + 2)
-                    {// 说明&#和;之间有字符存在，则尝试反解析
+                    {
+                        // 说明&#和;之间有字符存在，则尝试反解析
                         String unicodeVal = str.substring(i + 2, index);
-                        // System.out.println("index=" + index + ",i==" + i
-                        // + ",unicodeVal=" + unicodeVal);
+
                         try
                         {
                             int val = Integer.parseInt(unicodeVal.substring(1), 'x' == unicodeVal.charAt(0) ? 16 : 10);
-                            // System.out.println("val==" + val);
                             if (!StringUtil.isXMLCharacter(val))
                             {
-                                sb.append("&amp;");// &#后面的字符无法反解析为合法xml字符，因此继续转义
+                                sb.append("&amp;");
+                                // &#后面的字符无法反解析为合法xml字符，因此继续转义
                             }
                             else
-                            {// 否则原样拼接
+                            {
+                                // 否则原样拼接
                                 sb.append("&#").append(unicodeVal).append(';');
                                 i = i + 2 + unicodeVal.length();
                             }
@@ -461,7 +469,8 @@ public final class StringUtil
             case '\"':
                 sb.append("&quot;");
                 break;
-            case '$':// wml中$在postfield的value中表示变量定义，因此需要展示真实的$时，需要转义
+            case '$':
+                // wml中$在postfield的value中表示变量定义，因此需要展示真实的$时，需要转义
             case '\n':
             case '\r':
             case '\t':
@@ -469,8 +478,10 @@ public final class StringUtil
                 break;
             // 利用两个特殊字符做xss和sql注入的预防
             // @see http://www.cs.tut.fi/~jkorpela/chars/spaces.html
-            case '\u200B':// ZERO WIDTH SPACE
-            case '\uFEFF':// ZERO WIDTH NO-BREAK SPACE
+            case '\u200B':
+                // ZERO WIDTH SPACE
+            case '\uFEFF':
+                // ZERO WIDTH NO-BREAK SPACE
                 break;
             default:
                 sb.append(c);
@@ -483,8 +494,8 @@ public final class StringUtil
     /**
      * 返回移除非法xml字符后的字符串，确保json和xml中的字符串能被正常解析
      * 
-     * @param str
-     * @return
+     * @param str str
+     * @return String String
      */
     public static String removeInvalidXmlChar(String str)
     {
@@ -503,17 +514,18 @@ public final class StringUtil
                 {
                     c = str.charAt(i);
                     if (Character.isHighSurrogate(c))
-                    {// 如果已经是高代理字符，则可能是超过\uFFFF的unicode了
-                        int codePoint = str.codePointAt(i);// 进行代码点解析
+                    {
+                        // 如果已经是高代理字符，则可能是超过\uFFFF的unicode了
+                        int codePoint = str.codePointAt(i);
+                        // 进行代码点解析
                         if (codePoint == c)
-                        {// 解析后的值与单个字符相同，说明只有单个高代理字符，则编码有问题，需要过滤该字符
+                        {
+                            // 解析后的值与单个字符相同，说明只有单个高代理字符，则编码有问题，需要过滤该字符
                             continue;
                         }
                         else if (!StringUtil.isXMLCharacter(codePoint))
-                        {// 非法xml字符滤掉
-                         // System.err.println(codePoint + "|"
-                         // + Integer.toHexString(codePoint)
-                         // + " is not xml char a,i=" + i + ",len=" + len);
+                        {
+                            // 非法xml字符滤掉
                             i++;
                             continue;
                         }
@@ -569,19 +581,24 @@ public final class StringUtil
         {
             char c = str.charAt(i);
             if (Character.isHighSurrogate(c))
-            {// 如果已经是高代理字符，则可能是超过\uFFFF的unicode了
-                int codePoint = str.codePointAt(i);// 进行代码点解析
+            {
+                // 如果已经是高代理字符，则可能是超过\uFFFF的unicode了
+                // 进行代码点解析
+                int codePoint = str.codePointAt(i);
+                boolean privateUserAreaFlag = removePrivateUseArea
+                        && ((codePoint >= 0xF0000 && codePoint <= 0xFFFFD) || (codePoint >= 0x100000 && codePoint <= 0x10FFFD));
                 if (codePoint == c)
-                {// 解析后的值与单个字符想通，说明只有单个高代理字符，则编码有问题，需要过滤该字符
+                {
+                    // 解析后的值与单个字符想通，说明只有单个高代理字符，则编码有问题，需要过滤该字符
                     continue;
                 }
                 else if (!StringUtil.isXMLCharacter(codePoint))
-                {// 非法xml字符滤掉
+                {
+                    // 非法xml字符滤掉
                     i++;
                     continue;
                 }
-                else if (removePrivateUseArea
-                        && ((codePoint >= 0xF0000 && codePoint <= 0xFFFFD) || (codePoint >= 0x100000 && codePoint <= 0x10FFFD)))
+                else if (privateUserAreaFlag)
                 {
                     // 过滤高代理的PrivateUseArea区的字符,
                     // Supplementary Private Use Area-A Range: F0000–FFFFD
@@ -597,15 +614,18 @@ public final class StringUtil
                 }
             }
             if (!StringUtil.isXMLCharacter(c))
-            {// 跳过非法xml字符
+            {
+                // 跳过非法xml字符
                 continue;
             }
             if (removePrivateUseArea && c >= '\uE000' && c <= '\uF8FF')
-            {// 过滤PrivateUseArea区的字符
+            {
+                // 过滤PrivateUseArea区的字符
                 continue;
             }
             if (removePrivateUseArea && c == '\u202E')
-            {// 过滤RIGHT-TO-LEFT
+            {
+                // 过滤RIGHT-TO-LEFT
              // OVERRIDE转义字符
              // http://www.fileformat.info/info/unicode/char/202e/index.htm
                 continue;
@@ -614,37 +634,44 @@ public final class StringUtil
             {
             case '&':
                 if (str.startsWith("&amp;amp;", i))
-                {// 把两个amp;的兼容还原
+                {
+                    // 把两个amp;的兼容还原
                     sb.append("&");
                     i = i + 8;
                 }
                 else if (str.startsWith("&amp;gt;", i))
-                {// 把多encode了一次的导致amp;的兼容还原
+                {
+                    // 把多encode了一次的导致amp;的兼容还原
                     sb.append(">");
                     i = i + 7;
                 }
                 else if (str.startsWith("&amp;lt;", i))
-                {// 把多encode了一次的导致amp;的兼容兼容还原
+                {
+                    // 把多encode了一次的导致amp;的兼容兼容还原
                     sb.append("<");
                     i = i + 7;
                 }
                 else if (str.startsWith("&amp;apos;", i))
-                {// 把多encode了一次的导致amp;的兼容兼容还原
+                {
+                    // 把多encode了一次的导致amp;的兼容兼容还原
                     sb.append("'");
                     i = i + 9;
                 }
                 else if (str.startsWith("&amp;quot;", i))
-                {// 把多encode了一次的导致amp;的兼容兼容还原
+                {
+                    // 把多encode了一次的导致amp;的兼容兼容还原
                     sb.append("\"");
                     i = i + 9;
                 }
                 else if (str.startsWith("&amp;nbsp;", i))
-                {// 把多encode了一次的导致amp;的兼容兼容还原
+                {
+                    // 把多encode了一次的导致amp;的兼容兼容还原
                     sb.append(" ");
                     i = i + 9;
                 }
                 else if (str.startsWith("&amp;", i))
-                {// 把已经encode的amp;的兼容兼容还原
+                {
+                    // 把已经encode的amp;的兼容兼容还原
                     sb.append("&");
                     i = i + 4;
                 }
@@ -695,21 +722,20 @@ public final class StringUtil
                                     unicodeVal, 10);
                             if (!StringUtil.isXMLCharacter(val))
                             {
-                                sb.append("&");// &#后面的字符无法反解析为合法xml字符，因此继续保持转义
+                                // &#后面的字符无法反解析为合法xml字符，因此继续保持转义
+                                sb.append("&");
                             }
                             else
-                            {// 否则还原成unicode字符
+                            {
+                                // 否则还原成unicode字符
                                 if (removePrivateUseArea)
-                                {// 反解析后再次过滤文字反向和私有区域字符
-                                    if (!((val == '\u202E') || (val >= '\uE000' && val <= '\uF8FF')
-                                            || (val >= 0xF0000 && val <= 0xFFFFD) || (val >= 0x100000 && val <= 0x10FFFD)))
+                                {
+                                    // 反解析后再次过滤文字反向和私有区域字符
+                                    boolean flag = !((val == '\u202E') || (val >= '\uE000' && val <= '\uF8FF')
+                                            || (val >= 0xF0000 && val <= 0xFFFFD) || (val >= 0x100000 && val <= 0x10FFFD));
+                                    if (flag)
                                     {
                                         sb.appendCodePoint(val);
-                                    }
-                                    else
-                                    {
-                                        // System.err.println(" error for:"
-                                        // + unicodeVal);
                                     }
                                 }
                                 else
@@ -1143,7 +1169,8 @@ public final class StringUtil
         {
             return s;
         }
-        int pos = s.indexOf(src); // 查找第一个替换的位置
+        int pos = s.indexOf(src);
+        // 查找第一个替换的位置
         if (pos < 0)
         {
             return s;
@@ -1153,12 +1180,17 @@ public final class StringUtil
         int writen = 0;
         for (; pos >= 0;)
         {
-            sb.append(s, writen, pos); // append 原字符串不需替换部分
-            sb.append(dest); // append 新字符串
-            writen = pos + src.length(); // 忽略原字符串需要替换部分
-            pos = s.indexOf(src, writen); // 查找下一个替换位置
+            sb.append(s, writen, pos);
+            // append 原字符串不需替换部分
+            sb.append(dest);
+            // append 新字符串
+            writen = pos + src.length();
+            // 忽略原字符串需要替换部分
+            pos = s.indexOf(src, writen);
+            // 查找下一个替换位置
         }
-        sb.append(s, writen, s.length()); // 替换剩下的原字符串
+        sb.append(s, writen, s.length());
+        // 替换剩下的原字符串
         return sb.toString();
     }
 
@@ -1251,7 +1283,8 @@ public final class StringUtil
             replacement = "";
         }
 
-        StringBuffer dest = new StringBuffer(); // 初始值设定为源串
+        StringBuffer dest = new StringBuffer();
+        // 初始值设定为源串
 
         try
         {
@@ -1415,7 +1448,7 @@ public final class StringUtil
     /**
      * 获取字节数组的UTF-8编码字符串
      * 
-     * @param b
+     * @param b b
      * @author quickli
      * @return
      */
@@ -1469,7 +1502,7 @@ public final class StringUtil
     /**
      * 对字符串以 UTF-8编码方式进行URLEncode
      * 
-     * @param s
+     * @param s s
      * @author quickli
      * @return
      */
@@ -1535,8 +1568,8 @@ public final class StringUtil
     /**
      * 数字转换成字母
      * 
-     * @param i
-     * @return
+     * @param i i
+     * @return char
      */
     public static char getChar(int i)
     {
@@ -1588,8 +1621,8 @@ public final class StringUtil
         int len1 = str1.length();
         int len2 = str2.length();
         int n = Math.min(len1, len2);
-        char v1[] = str1.toCharArray();
-        char v2[] = str2.toCharArray();
+        char[] v1 = str1.toCharArray();
+        char[] v2 = str2.toCharArray();
         int k = 0;
         while (k < n)
         {
@@ -1623,8 +1656,8 @@ public final class StringUtil
     /**
      * 移除targetStrBuf中字符串右侧subStr字符串，且把右侧空格移除
      * 
-     * @param targetStrBuf
-     * @param subStr
+     * @param targetStrBuf targetStrBuf
+     * @param subStr subStr
      * @throws
      */
     public static void rTrim(StringBuffer targetStrBuf, String subStr)
@@ -1652,7 +1685,7 @@ public final class StringUtil
      *        连接符
      * @param ignoreBlankStringInArr
      *        是否忽略掉数组中的空字符串（即如果某个元素是个空字符串，则不把它拼接到结果字符串中。空字符串是指：null,"", 或者全部字符均为空白字符的字符串。）
-     * @return
+     * @return String
      */
     public static String concatStringArray(String[] arr, String spliter, boolean ignoreBlankStringInArr)
     {
@@ -1747,14 +1780,17 @@ public final class StringUtil
         private final String pattern;
         private final int[] next;
 
-        // create Knuth-Morris-Pratt NFA from pattern
+        /**
+         *
+         * @param pattern
+         */
         public KMP(String pattern)
         {
             this.pattern = pattern;
-            int M = pattern.length();
-            this.next = new int[M];
+            int patternM = pattern.length();
+            this.next = new int[patternM];
             int j = -1;
-            for (int i = 0; i < M; i++)
+            for (int i = 0; i < patternM; i++)
             {
                 if (i == 0)
                 {
@@ -1776,14 +1812,12 @@ public final class StringUtil
             }
         }
 
-        // 返回pattern在text中第一次出现的位置，否则返回的值等于text的长度
-        // simulate the NFA to find match
         public int match(String text)
         {
-            int M = this.pattern.length();
-            int N = text.length();
+            int patternM = this.pattern.length();
+            int textN = text.length();
             int i, j;
-            for (i = 0, j = 0; i < N && j < M; i++)
+            for (i = 0, j = 0; i < textN && j < patternM; i++)
             {
                 while (j >= 0 && text.charAt(i) != this.pattern.charAt(j))
                 {
@@ -1791,18 +1825,18 @@ public final class StringUtil
                 }
                 j++;
             }
-            if (j == M)
+            if (j == patternM)
             {
-                return i - M;
+                return i - patternM;
             }
-            return N;
+            return textN;
         }
     }
 
     /**
      * 判断字符是否为中文字符
      * 
-     * @param c
+     * @param c c
      * @return
      * @date: 2014年1月15日上午11:02:50
      */
@@ -1824,7 +1858,7 @@ public final class StringUtil
     /**
      * 判断字符串是否为中文
      * 
-     * @param str
+     * @param str str
      * @return
      * @date: 2014年1月15日上午11:02:33
      */
@@ -1850,7 +1884,7 @@ public final class StringUtil
     /**
      * 过滤文本中的html转义字符
      * 
-     * @param content
+     * @param content content
      * @return
      * @date: 2014年1月15日上午11:02:15
      */
@@ -1863,8 +1897,10 @@ public final class StringUtil
         String html = content;
         html = html.replace("&apos;", "'");
         html = html.replace("&amp;", "&");
-        html = html.replace("&quot;", "\""); // "
-        html = html.replace("&nbsp;", " ");// 替换空格
+        html = html.replace("&quot;", "\"");
+        // "
+        html = html.replace("&nbsp;", " ");
+        // 替换空格
         html = html.replace("&lt;", "<");
         html = html.replace("&gt;", ">");
         return html;

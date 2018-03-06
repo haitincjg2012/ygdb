@@ -7,6 +7,7 @@ import com.dangdang.ddframe.job.lite.api.listener.ElasticJobListener;
 
 /**
  * ElasticJobListener -----> 弹性化分布式作业监听器接口
+ * @author xxx
  */
 public class SimpleListener implements ElasticJobListener{
     

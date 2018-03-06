@@ -76,6 +76,13 @@ public class UserOrgClientInfoVO {
      */
     private UserAccountType userAccountType;
 
+    public Long getUserOrgId() {
+        return userOrgId;
+    }
+
+    public void setUserOrgId(Long userOrgId) {
+        this.userOrgId = userOrgId;
+    }
 
     public String getOrgName() {
         return orgName;
@@ -125,20 +132,28 @@ public class UserOrgClientInfoVO {
         this.addressDetail = addressDetail;
     }
 
-    public Long getUserOrgId() {
-        return userOrgId;
-    }
-
-    public void setUserOrgId(Long userOrgId) {
-        this.userOrgId = userOrgId;
-    }
-
     public String getMainOperating() {
         return mainOperating;
     }
 
     public void setMainOperating(String mainOperating) {
         this.mainOperating = mainOperating;
+    }
+
+    public String getSaleAddress() {
+        return saleAddress;
+    }
+
+    public void setSaleAddress(String saleAddress) {
+        this.saleAddress = saleAddress;
+    }
+
+    public Long getOrderWeight() {
+        return orderWeight;
+    }
+
+    public void setOrderWeight(Long orderWeight) {
+        this.orderWeight = orderWeight;
     }
 
     public String getElasticId() {
@@ -163,5 +178,10 @@ public class UserOrgClientInfoVO {
 
     public void setUserAccountType(UserAccountType userAccountType) {
         this.userAccountType = userAccountType;
+    }
+
+    @Override
+    public String toString(){
+        return super.toString();
     }
 }

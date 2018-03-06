@@ -1,7 +1,7 @@
 <template>
   <div class="message-info-page">
-    <scroller>
     <top-bar title="我的消息"></top-bar>
+    <my-scroll class="c-message-Scroll" :data="messageList" :pullup="pullup" @scrollToEnd="loadMore">
       <div class="main-page">
         <div @click.stop="messageReaded($event,item)" v-for="item in messageList" class="m-v-form-cli">
           <div :class="item.activeCls"><span>通知</span></div>
@@ -13,7 +13,7 @@
           <img src="../../../assets/img/noMessage.png"/>
           <p class="c-z-message">暂无消息</p>
       </div>
-    </scroller>
+    </my-scroll>
   </div>
 </template>
 <style>
@@ -25,6 +25,7 @@
   import API from '../../../api/api'
   import c_js from '../../../assets/js/common'
   import {MessageBox,Indicator} from 'mint-ui';
+  import scroll from '@/components/scroll/scroll'//分页
 
   const api = new API();
 
@@ -39,6 +40,9 @@
           backAnim: 'touchPoint',  //options所有配置可以写在这个对象里，会覆盖全局的配置
         },
         messageFlag:false,//是否有消息存在
+        pullup:true,
+        id:"",
+        pageNumber:1,
       }
     },
 
@@ -48,7 +52,7 @@
     activated () {
       this.messageFlag = false;
       const self = this;
-
+      self.messageList = [];
       var params = {
         api:"/_node_user/_info.apno"
       }
@@ -60,8 +64,8 @@
           if (item.succeed) {
 
             dt = JSON.parse(item.data);
-
-            self.GetMesList( dt.useId);
+            self.id = dt.userId;
+            self.GetMesList( dt.userId);
           } else {
           }
         }).catch((error) => {
@@ -84,21 +88,23 @@
           text: '加载中...',
           spinnerType: 'fading-circle'
         });
-        self.messageList = []
+
         let params = {
           api: "/yg-message-service/message/getMessageByReceiver.apec",
           data: {
-            receiver: userId
+            "receiver": userId,
+            "pageNumber":self.pageNumber,
+            "pageSize": 10,
           }
         }
         try {
           api.post(params).then((res) => {
             var item = res.data;
             if (item.succeed) {
+              self.pageCount = item.data.pageCount;
               item.data.rows.forEach((item) => {
                 self.messageList.push({
                   "content": item.body.content,
-                  //"sendTime":newDate.toDateString()
                   "sendTime": new Date().format(item.body.sendTime, 'yyyy-MM-dd'),
                   "activeCls":item.messageStatus==='NEW'?"m-v-tz active":'m-v-tz',
                   "id":item.body.id
@@ -147,14 +153,26 @@
         } catch (error) {
           console.log(error)
         }
-      }
+      },
+      loadMore(){
+        var self = this;
+        if(self.pageNumber < self.pageCount){
+//              self.arrive = true;
+//            self.loadFlag = true;
+//          self.$refs.test.loading();
+          self.pageNumber ++;
+          self.GetMesList(self.id);
+        }
+
+      },
     },
 
     created() {
     },
 
     components: {
-      topBar
+      topBar,
+      'my-scroll':scroll,
     }
   }
 </script>

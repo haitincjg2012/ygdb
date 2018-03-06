@@ -47,17 +47,8 @@ public class Goods extends BaseModel<Long> {
     private Integer sort;
 
     /**
-     * 属性值
-     */
-    @OneToMany(mappedBy = "goods",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.REMOVE,
-            orphanRemoval = true)
-    private List<GoodsAttr> goodsAttrList;
-
-    /**
      * 是否为主类
      */
-    private boolean mainGoods;//如果为主类，则将其id存放于redis中
+    private boolean mainGoods;
 
 }

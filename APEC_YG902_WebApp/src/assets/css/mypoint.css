@@ -1,0 +1,225 @@
+.c-point-bg {
+  background: #f4f4f4;
+}
+.my-header-point-title {
+  width: 16.25rem;
+  font-size: 0.8rem;
+  color: #fff;
+  text-align: center;
+}
+.c-point-header {
+  position: relative;
+}
+.c-point {
+  position: relative;
+  width: 18.75rem;
+  height: 10rem;
+}
+.c-point-banner-bg {
+  width: 18.75rem;
+  height: 10rem;
+  display: block;
+}
+.c-point-banner-content {
+  position: absolute;
+  top: 0;
+  width: 18.75rem;
+}
+.c-point-levelPortrait {
+  margin: 2.4rem auto 0;
+  display: block;
+  width: 3.1rem;
+  height: 3.1rem;
+}
+.c-mypoint-text {
+  height: 1.35rem;
+  line-height: 1.35rem;
+  font-size: 0.75rem;
+  text-align: center;
+  color: #fff;
+}
+.c-point-level {
+  margin-top: 0.3rem;
+  position: relative;
+}
+.c-p-line {
+  margin: auto;
+  width: 14.75rem;
+  height: 0.2rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-p-line-f {
+  width: 0;
+  height: 0.2rem;
+  background: #fff;
+}
+.c-p-line-other {
+  width: 14.75rem;
+  height: 0.2rem;
+  background: #667282;
+}
+.c-p-line-text {
+  margin: 0.25rem auto 0;
+  width: 17.7rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-p-line-text-com {
+  width: 2.95rem;
+  text-align: center;
+}
+.c-p-line-text-com .levelActive {
+  color: #fff;
+}
+.c-p-line-box-dot {
+  position: absolute;
+  top: -0.1rem;
+  left: 50%;
+  transform: translate(-50%, 0);
+  -ms-transform: translate(-50%, 0);
+  -moz-transform: translate(-50%, 0);
+  -webkit-transform: translate(-50%, 0);
+  -o-transform: translate(-50%, 0);
+  width: 15.025rem;
+  font-size: 0px;
+}
+.c-p-line-dot {
+  display: inline-block;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 100%;
+  background: #667282;
+  margin-right: 2.5rem;
+}
+.c-p-line-dot:last-child {
+  margin-right: 0;
+}
+.c-p-line-dot-active {
+  background-color: #fff;
+}
+.c-p-line-name {
+  height: 1.1rem;
+  font-size: 0.6rem;
+  color: #8A8E9D;
+}
+.c-mypoint-next-leveltext {
+  height: 1.35rem;
+  line-height: 1.35rem;
+  font-size: 0.6rem;
+  color: #C1C1C9;
+  text-align: center;
+}
+.c-point-title {
+  margin-top: 0.5rem;
+  padding: 0 0.5rem;
+  width: 17.75rem;
+  height: 2.25rem;
+  line-height: 2.25rem;
+  background-color: #fff;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-point-t-text {
+  height: 2.25rem;
+  line-height: 2.25rem;
+  font-size: 0.8rem;
+  color: #323232;
+  width: 17.45rem;
+}
+.c-point-t-text:before {
+  display: inline-block;
+  content: "";
+  width: 0.2rem;
+  height: 0.8rem;
+  background-color: #FF4535;
+  vertical-align: -0.1rem;
+  margin-right: 0.5rem;
+}
+.c-point-t-btn {
+  width: 0.3rem;
+}
+.c-point-t-btn img {
+  width: 100%;
+}
+.c-point-content {
+  margin-top: 0.5rem;
+  padding: 0 0.5rem;
+  background: #fff;
+}
+.c-p-content-list {
+  border-top: 0.05rem solid #f4f4f4;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-p-c-list-content {
+  width: 15.25rem;
+  padding: 0.25rem 0 0.5rem;
+}
+.c-p-c-l-content-text {
+  font-size: 0.8rem;
+  line-height: 1.35rem;
+  color: #323232;
+}
+.c-p-c-l-content-time {
+  font-size: 0.6rem;
+  line-height: 0.8rem;
+  color: #646464;
+}
+.c-p-c-l-score {
+  width: 2.5rem;
+  padding: 0.25rem 0 0.5rem;
+  line-height: 2.75rem;
+  font-size: 0.8rem;
+  color: #323232;
+  text-align: right;
+}
+.pointWrapper {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  overflow: hidden;
+}
+.c-point-header .c-point-header-active {
+  position: absolute;
+  z-index: 99;
+  background: transparent;
+}

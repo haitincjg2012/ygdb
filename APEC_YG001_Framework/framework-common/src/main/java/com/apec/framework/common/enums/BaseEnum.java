@@ -9,7 +9,7 @@ public interface BaseEnum {
 
     /**
      * key along with enum
-     * @return
+     * @return String
      */
      String getKey();
 }

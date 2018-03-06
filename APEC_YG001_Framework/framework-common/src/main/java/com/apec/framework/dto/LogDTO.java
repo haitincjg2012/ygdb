@@ -2,6 +2,9 @@ package com.apec.framework.dto;
 
 import java.io.Serializable;
 
+/**
+ * @author xxx
+ */
 public class LogDTO implements Serializable
 {
 
@@ -77,5 +80,10 @@ public class LogDTO implements Serializable
     public void setLogId(Long logId)
     {
         this.logId = logId;
+    }
+
+    @Override
+    public String toString(){
+        return super.toString();
     }
 }

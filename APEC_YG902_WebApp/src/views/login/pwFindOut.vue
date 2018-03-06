@@ -7,10 +7,12 @@
           <form onsubmit="return false">
             <div class="phone-input-tt">
               <span>手机号</span>
-              <input id="input-phonenum" oninvalid="setCustomValidity(' ')" type="tel" v-model="phoneNum" placeholder="请输入手机号码"
-                     oninput="setCustomValidity('')" required maxlength="11" pattern="^1(3|4|5|7|8)\d{9}$"/>
+              <!--<input id="input-phonenum" oninvalid="setCustomValidity(' ')" type="tel" v-model="phoneNum" placeholder="请输入手机号码"-->
+                     <!--oninput="setCustomValidity('')" required maxlength="11" pattern="^1(3|4|5|7|8)\d{9}$"/>-->
+              <input id="input-phonenum" oninvalid="setCustomValidity(' ')" v-model="phoneNum" type="tel" placeholder="请输入手机号码"
+              oninput="setCustomValidity('')" required maxlength="11" pattern="^1(3|4|5|7|8)\d{9}$"/>
             </div>
-            <!--<div class="dash-line">-->
+     <!--<div class="dash-line">-->
             <!--</div>-->
             <div class="code-input">
               <span>验证码</span>
@@ -46,6 +48,7 @@
     data(){
       return {
         phoneNum: '',
+        phoneNum123: '',
         code: '',
         loginBtnClass:'btn-login-c',
       }

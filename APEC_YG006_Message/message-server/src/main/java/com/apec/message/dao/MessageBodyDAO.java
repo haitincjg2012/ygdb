@@ -21,10 +21,10 @@ public interface MessageBodyDAO extends BaseDAO<MessageBody, Long>{
 	 * 查询站内信内容列表
 	 * @param ids List<BigInteger>
 	 * @param pageRequest Pageable
-	 * @return Page<MessageBody>
+	 * @return 站内信分页结果
 	 * */
 	@Query(value = "select * from message_body where enable_flag='Y' and id in(:ids) order by send_time desc /* #pageable*/ ",
 			countQuery = "select count(*) from message_body where enable_flag='Y' and id in(:ids)", nativeQuery = true)
-	public Page<MessageBody> findByIdIn(@Param("ids")List<Long> ids, Pageable pageRequest);
+	Page<MessageBody> findByIdIn(@Param("ids")List<Long> ids, Pageable pageRequest);
 
 }

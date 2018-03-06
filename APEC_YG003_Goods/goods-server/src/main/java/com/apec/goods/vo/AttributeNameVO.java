@@ -1,16 +1,16 @@
 package com.apec.goods.vo;
 
 import com.apec.framework.common.enumtype.AttributeType;
-import com.apec.framework.dto.BaseVO;
-import com.apec.goods.model.AttributeValue;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by hmy on 2017/7/10.
+ * @author hmy
  */
 @Data
 @NoArgsConstructor
@@ -18,6 +18,10 @@ import java.util.List;
 public class AttributeNameVO{
 
     private Long id;
+
+    private Date createDate;
+
+    private Date lastUpdateDate;
 
     /**
      * 商品属性名称
@@ -52,6 +56,6 @@ public class AttributeNameVO{
     /**
      * 属性类型
      */
-    private AttributeType attributeType = AttributeType.RADIO;
+    private AttributeType attributeType;
 
 }

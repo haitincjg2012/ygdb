@@ -3,8 +3,8 @@ package com.apec.framework.elasticsearch.producer;
 import com.alibaba.fastjson.TypeReference;
 import com.apec.framework.common.Constants;
 import com.apec.framework.common.exception.BusinessException;
-import com.apec.framework.common.util.JsonUtil;
-import com.apec.framework.elasticsearch.eslistener.ApecESResponseListener;
+import com.apec.framework.common.util.BaseJsonUtil;
+import com.apec.framework.elasticsearch.eslistener.ApecEsResponseListener;
 import com.apec.framework.elasticsearch.vo.*;
 import com.apec.framework.log.InjectLogger;
 import org.apache.http.StatusLine;
@@ -29,7 +29,7 @@ import java.util.Collections;
  * @author yirde  2017/7/10.
  */
 @Component
-public class ApecESProducer {
+public class ApecEsProducer {
 
     @Autowired
     RestClient restClient;
@@ -38,25 +38,26 @@ public class ApecESProducer {
     private Logger logger;
 
     @Autowired
-    ApecESResponseListener apecESResponseListener;
+    ApecEsResponseListener apecESResponseListener;
 
     /**
      * 异步推送ES信息
      * @param bodyJson Body Json
      */
-    public ESPostResponseVO postESInfo(String indexUrl, String bodyJson) throws BusinessException{
+    public EsPostResponseVO postESInfo(String indexUrl, String bodyJson) throws BusinessException{
           InputStream is = null;
           BufferedReader reader = null;
           try {
+              //Post操作//索引路径
               Response indexResponse = restClient.performRequest(
-                      ESProducerConstants.OPREATION_POST,   //Post操作
-                      indexUrl,         //索引路径
+                      EsProducerConstants.OPREATION_POST,
+                      indexUrl,
                       Collections.<String, String>emptyMap(),
                       new NStringEntity(bodyJson, ContentType.APPLICATION_JSON)
               );
               logger.info("[ApecESProducer][Post] IndexResponse:{}", indexResponse.getStatusLine());
               is = indexResponse.getEntity().getContent();
-              reader =  new BufferedReader(new InputStreamReader(is, Constants.SYSTEM_ENCODING),ESProducerConstants.BUFFER_SIZE);
+              reader =  new BufferedReader(new InputStreamReader(is, Constants.SYSTEM_ENCODING), EsProducerConstants.BUFFER_SIZE);
               StringBuilder sb = new StringBuilder();
               String line;
               while ((line = reader.readLine()) != null){
@@ -66,7 +67,7 @@ public class ApecESProducer {
               reader.close();
               is.close();
 
-              return JsonUtil.parseObject(resString , ESPostResponseVO.class);
+              return BaseJsonUtil.parseObject(resString , EsPostResponseVO.class);
           }catch (Exception ex){
               if(reader != null){
                   try {
@@ -89,21 +90,22 @@ public class ApecESProducer {
 
     /**
      * put 操作
-     * @param indexUrl
+     * @param indexUrl indexUrl
      */
-    public ESPostResponseVO putEsInfo(String indexUrl, String mapping) throws BusinessException{
+    public EsPostResponseVO putEsInfo(String indexUrl, String mapping) throws BusinessException{
         InputStream is = null;
         BufferedReader reader = null;
         try {
+            //put操作,索引路径
             Response indexResponse = restClient.performRequest(
-                    ESProducerConstants.OPREATION_PUT,   //put操作
-                    indexUrl,         //索引路径
+                    EsProducerConstants.OPREATION_PUT,
+                    indexUrl,
                     Collections.<String, String>emptyMap(),
                     new NStringEntity(mapping, ContentType.APPLICATION_JSON)
             );
             logger.info("[ApecESProducer][putEsInfo] IndexResponse:{}", indexResponse.getStatusLine());
             is = indexResponse.getEntity().getContent();
-            reader =  new BufferedReader(new InputStreamReader(is, Constants.SYSTEM_ENCODING),ESProducerConstants.BUFFER_SIZE);
+            reader =  new BufferedReader(new InputStreamReader(is, Constants.SYSTEM_ENCODING), EsProducerConstants.BUFFER_SIZE);
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null){
@@ -113,7 +115,7 @@ public class ApecESProducer {
             reader.close();
             is.close();
 
-            return JsonUtil.parseObject(resString , ESPostResponseVO.class);
+            return BaseJsonUtil.parseObject(resString , EsPostResponseVO.class);
         }catch (Exception ex){
             if(reader != null){
                 try {
@@ -144,7 +146,7 @@ public class ApecESProducer {
      */
     public boolean postESInfoForUpdateByDoc(String indexUrl,String indexId,Object bodyJson){
 
-        ESPostResponseVO esPostResponseVO = postESInfoForUpdate(indexUrl,indexId,JsonUtil.toJSONString(ESUpdateDocRequestVO.getInstnce(bodyJson)));
+        EsPostResponseVO esPostResponseVO = postESInfoForUpdate(indexUrl,indexId, BaseJsonUtil.toJSONString(EsUpdateDocRequestVO.getInstnce(bodyJson)));
         return esPostResponseVO != null;
     }
 
@@ -157,7 +159,7 @@ public class ApecESProducer {
      * @return 是否更新成功
      */
     public boolean postESInfoForUpdateByScript(String indexUrl,String indexId ,String scriptJson){
-        ESPostResponseVO esPostResponseVO = postESInfoForUpdate(indexUrl,indexId,JsonUtil.toJSONString(ESUpdateScriptRequestVO.getInstnce(scriptJson)));
+        EsPostResponseVO esPostResponseVO = postESInfoForUpdate(indexUrl,indexId, BaseJsonUtil.toJSONString(EsUpdateScriptRequestVO.getInstnce(scriptJson)));
         return esPostResponseVO != null;
     }
 
@@ -166,21 +168,21 @@ public class ApecESProducer {
      * 避免了多次请求的网络开销。通过减少检索和重建索引步骤之间的时间，我们也减少了其他进程的变更带来冲突的可能性
      * @param indexUrl 索引路劲
      * @param indexId 文档ID
-     * @return
+     * @return ESPostResponseVO
      */
-     private ESPostResponseVO postESInfoForUpdate(String indexUrl,String indexId,String bodyJson){
+     private EsPostResponseVO postESInfoForUpdate(String indexUrl,String indexId,String bodyJson){
          InputStream is = null;
          BufferedReader reader = null;
          try {
              Response indexResponse = restClient.performRequest(
-                     ESProducerConstants.OPREATION_POST,   //Post操作
-                     indexUrl + indexId + ESProducerConstants.OPREATION_POST_UPDATE,         //索引路径
+                     EsProducerConstants.OPREATION_POST,
+                     indexUrl + indexId + EsProducerConstants.OPREATION_POST_UPDATE,
                      Collections.<String, String>emptyMap(),
                      new NStringEntity(bodyJson, ContentType.APPLICATION_JSON)
              );
              logger.info("[ApecESProducer][Post Update] IndexResponse:{}", indexResponse.getStatusLine());
              is = indexResponse.getEntity().getContent();
-             reader =  new BufferedReader(new InputStreamReader(is, Constants.SYSTEM_ENCODING),ESProducerConstants.BUFFER_SIZE);
+             reader =  new BufferedReader(new InputStreamReader(is, Constants.SYSTEM_ENCODING), EsProducerConstants.BUFFER_SIZE);
              StringBuilder sb = new StringBuilder();
              String line;
              while ((line = reader.readLine()) != null){
@@ -190,7 +192,7 @@ public class ApecESProducer {
              reader.close();
              is.close();
 
-             return JsonUtil.parseObject(resString , ESPostResponseVO.class);
+             return BaseJsonUtil.parseObject(resString , EsPostResponseVO.class);
          }catch (ResponseException rex){
              if(reader != null){
                  try {
@@ -238,15 +240,16 @@ public class ApecESProducer {
      */
     public boolean headESInfo(String indexUrl,String indexId){
         try {
+            //Head操作,索引路径
             Response indexResponse = restClient.performRequest(
-                    ESProducerConstants.OPREATION_HEAD,   //Head操作
-                    indexUrl + indexId,         //索引路径
+                    EsProducerConstants.OPREATION_HEAD,
+                    indexUrl + indexId,
                     Collections.<String, String>emptyMap()
             );
 
             logger.info("[ApecESProducer] [Head]IndexResponse:{}", indexResponse.getStatusLine());
             StatusLine statusLine = indexResponse.getStatusLine();
-            return statusLine.getStatusCode() == ESProducerConstants.RESPONSE_CODE;
+            return statusLine.getStatusCode() == EsProducerConstants.RESPONSE_CODE;
         }catch (Exception ex){
             logger.error("[ApecESProducer][Head] Failed ! indexUrl:{},indexId:{}",indexUrl,indexId ,ex);
             throw new BusinessException(Constants.SYS_ERROR);
@@ -262,19 +265,19 @@ public class ApecESProducer {
     public boolean deleteESInfo(String indexUrl,String indexId){
         try {
             Response indexResponse = restClient.performRequest(
-                    ESProducerConstants.OPREATION_DELETE,   //Head操作
-                    indexUrl + indexId,         //索引路径
+                    EsProducerConstants.OPREATION_DELETE,
+                    indexUrl + indexId,
                     Collections.<String, String>emptyMap()
             );
             logger.info("[ApecESProducer] [Delete]IndexResponse:{}", indexResponse.getStatusLine());
             StatusLine statusLine = indexResponse.getStatusLine();
-            return statusLine.getStatusCode() == ESProducerConstants.RESPONSE_CODE;
+            return statusLine.getStatusCode() == EsProducerConstants.RESPONSE_CODE;
         }catch (ResponseException ex){
             logger.info("[ApecESProducer][Delete] Not Found ! indexUrl:{},indexId:{},response:{}",indexUrl,indexId ,ex.getResponse());
             Response indexResponse =  ex.getResponse();
             StatusLine statusLine = indexResponse.getStatusLine();
 
-            return statusLine.getStatusCode() == ESProducerConstants.RESPONSE_CODE;
+            return statusLine.getStatusCode() == EsProducerConstants.RESPONSE_CODE;
         }catch (Exception ex){
             logger.error("[ApecESProducer][Delete] Failed ! indexUrl:{},indexId:{}",indexUrl,indexId ,ex);
             throw new BusinessException(Constants.SYS_ERROR);
@@ -286,21 +289,21 @@ public class ApecESProducer {
      * @param <V> V VO对象
      * @param indexUrl 索引的路劲
      * @param indexId 索引的ID
-     * @param clazz
+     * @param  clazz clazz
      * @return ESGetSingleResponseVO 获取单个文档
      */
-    public <V> ESGetSingleResponseVO<V> getSingleESInfoById(String indexUrl, String indexId, Class<V> clazz){
+    public <V> EsGetSingleResponseVO<V> getSingleESInfoById(String indexUrl, String indexId, Class<V> clazz){
         InputStream is = null;
         BufferedReader reader = null;
         try {
             Response indexResponse = restClient.performRequest(
-                    ESProducerConstants.OPREATION_GET,   //Head操作
-                    indexUrl + indexId,         //索引路径
+                    EsProducerConstants.OPREATION_GET,
+                    indexUrl + indexId,
                     Collections.<String, String>emptyMap()
             );
             logger.info("[ApecESProducer] [Get Single] IndexResponse:{}", indexResponse.getStatusLine());
             is = indexResponse.getEntity().getContent();
-            reader = new BufferedReader(new InputStreamReader(is, Constants.SYSTEM_ENCODING), ESProducerConstants.BUFFER_SIZE);
+            reader = new BufferedReader(new InputStreamReader(is, Constants.SYSTEM_ENCODING), EsProducerConstants.BUFFER_SIZE);
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -310,9 +313,9 @@ public class ApecESProducer {
             reader.close();
             is.close();
 
-            ESGetSingleResponseVO<V> responseVO = JsonUtil.parseObject(resString, new TypeReference<ESGetSingleResponseVO<V>>() {
+            EsGetSingleResponseVO<V> responseVO = BaseJsonUtil.parseObject(resString, new TypeReference<EsGetSingleResponseVO<V>>() {
             });
-            V data = JsonUtil.parseObject(responseVO.getSource().toString(), clazz);
+            V data = BaseJsonUtil.parseObject(responseVO.getSource().toString(), clazz);
             responseVO.setSource(data);
             return responseVO;
         }catch (ResponseException rex){

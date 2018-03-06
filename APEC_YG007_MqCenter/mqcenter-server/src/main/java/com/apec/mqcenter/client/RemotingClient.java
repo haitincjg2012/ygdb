@@ -3,7 +3,7 @@ package com.apec.mqcenter.client;
 import com.apec.framework.common.ErrorCodeConst;
 import com.apec.framework.common.ResultData;
 import com.apec.framework.common.exception.BusinessException;
-import com.apec.framework.common.util.JsonUtil;
+import com.apec.framework.common.util.BaseJsonUtil;
 import com.apec.framework.log.InjectLogger;
 import com.apec.framework.springcloud.SpringCloudClient;
 import org.apache.commons.lang3.StringUtils;
@@ -28,14 +28,14 @@ public class RemotingClient {
     /**
      * 推送 MQ 消息消费错误的数据
      * @param paramJson 参数字符串
-     * @param
+     * @param remotingURL remotingURL
      */
     public void sendMqConsumerExecute(String paramJson,String remotingURL){
         try {
             logger.info("Send the  MQ Consumer Execute  Start.ULR:{}, paramSr:{}",remotingURL, paramJson);
             String respStr = springCloudClient.post(remotingURL, paramJson);
             logger.info("Send the MQ Consumer Execute  End. respStr:{}", respStr);
-            ResultData resultData= JsonUtil.parseObject(respStr, ResultData.class);
+            ResultData resultData= BaseJsonUtil.parseObject(respStr, ResultData.class);
             if((!resultData.isSucceed()) && StringUtils.isNotBlank(resultData.getErrorCode())){
                 logger.error(remotingURL
                         +"\n result:"+resultData.getErrorCode()+",msg:"+resultData.getErrorMsg());

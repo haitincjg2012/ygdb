@@ -1,0 +1,144 @@
+.c-addressS .c-addr-header {
+  padding: 0 0.5rem;
+  width: 17.75rem;
+  background-color: #fff;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-addressS .c-addr-back {
+  width: 0.5rem;
+  height: 2.2rem;
+  background: url("../img/ret.png") no-repeat center;
+  background-size: 0.5rem 0.85rem;
+}
+.c-addressS .c-addr-h-text {
+  width: 16rem;
+  line-height: 2.2rem;
+  font-size: 0.8rem;
+  color: #323232;
+  text-align: center;
+}
+.c-addressS .c-address-history {
+  border-top: 0.05rem solid #f4f4f4;
+  width: 18.75rem;
+  height: 5.65rem;
+  background-color: #fff;
+}
+.c-addressS .c-history-title {
+  margin-left: 0.75rem;
+  height: 2.1rem;
+  line-height: 2.1rem;
+  font-size: 0.8rem;
+  color: #323232;
+}
+.c-addressS .c-history-text {
+  margin-left: 0.75rem;
+  margin-top: 0.65rem;
+  height: 2.25rem;
+  line-height: 2.25rem;
+}
+.c-addressS .c-history-text span {
+  display: inline-block;
+  max-width: 15rem;
+  overflow: hidden;
+  padding: 0 0.25rem;
+  border-radius: 0.2rem;
+  line-height: 2.25rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #323232;
+  background-color: #f4f4f4;
+}
+.c-addressS .c-address-blank {
+  width: 18.75rem;
+  height: 0.5rem;
+  background-color: #f4f4f4;
+}
+.c-addressS .c-address-title {
+  margin: 0 0.75rem;
+  height: 2.25rem;
+  line-height: 2.25rem;
+  font-size: 0.8rem;
+  color: #323232;
+}
+.c-addressS .c-address-title {
+  position: relative;
+}
+.c-addressS .c-address-title:after {
+  position: absolute;
+  content: '';
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  height: 1px;
+  background-color: #f4f4f4;
+  -webkit-transform: scale(1, 0.5);
+  transform: scale(1, 0.5);
+  -webkit-transform-origin: center bottom;
+  transform-origin: center bottom;
+}
+.c-addressS .c-addr-c-main {
+  position: fixed;
+  top: 10.65rem;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  margin: 0 0.75rem;
+  width: 17.25rem;
+  overflow: hidden;
+}
+.c-addressS .c-addr-c-main .c-addr-c-item {
+  margin-top: 0.5rem;
+  margin-right: 0.5rem;
+  border-radius: 0.25rem;
+  padding: 0 0.25rem;
+  line-height: 2.25rem;
+  height: 2.25rem;
+  font-size: 0.8rem;
+  color: #323232;
+}
+.c-addressS .c-addr-c-main .c-addr-c-item {
+  position: relative;
+}
+.c-addressS .c-addr-c-main .c-addr-c-item:after {
+  position: absolute;
+  content: '';
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  height: 1px;
+  background-color: #f4f4f4;
+  -webkit-transform: scale(1, 0.5);
+  transform: scale(1, 0.5);
+  -webkit-transform-origin: center bottom;
+  transform-origin: center bottom;
+}
+.c-addressS .c-addr-c-main .c-addr-c-active {
+  color: #fff;
+  background-color: #2fcaa7;
+}
+.c-addressS .c-address-content {
+  position: relative;
+}
+.c-addressS .c-address-content:after {
+  position: absolute;
+  content: '';
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  height: 1px;
+  background-color: #d7d7d7;
+  -webkit-transform: scale(1, 0.5);
+  transform: scale(1, 0.5);
+  -webkit-transform-origin: center bottom;
+  transform-origin: center bottom;
+}

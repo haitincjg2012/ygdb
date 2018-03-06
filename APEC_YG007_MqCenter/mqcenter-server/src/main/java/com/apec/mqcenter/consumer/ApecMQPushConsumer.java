@@ -42,7 +42,7 @@ public class ApecMQPushConsumer extends DefaultMQPushConsumer {
     @Autowired
     private MailService mailService;
 
-    /*
+    /**
      * 重试次数
      */
     private int retryNum;

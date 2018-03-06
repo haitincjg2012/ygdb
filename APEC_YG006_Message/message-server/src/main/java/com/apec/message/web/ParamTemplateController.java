@@ -12,11 +12,14 @@ import com.apec.framework.base.BaseController;
 import com.apec.framework.common.Constants;
 import com.apec.framework.common.ResultData;
 import com.apec.framework.common.exception.BusinessException;
-import com.apec.framework.common.util.JsonUtil;
+import com.apec.framework.common.util.BaseJsonUtil;
 import com.apec.framework.log.InjectLogger;
 import com.apec.message.service.ParamTemplateService;
 import com.apec.message.vo.ParamTemplateVO;
 
+/**
+ * @author xxx
+ */
 @RestController
 @RequestMapping(value = "/params")
 public class ParamTemplateController extends BaseController{
@@ -48,14 +51,11 @@ public class ParamTemplateController extends BaseController{
 	
 	/**
 	 * 增加参数配置
-	 * @param paramsVO 参数对象体
-	 * @return 
 	 * */
 	@RequestMapping(value = "/addParams", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	public ResultData<String> addParams(@RequestBody String json){
-		ParamTemplateVO paramTemplateVO = JsonUtil.parseObject(json, ParamTemplateVO.class);
+		ParamTemplateVO paramTemplateVO = BaseJsonUtil.parseObject(json, ParamTemplateVO.class);
 		if (paramTemplateVO == null){
-			log.warn("can't add paramsVO,[paramsVO:{}]",paramTemplateVO);
 			return getResultData(false, null, Constants.ERROR_100003);
 		}
 		if (StringUtils.isBlank(paramTemplateVO.getParamKey()) || StringUtils.isBlank(paramTemplateVO.getParamValue())){

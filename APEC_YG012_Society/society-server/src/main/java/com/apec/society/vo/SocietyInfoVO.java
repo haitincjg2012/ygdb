@@ -1,7 +1,7 @@
 package com.apec.society.vo;
 
 import com.apec.framework.common.enumtype.SocietyType;
-import com.apec.framework.mongodb.model.BaseModel;
+import com.apec.framework.mongodb.vo.BaseVO;
 import lombok.Data;
 
 /**
@@ -10,7 +10,7 @@ import lombok.Data;
  * @author yirde  2017/10/20.
  */
 @Data
-public class SocietyInfoVO extends BaseModel {
+public class SocietyInfoVO extends BaseVO<Long> {
 
     /**
      *  圈子标题

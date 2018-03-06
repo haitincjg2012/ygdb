@@ -33,7 +33,8 @@
       <div class="z-content">
         <ul class="z-ul-itemS">
           <li :is="item.ss"   v-for="item in itemG"
-              :item = "item">
+              :item = "item"
+               @receive="scrollTop">
           </li>
         </ul>
         <div class="button-tip" :class="{flip:arrive, loading:loadFlag}" v-if="!space">
@@ -78,7 +79,7 @@
       </div>
     </div>
     <div v-if="space" class="z-tip-img">
-      <img src="../../../assets/img/searchF.svg">
+      <img src="../../../assets/img/searchF.png">
       <p>抱歉,没有找到符合条件的供求</p>
     </div>
     <!--</scroller>-->
@@ -105,6 +106,7 @@
   import CITY from  './city.vue'
   import URBAN from './urban.vue'
   import dataConfig from "../../../api/data"
+  import WX from '../../../components/wx.vue'  //微信分享功能
   const api = new API();
 
 
@@ -264,6 +266,11 @@
       }else{
           this.space = false;
       }
+
+      if(this.pageCount == 1){
+          this.load="数据加载完...";
+          this.showVisableF = true;
+      }
       var arr = [];
       rows.forEach(function (current, index) {
         var obj = {};
@@ -292,31 +299,46 @@
         len += obj.weight.length;
         obj.path = index;
 
-        var goodTime = current.showSecondInfo;
-        var text = goodTime.join(" ");
+        var html = "";
+        if(current.productTags){
+          current.productTags.forEach(function (recommands) {
+            html +="<span class='g-sp-com g-first g-second' data-id="+current.id+">"+recommands.tagName + "</span>";
+          });
+        }
+        current.showSecondInfo.forEach(function (fruitC) {
+          html +="<span class='g-sp-com g-first ' data-id="+current.id+">"+fruitC + "</span>";
+        });
 
-        obj.fruitdate = text;
+
+        obj.fruitdate = html;
 
         var Identification = current.productTypeName;
         obj.gq = current.productTypeName;
         //单一的排序
-        //只有求购和供应
+        //求购和供应的价格
+        var hprice = "";
         if(Identification == "求购"){
-          obj.bg = true;
-          obj.indentification = 0;
-          obj.endAmount = current.endAmount.toString();
-          len += obj.endAmount.length;
-          obj.startAmount = current.startAmount.toString();
-          len += obj.startAmount.length;
-        }else{
-          obj.bg = false;
-          obj.indentification = 1;
-          obj.amount = current.amount.toString();
-          len += obj.amount.length;
-        }
-        var n = (250 - (len + 3 + 3 + 3) * 10)/20;
-        obj.wh = n;
+          hprice = "<span data-id=" + current.id +" class='g-price-com-f gy'>&yen;" + current.startAmount + "~" +current.endAmount + "</span><span class='g-unit'  data-id=" + current.id + ">" + current.priceUnit +"</span>";
+          obj.price = hprice;
 
+          obj.bg = true;
+//          obj.indentification = 0;
+//          obj.endAmount = current.endAmount.toString();
+//          len += obj.endAmount.length;
+//          obj.startAmount = current.startAmount.toString();
+//          len += obj.startAmount.length;
+        }else{
+          hprice = "<span data-id=" + current.id +" class='g-price-com-f gy'>&yen;" + current.amount + "</span><span class='g-unit'  data-id=" + current.id + ">" + current.priceUnit +"</span>";
+          obj.price = hprice;
+          obj.bg = false;
+//          obj.indentification = 1;
+//          obj.amount = current.amount.toString();
+//          len += obj.amount.length;
+        }
+//        var n = (250 - (len + 3 + 3 + 3) * 10)/20;
+//        obj.wh = n;
+        //重量
+        obj.weight = "<span class='g-unit'>" + current.weight + "&nbsp;" + current.weightUnit + "</span>";
         var pattern =/[0-9]*/g;
         var pt = /([a-z]*|[A-Z]*|(\s*))/g;
         var st = obj.name +"";
@@ -331,7 +353,8 @@
         arrtttt.forEach(function (current) {
           lt += current.length;
         })
-        obj.addreeWh = (185 - (obj.name.toString().length + obj.agency.length) * 12 + lF * 6 + lt*8)/20;;
+
+        obj.addreeWh = (185 - ((obj.name?(obj.name+""):"").length + (obj.agency?(obj.agency+""):"").length) * 12 + lF * 6 + lt*8)/20;;
         obj.productTypeName = QG.methods.img(current.productTypeName);
         if(that.del.hasOwnProperty(id)){
             return;
@@ -496,6 +519,7 @@
         showVisableF:false,//默认显示的
         load:"",//数据在加载中
         emptyFlag:false,//是否需要显示
+        scroll:0,//滚动的距离
       }
     },
     components: {
@@ -555,12 +579,7 @@
         this.searchType = "";
         this.el = null;
         fn.initialization();
-        if (this.smain == 0) {
-          this.$router.go(-1);
-        } else {
-          this.$router.push({name: "home"})
-          this.smain = 0;
-        }
+
         this.items = null;
         this.itemChild = null;
         this.showShadow = false;
@@ -575,6 +594,20 @@
             current.children[1].classList.remove("activeTri")
           }
         });
+
+//        if (this.smain == 0) {
+//          this.$router.go(-1);
+//        } else {
+//          this.$router.push({name: "home"})
+//          this.smain = 0;
+//        }
+        var wxF = localStorage.wx;
+        if(wxF){
+          this.$router.push({name:"home"});
+          localStorage.removeItem("wx");
+        }else{
+          this.$router.go(-1);
+        }
       },
       reset(){
           this.pageNumber = 1;
@@ -715,7 +748,6 @@
             } else {
               this.twoDirector(idx)
             }
-//          }
         }
         this.showShadow = true;
       },
@@ -943,6 +975,8 @@
           var target = e.target || e.srcElement;
           var offsetH = target.body.scrollTop;
           var sHeight = target.body.scrollHeight;
+
+
           var that = this;
           if(sHeight - offsetH - this.bheight == 0){
             if(this.pageCount > this.pageNumber){
@@ -955,12 +989,14 @@
               this.arrive = false;
               this.loadFlag = false;
               this.showVisableF = true;
-              this.load = "数据正在加载完...";
-//              Toast('数据加载完...')
+              this.load = "数据加载完...";
             }
 
           }
         }
+      },
+      scrollTop(top){
+          this.scroll = top;
       },
       st(aa){
         var argument = [].slice.call(arguments);
@@ -986,16 +1022,26 @@
 
     },
     activated(){
+        console.log(this, 89898);
       this.el = this.$refs.ZGQ;
       this.isActivated = true;
       this.del = {};
       this.bheight = document.querySelector(".page").clientHeight;
         var type = this.$route.query.gq;
+      //分析供应和求购
+      if(type == "GYTYPE"){
+        //   供应
+        WX.wx("果来乐-供应");
+      }else if(type == "QGTYPE"){
+        //求购
+        WX.wx("果来乐-求购");
+      }
 
+//      var sH =  this.$store.state.xqInfoF;
 
-      var sH =  this.$store.state.xqInfoF;
       if( this.$store.state.xqF){
-        window.scrollTo(0,sH);
+          var scrollTop = this.scroll;
+        window.scrollTo(0,scrollTop);
       }else{
         this.ky = "";
         if(type == "GYTYPE"){

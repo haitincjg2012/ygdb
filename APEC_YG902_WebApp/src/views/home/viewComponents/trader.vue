@@ -1,6 +1,6 @@
 <template>
   <div class="z-trader">
-    <div class="z-header-com">
+    <div class="z-header-com z-find-Add-sty">
       <!--<h1>客商</h1>-->
       <div class="return" @click.stop="back">
         <img src="../../../assets/img/ret.png">
@@ -22,44 +22,46 @@
            <span class="triangle"></span>
          </div>
     </div>
-    <div class="z-t-frame">
-      <ul class="z-t-list clearfix">
-        <li :is="item.ss"
-            v-for = "item in itemC"
-            :item = "item"
-        ></li>
-      </ul>
-      <scrollS ref="childScroll"></scrollS>
+      <scrollbg class="z-t-frame" :data="itemC || []" :pullup="pullup" @scrollToEnd="loadMore" ref="traderWrapper">
+        <div>
+          <ul class="z-t-list clearfix">
+            <li :is="item.ss"
+                v-for = "item in itemC"
+                :item = "item"
+            ></li>
+          </ul>
+          <scrollS ref="childScroll"></scrollS>
+          <div class="c-z-tr-empty" v-if="tremptyFlag">
+            <img src="../../../assets/img/noData.png">
+            <p>暂无数据</p>
+          </div>
+        </div>
+      </scrollbg>
       <div class="z-t-shadow" v-if="shadowF">
-        <ul class="z-t-listS clearfix" v-if="firstF">
-          <li :is = "item.ss"
-              v-for="item in itemS"
-              :item = "item"
-              v-on:rs="pzSearch">
-          </li>
-        </ul>
-        <ul class="c-filter" v-if="firstTF">
-          <li v-for="item in itemFilter" class="c-filter-com" @click="filteBtn(item)">
-            <span :class="{Cactive:item.sh}">{{item.keyword}}</span>
-            <!--<img>-->
-          </li>
-          <li class="c-filter-ok">
-            <div class="z-f-ok" @click="searchOk">确认</div>
-          </li>
-        </ul>
-        <ul class="z-t-listA clearfix" v-if="secondF">
-          <li :is = "item.ss"
-              v-for="item in itemA"
-              :item = "item"
-              v-on:rss="searchArea">
-          </li>
-        </ul>
-        <div class="shadow" @click="remove"></div>
-      </div>
-      <div class="c-z-tr-empty" v-if="tremptyFlag">
-        <img src="../../../assets/img/noData.png">
-        <p>暂无数据</p>
-      </div>
+      <ul class="z-t-listS clearfix" v-if="firstF">
+        <li :is = "item.ss"
+            v-for="item in itemS"
+            :item = "item"
+            v-on:rs="pzSearch">
+        </li>
+      </ul>
+      <ul class="c-filter" v-if="firstTF">
+        <li v-for="item in itemFilter" class="c-filter-com" @click="filteBtn(item)">
+          <span :class="{Cactive:item.sh}">{{item.keyword}}</span>
+          <!--<img>-->
+        </li>
+        <li class="c-filter-ok">
+          <div class="z-f-ok" @click="searchOk">确认</div>
+        </li>
+      </ul>
+      <ul class="z-t-listA clearfix" v-if="secondF">
+        <li :is = "item.ss"
+            v-for="item in itemA"
+            :item = "item"
+            v-on:rss="searchArea">
+        </li>
+      </ul>
+      <div class="shadow" @click="remove"></div>
     </div>
   </div>
 </template>
@@ -75,7 +77,12 @@
   import Region from './region.vue'
   import dataConfig from "../../../assets/data/search.json"
   import {Toast} from 'mint-ui'
-  import scrollS from "../../../components/scrollSecond.vue"
+
+  import scrollS from "../../../components/loadingAnimation.vue"
+  import scrollbg from '../../../components/scroll/scrollbg.vue'//下拉刷新
+
+  import WX from '../../../components/wx.vue'  //微信分享功能
+  import TFIcon from '../../../assets/img/TFIcon.png'
 
   const api = new API();
   var fn = {
@@ -167,41 +174,66 @@
       if(!data.succeed){
         return;
       }
-      var arr = [];
-      var rows = data.data.rows;
-      this.pageCount = data.data.pageCount;
-      if(data.data.pageCount == 0){
-        this.$refs.childScroll.init(true);
-      }else{
-        this.$refs.childScroll.init(false);
-      }
-      rows.forEach(function (current, index) {
-        var obj = {
-          showOrgTagsInfo:{}
-        };
-        obj.path =index;
-        obj.id = current.userId;
-        obj.ss = childT;
-        obj.orgId = current.orgId ? current.orgId:"-999";
-        obj.userId = current.userId ? current.userId:"-1000";
-        obj.orgName = current.orgName;//用户姓名
-        obj.orgFirstBannerUrl = (current.orgFirstBannerUrl || agksD)+"?x-oss-process=style/_list";//左侧图片
-        obj.userLevelName = IMG.methods.userLevel(current.userLevelName);//用户等级
-        obj.userRealAuthKey = current.userRealAuthKey == ""?false:true;//用户是否实名认证
-        obj.mainOperating = current.mainOperating;//用户主营品种
-        obj.saleAddress = current.saleAddress;//用户的销售区域
-        obj.address = current.address;
-        arr.push(obj);
-      });
 
-      fn.traderData = fn.traderData.concat(arr);
-      this.itemC = fn.traderData;
+      if(data.data.pageCount > 0){
+        var arr = [];
+        var rows = data.data.rows;
+        this.pageCount = data.data.pageCount;
+        rows.forEach(function (current, index) {
+          var obj = {
+            showOrgTagsInfo:{}
+          };
+          obj.path =index;
+          obj.id = current.userId;
+          obj.ss = childT;
+          obj.orgId = current.orgId ? current.orgId:"-999";
+          obj.userId = current.userId ? current.userId:"-1000";
+          obj.orgName = current.orgName;//用户姓名
 
-      if(this.itemC.length == 0){
-          this.tremptyFlag = true;
-      }else{
+          if(current.orgFirstBannerUrl){
+            obj.portraitHtml ='<div class="pic-com-picture"><img src ="'+current.orgFirstBannerUrl + '?x-oss-process=style/_list'+ '"/></div>'
+          }else{
+            obj.portraitHtml ='<div class="pic-com-picture pic-com-picture-bg">客商</div>'
+          }
+
+          obj.orgNameHtml = '<div class="z-t-r-f-partO"><div class="z-t-r-info-name"> '
+            +current.orgName + '</div> <div class="z-t-r-info-auth">'
+            +(current.userRealAuthKey == ""?"":'<span class="z-t-r-info-auth-sty">实名认证</span>')
+            +'</div></div><div class="z-t-r-f-partT">'
+            + (current.viewNum > 0?current.viewNum :"0")+ '人浏览</div>';
+
+          if(current.mainOperating){
+            obj.mainOperatingHtml = '<div class="z-t-main-l"><img src='+TFIcon +' class="z-t-icon"></div>'
+              + '<div class="z-t-main-r"> <p class="z-t-main-text">主营:&nbsp;'+current.mainOperating + '</p></div>';
+          }else{
+            obj.compensate = true;
+          }
+          if(current.voucherNum > 0){
+            obj.voucherNumHtml = ' <div class="z-t-main-l"><img src='+TFIcon +' class="z-t-icon"></div>'
+              + '<div class="z-t-main-r"> <p class="z-t-main-text">累计调果:&nbsp;'+current.voucherNum + '</p></div>';
+          }
+
+
+
+          obj.orgFirstBannerUrl = (current.orgFirstBannerUrl || agksD)+"?x-oss-process=style/_list";//左侧图片
+          obj.userLevelName = IMG.methods.userLevel(current.userLevelName);//用户等级
+          obj.userRealAuthKey = current.userRealAuthKey == ""?false:true;//用户是否实名认证
+          obj.mainOperating = current.mainOperating;//用户主营品种
+          obj.saleAddress = current.saleAddress;//用户的销售区域
+          obj.address = current.address;
+          arr.push(obj);
+        });
+
+        fn.traderData = fn.traderData.concat(arr);
+        this.itemC = fn.traderData;
         this.tremptyFlag = false;
+
+      }else{
+        this.itemC = null;
+        this.$refs.childScroll.init();
+        this.tremptyFlag = true;
       }
+
     }
   };
 export default{
@@ -212,7 +244,7 @@ export default{
           itemA:null,
           shadowF:false,
           searchType:"",
-          pageNumber:1,
+
           ky:"",
           itemFilter:null,
           firstF:false,
@@ -221,10 +253,17 @@ export default{
           tremptyFlag:false,////默认情况是有数据的
           bheight:0,//记录屏幕的默认高度
           traderSearch:"",
+
+          scrollTop:undefined,//
+          //下拉刷新
+          pullup:true,
+          pageCount:10000,
+          pageNumber:1,
         }
     },
     methods:{
        back(){
+         this.$store.state.traderScroll = undefined;
          this.shadowF = false;
          fn.pzD = null;
          fn.aD = null;
@@ -265,7 +304,8 @@ export default{
         this.shadowF = false;
       },
       search(){
-        this.searchType = this.traderSearch;
+        this.searchType = "";
+        this.ky = this.traderSearch;
         this.shadowF = false;
         this.initPagination();
         this.list(1);
@@ -314,15 +354,14 @@ export default{
         }else if(path == 1){
           this.reset();
           this.firstTF = true
-          if(fn.aD){
-            this.itemS = fn.aD;
+          if(fn.itemFilter){
+            this.itemS = fn.itemFilter;
           }else{
             fn.secondC.bind(this)(path);
           }
         }
       },
       pzSearch(param){
-          console.log(param, 88888);
         var flag = param.flag;
         var type = param.type;
         var path = param.path;
@@ -468,7 +507,7 @@ export default{
           var offsetH = target.body.scrollTop;
           var sHeight = target.body.scrollHeight;
           var that = this;
-
+          that.scrollTop = offsetH;
           if(sHeight - offsetH - this.bheight == 0){
 
             if(this.pageCount > this.pageNumber){
@@ -477,9 +516,7 @@ export default{
               this.pageNum(this.pageNumber);
             }else{
               this.$refs.childScroll.end();
-//              Toast('数据加载完...')
             }
-
           }
         }
       },
@@ -492,17 +529,43 @@ export default{
         }
         setTimeout(l, 1000)
       },
+      loadMore(){
+        if(this.pageCount > this.pageNumber){
+          this.pageNumber ++;
+          this.$refs.childScroll.start();
+          this.pageNum(this.pageNumber);
+        }else{
+            if(!this.tremptyFlag){
+              this.$refs.childScroll.end();
+            }
+        }
+      },
     },
     activated(){
-      this.bheight = document.querySelector(".page").clientHeight;
+//        this.bheight = document.querySelector(".page").clientHeight;
+      var self = this;
+      var el = this.$refs.traderWrapper;
+      el.init();
+
+      var scrollTop = this.$store.state.traderScroll;
+      if(scrollTop != 1){
         this.initPagination();
         this.list(1);
+      }
+//      if(typeof scrollTop != "undefined" && self.scrollTop){
+//        window.scrollTo(0,self.scrollTop);//返回到悬浮的位置
+//      }else {
+//        this.initPagination();
+//        this.list(1);
+//      }
+        WX.wx("果来乐-找客商");
     },
    created(){
-    window.addEventListener('scroll', this.menuList, false);
+//    window.addEventListener('scroll', this.menuList, false);
   },
   components:{
-    scrollS
+    scrollS,
+    scrollbg
   }
 }
 </script>

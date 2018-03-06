@@ -2,12 +2,15 @@ package com.apec.goods.dto;
 
 import com.apec.framework.dto.BaseDTO;
 import com.apec.goods.vo.AttributeNameVO;
+import lombok.Data;
 
 import java.util.List;
 
 /**
  * Created by hmy on 2017/7/11.
+ * @author hmy
  */
+@Data
 public class AttributeNameDTO extends BaseDTO {
 
     /**

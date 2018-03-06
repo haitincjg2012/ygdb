@@ -1,0 +1,215 @@
+/*
+* 消息模块
+* created by gsy on 2017/11/10
+*/
+.gsymesg {
+  background-color: #F8F8F8;
+}
+.textWrap {
+  word-break: break-all;
+}
+.megscroll {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 2.2rem;
+  overflow: hidden;
+}
+.messageInfo .mesglist {
+  background-color: #fff;
+}
+.messageInfo .mesglist li {
+  width: 100%;
+  font-size: 0.75rem;
+  letter-spacing: 0.05rem;
+  position: relative;
+}
+.messageInfo .mesglist li .unread {
+  position: absolute;
+  width: 0.9rem;
+  height: 0.9rem;
+  right: 1.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #ff4535;
+  font-size: 0.6rem;
+  text-align: center;
+  line-height: 0.9rem;
+  color: #fff;
+  letter-spacing: 0;
+  border-radius: 100%;
+}
+.messageInfo .mesglist li .listCotent {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+.messageInfo .mesglist li .listCotent .listL {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0.4rem 0.7rem 0.4rem 0.75rem;
+  display: inline-block;
+}
+.messageInfo .mesglist li .listCotent .listL img {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+.messageInfo .mesglist li .listCotent .listR {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f4f4f4;
+  line-height: 1.125rem;
+  padding: 0.95rem 0.75rem 0.95rem 0;
+}
+.messageInfo .mesglist li .listCotent .listR .listarrow {
+  width: 0.375rem;
+  height: 0.675rem;
+}
+.messageInfo .mesglist li .listCotent .listR .listarrow img {
+  width: 0.375rem;
+  height: 0.675rem;
+}
+.messageInfo .mesglist li:last-child .listR {
+  border: 0 none;
+}
+.sysmessage .notifylist li {
+  background-color: #fff;
+  margin-top: 0.5rem;
+  position: relative;
+  padding: 0.65rem 0.7rem 0.65rem 3.15rem;
+}
+.sysmessage .notifylist li .bellIcon {
+  position: absolute;
+  left: 0.775rem;
+  height: 0.65rem;
+  width: 1.75rem;
+  height: 1.75rem;
+}
+.sysmessage .notifylist li .notifyR {
+  display: flex;
+  flex-direction: column;
+  letter-spacing: 0.05rem;
+}
+.sysmessage .notifylist li .notifyR .noRtitle {
+  color: #222328;
+  font-size: 0.75rem;
+  font-weight: bold;
+  line-height: 0.75rem;
+  line-height: 1.05rem;
+}
+.sysmessage .notifylist li .notifyR .noRtime {
+  color: #646464;
+  font-size: 0.6rem;
+  line-height: 0.7rem;
+  margin-bottom: 0.625rem;
+}
+.sysmessage .notifylist li .notifyR .content {
+  background-color: #F4F4F4;
+  color: #646464;
+  font-size: 0.75rem;
+  line-height: 1.2rem;
+  text-align: justify;
+  letter-spacing: 0.025rem;
+  padding: 0.225rem 0.5rem 0.225rem 0.5rem;
+  word-break: break-all;
+}
+.praise .praiselist li {
+  margin-top: 0.55rem;
+  background-color: #fff;
+  padding: 0.5rem 0.7rem;
+  display: flex;
+  flex-direction: column;
+  letter-spacing: 0.05rem;
+  color: #323232;
+}
+.praise .praiselist .pralFirst {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 0.45rem;
+}
+.praise .praiselist .pralFirst .praFl {
+  width: 1.75rem;
+  height: 1.75rem;
+  margin-right: 0.425rem;
+}
+.praise .praiselist .pralFirst .praFl img {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+.praise .praiselist .pralFirst .praFr {
+  display: flex;
+  flex-direction: column;
+}
+.praise .praiselist .pralFirst .praFr .title {
+  color: #222328;
+  font-size: 0.75rem;
+  line-height: 0.75rem;
+  padding: 0.1rem 0 0.15rem;
+  font-weight: bold;
+}
+.praise .praiselist .pralFirst .praFr .time {
+  color: #646464;
+  font-size: 0.6rem;
+}
+.praise .praiselist .pralSed {
+  margin-bottom: 0.375rem;
+  font-size: 0.8rem;
+  line-height: 0.95rem;
+  font-weight: bold;
+  word-break: break-all;
+}
+.praise .praiselist .pralThird {
+  display: flex;
+  flex-direction: row;
+  background-color: #F4F4F4;
+}
+.praise .praiselist .pralThird .pralTimg {
+  width: 3.75rem;
+  height: 3.75rem;
+  background-color: #fff;
+}
+.praise .praiselist .pralThird .pralTimg img {
+  width: 3.75rem;
+  height: 3.75rem;
+}
+.praise .praiselist .pralThird .content {
+  color: #646464;
+  font-size: 0.75rem;
+  line-height: 1.15rem;
+  padding: 0.15rem 0.275rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}
+.comments .praiselist .pralFirst .praFr {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.comments .praiselist .pralFirst .praFr .praFrl {
+  display: flex;
+  flex-direction: column;
+}
+.comments .praiselist .pralFirst .praFr .praFrr {
+  width: 1.65rem;
+  height: 0.9rem;
+  border-radius: 0.2rem;
+  border: 0.05rem solid #969696;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.comments .praiselist .pralFirst .praFr .praFrr span {
+  font-size: 0.65rem;
+  color: #969696;
+}

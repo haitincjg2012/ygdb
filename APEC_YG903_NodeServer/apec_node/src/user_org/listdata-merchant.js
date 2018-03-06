@@ -14,7 +14,7 @@ exports = module.exports = function (elastic,total,err,done) {
     elastic.forEach(function(elasticObj,index){
         elasticSource = elasticObj._source;
         if(!elasticSource){
-            console.warn("=============listdata-agency: _source not found. Id:"+elasticObj._id);
+            console.warn("=============listdata-Merchant: _source not found. Id:"+elasticObj._id);
             return;
         }
         elasticUserOrgId.push({"elasticId":elasticObj._id,"orgId": elasticSource.orgId,"userId":elasticSource.userId});
@@ -73,7 +73,6 @@ exports = module.exports = function (elastic,total,err,done) {
     } catch (e) {
        console.log("============List Merchant Error==============");
        console.log(e);
-       console.log("============List Merchant Error==============");
        return done(returnData,total,err);
     }
 };

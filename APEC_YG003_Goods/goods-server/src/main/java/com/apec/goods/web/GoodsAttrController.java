@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by hmy on 2017/7/11.
+ * @author hmy
  */
 @RestController
 @RequestMapping("/goodsAttr")
@@ -107,13 +108,12 @@ public class GoodsAttrController extends MyBaseController {
     @RequestMapping(value = "/findGoodsAttr",method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
     public String findGoodsAttr(@RequestBody String json){
         try{
-            GoodsAttrVO goodsAttrVO1 = new GoodsAttrVO();
             //获取前端数据
             GoodsAttrVO goodsAttrVO = getFormJSON(json,GoodsAttrVO.class);
             if(goodsAttrVO == null || goodsAttrVO.getId() == null ){
                 return super.getResultJSONStr(false, null, Constants.ERROR_100003);
             }
-            goodsAttrVO1 = goodsAttrService.findGoodsAttr(goodsAttrVO);
+            GoodsAttrVO goodsAttrVO1 = goodsAttrService.findGoodsAttr(goodsAttrVO);
             return super.getResultJSONStr(true, goodsAttrVO1, "");
         }catch (Exception e){
             log.error("[goodsAttr][findGoodsAttr] exception:{}",e);
@@ -136,6 +136,54 @@ public class GoodsAttrController extends MyBaseController {
         }catch(Exception e){
             log.error("[goodsAttr][deleteGoodsAttrList] Exception:{}" , e);
             return super.getResultJSONStr(false, null, Constants.SYS_ERROR);
+        }
+    }
+
+    /**
+     * 商品属性关系序号上升
+     */
+    @RequestMapping(value = "/riseGoodsAttrSort",method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
+    public String riseGoodsAttrSort(@RequestBody String json){
+        String result = Constants.SYS_ERROR;
+        try{
+            //获取前端数据
+            GoodsAttrVO goodsAttrVO = getFormJSON(json,GoodsAttrVO.class);
+            if(goodsAttrVO == null || goodsAttrVO.getId() == null ){
+                return super.getResultJSONStr(false, null, Constants.ERROR_100003);
+            }
+            result = goodsAttrService.riseGoodsAttrSort(goodsAttrVO,String.valueOf(getUserId(json)));
+            if(StringUtils.equals(result,Constants.RETURN_SUCESS)){
+                return super.getResultJSONStr(true, null, "");
+            }else{
+                return super.getResultJSONStr(false, null, result);
+            }
+        }catch (Exception e){
+            log.error("[goodsAttr][riseGoodsAttrSort] exception:{}",e);
+            return super.getResultJSONStr(false, null, result);
+        }
+    }
+
+    /**
+     * 商品属性关系序号下降
+     */
+    @RequestMapping(value = "/downGoodsAttrSort",method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
+    public String downGoodsAttrSort(@RequestBody String json){
+        String result = Constants.SYS_ERROR;
+        try{
+            //获取前端数据
+            GoodsAttrVO goodsAttrVO = getFormJSON(json,GoodsAttrVO.class);
+            if(goodsAttrVO == null || goodsAttrVO.getId() == null ){
+                return super.getResultJSONStr(false, null, Constants.ERROR_100003);
+            }
+            result = goodsAttrService.downGoodsAttrSort(goodsAttrVO,String.valueOf(getUserId(json)));
+            if(StringUtils.equals(result,Constants.RETURN_SUCESS)){
+                return super.getResultJSONStr(true, null, "");
+            }else{
+                return super.getResultJSONStr(false, null, result);
+            }
+        }catch (Exception e){
+            log.error("[goodsAttr][downGoodsAttrSort] exception:{}",e);
+            return super.getResultJSONStr(false, null, result);
         }
     }
 

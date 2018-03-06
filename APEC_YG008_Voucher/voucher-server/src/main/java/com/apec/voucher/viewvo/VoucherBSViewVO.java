@@ -1,7 +1,6 @@
 package com.apec.voucher.viewvo;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
@@ -37,6 +36,11 @@ public class VoucherBSViewVO {
 	 * 售货市场
 	 * */
 	private String saleMarket;
+
+	/**
+	 * 买方姓名
+	 */
+	private String name;
 	
 	/**
 	 * 交收单总重量（斤）
@@ -46,12 +50,17 @@ public class VoucherBSViewVO {
 	/**
 	 * 合计金额（元）
 	 * */
-	private BigDecimal totalAmount;
+	private Double totalAmount;
 	
 	/**
 	 * 上传人
 	 * */
 	private String userName;
+
+	/**
+	 * 上传人手机号
+	 */
+	private String mobile;
 	
 	/**
 	 * 图片路径
@@ -61,10 +70,16 @@ public class VoucherBSViewVO {
 	/**
 	 * id
 	 * */
-	private BigInteger voucherId;
+	private Long voucherId;
 	
 	/**
 	 * 用户id
 	 * */
-	private BigInteger userId;
+	private Long userId;
+
+	/**
+	 * 审核状态
+	 */
+	private String auditState;
+
 }

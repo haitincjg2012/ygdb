@@ -43,6 +43,7 @@ exports = module.exports = function (elastic,total,err,done,saveProductArr) {
          "timeout":elasticSource.timeout,
          "createDate":elasticSource.createDate,
          "offsellDate": elasticSource.offsellDate,
+         "productTags":elasticSource.productTags,
          "showCredateTime": datautil.getDateDiff(elasticSource.createDate,elasticSource.timeout)
      };
      showSecondInfo = [];
@@ -136,7 +137,6 @@ exports = module.exports = function (elastic,total,err,done,saveProductArr) {
     } catch (e) {
        console.log("============List Product Error==============");
        console.log(e);
-       console.log("============List Product Error==============");
        return done(returnData,total,err);
     }
 };

@@ -11,7 +11,7 @@
   position: relative;
 }
 .myHeader .header h1 {
-  font-size: 0.825rem;
+  font-size: 0.85rem;
   height: 2.175rem;
   line-height: 2.175rem;
   letter-spacing: 0.075rem;
@@ -22,11 +22,9 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 0.475rem;
-  height: 0.85rem;
 }
 .myHeader .header i img {
-  margin-top: 0.725rem;
+  margin-top: 0.7rem;
   margin-left: 0.75rem;
   width: 0.475rem;
   height: 0.85rem;

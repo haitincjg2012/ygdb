@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * Created by hmy on 2017/8/2.
+ * @author hmy
  */
 @Service
 public class WordBookServiceImpl implements WordBookService {
@@ -25,8 +26,6 @@ public class WordBookServiceImpl implements WordBookService {
 
     /**
      * 根据code获取相应所需的字典表数据
-     * @param vo
-     * @return
      */
     @Override
     public List<WordBookViewVO> listNeedWordBook(WordBookViewVO vo) {

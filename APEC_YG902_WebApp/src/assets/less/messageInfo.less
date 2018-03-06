@@ -1,0 +1,266 @@
+/*
+* 消息模块
+* created by gsy on 2017/11/10
+*/
+@rem:40rem;
+
+
+ //公共部分
+.gsymesg{
+  background-color: #F8F8F8;
+}
+//换行
+.textWrap{
+  word-break: break-all;
+}
+//多行显示 显示...
+.mulellipsis(@lines:3){
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display:-webkit-box;
+  -webkit-line-clamp:@lines;
+  -webkit-box-orient:vertical;
+}
+//scroll滚动
+.megscroll{
+  position: fixed;
+  left: 0;
+  right:0;
+  bottom: 0;
+  top:88/@rem;
+  overflow: hidden;
+}
+
+//消息模块-主页
+.messageInfo{
+  .mesglist{
+    background-color: #fff;
+
+    li{
+      width:100%;
+      font-size: 30/@rem;
+      letter-spacing: 2/@rem;
+      position: relative;
+    .unread{
+      position: absolute;
+      width:36/@rem;
+      height:36/@rem;
+      right:76/@rem;
+      top:50%;
+      transform: translateY(-50%);
+      background-color: #ff4535;
+      font-size: 24/@rem;
+      text-align: center;
+      line-height:36/@rem;
+      color:#fff;
+      letter-spacing: 0;
+      border-radius:100%;
+    }
+    .listCotent{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      .listL{
+        width:90/@rem;
+        height:90/@rem;
+        padding:16/@rem 28/@rem 16/@rem 30/@rem;
+        display: inline-block;
+        // margin-right: 28/@rem;
+        img{
+          width:90/@rem;
+          height:90/@rem;
+        }
+      }
+      .listR{
+          width:100%;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          border-bottom: 1px solid #f4f4f4;
+          line-height: 45/@rem;
+          padding: 38/@rem 30/@rem 38/@rem 0;
+          .listarrow{
+            width:15/@rem;
+            height:27/@rem;
+            img{
+              width:15/@rem;
+              height:27/@rem;
+            }
+          }
+      }
+     }
+    }
+    li:last-child{
+      .listR{
+        border:0 none;
+      }
+    }
+
+
+
+  }
+}
+
+//消息模块-系统消息
+.sysmessage{
+  .notifylist{
+    li{
+      background-color: #fff;
+      margin-top: 20/@rem;
+      position: relative;
+      padding: 26/@rem 28/@rem 26/@rem 126/@rem;
+      .bellIcon{
+        position: absolute;
+        left:31/@rem;
+        height: 26/@rem;
+        width:70/@rem;
+        height: 70/@rem;
+      }
+      .notifyR{
+        display: flex;
+        flex-direction: column;
+        letter-spacing: 2/@rem;
+        .noRtitle{
+          color:#222328;
+          font-size: 30/@rem;
+          font-weight:bold;
+          line-height: 30/@rem;
+          // padding:8/@rem 0 5/@rem;
+          line-height: 42/@rem;
+        }
+        .noRtime{
+          color:#646464;
+          font-size: 24/@rem;
+          line-height: 28/@rem;
+          margin-bottom: 25/@rem;
+        }
+        .content{
+          background-color:#F4F4F4;
+          color:#646464;
+          font-size: 30/@rem;
+          line-height: 48/@rem;
+          text-align: justify;
+          letter-spacing: 1/@rem;
+          padding: 9/@rem 20/@rem 9/@rem 20/@rem;
+          .textWrap;
+        }
+      }
+    }
+
+  }
+}
+
+//消息模块-赞
+.praise{
+  .praiselist{
+    li{
+      margin-top: 22/@rem;
+      background-color: #fff;
+      padding: 20/@rem 28/@rem;
+      display: flex;
+      flex-direction: column;
+      letter-spacing: 2/@rem;
+      color:#323232;
+    }
+    .pralFirst{
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 18/@rem;
+      .praFl{
+        width:70/@rem;
+        height: 70/@rem;
+        margin-right: 17/@rem;
+        img{
+          width:70/@rem;
+          height: 70/@rem;
+        }
+      }
+      .praFr{
+          display: flex;
+          flex-direction: column;
+          .title{
+            color:#222328;
+            font-size: 30/@rem;
+            line-height: 30/@rem;
+            padding: 4/@rem 0 6/@rem;
+            font-weight: bold;
+          }
+          .time{
+            color:#646464;
+            font-size: 24/@rem;
+            // line-height: 36/@rem;
+
+          }
+      }
+    }
+    .pralSed{
+        margin-bottom: 15/@rem;
+        font-size: 32/@rem;
+        line-height: 38/@rem;
+        font-weight: bold;
+        .textWrap;
+    }
+    .pralThird{
+        display: flex;
+        flex-direction: row;
+        background-color: #F4F4F4;
+        .pralTimg{
+          width:150/@rem;
+          height:150/@rem;
+          background-color: #fff;
+          img{
+            width:150/@rem;
+            height:150/@rem;
+          }
+        }
+        .content{
+            color:#646464;
+            font-size: 30/@rem;
+            line-height: 46/@rem;
+            padding: 6/@rem 11/@rem;
+            .mulellipsis;
+            .textWrap;
+        }
+    }
+
+  }
+}
+
+//消息模块-评论
+.comments{
+  .praiselist {
+    .pralFirst{
+      .praFr{
+        width:100%;
+        display: flex;
+        flex-direction:row;
+        justify-content: space-between;
+        .praFrl{
+          display: flex;
+          flex-direction: column;
+        }
+        .praFrr{
+          width:66/@rem;
+          height: 36/@rem;
+          border-radius: 8/@rem;
+          border:2/@rem solid #969696;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          // font-size: 26/@rem;
+          // line-height: 34/@rem;
+
+          span{
+             font-size: 26/@rem;
+             color:#969696;
+          }
+        }
+      }
+    }
+
+  }
+
+}

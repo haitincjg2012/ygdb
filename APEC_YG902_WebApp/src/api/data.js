@@ -8,6 +8,6 @@ export default {
   },{
     "keyWord": "烟台市",
     "value":3706,
-    3706:[{"keyWord": "牟平区"},{"keyWord": "龙口市"},{"keyWord": "莱阳市"},{"keyWord": "莱州市"},{"keyWord": "蓬莱市"},{"keyWord": "招远市"},{"keyWord": "栖霞市"},{"keyWord": "海阳市"}]
+    3706:[{"keyWord": "栖霞市"},{"keyWord": "蓬莱市"},{"keyWord": "牟平区"},{"keyWord": "龙口市"},{"keyWord": "莱阳市"},{"keyWord": "莱州市"},{"keyWord": "招远市"},{"keyWord": "海阳市"}]
   }],
 }

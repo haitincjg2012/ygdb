@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * Created by wubi on 2017/8/4.
+ * @author xxx
  */
 @Configuration
 public class MailConfig {

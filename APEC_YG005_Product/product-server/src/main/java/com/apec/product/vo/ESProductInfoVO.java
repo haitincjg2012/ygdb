@@ -79,7 +79,7 @@ public class ESProductInfoVO {
      */
     private String skuName;
 
-    private float orderWeight;
+    private Float orderWeight;
 
     private BigDecimal weight;
 
@@ -101,7 +101,7 @@ public class ESProductInfoVO {
      * 7天 15天 30 天， 每晚凌晨三点 进行有效期变更
      * 权重 2
      */
-    private int timeout;
+    private Integer timeout;
 
     private String  address;
     /**
@@ -128,6 +128,11 @@ public class ESProductInfoVO {
      *  图片 属性
      */
     private List<ESProductImageVO> productImages;
+
+    /**
+     * 标签属性
+     */
+    private List<ESProductTagsVO> productTags;
 
     /**
      * 下架时间

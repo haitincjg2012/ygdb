@@ -5,6 +5,9 @@ import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
+/**
+ * @author xxx
+ */
 public class ExcelStyle {
 
 	public static HSSFCellStyle getGeneralCellStyleLeft(HSSFWorkbook book) {

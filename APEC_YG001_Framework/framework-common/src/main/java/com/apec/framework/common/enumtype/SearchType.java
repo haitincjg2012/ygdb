@@ -4,15 +4,23 @@ import com.apec.framework.common.enums.BaseEnum;
 
 /**
  * Created by hmy on 2017/7/31.
+ * @author xxx
  */
 public enum SearchType implements BaseEnum {
 
+    /**
+     * 热门搜索
+     */
     RMSS("热门搜索"),
+
+    /**
+     * 预制搜索
+     */
     YZSS("预制搜索");
 
     private final String key;
 
-    private SearchType(String key) {
+    SearchType(String key) {
         this.key = key;
     }
 

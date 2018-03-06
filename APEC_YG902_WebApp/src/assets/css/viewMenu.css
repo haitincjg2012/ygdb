@@ -1,6 +1,42 @@
 .upload-view-info-page {
   background-color: #f4f4f4;
 }
+.upload-view-info-page .c-upload-head {
+  width: 17.5rem;
+  height: 2.2rem;
+  line-height: 2.2rem;
+  padding: 0 0.625rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.upload-view-info-page .c-upload-head .c-u-h-back {
+  width: 0.55rem;
+  height: 100%;
+}
+.upload-view-info-page .c-upload-head .c-u-h-back img {
+  width: 0.55rem;
+}
+.upload-view-info-page .c-upload-head .c-u-h-title {
+  width: 15.45rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #323232;
+}
+.upload-view-info-page .c-upload-head .c-u-h-newMenu {
+  width: 1.5rem;
+  text-align: center;
+  font-size: 0.7rem;
+  color: #323232;
+}
 .upload-view-info-page .c-z-total {
   width: 18.75rem;
   height: 6.25rem;
@@ -61,12 +97,17 @@
   display: flex;
 }
 .upload-view-info-page .z-m-u-v-form-cli .c-z-m-p .c-z-del-menu {
-  width: 8.75rem;
+  width: 4.375rem;
   font-size: 0.7rem;
   text-align: right;
 }
 .upload-view-info-page .z-m-u-v-form-cli .c-z-m-p .c-z-del-menu .c-z-p-text {
   color: red;
+}
+.upload-view-info-page .z-m-u-v-form-cli .c-z-m-p .c-z-m-check {
+  width: 4.375rem;
+  color: red;
+  font-size: 0.7rem;
 }
 .upload-view-info-page .z-m-u-v-form-cli .c-z-viewmenu {
   min-height: 5rem;
@@ -199,4 +240,11 @@
 }
 .upload-view-info-page .z-m-u-v-form-cli .c-z-viewmenu .c-m-u-v-content .c-z-viewmenu-info-r .c-z-v-info-r-price .c-z-v-i-r-p-r {
   width: 6.25rem;
+}
+.c-upload-Scroll {
+  position: fixed;
+  left: 0;
+  top: 2.2rem;
+  width: 100%;
+  height: 100%;
 }

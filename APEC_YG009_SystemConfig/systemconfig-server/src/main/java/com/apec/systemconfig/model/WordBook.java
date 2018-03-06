@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 /**
  * 字典表（帮助查询）
  * Created by hmy on 2017/8/2.
+ * @author hmy
  */
 @Entity
 @Data

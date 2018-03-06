@@ -6,17 +6,20 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
  * Created by wubi on 2017/8/4.
+ * @author xxx
  */
 @Component
-public class TextMailEngin extends MailEngin {
+public class TextMailEngin extends AbstractMailEngin {
 
+    /**
+     * //执行者
+     */
     @Autowired
-    private JavaMailSender mailSender;//执行者
+    private JavaMailSender mailSender;
 
     @InjectLogger
     private Logger logger;

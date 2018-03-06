@@ -1,0 +1,127 @@
+.c-endorsement {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 18.75rem;
+  height: 33.35rem;
+  background: url("../../img/o_home_bg.png") no-repeat center;
+  background-size: 100% 100%;
+  overflow: auto;
+}
+.c-endorsement-position {
+  position: relative;
+  top: 15.5rem;
+}
+.c-endorsement-endit {
+  margin: auto;
+  width: 15.6rem;
+  height: 11rem;
+  background: url("../../img/o_home_edit.png") no-repeat center;
+  background-size: 100% 100%;
+  border-top: 1px solid transparent;
+}
+.c-endorsement-f-style-com {
+  margin: 0.25rem auto;
+  height: 1.6rem;
+  width: 11.75rem;
+  border-bottom: 0.05rem solid #c3aea3;
+}
+.c-endorsement-charactier-name {
+  margin-top: 1rem;
+}
+.c-endorsement-f-input-com {
+  outline: none;
+  border: none;
+  line-height: 1.6rem;
+  width: 11.75rem;
+  font-size: 0.8rem;
+  color: #6E282C;
+  background-color: transparent;
+}
+.c-endorsement-btn {
+  margin: 1rem auto;
+  display: block;
+  width: 15.1rem;
+  height: 2.3rem;
+  background: url("../../img/o_home_btn.png") no-repeat center;
+  background-size: 100% 100%;
+}
+.c-endorsement-identify-tips {
+  margin: 0.4rem auto;
+  width: 11.75rem;
+  font-size: 0.6rem;
+  color: #969696;
+}
+.c-endorsement-identify-item {
+	border-bottom: 0.05rem solid #c3aea3;
+  margin: auto;
+  padding-bottom: .5rem;
+  width: 11.75rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-endorsement-id-item-content {
+  width: 3.35rem;
+  height: 1.2rem;
+}
+.c-endorsement-id-item-content .c-endorsement-identify-active {
+  border: none;
+  background-color: #6E282C !important;
+  color: #fff !important;
+}
+.c-endorsement-id-item-child {
+  width: 1.85rem;
+  height: 100%;
+  line-height: 1.2rem;
+  text-align: center;
+  font-size: 0.7rem;
+  border: 0.05rem solid #9a8379;
+  border-radius: 0.2rem;
+  color: #646464;
+}
+.c-endorsement-id-item-content:nth-child(5) {
+  width: 3.35rem;
+  height: 1.2rem;
+}
+.c-endorsement-id-item-content:nth-child(5) .c-endorsement-id-item-child {
+  width: 2.5rem;
+  height: 100%;
+  line-height: 1.2rem;
+  text-align: center;
+  font-size: 0.7rem;
+  border-radius: 0.2rem;
+  color: #646464;
+}
+.c-endorsement-btn-file {
+  position: fixed;
+  left: 10000px;
+}
+.c-endorsement-compose {
+  position: fixed;
+  top: -20px;
+  left: 10000px;
+  z-index: -1;
+}
+.c-endorsement-compose-show {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+.c-endorsement-compose-show-picture {
+  width: 18.75rem;
+  height: 33.35rem;
+}

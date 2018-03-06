@@ -21,6 +21,7 @@ import java.util.Map;
 
 /**
  * Created by wubi on 2017/10/9.
+ * @author wubi
  */
 public class HttpClientUtil {
     private RequestConfig requestConfig = RequestConfig.custom()
@@ -39,11 +40,14 @@ public class HttpClientUtil {
     }
 
     /**
-     * 发送 post请求
+     * * 发送 post请求
      * @param httpUrl 地址
+     * @return String
+     * @throws  IOException IOException
      */
     public String sendHttpPost(String httpUrl) throws IOException {
-        HttpPost httpPost = new HttpPost(httpUrl);// 创建httpPost
+        // 创建httpPost
+        HttpPost httpPost = new HttpPost(httpUrl);
         return sendHttpPost(httpPost);
     }
 
@@ -51,9 +55,12 @@ public class HttpClientUtil {
      * 发送 post请求
      * @param httpUrl 地址
      * @param params 参数(格式:key1=value1&key2=value2)
+     * @return String
+     * @throws IOException IOException
      */
     public String sendHttpPost(String httpUrl, String params) throws IOException {
-        HttpPost httpPost = new HttpPost(httpUrl);// 创建httpPost
+        // 创建httpPost
+        HttpPost httpPost = new HttpPost(httpUrl);
         try {
             //设置参数
             StringEntity stringEntity = new StringEntity(params, "UTF-8");
@@ -71,9 +78,10 @@ public class HttpClientUtil {
      * @param maps 参数
      */
     public String sendHttpPost(String httpUrl, Map<String, String> maps) throws IOException {
-        HttpPost httpPost = new HttpPost(httpUrl);// 创建httpPost
+        // 创建httpPost
+        HttpPost httpPost = new HttpPost(httpUrl);
         // 创建参数队列
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+        List<NameValuePair> nameValuePairs = new ArrayList<>();
         for (String key : maps.keySet()) {
             nameValuePairs.add(new BasicNameValuePair(key, maps.get(key)));
         }
@@ -83,18 +91,17 @@ public class HttpClientUtil {
     }
 
 
-
-
     /**
      * 发送Post请求
-     * @param httpPost
-     * @return
+     * @param httpPost httpPost
+     * @return String
+     * @throws IOException IOException
      */
     private String sendHttpPost(HttpPost httpPost) throws IOException {
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse response = null;
-        HttpEntity entity = null;
-        String responseContent = null;
+        HttpEntity entity;
+        String responseContent;
         try {
             // 创建默认的httpClient实例.
             httpClient = HttpClients.createDefault();
@@ -116,23 +123,27 @@ public class HttpClientUtil {
 
     /**
      * 发送 get请求
-     * @param httpUrl
+     * @param httpUrl httpUrl
+     * @return String
+     * @throws IOException IOException
      */
     public String sendHttpGet(String httpUrl) throws IOException {
-        HttpGet httpGet = new HttpGet(httpUrl);// 创建get请求
+        // 创建get请求
+        HttpGet httpGet = new HttpGet(httpUrl);
         return sendHttpGet(httpGet);
     }
 
     /**
      * 发送Get请求
-     * @param httpGet
-     * @return
+     * @param httpGet httpGet
+     * @return String
+     * @throws IOException IOException
      */
     private String sendHttpGet(HttpGet httpGet) throws IOException {
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse response = null;
-        HttpEntity entity = null;
-        String responseContent = null;
+        HttpEntity entity;
+        String responseContent;
         try {
             // 创建默认的httpClient实例.
             httpClient = HttpClients.createDefault();

@@ -9,11 +9,12 @@
   right: 0;
 }
 #rankBox .rankBanner {
-  height: 4.225rem;
-  background: #2fcaa7 url("../../assets/img/rateBj.png") no-repeat center;
+  width: 18.75rem;
+  height: 7.25rem;
+  background: url("../../assets/img/rateBj.png") no-repeat center;
   background-size: contain;
   color: #fff;
-  padding: 3rem 0 0 2.3rem;
+  /*padding: 3rem 0 0 2.3rem;*/
   position: relative;
 }
 #rankBox .rankBanner span {
@@ -45,7 +46,7 @@
 }
 #rankBox .rankTab {
   width: 100%;
-  background-color: #0AB58E;
+  background-color: #FC8C01;
 }
 #rankBox .rankTab li {
   width: 50%;
@@ -72,7 +73,7 @@
   height: 0;
   overflow: hidden;
   border-width: 0.475rem;
-  border-color: transparent transparent #0AB58E transparent;
+  border-color: transparent transparent #FC8C01 transparent;
   border-style: dashed dashed solid dashed;
 }
 #rankBox .rankTab li .white {
@@ -151,4 +152,16 @@
   letter-spacing: 0.05rem;
   padding: 1rem 0;
   height: 1.5rem;
+}
+
+.c-upload-menu{
+  position: fixed;
+  bottom: 2rem;
+  right: 1rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 100%;
+  background-color: #00c850;
+  background: url("../img/billIcon.png") no-repeat center;
+  background-size: 100% 100%;
 }

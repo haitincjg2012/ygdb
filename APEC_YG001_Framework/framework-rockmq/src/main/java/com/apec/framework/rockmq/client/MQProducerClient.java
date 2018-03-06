@@ -2,8 +2,8 @@ package com.apec.framework.rockmq.client;
 
 import com.apec.framework.common.enumtype.MQSendStatus;
 import com.apec.framework.log.InjectLogger;
-import com.apec.framework.rockmq.producer.ApecMQProducer;
-import com.apec.framework.rockmq.vo.IMQBody;
+import com.apec.framework.rockmq.producer.ApecMqProducer;
+import com.apec.framework.rockmq.vo.IMqBody;
 import com.apec.framework.vo.MQMessageLogVO;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +17,10 @@ import javax.annotation.PreDestroy;
  * @author yirde  2017/7/4.
  */
 @Component
-public class MQProducerClient {
+public class MqProducerClient {
 
     @Autowired
-    ApecMQProducer apecMQProducer;
+    ApecMqProducer apecMQProducer;
 
     @Autowired
     RemotingClient remotingClient;
@@ -34,7 +34,7 @@ public class MQProducerClient {
      * @param key key
      * @param body 消息体
      */
-    public void sendConcurrently(String tag, String key,  IMQBody body) {
+    public void sendConcurrently(String tag, String key,  IMqBody body) {
         MQMessageLogVO mqMessageLogVO = apecMQProducer.sendConcurrently(tag,key,body);
         //消息发送失败，消息落地，落地失败记录日志
         if(mqMessageLogVO.getStatus() == MQSendStatus.FAILURE){
@@ -63,7 +63,7 @@ public class MQProducerClient {
      * @param body 消息体
      * @param orderKey 排序字段
      */
-    public  void sendConcurrentlyByKey(String tag, String key,  IMQBody body, String orderKey) {
+    public  void sendConcurrentlyByKey(String tag, String key, IMqBody body, String orderKey) {
         MQMessageLogVO mqMessageLogVO = apecMQProducer.sendConcurrentlyByKey(tag,key,body,orderKey);
         //消息发送失败，消息落地，落地失败记录日志
         if(mqMessageLogVO.getStatus() == MQSendStatus.FAILURE){

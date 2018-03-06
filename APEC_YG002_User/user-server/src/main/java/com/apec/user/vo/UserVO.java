@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -22,6 +23,8 @@ import java.util.List;
 public class UserVO extends BaseVO<Long>{
 
     private List<Long> ids;
+
+    private List<Long> userOrgIds;
 
     /**
      * 登陆名
@@ -37,6 +40,11 @@ public class UserVO extends BaseVO<Long>{
      * 身份证
      */
     private String idNumber;
+
+    /**
+     * 二维码图片地址
+     */
+    private String qrCodeUrl;
 
     /**
      * 手机号
@@ -86,7 +94,7 @@ public class UserVO extends BaseVO<Long>{
     /**
      * 实体ID
      */
-    private String  referralId;//实体ID
+    private String  referralId;
 
     /**
      * 所在地区
@@ -172,12 +180,12 @@ public class UserVO extends BaseVO<Long>{
     /**
      * 登录次数
      */
-    private  int loginNumber;
+    private  Integer loginNumber;
 
     /**
      * 是否需要修改密码
      */
-    private boolean needChangePassword;
+    private Boolean needChangePassword;
 
     /**
      * 组织主账号
@@ -197,6 +205,21 @@ public class UserVO extends BaseVO<Long>{
     /**
      * 开关，开为Y，关为N
      */
-    private boolean pushFlag;
+    private Boolean pushFlag;
+
+    /**
+     * 果满仓用户信息
+     */
+    private List<UserOfWmsVO> list;
+
+    /**
+     * 开始时间
+     */
+    private Date startDate;
+
+    /**
+     * 结束时间
+     */
+    private Date endDate;
 
 }

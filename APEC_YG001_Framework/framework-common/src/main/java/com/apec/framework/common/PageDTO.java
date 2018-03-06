@@ -1,7 +1,6 @@
 package com.apec.framework.common;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
@@ -16,13 +15,11 @@ import com.fasterxml.jackson.annotation.JsonGetter;
  * 内容摘要：页面分页对象
  * 创建日期：2016-09-27 18:43
  * 编码作者：zhaolei
+ * @author xxx
  */
 public class PageDTO<T> implements Serializable
 {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 6268718986881793567L;
 
     private long totalElements;
@@ -31,7 +28,7 @@ public class PageDTO<T> implements Serializable
 
     private int number;
 
-    private List<T> rows = new ArrayList<>();
+    private List<T> rows;
 
     public PageDTO()
     {
@@ -52,8 +49,8 @@ public class PageDTO<T> implements Serializable
         this.rows.addAll( content );
         this.totalElements = totalElements;
 
-        this.totalPages = pageRequest.getPageSize() == 0 ? 1 :
-            (int)Math.ceil( (double)totalElements / (double)pageRequest.getPageSize() );
+        this.totalPages = pageRequest.getPageSize() == 0L ? 1 :
+                (int)Math.ceil( (double)totalElements / (double)pageRequest.getPageSize() );
         this.number = pageRequest.getPageNumber() + 1;
     }
 
@@ -100,4 +97,10 @@ public class PageDTO<T> implements Serializable
     {
         this.rows = rows;
     }
+
+    @Override
+    public String toString(){
+        return "totalElements：" + totalElements + "|totalPages：" + totalPages + "|number：" + number;
+    }
+
 }

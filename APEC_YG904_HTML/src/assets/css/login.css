@@ -23,11 +23,11 @@
 }
 .loginBox .loginContent .formBox {
   width: 100%;
-  text-align: center;
 }
 .loginBox .loginContent .formBox .title {
   font-size: 35px;
   padding-bottom: 30px;
+  text-align: center;
 }
 .loginBox .loginContent .formBox .title .titName {
   color: #41B883;

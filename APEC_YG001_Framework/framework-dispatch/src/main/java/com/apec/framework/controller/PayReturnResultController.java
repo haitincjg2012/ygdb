@@ -1,10 +1,10 @@
 package com.apec.framework.controller;
 
 import com.apec.framework.base.BaseController;
-import com.apec.framework.base.IJSONService;
+import com.apec.framework.base.IJsonService;
 import com.apec.framework.common.Constants;
 import com.apec.framework.common.exception.DispatchException;
-import com.apec.framework.common.util.HttpRequestUtil;
+import com.apec.framework.common.util.AbstractHttpRequestUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
  * 内容摘要：获取支付成功之后的返回结果
  * 创建日期：2017/2/10
  * 编码作者：
+ * @author xxx
  */
 @RestController
 public class PayReturnResultController extends BaseController
@@ -28,7 +29,7 @@ public class PayReturnResultController extends BaseController
     private static Logger log = Logger.getLogger( PayReturnResultController.class );
 
     @Autowired
-    private IJSONService dispatchJSONService;
+    private IJsonService dispatchJSONService;
 
     /**
      * 获取支付成功返回结果
@@ -56,10 +57,10 @@ public class PayReturnResultController extends BaseController
         String ret;
         try
         {
-            String payResult = HttpRequestUtil.getPostJSONData( request );
+            String payResult = AbstractHttpRequestUtil.getPostJSONData( request );
             log.debug( "serverName:" + serverName + " methodName:" + methodName + " payResult:" + payResult );
             serverName = serverName + "-SERVICE";
-            String serviceUrl = HttpRequestUtil.getRequestServiceUrl( serverName, methodName, StringUtils.EMPTY );
+            String serviceUrl = AbstractHttpRequestUtil.getRequestServiceUrl( serverName, methodName, StringUtils.EMPTY );
             ret = dispatchJSONService.invokeRestful( serviceUrl, payResult );
         }
         catch (DispatchException e)

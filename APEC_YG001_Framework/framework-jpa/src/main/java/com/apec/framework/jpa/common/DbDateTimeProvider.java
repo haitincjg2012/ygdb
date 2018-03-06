@@ -10,6 +10,7 @@ import org.springframework.data.auditing.DateTimeProvider;
  * 内容摘要：实体必填字段当前时间
  * 完成日期：2016-07-14
  * 编码作者：
+ * @author xxx
  */
 public class DbDateTimeProvider implements DateTimeProvider
 {

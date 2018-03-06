@@ -2,7 +2,7 @@
   _rem = 20rem;
   .tab-item
     font-size 0
-    .fa-home,.fa-user
+    .fa-home,.fa-user,.fa-findShome,.fa-fruitCircle
       width (24/_rem)
       height (24/_rem)
     .fa-add
@@ -26,8 +26,10 @@
         white-space: nowrap;
     .tab-label
       font-size: (12/_rem);
+      color:#646464;
       display: block;
-
+    .active
+      color #28CBA7
   //.tab-item:hover {
   //   -webkit-animation: icon-bounce 0.5s alternate;
   //   -moz-animation: icon-bounce 0.5s alternate;
@@ -179,13 +181,13 @@
       transform: rotate(-5deg);
     }
   }
-
 </style>
 
 <template>
   <router-link :to="path" class="tab-item">
+  <!--<router-link class="tab-item">-->
     <img :src="srcClass" :class="iconClass">
-    <span class="tab-label" v-text="label"></span>
+    <span class="tab-label" :class="{active:labelClass}" v-text="label"></span>
   </router-link>
 </template>
 
@@ -196,7 +198,11 @@
   import My from '../assets/img/My.png';
   import MyR from '../assets/img/MyR.png';
   import add from '../assets/img/add.png';
-  import sub from '../assets/img/sub.png'
+  import sub from '../assets/img/sub.png';
+  import goodsD from '../assets/img/goodsD.png'//默认果圈
+  import goods from '../assets/img/goods.png'//果圈
+  import fruitCircleD from '../assets/img/fruitCircleD.png'//默认果圈
+  import fruitCircle from '../assets/img/fruitCircle.png'//果圈
 
   export default {
     props: {
@@ -212,12 +218,23 @@
         var srcIcon = '';
         var icon = this.icon;
         var flag = this.$route.query.flag;
-        srcIcon = this.linkClass(icon, flag);
+        var name = this.$route.name;
+        srcIcon = this.linkClass(icon, flag,name);
         return srcIcon
       },
       iconClass () {
         return `fa-${this.icon}`
       },
+      labelClass(){
+          var rname = this.$route.name;
+          var name = this.name;
+
+          if(rname == name){
+             return true;
+          }else{
+              return false;
+          }
+      }
     },
     data() {
       return {
@@ -232,48 +249,51 @@
     created() {
     },
     methods:{
-      linkClass(name, flag){
+      linkClass(icon, flag,name){
         var srcIcon = '';
-        switch(name){
+        switch(icon){
           case 'home':
-              if(!flag){
-                srcIcon =homeIconR;
-              }
-            else if(flag == 0)
+           if(flag == 0)
               srcIcon = homeIconR;
-            else
+           else if(name == "home"){
+             srcIcon = homeIconR;
+           }else
                 srcIcon =homeIcon;
             break;
           case 'user':
-            if(flag == 2)
+            if(flag == 3)
               srcIcon =MyR;
-            else
+            else if(name == "pc"){
+              srcIcon =MyR;
+            } else
               srcIcon =My;
             break;
           case 'add':
-            if(!flag){
-              srcIcon =sub;
-            }
-            else if(flag == 1){
-              srcIcon =add;
-            }else{
-              srcIcon = sub;
-            }
+            srcIcon = sub;
             break;
+          case 'findShome':
+              if(flag == 1){
+                srcIcon = goods;
+              }
+              else if(name == "findShome"){
+                srcIcon =goods;
+              }else{
+                srcIcon = goodsD;
+              }
+              break;
+          case 'fruitCircle':
+            if(flag == 2){
+              srcIcon = fruitCircle;
+            }else if(name == "fruitCircle"){
+              srcIcon = fruitCircle;
+            }else{
+              srcIcon = fruitCircleD;
+            }
+              break;
           default:break;
         }
 
         return srcIcon;
-//        if(show[name]){
-//          return "active"
-//        }else {
-//          return ""
-//        }
-//        if(this.name===this.$route.name){
-//          return "active"
-//        }else{
-//          return ""
-//        }
       },
     }
   }

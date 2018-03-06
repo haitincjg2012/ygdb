@@ -6,11 +6,23 @@ package com.apec.framework.common.enumtype;
  * 内容摘要：
  * 创建日期：2016-09-28 11:49
  * 编码作者：
+ * @author xx
  */
 public enum Platform {
 
+    /**
+     * IOS
+     */
     IOS,
+
+    /**
+     * ANDROID
+     */
     ANDROID,
+
+    /**
+     * WEB
+     */
     WEB;
 
     public static Platform getPlatform(String platform) {

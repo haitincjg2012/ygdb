@@ -100,4 +100,10 @@ public class VoucherDTO extends BaseDTO {
 	 * 交收结束日期
 	 * */
 	private Date deliveryEndDate;
+
+	/**
+	 * 审核状态
+	 */
+	private String auditState;
+
 }

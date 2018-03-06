@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Created by wubi on 2017/8/2.
+ * @author wubi
  */
 @Service
 public class MyServiceImpl implements MyService {

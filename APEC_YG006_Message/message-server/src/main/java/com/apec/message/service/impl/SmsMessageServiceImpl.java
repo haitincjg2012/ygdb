@@ -35,6 +35,9 @@ import com.esms.common.entity.MTReport;
 import com.esms.common.entity.MTResponse;
 import com.esms.common.util.MediaUtil;
 
+/**
+ * @author xxx
+ */
 @Service
 @RefreshScope
 public class SmsMessageServiceImpl implements SmsMessageService{
@@ -54,39 +57,51 @@ public class SmsMessageServiceImpl implements SmsMessageService{
 	@Override
 	public String sendSmsMessageByPost(SmsMessageVO smsMessageVO) throws Exception{
 		MTPack pack = new MTPack();
-		pack.setBatchID(UUID.randomUUID());//批量唯一序列号
-		pack.setBatchName(smsMessageVO.getBatchName());//批量名称
-		pack.setMsgType(MsgType.SMS);//默认发送消息类型:短信
-		if (smsMessageVO.isMsgTypeFlag()){
+		//批量唯一序列号
+		pack.setBatchID(UUID.randomUUID());
+		//批量名称
+		pack.setBatchName(smsMessageVO.getBatchName());
+		//默认发送消息类型:短信
+		pack.setMsgType(MsgType.SMS);
+		if (smsMessageVO.getMsgTypeFlag()){
 			String path = SmsMessageServiceImpl.class.getClassLoader().getResource("mms").getPath();
 			path = URLDecoder.decode(path, "utf-8");			
 			//设置公共彩信资源
 			pack.setMedias(MediaUtil.getMediasFromFolder(path));
-			pack.setMsgType(MsgType.MMS);//彩信
+			//彩信
+			pack.setMsgType(MsgType.MMS);
 		}
 		//信息业务类型默认为0
 		Integer bizType = smsMessageVO.getBizType() == null?0:smsMessageVO.getBizType();
-		pack.setBizType(bizType);//信息业务类型
-		pack.setDistinctFlag(smsMessageVO.isDistinctFlag());//是否过滤重复号码
+		//信息业务类型
+		pack.setBizType(bizType);
+		//是否过滤重复号码
+		pack.setDistinctFlag(smsMessageVO.getDistinctFlag());
 		//发送时间默让即时
 		if (smsMessageVO.getScheduleTime() != null){
-			pack.setScheduleTime(smsMessageVO.getScheduleTime());//计划发送时间
+			//计划发送时间
+			pack.setScheduleTime(smsMessageVO.getScheduleTime());
 		}
-		pack.setRemark(smsMessageVO.getRemark());//备注
-		pack.setCustomNum(smsMessageVO.getCustomNum());//用户扩展码
+		//备注
+		pack.setRemark(smsMessageVO.getRemark());
+		//用户扩展码
+		pack.setCustomNum(smsMessageVO.getCustomNum());
 		//默认下发截至时间为当前系统时间
 		if (smsMessageVO.getDeadline() != null){
-			pack.setDeadline(smsMessageVO.getDeadline());//下发截至时间
+			//下发截至时间
+			pack.setDeadline(smsMessageVO.getDeadline());
 		}
 		
-		List<MessageData> msgs = new LinkedList<MessageData>();
-		pack.setSendType(SendType.MASS);//默认发送类型:群发
+		List<MessageData> msgs = new LinkedList<>();
+		//默认发送类型:群发
+		pack.setSendType(SendType.MASS);
 		//是否群发
-		if (smsMessageVO.isSendTypeFlag()){
-			pack.setSendType(SendType.GROUP);//组发
+		if (smsMessageVO.getSendTypeFlag()){
+			//组发
+			pack.setSendType(SendType.GROUP);
 		}
 		//是否使用数据库配置模板
-		if (smsMessageVO.isTemlateFlag()){
+		if (smsMessageVO.getTemlateFlag()){
 			msgs = getTeplate(smsMessageVO, msgs);
 		}else{
 			msgs = getCustomContent(smsMessageVO, msgs);
@@ -136,10 +151,11 @@ public class SmsMessageServiceImpl implements SmsMessageService{
 	@Override
 	public SmsAccountInfoDTO getAccountInfo() throws Exception{
 		SmsAccountInfoDTO smsAccountInfo = new SmsAccountInfoDTO();
-		AccountInfo accountInfo = postMsg.getAccountInfo(account); //获取账号详细信息
+		//获取账号详细信息
+		AccountInfo accountInfo = postMsg.getAccountInfo(account);
 		smsAccountInfo.setAccountInfo(accountInfo);
-		
-		BusinessType[] businessTypes = postMsg.getBizTypes(account);//获取账号绑定业务类型
+		//获取账号绑定业务类型
+		BusinessType[] businessTypes = postMsg.getBizTypes(account);
 		smsAccountInfo.setBusinessTypes(businessTypes);
 		return smsAccountInfo;
 	}
@@ -174,7 +190,7 @@ public class SmsMessageServiceImpl implements SmsMessageService{
 		mtPack.setMsgType(MsgType.SMS);
 		mtPack.setSendType(SendType.MASS);
 		mtPack.setDistinctFlag(false);
-		List<MessageData> msgs = new LinkedList<MessageData>();
+		List<MessageData> msgs = new LinkedList<>();
 		
 		//发送内容生成
 		String template = paramsDAO.findByParamKey(smsCaptchaVO.getTemplateKey().getKey());
@@ -197,7 +213,8 @@ public class SmsMessageServiceImpl implements SmsMessageService{
 	 * @return Captcha
 	 */
 	private String randomCaptcha(String oldCaptcha){
-		String captcha = RandomStringUtils.randomNumeric(SysBusinessConstants.CAPTCHA_LENGTH);//生成6位的随机数
+		//生成6位的随机数
+		String captcha = RandomStringUtils.randomNumeric(SysBusinessConstants.CAPTCHA_LENGTH);
 		if(StringUtils.equals(captcha,oldCaptcha)){
 			return randomCaptcha(oldCaptcha);
 		}
@@ -208,7 +225,7 @@ public class SmsMessageServiceImpl implements SmsMessageService{
 	public MTReport[] findSmsStatusReport(String batchId, String phone,
 			Integer pageSize, boolean flag) throws Exception {
 		UUID id = UUID.fromString(batchId);
-		MTReport[] response = null;
+		MTReport[] response;
 		if (flag){
 			response = postMsg.findReports(account, pageSize, id, phone, 0);
 		}else{
@@ -221,7 +238,7 @@ public class SmsMessageServiceImpl implements SmsMessageService{
 	public MTResponse[] getSmsReport(String batchId, String phone,
 			Integer pageSize, boolean flag) throws Exception {
 		UUID id = UUID.fromString(batchId);
-		MTResponse[] response = null;
+		MTResponse[] response;
 		if (flag){
 			response = postMsg.findResps(account, pageSize, id, phone, 0);
 		}else{

@@ -9,11 +9,12 @@ import org.apache.commons.logging.LogFactory;
  * 内容摘要：workerId是机器ID，datacenterId是数据中心ID或机房ID。 这都是为分布式而设置的，workerId每台机器肯定不一样，最大值由maxWorkerId限制。
  * 完成日期：
  * 编码作者：
+ * @author xxx
  */
 public class IdWorker
 {
 
-    protected static final Log LOG = LogFactory.getLog(IdWorker.class);
+    private static final Log LOG = LogFactory.getLog(IdWorker.class);
 
     private long workerId;
 

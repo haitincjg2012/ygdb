@@ -5,6 +5,9 @@ import org.springframework.data.domain.PageRequest;
 import com.apec.framework.common.PageDTO;
 import com.apec.message.vo.ParamTemplateVO;
 
+/**
+ * @author xxx
+ */
 public interface ParamTemplateService {
 
 	/**
@@ -12,31 +15,32 @@ public interface ParamTemplateService {
 	 * @param paramsVO 对象体
 	 * @return boolean
 	 * */
-	public boolean addParams(ParamTemplateVO paramsVO);
+	boolean addParams(ParamTemplateVO paramsVO);
 	
 	/**
 	 * 查询参数列表
+	 * @param pageRequest 分页对象
 	 * @return PageDTO<ParamsVO> 参数对象列表
 	 * */
-	public PageDTO<ParamTemplateVO> findAll(PageRequest pageRequest);
+	PageDTO<ParamTemplateVO> findAll(PageRequest pageRequest);
 	
 	/**
 	 * 查询参数value
 	 * @param paramKey 参数key
 	 * @return String
 	 * */
-	public String findByParamKey(String paramKey);
+	String findByParamKey(String paramKey);
 	
 	/**
 	 * 根据id更新参数
-	 * @param ParamTemplateVO
+	 * @param paramsVO paramsVO
 	 *
 	 * */
-	public void updateById(ParamTemplateVO paramsVO);
+	void updateById(ParamTemplateVO paramsVO);
 	
 	/**
 	 * 根据id删除参数
-	 * @param id
+	 * @param id id
 	 * */
-	public void deleteById(Long id);
+	void deleteById(Long id);
 }

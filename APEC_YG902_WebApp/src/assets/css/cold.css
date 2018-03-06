@@ -14,9 +14,13 @@
   width: 18.75rem;
   background: #ece7e7;
 }
+.z-find-Add-sty {
+  position: fixed;
+  top: 0;
+  z-index: 88;
+}
 .z-header-com {
   padding: 0 0.625rem;
-  position: relative;
   width: 17.5rem;
   height: 2.2rem;
   color: #333;
@@ -72,6 +76,10 @@
   background-color: #fff;
 }
 .z-cold .z-c-select {
+  position: fixed;
+  top: 2.2rem;
+  z-index: 99;
+  background-color: #fff;
   border-bottom: 0.05rem solid #dcd7d7;
   display: -webkit-box;
   /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
@@ -128,21 +136,28 @@
   border-bottom-color: #28cba7;
 }
 .z-cold .z-c-frame {
-  position: relative;
+  position: fixed;
+  top: 4.2rem;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
 }
-.z-cold .z-c-frame .z-c-shadow {
-  position: absolute;
-  top: 0;
+.z-cold .z-c-shadow {
+  position: fixed;
+  top: 4.25rem;
+  right: 0;
+  bottom: 0;
   left: 0;
   z-index: 100;
   height: 100%;
 }
-.z-cold .z-c-frame .z-c-listS {
+.z-cold .z-c-listS {
   padding: 0.5rem 0.625rem 0;
   width: 17.5rem;
   background-color: #fff;
 }
-.z-cold .z-c-frame .z-c-listS li {
+.z-cold .z-c-listS li {
   float: left;
   width: 5.75rem;
   height: 100%;
@@ -150,7 +165,7 @@
   margin-bottom: 0.5rem;
   text-align: center;
 }
-.z-cold .z-c-frame .z-c-listS li .pitch {
+.z-cold .z-c-listS li .pitch {
   height: 1.75rem;
   color: #333;
   width: 4rem;
@@ -160,27 +175,27 @@
   border-radius: 0.25rem;
   background-color: #f1f2f6;
 }
-.z-cold .z-c-frame .z-c-listS li .pitch span {
+.z-cold .z-c-listS li .pitch span {
   font-size: 0.75rem;
 }
-.z-cold .z-c-frame .z-c-listS li .pitch img {
+.z-cold .z-c-listS li .pitch img {
   width: 0.65rem;
   height: 0.5rem;
   display: none;
 }
-.z-cold .z-c-frame .z-c-listS li .on {
+.z-cold .z-c-listS li .on {
   color: #28cba7;
   border-color: #28CBA7;
 }
-.z-cold .z-c-frame .z-c-listS li .on img {
+.z-cold .z-c-listS li .on img {
   display: inline-block;
 }
-.z-cold .z-c-frame .z-c-listA {
+.z-cold .z-c-listA {
   padding: 0 0.625rem;
   width: 17.5rem;
   background-color: #fff;
 }
-.z-cold .z-c-frame .z-c-listA li {
+.z-cold .z-c-listA li {
   float: left;
   width: 5.75rem;
   height: 100%;
@@ -188,7 +203,7 @@
   margin-bottom: 0.5rem;
   text-align: center;
 }
-.z-cold .z-c-frame .z-c-listA li .pitch {
+.z-cold .z-c-listA li .pitch {
   height: 1.75rem;
   color: #333;
   width: 4rem;
@@ -198,22 +213,22 @@
   border-radius: 0.25rem;
   background-color: #f1f2f6;
 }
-.z-cold .z-c-frame .z-c-listA li .pitch span {
+.z-cold .z-c-listA li .pitch span {
   font-size: 0.75rem;
 }
-.z-cold .z-c-frame .z-c-listA li .pitch img {
+.z-cold .z-c-listA li .pitch img {
   width: 0.65rem;
   height: 0.5rem;
   display: none;
 }
-.z-cold .z-c-frame .z-c-listA li .on {
+.z-cold .z-c-listA li .on {
   color: #28cba7;
   border-color: #28CBA7;
 }
-.z-cold .z-c-frame .z-c-listA li .on img {
+.z-cold .z-c-listA li .on img {
   display: inline-block;
 }
-.z-cold .z-c-frame .shadow {
+.z-cold .shadow {
   min-height: 30rem;
   height: 100%;
   width: 18.75rem;
@@ -222,10 +237,10 @@
   filter: alpha(opacity=50);
   -moz-opacity: 0.5;
 }
-.z-cold .z-c-frame .c-z-cold-empty {
+.z-cold .c-z-cold-empty {
   z-index: -1;
 }
-.z-cold .z-c-frame .c-z-cold-empty img {
+.z-cold .c-z-cold-empty img {
   height: 5.5rem;
   display: block;
   position: relative;
@@ -237,7 +252,7 @@
   top: 5rem;
   left: 50%;
 }
-.z-cold .z-c-frame .c-z-cold-empty p {
+.z-cold .c-z-cold-empty p {
   font-size: 0.8rem;
   text-align: center;
   color: #333;

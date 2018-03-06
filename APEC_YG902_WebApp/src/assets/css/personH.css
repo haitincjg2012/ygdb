@@ -35,10 +35,12 @@
   background: url("../img/c.png") no-repeat center;
   background-size: 1.65rem 1.1rem;
 }
-.z-p-home .z-p-banner .z-canmer .z-imgInput {
+.z-p-home .z-p-banner .z-imgInput {
+  position: absolute;
+  left: -9999px;
   display: block;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 1.65rem;
+  height: 1.1rem;
   opacity: 0;
   filter: alpha(opacity=0);
   -moz-opacity: 0;
@@ -67,24 +69,10 @@
   color: #323232;
   font-weight: bold;
 }
-.z-p-home .z-p-info .z-p-agency {
-  font-size: 0.7rem;
-  color: #28cba5;
-  padding: 0 0.15rem;
-  border: 0.05rem solid #28cba5;
-  border-radius: 0.1rem;
-}
-.z-p-home .z-p-info .z-p-real {
-  font-size: 0.7rem;
-  color: #28cba5;
-  border: 0.05rem solid #28cba5;
-  border-radius: 0.1rem;
-  padding: 0 0.05rem;
-}
 .z-p-home .z-p-info .z-p-level {
   margin-left: 0.5rem;
-  width: 0.8rem;
-  height: 0.8rem;
+  width: 1.5rem;
+  height: 1.5rem;
   vertical-align: middle;
 }
 .z-p-home .z-space {
@@ -146,56 +134,31 @@
   line-height: 2.3rem;
   margin-left: 0.5rem;
 }
-.z-p-home .z-p-manage-info .z-p-cold {
-  font-size: 0.8rem;
+.z-p-home .z-p-manage-info .c-p-manage-com {
+  line-height: 2.3rem;
   border-bottom: 0.05rem solid #f4f4f4;
-  color: #323232;
+  font-size: 0.75rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
 }
-.z-p-home .z-p-manage-info .z-p-c-storage {
-  font-size: 0.8rem;
-  border-bottom: 0.05rem solid #f4f4f4;
-}
-.z-p-home .z-p-manage-info .z-p-c-cooperative {
-  font-size: 0.8rem;
-  border-bottom: 0.05rem solid #f4f4f4;
-}
-.z-p-home .z-p-manage-info .z-p-area {
-  font-size: 0.8rem;
-  border-bottom: 0.05rem solid #f4f4f4;
-}
-.z-p-home .z-p-manage-info .z-p-cmarket {
-  font-size: 0.8rem;
-  border-bottom: 0.05rem solid #f4f4f4;
-}
-.z-p-home .z-p-manage-info .z-p-area {
-  font-size: 0.8rem;
-  border-bottom: 0.05rem solid #f4f4f4;
-}
-.z-p-home .z-p-manage-info .z-p-pz {
-  font-size: 0.8rem;
-  border-bottom: 0.05rem solid #f4f4f4;
-}
-.z-p-home .z-p-manage-info .z-p-transship {
-  font-size: 0.8rem;
-  border-bottom: 0.05rem solid #f4f4f4;
-}
-.z-p-home .z-p-manage-info .z-p-sale {
-  font-size: 0.8rem;
-  border-bottom: 0.05rem solid #f4f4f4;
-}
-.z-p-home .z-p-manage-info input {
-  width: 12.5rem;
-  height: 1rem;
-  font-size: 0.8rem;
-  text-align: right;
-  background-color: transparent;
+.z-p-home .z-p-manage-info .c-p-m-nameCom {
+  width: 3.75rem;
   color: #646464;
 }
-.z-p-home .z-p-manage-info .img-com {
-  width: 0.95rem;
-  height: 0.95rem;
-  margin-right: 0.25rem;
-  vertical-align: sub;
+.z-p-home .z-p-manage-info .c-p-m-contentCom {
+  width: 14.5rem;
+  color: #323232;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 .z-p-home .z-description {
   position: relative;
@@ -388,4 +351,18 @@
   -webkit-box-shadow: 1000px 1000px 100px 100px #fff inset;
   /*webkit*/
   box-shadow: 1000px 1000px 100px 100px #fff inset;
+}
+.fruitNoData {
+  width: 18.75rem;
+  text-align: center;
+}
+.fruitNoData img {
+  padding-top: 2.5rem;
+  width: 8.45rem;
+  height: 6.675rem;
+}
+.fruitNoData .c-z-nodata-text {
+  font-size: 0.75rem;
+  color: #323232;
+  letter-spacing: 0.1rem;
 }

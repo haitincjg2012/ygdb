@@ -6,13 +6,18 @@ import lombok.NoArgsConstructor;
 
 /**
  * Created by wubi on 2017/10/9.
+ * @author wubi
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class JsapiTicket {
-    // 获取到的凭证
+    /**
+     * 获取到的凭证
+     */
     private String ticket;
-    // 凭证有效时间，单位：秒
+    /**
+     * 凭证有效时间，单位：秒
+     */
     private int expiresIn;
 }

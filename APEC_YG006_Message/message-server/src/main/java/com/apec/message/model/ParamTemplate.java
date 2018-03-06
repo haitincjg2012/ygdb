@@ -7,6 +7,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -20,6 +21,7 @@ import com.apec.framework.jpa.model.BaseModel;
  * @author gunj
  * 
  * */
+@Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -45,44 +47,14 @@ public class ParamTemplate extends BaseModel<Long>{
 	 * 内容类型
 	 * */
 	@Enumerated(EnumType.STRING)
-	@Column(name = "type", nullable = true, length = 20)
+	@Column(name = "type",length = 20)
 	private MessageType type;
 	
 	/**
 	 * 备注
 	 * */
-	@Column(name = "remark", nullable = true)
+	@Column(name = "remark")
 	private String remark;
 
-	public String getParamKey() {
-		return paramKey;
-	}
 
-	public void setParamKey(String paramKey) {
-		this.paramKey = paramKey;
-	}
-
-	public String getParamValue() {
-		return paramValue;
-	}
-
-	public void setParamValue(String paramValue) {
-		this.paramValue = paramValue;
-	}
-
-	public MessageType getType() {
-		return type;
-	}
-
-	public void setType(MessageType type) {
-		this.type = type;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
 }

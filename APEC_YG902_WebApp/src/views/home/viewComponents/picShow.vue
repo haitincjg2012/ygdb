@@ -2,9 +2,8 @@
     <div class="c-z-roll">
        <div class="c-z-r-v-w sw">
           <div class="c-z-r-real vw">
-            <!--<img v-for="item in itemImg" :src="item.imageUrl" class="c-z-r-img" ref="zj">-->
              <div v-for="item in itemImg" class="c-z-c-img">
-                <img :src="item.imageUrl" class="c-z-r-img" ref="zj"><!--  -->
+                <img :src="item.imageUrl +'?x-oss-process=style/_show'" class="c-z-r-img" ref="zj"><!--  -->
              </div>
           </div>
        </div>
@@ -36,16 +35,17 @@
             total:"",//总共页数
             step:0,//左右距离
             moveFlag:true,//默认允许移动
+            timeStart:0,//滑动开始的时间
+            timeEnd:0,//滑动结束的时间
           }
       },
        methods:{
+          timeInit(){
+              //滑动结束后的初始化
+             this.timeStart = 0;
+             this.timeEnd = 0;
+          },
           init(){
-//              this.$nextTick(function () {
-//                var el = document.querySelector(".c-z-r-real");
-//
-//
-//              })
-
           },
          bs(property){
            var _elementstyle = document.createElement("div").style;
@@ -69,7 +69,6 @@
              alert("浏览器不存在此属性");
            }else{
              var adaptation = property+"Transform";
-//             el.style[adaptation]='translate('+x +'px,'+ y +'px)';
              el.style[adaptation] ='translate3d('+x +'px,'+ y +'px, 0)';
            }
          },
@@ -86,6 +85,7 @@
           start(e){
               var e = window.event || e;
              var touch = e.targetTouches[0];
+             this.timeStart = e.timeStamp;
              this.fingerNextP = this.fingerSPos = touch.pageX;
             e.preventDefault();
           },
@@ -140,7 +140,9 @@
             var e = window.event || e;
             var touch = e.changedTouches[0];
             var pos = touch.pageX;
-
+            var timeStart = this.timeStart;
+            var timeEnd  = this.timeEnd = e.timeStamp;
+            this.timeInit();
             var el = document.querySelector(".c-z-r-real")
             if(this.isBackFlag){
               this.moveFlag = true;
@@ -151,6 +153,13 @@
                 return ;
               }
               if(this.current == 1){
+
+                if(((timeEnd - timeStart) < 500) && (pos - this.fingerSPos < 0)){
+                  this.current ++;
+                  var movePos = - (this.current - 1) * this.wrapPicW;
+                  this.translate(el, movePos, 0);
+
+                }else{
                   if(pos - this.fingerSPos > 0 || pos - this.fingerSPos > -this.width/2){
                     this.translate(el, 0, 0);
                   }else if(pos - this.fingerSPos < - this.width/2){
@@ -158,34 +167,64 @@
                     var movePos = - (this.current - 1) * this.wrapPicW;
                     this.translate(el, movePos, 0);
                   }
-              }else if(this.current == this.total){
+                }
 
+              }else if(this.current == this.total){
+                if((timeEnd - timeStart) < 500 && pos - this.fingerSPos > 0){
+                  this.current --;
+                  var movePos = -(this.current - 1) * this.wrapPicW;
+                  this.translate(el, movePos, 0);
+                }else{
                   if(pos - this.fingerSPos < 0 ||  pos - this.fingerSPos <= this.width/2 ){
-                      var movePos = -(this.current-1) * this.wrapPicW;
-                     this.translate(el, movePos, 0);
+                    var movePos = -(this.current-1) * this.wrapPicW;
+                    this.translate(el, movePos, 0);
                   }else if(pos - this.fingerSPos > this.width/2){
                     this.current --;
                     var movePos = -(this.current - 1) * this.wrapPicW;
                     this.translate(el, movePos, 0);
                   }
-
+                }
               }else{
 
-                  if(Math.abs(pos - this.fingerSPos) < this.width/2){
+                  if((timeEnd - timeStart) < 500){
+                      if(pos - this.fingerSPos > 0){
+                        this.current --;
+                        var movePos = -(this.current - 1) * this.wrapPicW;
+                        this.translate(el, movePos, 0);
+                      }else if(pos - this.fingerSPos < 0){
+                        this.current ++;
+                        var movePos = - (this.current - 1) * this.wrapPicW;
+                        this.translate(el, movePos, 0);
+                      }else{
+                        var movePos = -(this.current - 1) * this.wrapPicW;
+                        this.translate(el, movePos, 0)
+                      }
+
+                  }else{
+                      //时间差大于50ms
+                    if(Math.abs(pos - this.fingerSPos) < this.width/2){
 
                       var movePos = -(this.current - 1) * this.wrapPicW;
                       this.translate(el, movePos, 0)
-                  }else if(pos - this.fingerSPos > this.width/2){
+                    }else if(pos - this.fingerSPos > this.width/2){
 
-                    this.current --;
-                    var movePos = -(this.current - 1) * this.wrapPicW;
-                    this.translate(el, movePos, 0);
-                  }else if(pos - this.fingerSPos < - this.width/2){
+                      this.current --;
+                      var movePos = -(this.current - 1) * this.wrapPicW;
+                      this.translate(el, movePos, 0);
+                      return;
+                    }else if(pos - this.fingerSPos < - this.width/2){
 
-                    this.current ++;
-                    var movePos = - (this.current - 1) * this.wrapPicW;
-                    this.translate(el, movePos, 0);
+                      this.current ++;
+                      var movePos = - (this.current - 1) * this.wrapPicW;
+                      this.translate(el, movePos, 0);
+                      return;
+                    }
                   }
+
+//                  else if((this.timeEnd - this.timeStart) < 1000){
+//
+//                    return;
+//                  }
               }
 
             }else{
@@ -193,12 +232,14 @@
                 this.$router.go(-1);
               }
             }
+
+
             e.preventDefault();
           },
           setWidth(index){
               var imgArr = [];
               var xqImgArr = this.$store.state.xqImgArr;
-            xqImgArr.forEach(function (current) {
+              xqImgArr.forEach(function (current) {
               var strImg = current.imageUrl;
               var obj = {};
               var arr = strImg.split("/"),len = arr.length;
@@ -222,7 +263,6 @@
 
             });
             this.itemImg =  imgArr;
-//            this.itemImg = arr;
               var len = this.itemImg.length;
               this.total = len;
 

@@ -34,7 +34,8 @@ public class ESTagsInfoVO {
 
     /**
      * 排序
+     *
      */
-    private int sort;
+    private Integer sort;
 
 }

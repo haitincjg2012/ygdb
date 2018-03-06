@@ -11,9 +11,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * Created by hmy on 2017/9/27.
+ * @author hmy
  */
 @FeignClient(name = "yg-voucher-service", fallback=VoucherClient.HystrixClientFallback.class)
 public interface VoucherClient {
+
+    /**
+     * 充值redis中上传量client
+     * @return 任务处理结果
+     */
     @RequestMapping(value = "/voucher/countVoucherOfUser",method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     ResultData<String> countVoucherOfUser();
 
@@ -28,7 +34,7 @@ public interface VoucherClient {
             String url = "/voucher/countVoucherOfUser";
             String msg = String.format("调用服务:%s  URL:%s  发生异常,进入fallback方法", serverName, url);
             logger.info(msg);
-            ResultData<String> resultData = new ResultData();
+            ResultData<String> resultData = new ResultData<>();
             resultData.setErrorCode(Constants.SYS_ERROR);
             resultData.setErrorMsg(msg);
             return resultData;

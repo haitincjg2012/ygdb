@@ -3,13 +3,13 @@ package com.apec.framework.dto;
 import com.apec.framework.common.enums.Source;
 import com.apec.framework.common.enumtype.*;
 
-import java.util.List;
-
 /**
  * 用户基本信息表model
  * @author zhangwenjia
  */
 public class UserInfoVO {
+
+    private Long id;
 
     /**
      * 用户ID
@@ -45,6 +45,11 @@ public class UserInfoVO {
      * 头像地址
      */
     private String imgUrl;
+
+    /**
+     * 二维码图片地址
+     */
+    private String qrCodeUrl;
 
     /**
      * 用户身份
@@ -110,6 +115,14 @@ public class UserInfoVO {
      * 用户账户类型
      */
     private UserAccountType userAccountType;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getUserId() {
         return userId;
@@ -270,4 +283,10 @@ public class UserInfoVO {
     public void setUserAccountType(UserAccountType userAccountType) {
         this.userAccountType = userAccountType;
     }
+
+    @Override
+    public String toString(){
+        return super.toString();
+    }
+
 }

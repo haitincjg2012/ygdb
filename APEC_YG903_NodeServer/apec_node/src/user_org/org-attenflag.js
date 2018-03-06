@@ -27,7 +27,7 @@ router.post('/_node_user/_org_atten_flag' + config.urlSuffix , bodyParser, funct
         return ef(done, bind$(redis, 'hget'), config.userInfoPrefix + json, config.userOrgSaveKey , function(obj){
           if(obj){
              var objArr = obj.split(",");
-             if(objArr.indexOf(orgId) != -1){   //check repeat value
+             if(objArr.indexOf(orgId + "") != -1){   //check repeat value
                 returnObj.attenFlag = true;
                 return done(true,returnObj);
              }

@@ -1,7 +1,12 @@
 package com.apec.message.vo;
 
 import com.apec.framework.common.enumtype.MessageStatus;
+import lombok.Data;
 
+/**
+ * @author xxx
+ */
+@Data
 public class MessageVVO {
 
     /**
@@ -19,27 +24,5 @@ public class MessageVVO {
      */
     private MessageStatus messageStatus;
 
-	public MessageBodyVVO getBody() {
-		return body;
-	}
 
-	public void setBody(MessageBodyVVO body) {
-		this.body = body;
-	}
-
-	public String getSender() {
-		return sender;
-	}
-
-	public void setSender(String sender) {
-		this.sender = sender;
-	}
-
-	public MessageStatus getMessageStatus() {
-		return messageStatus;
-	}
-
-	public void setMessageStatus(MessageStatus messageStatus) {
-		this.messageStatus = messageStatus;
-	}
 }

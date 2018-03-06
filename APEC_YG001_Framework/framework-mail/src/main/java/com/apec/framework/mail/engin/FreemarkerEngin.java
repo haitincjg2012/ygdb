@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
@@ -22,15 +21,22 @@ import java.util.Map;
 
 /**
  * Created by wubi on 2017/8/4.
+ * @author xxx
  */
 @Component
-public class FreemarkerEngin extends MailEngin{
+public class FreemarkerEngin extends AbstractMailEngin {
 
+    /**
+     * /执行者
+     */
     @Autowired
-    private JavaMailSender mailSender;//执行者
+    private JavaMailSender mailSender;
 
+    /**
+     * //freemarker
+     */
     @Autowired
-    public Configuration configuration;//freemarker
+    public Configuration configuration;
 
     @InjectLogger
     private Logger logger;
@@ -43,7 +49,7 @@ public class FreemarkerEngin extends MailEngin{
         helper.setFrom(mail.getMailFrom());
         helper.setTo(mail.getMailTo());
         helper.setSubject(mail.getSubject());
-        Map<String, Object> model = new HashMap<String, Object>();
+        Map<String, Object> model = new HashMap<>(16);
         model.put("content", mail.getContent());
         Template template = configuration.getTemplate(mail.getTemplate()+".flt");
         String text = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);

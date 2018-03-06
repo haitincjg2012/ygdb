@@ -1,0 +1,120 @@
+.c-my-main-page {
+  position: fixed;
+  top: 0;
+  bottom: 2.5rem;
+  right: 0;
+  left: 0;
+  background-color: #fff;
+}
+.c-my-menu {
+  height: 1.25rem;
+  width: 4.65rem;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.65rem;
+  line-height: 1.25rem;
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+}
+.c-my-menu .c-my-m-com {
+  -webkit-flex: 1;
+  /* Chrome */
+  -ms-flex: 1;
+  /* IE 10 */
+  flex: 1;
+  /* NEW, Spec - Opera 12.1, Firefox 20+ */
+  -webkit-box-flex: 1;
+  /* OLD - iOS 6-, Safari 3.1-6 */
+  -moz-box-flex: 1;
+  /* OLD - Firefox 19- */
+  text-align: center;
+}
+.c-my-menu .c-my-m-com img {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+.c-my-menu .c-my-m-message {
+  text-align: right;
+}
+.c-my-menu .c-my-m-m-text {
+  position: absolute;
+  top: -0.025rem;
+  right: -0.125rem;
+  height: 0.5rem;
+  width: 0.5rem;
+  line-height: 0.9rem;
+  border-radius: 100%;
+  font-size: 0.6rem;
+  color: #fff;
+  background-color: #ff4e4e;
+}
+.c-my-menu .c-my-m-m-text span {
+  display: inline-block;
+  transform: scale(1, 0.8);
+  -ms-transform: scale(1, 0.8);
+  /* IE 9 */
+  -moz-transform: scale(1, 0.8);
+  /* Firefox */
+  -webkit-transform: scale(1, 0.8);
+  /* Safari and Chrome */
+  -o-transform: scale(1, 0.8);
+  /* Opera */
+}
+.c-p-line-top {
+  display: -webkit-box;
+  /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+  display: -moz-box;
+  /* Firefox 17- */
+  display: -webkit-flex;
+  /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+  display: -moz-flex;
+  /* Firefox 18+ */
+  display: -ms-flexbox;
+  /* IE 10 */
+  display: flex;
+  height: 2.7rem;
+}
+.c-p-line-top .line-one {
+  -webkit-flex: 1;
+  /* Chrome */
+  -ms-flex: 1;
+  /* IE 10 */
+  flex: 1;
+  /* NEW, Spec - Opera 12.1, Firefox 20+ */
+  -webkit-box-flex: 1;
+  /* OLD - iOS 6-, Safari 3.1-6 */
+  -moz-box-flex: 1;
+  /* OLD - Firefox 19- */
+  text-align: center;
+}
+.c-p-line-top .p-l-img-com {
+  height: 1.05rem;
+  width: 1.05rem;
+}
+.c-p-line-top .p-l-text-com {
+  font-size: 0.6rem;
+}
+.c-my-edit {
+  position: absolute;
+  bottom: 1.75rem;
+  right: 0;
+  width: 5rem;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  font-size: 0.75rem;
+  color: #fff;
+}
+.c-my-edit img {
+  height: 0.75rem;
+  margin-left: 0.5rem;
+  vertical-align: -0.05rem;
+}
